@@ -1,5 +1,5 @@
 //
-//  mulle_callback_types.h
+//  mulle_callback_type.h
 //  mulle-types
 //
 //  Created by Nat! on 24.03.15.
@@ -32,8 +32,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef mulle_callback_types_h__
-#define mulle_callback_types_h__
+#ifndef mulle_callback_type_h__
+#define mulle_callback_type_h__
 
 #include <stdint.h>
 #include <stddef.h>
@@ -53,7 +53,7 @@ struct _mulle_allocator
    void   (*free)( void *);
 };
 
-extern struct _mulle_allocator   mulle_malloc_allocator;
+extern struct _mulle_allocator   mulle_stdlib_allocator;
 
 
 typedef void   *mulle_lockfree_calloc_t( size_t n, size_t size);
@@ -62,13 +62,13 @@ typedef void   mulle_lockfree_free_t( void *);
 
 static inline mulle_lockfree_calloc_t  *_mulle_allocator_get_calloc( struct _mulle_allocator *p)
 {
-   return( p ? p->calloc : mulle_malloc_allocator.calloc);
+   return( p ? p->calloc : mulle_stdlib_allocator.calloc);
 }
 
 
 static inline mulle_lockfree_free_t  *_mulle_allocator_get_free( struct _mulle_allocator *p)
 {
-   return( p ? p->free : mulle_malloc_allocator.free);
+   return( p ? p->free : mulle_stdlib_allocator.free);
 }
 
 
@@ -127,66 +127,66 @@ static inline int  _mulle_comparator_compare( struct _mulle_comparator *comparat
 
 
 #pragma mark -
-#pragma mark _mulle_callbacks
+#pragma mark _mulle_callback
 //
-// _mulle_callbacks combines allocation and comparison into a
+// _mulle_callback combines allocation and comparison into a
 // callback scheme for mulle_lockfree containers
 //
-struct _mulle_callbacks
+struct _mulle_callback
 {
    struct _mulle_allocator     allocator;
    struct _mulle_comparator    comparator;
 };
 
-extern struct _mulle_callbacks    mulle_default_callbacks;
+extern struct _mulle_callback    mulle_default_callback;
 
 
-static inline mulle_lockfree_calloc_t  *_mulle_callbacks_get_calloc( struct _mulle_callbacks *p)
+static inline mulle_lockfree_calloc_t  *_mulle_callback_get_calloc( struct _mulle_callback *p)
 {
-   return( p ? p->allocator.calloc : mulle_default_callbacks.allocator.calloc);
+   return( p ? p->allocator.calloc : mulle_default_callback.allocator.calloc);
 }
 
 
-static inline mulle_lockfree_free_t  *_mulle_callbacks_get_free( struct _mulle_callbacks *p)
+static inline mulle_lockfree_free_t  *_mulle_callback_get_free( struct _mulle_callback *p)
 {
-   return( p ? p->allocator.free : mulle_default_callbacks.allocator.free);
+   return( p ? p->allocator.free : mulle_default_callback.allocator.free);
 }
 
 
-static inline mulle_lockfree_hash_t  *_mulle_callbacks_get_hash( struct _mulle_callbacks *p)
+static inline mulle_lockfree_hash_t  *_mulle_callback_get_hash( struct _mulle_callback *p)
 {
-   return( p ? p->comparator.hash : mulle_default_callbacks.comparator.hash);
+   return( p ? p->comparator.hash : mulle_default_callback.comparator.hash);
 }
 
 
-static inline mulle_lockfree_compare_t  *_mulle_callbacks_get_compare( struct _mulle_callbacks *p)
+static inline mulle_lockfree_compare_t  *_mulle_callback_get_compare( struct _mulle_callback *p)
 {
-   return( p ? p->comparator.compare : mulle_default_callbacks.comparator.compare);
+   return( p ? p->comparator.compare : mulle_default_callback.comparator.compare);
 }
 
 
 
-static inline void  *_mulle_callbacks_calloc( struct _mulle_callbacks *p, size_t n, size_t size)
+static inline void  *_mulle_callback_calloc( struct _mulle_callback *p, size_t n, size_t size)
 {
-   return( (*_mulle_callbacks_get_calloc( p))( n, size));
+   return( (*_mulle_callback_get_calloc( p))( n, size));
 }
 
 
-static inline void  _mulle_callbacks_free( struct _mulle_callbacks *p, void *block)
+static inline void  _mulle_callback_free( struct _mulle_callback *p, void *block)
 {
-   (*_mulle_callbacks_get_free( p))( block);
+   (*_mulle_callback_get_free( p))( block);
 }
 
 
-static inline unsigned int  _mulle_callbacks_hash( struct _mulle_callbacks *p, intptr_t key)
+static inline unsigned int  _mulle_callback_hash( struct _mulle_callback *p, intptr_t key)
 {
-   return( (*_mulle_callbacks_get_hash)( p)( key));
+   return( (*_mulle_callback_get_hash)( p)( key));
 }
 
 
-static inline int  _mulle_callbacks_compare( struct _mulle_callbacks *p, void *a, void *b)
+static inline int  _mulle_callback_compare( struct _mulle_callback *p, void *a, void *b)
 {
-   return( (*_mulle_callbacks_get_compare( p))( a, b));
+   return( (*_mulle_callback_get_compare( p))( a, b));
 }
 
 #endif

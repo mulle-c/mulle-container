@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4105ABF11BCB089600D45AA8 /* mulle_callback_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 414AC1AA1AC2C45800DCA3CC /* mulle_callback_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41F14FEB1B68F0AE002189F1 /* mulle_callback_types.c in Sources */ = {isa = PBXBuildFile; fileRef = 414AC1AB1AC2C45800DCA3CC /* mulle_callback_types.c */; };
+		4105ABF11BCB089600D45AA8 /* mulle_callback_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		41F14FEB1B68F0AE002189F1 /* mulle_callback_type.c in Sources */ = {isa = PBXBuildFile; fileRef = 414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		414AC1AA1AC2C45800DCA3CC /* mulle_callback_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_callback_types.h; sourceTree = "<group>"; };
-		414AC1AB1AC2C45800DCA3CC /* mulle_callback_types.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_callback_types.c; sourceTree = "<group>"; };
-		41F14FE61B68F098002189F1 /* libmulle_containers.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmulle_containers.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_callback_type.h; sourceTree = "<group>"; };
+		414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_callback_type.c; sourceTree = "<group>"; };
+		41F14FE61B68F098002189F1 /* libmulle_container.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmulle_container.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +39,7 @@
 		4147852D1ABAF290002DBAE4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				41F14FE61B68F098002189F1 /* libmulle_containers.a */,
+				41F14FE61B68F098002189F1 /* libmulle_container.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -47,8 +47,8 @@
 		4147852E1ABAF290002DBAE4 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				414AC1AA1AC2C45800DCA3CC /* mulle_callback_types.h */,
-				414AC1AB1AC2C45800DCA3CC /* mulle_callback_types.c */,
+				414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */,
+				414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -60,16 +60,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4105ABF11BCB089600D45AA8 /* mulle_callback_types.h in Headers */,
+				4105ABF11BCB089600D45AA8 /* mulle_callback_type.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		41F14FE51B68F098002189F1 /* mulle_containers */ = {
+		41F14FE51B68F098002189F1 /* mulle_container */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 41F14FE71B68F098002189F1 /* Build configuration list for PBXNativeTarget "mulle_containers" */;
+			buildConfigurationList = 41F14FE71B68F098002189F1 /* Build configuration list for PBXNativeTarget "mulle_container" */;
 			buildPhases = (
 				41F14FE21B68F098002189F1 /* Sources */,
 				41F14FE31B68F098002189F1 /* Frameworks */,
@@ -79,9 +79,9 @@
 			);
 			dependencies = (
 			);
-			name = mulle_containers;
+			name = mulle_container;
 			productName = mulle_aba;
-			productReference = 41F14FE61B68F098002189F1 /* libmulle_containers.a */;
+			productReference = 41F14FE61B68F098002189F1 /* libmulle_container.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -98,7 +98,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 414785271ABAF290002DBAE4 /* Build configuration list for PBXProject "mulle-containers" */;
+			buildConfigurationList = 414785271ABAF290002DBAE4 /* Build configuration list for PBXProject "mulle-container" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -111,7 +111,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				41F14FE51B68F098002189F1 /* mulle_containers */,
+				41F14FE51B68F098002189F1 /* mulle_container */,
 			);
 		};
 /* End PBXProject section */
@@ -121,7 +121,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41F14FEB1B68F0AE002189F1 /* mulle_callback_types.c in Sources */,
+				41F14FEB1B68F0AE002189F1 /* mulle_callback_type.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,7 +173,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		414785271ABAF290002DBAE4 /* Build configuration list for PBXProject "mulle-containers" */ = {
+		414785271ABAF290002DBAE4 /* Build configuration list for PBXProject "mulle-container" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				414785311ABAF290002DBAE4 /* Debug */,
@@ -182,7 +182,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		41F14FE71B68F098002189F1 /* Build configuration list for PBXNativeTarget "mulle_containers" */ = {
+		41F14FE71B68F098002189F1 /* Build configuration list for PBXNativeTarget "mulle_container" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				41F14FE81B68F098002189F1 /* Debug */,

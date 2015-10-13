@@ -1,5 +1,5 @@
 //
-//  mulle_callback_types.c
+//  mulle_callback_type.c
 //  mulle-types
 //
 //  Created by Nat! on 24.03.15.
@@ -32,7 +32,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "mulle_callback_types.h"
+#include "mulle_callback_type.h"
 
 #include <stdlib.h>
 
@@ -40,10 +40,11 @@
 #pragma mark -
 #pragma mark _mulle_allocator
 
-struct _mulle_allocator   mulle_malloc_allocator =
+struct _mulle_allocator   mulle_stdlib_allocator =
 {
    calloc, free
 };
+
 
 #pragma mark -
 #pragma mark _mulle_comparator
@@ -77,9 +78,9 @@ struct _mulle_comparator   mulle_default_comparator =
 
 
 #pragma mark -
-#pragma mark _mulle_callbacks
+#pragma mark _mulle_callback
 
-struct _mulle_callbacks   mulle_default_callbacks =
+struct _mulle_callback   mulle_default_callback =
 {
    {
       calloc, free
