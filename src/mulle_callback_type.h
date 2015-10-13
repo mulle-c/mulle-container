@@ -50,6 +50,7 @@
 struct _mulle_allocator
 {
    void   *(*calloc)( size_t, size_t);
+   void   *(*realloc)( void *, size_t);
    void   (*free)( void *);
 };
 
@@ -57,12 +58,19 @@ extern struct _mulle_allocator   mulle_stdlib_allocator;
 
 
 typedef void   *mulle_lockfree_calloc_t( size_t n, size_t size);
+typedef void   *mulle_lockfree_realloc_t( void *, size_t);
 typedef void   mulle_lockfree_free_t( void *);
 
 
 static inline mulle_lockfree_calloc_t  *_mulle_allocator_get_calloc( struct _mulle_allocator *p)
 {
    return( p ? p->calloc : mulle_stdlib_allocator.calloc);
+}
+
+
+static inline mulle_lockfree_realloc_t  *_mulle_allocator_get_realloc( struct _mulle_allocator *p)
+{
+   return( p ? p->realloc : mulle_stdlib_allocator.realloc);
 }
 
 
@@ -75,6 +83,12 @@ static inline mulle_lockfree_free_t  *_mulle_allocator_get_free( struct _mulle_a
 static inline void  *__mulle_allocator_calloc( struct _mulle_allocator *p, size_t n, size_t size)
 {
    return( (*_mulle_allocator_get_calloc( p))( n, size));
+}
+
+
+static inline void  *__mulle_allocator_realloc( struct _mulle_allocator *p, size_t size)
+{
+   return( (*_mulle_allocator_get_realloc( p))( p, size));
 }
 
 
