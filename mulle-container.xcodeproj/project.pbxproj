@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		4105ABF11BCB089600D45AA8 /* mulle_callback_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		412E47391BCD100200597B41 /* mulle_container.h in Headers */ = {isa = PBXBuildFile; fileRef = 412E47381BCD0FDF00597B41 /* mulle_container.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41F14FEB1B68F0AE002189F1 /* mulle_callback_type.c in Sources */ = {isa = PBXBuildFile; fileRef = 414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		412E47381BCD0FDF00597B41 /* mulle_container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container.h; sourceTree = "<group>"; };
 		414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_callback_type.h; sourceTree = "<group>"; };
 		414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_callback_type.c; sourceTree = "<group>"; };
 		41F14FE61B68F098002189F1 /* libmulle_container.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmulle_container.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +49,7 @@
 		4147852E1ABAF290002DBAE4 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				412E47381BCD0FDF00597B41 /* mulle_container.h */,
 				414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */,
 				414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */,
 			);
@@ -60,6 +63,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				412E47391BCD100200597B41 /* mulle_container.h in Headers */,
 				4105ABF11BCB089600D45AA8 /* mulle_callback_type.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
