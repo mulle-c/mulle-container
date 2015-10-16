@@ -13,6 +13,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		411A28C11BCD446E00D39FF7 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		412E47381BCD0FDF00597B41 /* mulle_container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container.h; sourceTree = "<group>"; };
 		414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_callback_type.h; sourceTree = "<group>"; };
 		414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_callback_type.c; sourceTree = "<group>"; };
@@ -33,6 +34,7 @@
 		414785231ABAF290002DBAE4 = {
 			isa = PBXGroup;
 			children = (
+				411A28C11BCD446E00D39FF7 /* CMakeLists.txt */,
 				4147852E1ABAF290002DBAE4 /* src */,
 				4147852D1ABAF290002DBAE4 /* Products */,
 			);
@@ -135,9 +137,10 @@
 		414785311ABAF290002DBAE4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
@@ -147,9 +150,10 @@
 		414785321ABAF290002DBAE4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 			};
 			name = Release;
