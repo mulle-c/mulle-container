@@ -42,7 +42,7 @@
 
 struct _mulle_allocator   mulle_stdlib_allocator =
 {
-   calloc, free
+   calloc, realloc, free
 };
 
 
@@ -83,7 +83,7 @@ struct _mulle_comparator   mulle_default_comparator =
 struct _mulle_callback   mulle_default_callback =
 {
    {
-      calloc, free
+      calloc, realloc, free
    },
    {
       pointer_hash, pointer_compare

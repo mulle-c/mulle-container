@@ -17,6 +17,15 @@
 		412E47381BCD0FDF00597B41 /* mulle_container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container.h; sourceTree = "<group>"; };
 		414AC1AA1AC2C45800DCA3CC /* mulle_callback_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_callback_type.h; sourceTree = "<group>"; };
 		414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_callback_type.c; sourceTree = "<group>"; };
+		417C02641BD8404E005A3751 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		417C02651BD8404E005A3751 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		417C02661BD8404E005A3751 /* IOS.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = IOS.xcconfig; sourceTree = "<group>"; };
+		417C02671BD8404E005A3751 /* OSX.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = OSX.xcconfig; sourceTree = "<group>"; };
+		417C02681BD8404E005A3751 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		417C02691BD8404E005A3751 /* StaticLibrary.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = StaticLibrary.xcconfig; sourceTree = "<group>"; };
+		417C026A1BD8404E005A3751 /* StaticLibraryIOS.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = StaticLibraryIOS.xcconfig; sourceTree = "<group>"; };
+		417C026B1BD8404E005A3751 /* StaticLibraryOSX.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = StaticLibraryOSX.xcconfig; sourceTree = "<group>"; };
+		417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ToolOSX.xcconfig; sourceTree = "<group>"; };
 		41F14FE61B68F098002189F1 /* libmulle_container.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmulle_container.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -34,6 +43,7 @@
 		414785231ABAF290002DBAE4 = {
 			isa = PBXGroup;
 			children = (
+				417C02631BD8404E005A3751 /* mulle-configuration */,
 				411A28C11BCD446E00D39FF7 /* CMakeLists.txt */,
 				4147852E1ABAF290002DBAE4 /* src */,
 				4147852D1ABAF290002DBAE4 /* Products */,
@@ -56,6 +66,22 @@
 				414AC1AB1AC2C45800DCA3CC /* mulle_callback_type.c */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		417C02631BD8404E005A3751 /* mulle-configuration */ = {
+			isa = PBXGroup;
+			children = (
+				417C02641BD8404E005A3751 /* Common.xcconfig */,
+				417C02651BD8404E005A3751 /* Debug.xcconfig */,
+				417C02661BD8404E005A3751 /* IOS.xcconfig */,
+				417C02671BD8404E005A3751 /* OSX.xcconfig */,
+				417C02681BD8404E005A3751 /* Release.xcconfig */,
+				417C02691BD8404E005A3751 /* StaticLibrary.xcconfig */,
+				417C026A1BD8404E005A3751 /* StaticLibraryIOS.xcconfig */,
+				417C026B1BD8404E005A3751 /* StaticLibraryOSX.xcconfig */,
+				417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */,
+			);
+			path = "mulle-configuration";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,45 +162,29 @@
 /* Begin XCBuildConfiguration section */
 		414785311ABAF290002DBAE4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 417C02651BD8404E005A3751 /* Debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
 		414785321ABAF290002DBAE4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 417C02681BD8404E005A3751 /* Release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 			};
 			name = Release;
 		};
 		41F14FE81B68F098002189F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 417C02691BD8404E005A3751 /* StaticLibrary.xcconfig */;
 			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/${PRODUCT_NAME}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "/usr/local/include/${PRODUCT_NAME}";
 			};
 			name = Debug;
 		};
 		41F14FE91B68F098002189F1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 417C02691BD8404E005A3751 /* StaticLibrary.xcconfig */;
 			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/${PRODUCT_NAME}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "/usr/local/include/${PRODUCT_NAME}";
 			};
 			name = Release;
 		};
