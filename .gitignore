@@ -10,3 +10,4 @@ mulle-configuration/
 .bootstrap.auto/
 .bootstrap.local/
 dependencies/
+cityhash/
