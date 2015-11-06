@@ -1,9 +1,7 @@
+//  mulle-container
 //
-//  mulle_callback_type.c
-//  mulle-types
-//
-//  Created by Nat! on 24.03.15.
-//  Copyright (c) 2015 Mulle kybernetiK. All rights reserved.
+//  Created by Nat! on 02/11/15.
+//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -32,7 +30,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "mulle_callback_type.h"
+#include "mulle_allocator.h"
 
 #include <stdlib.h>
 
@@ -40,52 +38,15 @@
 #pragma mark -
 #pragma mark _mulle_allocator
 
-struct _mulle_allocator   mulle_stdlib_allocator =
+struct mulle_allocator   mulle_stdlib_allocator =
 {
    calloc, realloc, free
 };
 
 
-#pragma mark -
-#pragma mark _mulle_comparator
+// this will be patched by the foundation
 
-static unsigned int   pointer_hash( intptr_t value)
+struct mulle_allocator   mulle_default_allocator =
 {
-   int    bits;
-   int    shift;
-   
-   bits  = sizeof( intptr_t) * 8;
-   shift = sizeof( intptr_t) * 2;
-   
-   return( (unsigned int) (((uintptr_t) value >> shift) | ((uintptr_t) value << (bits - shift))));
-}
-
-
-static int   pointer_compare( void *a, void *b)
-{
-   intptr_t  diff;
-   
-   diff = (intptr_t) a - (intptr_t) b;
-   // signed representation should keep sign, even if smaller 
-   return( (int) diff);
-}
-
-
-struct _mulle_comparator   mulle_default_comparator =
-{
-   pointer_hash, pointer_compare
-};
-
-
-#pragma mark -
-#pragma mark _mulle_callback
-
-struct _mulle_callback   mulle_default_callback =
-{
-   {
-      calloc, realloc, free
-   },
-   {
-      pointer_hash, pointer_compare
-   }
+   calloc, realloc, free
 };

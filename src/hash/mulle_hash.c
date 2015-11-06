@@ -1,9 +1,5 @@
 //
-//  mulle_container.h
-//  mulle-container
-//
-//  Created by Nat! on 02/11/15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (C) 2011 Nat!, Mulle kybernetiK.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -31,32 +27,21 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
-
-#include "mulle_allocator.h"
-#include "mulle_container_operation.h"
-#include "mulle_container_callback.h"
-
-#include "mulle_prime.h"
 #include "mulle_hash.h"
 
-#include "_mulle_buffer.h"
-#include "mulle_buffer.h"
+#include "city.h"
 
-#include "_mulle_array.h"
-#include "mulle_array.h"
+// lots of other code snipped
 
-#include "_mulle_indexedbucket.h"
-#include "_mulle_set.h"
-#include "mulle_set.h"
-
-#include "_mulle_indexedkeyvaluebucket.h"
-#include "_mulle_map.h"
-#include "mulle_map.h"
-
-#include "mulle_container_callback.h"
-#include "mulle_container_operation.h"
+uintptr_t   mulle_hash( void *buf, size_t len)
+{
+   if( sizeof( uintptr_t) == sizeof( uint32_t))
+      return( (uintptr_t) CityHash32( buf, len));
+   return( (uintptr_t) CityHash64( buf, len));
+}
 
 
-#endif /* mulle_container_h */
+uintptr_t   mulle_chained_hash( void *buf, size_t len, uintptr_t hash)
+{
+   return( (uintptr_t) CityHash64WithSeed( buf, len, hash));
+}

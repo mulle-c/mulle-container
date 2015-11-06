@@ -1,5 +1,3 @@
-//
-//  mulle_container.h
 //  mulle-container
 //
 //  Created by Nat! on 02/11/15.
@@ -31,32 +29,55 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
+#ifndef mulle_allocator_h
+#define mulle_allocator_h
 
-#include "mulle_allocator.h"
-#include "mulle_container_operation.h"
-#include "mulle_container_callback.h"
-
-#include "mulle_prime.h"
-#include "mulle_hash.h"
-
-#include "_mulle_buffer.h"
-#include "mulle_buffer.h"
-
-#include "_mulle_array.h"
-#include "mulle_array.h"
-
-#include "_mulle_indexedbucket.h"
-#include "_mulle_set.h"
-#include "mulle_set.h"
-
-#include "_mulle_indexedkeyvaluebucket.h"
-#include "_mulle_map.h"
-#include "mulle_map.h"
-
-#include "mulle_container_callback.h"
-#include "mulle_container_operation.h"
+#include <stdint.h>
+#include <stddef.h>
 
 
-#endif /* mulle_container_h */
+//
+// _mulle_allocator just a way to pass around the memory scheme du jour
+// to containers. Eventually this header will wind up in a separate
+// mulle_c_containers project,
+//
+struct mulle_allocator
+{
+   void   *(*calloc)( size_t, size_t);
+   void   *(*realloc)( void *, size_t);
+   void   (*free)( void *);
+};
+
+extern struct mulle_allocator   mulle_default_allocator;
+extern struct mulle_allocator   mulle_stdlib_allocator;
+
+typedef void  *(*mulle_allocator_calloc_t)( size_t, size_t);
+typedef void  *(*mulle_allocator_realloc_t)( void *, size_t);
+typedef void   (*mulle_allocator_free_t)( void *);
+
+
+static inline void  *mulle_allocator_malloc( struct mulle_allocator *p, size_t size)
+{
+   return( (*p->realloc)( NULL, size));
+}
+
+
+static inline void  *mulle_allocator_calloc( struct mulle_allocator *p, size_t n, size_t size)
+{
+   return( (*p->calloc)( n, size));
+}
+
+
+static inline void  *mulle_allocator_realloc( struct mulle_allocator *p, void *block, size_t size)
+{
+   return( (*p->realloc)( block, size));
+}
+
+
+static inline void  mulle_allocator_free( struct mulle_allocator *p, void *block)
+{
+   (*p->free)( block);
+}
+
+
+#endif /* mulle_allocator_h */

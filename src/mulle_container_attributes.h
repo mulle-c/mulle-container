@@ -1,8 +1,8 @@
 //
-//  mulle_container.h
+//  mulle_container_attributes.h
 //  mulle-container
 //
-//  Created by Nat! on 02/11/15.
+//  Created by Nat! on 05.11.15.
 //  Copyright © 2015 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -31,32 +31,24 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
 
-#include "mulle_allocator.h"
-#include "mulle_container_operation.h"
-#include "mulle_container_callback.h"
+#ifndef mulle_container_attributes__h__
+#define mulle_container_attributes__h__
 
-#include "mulle_prime.h"
-#include "mulle_hash.h"
+#ifndef mulle_nonnull_first
+# define mulle_nonnull_first                __attribute__((nonnull(1)))
+# define mulle_nonnull_first_second         __attribute__((nonnull(1,2)))
+# define mulle_nonnull_first_second_third   __attribute__((nonnull(1,2,3)))
+# define mulle_nonnull_first_second_fourth  __attribute__((nonnull(1,2,4)))
+# define mulle_nonnull_first_second_fifth   __attribute__((nonnull(1,2,5)))
+# define mulle_nonnull_first_third          __attribute__((nonnull(1,3)))
+# define mulle_nonnull_first_third_fourth   __attribute__((nonnull(3,4)))
+# define mulle_nonnull_first_fourth         __attribute__((nonnull(1,4)))
+# define mulle_nonnull_first_fifth          __attribute__((nonnull(1,5)))
+# define mulle_nonnull_second               __attribute__((nonnull(2)))
+# define mulle_nonnull_second_third         __attribute__((nonnull(2,3)))
+# define mulle_nonnull_third_fourth         __attribute__((nonnull(3,4)))
 
-#include "_mulle_buffer.h"
-#include "mulle_buffer.h"
+#endif
 
-#include "_mulle_array.h"
-#include "mulle_array.h"
-
-#include "_mulle_indexedbucket.h"
-#include "_mulle_set.h"
-#include "mulle_set.h"
-
-#include "_mulle_indexedkeyvaluebucket.h"
-#include "_mulle_map.h"
-#include "mulle_map.h"
-
-#include "mulle_container_callback.h"
-#include "mulle_container_operation.h"
-
-
-#endif /* mulle_container_h */
+#endif /* mulle_container_attributes_h */

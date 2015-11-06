@@ -1,8 +1,8 @@
 //
-//  mulle_container.h
+//  mulle_test_allocator.h
 //  mulle-container
 //
-//  Created by Nat! on 02/11/15.
+//  Created by Nat! on 04.11.15.
 //  Copyright © 2015 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -31,32 +31,16 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
 
-#include "mulle_allocator.h"
-#include "mulle_container_operation.h"
-#include "mulle_container_callback.h"
+#ifndef mulle_test_allocator_h
+#define mulle_test_allocator_h
 
-#include "mulle_prime.h"
-#include "mulle_hash.h"
+#include <mulle_container/mulle_container.h>
 
-#include "_mulle_buffer.h"
-#include "mulle_buffer.h"
+void   mulle_test_allocator_reset_memory( void);
 
-#include "_mulle_array.h"
-#include "mulle_array.h"
+// will be reset by mulle_test_allocator_reset_memory
+extern int       mulle_test_allocator_out_of_memory;
+extern size_t    mulle_test_allocator_max_size;
 
-#include "_mulle_indexedbucket.h"
-#include "_mulle_set.h"
-#include "mulle_set.h"
-
-#include "_mulle_indexedkeyvaluebucket.h"
-#include "_mulle_map.h"
-#include "mulle_map.h"
-
-#include "mulle_container_callback.h"
-#include "mulle_container_operation.h"
-
-
-#endif /* mulle_container_h */
+#endif /* mulle_test_allocator_h */

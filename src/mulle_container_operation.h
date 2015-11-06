@@ -1,8 +1,6 @@
-//
-//  mulle_container.h
 //  mulle-container
 //
-//  Created by Nat! on 02/11/15.
+//  Created by Nat! on 03/11/15.
 //  Copyright © 2015 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -31,32 +29,22 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
 
-#include "mulle_allocator.h"
-#include "mulle_container_operation.h"
-#include "mulle_container_callback.h"
+#ifndef mulle_container_operation__h__
+#define mulle_container_operation__h__
 
-#include "mulle_prime.h"
-#include "mulle_hash.h"
-
-#include "_mulle_buffer.h"
-#include "mulle_buffer.h"
-
-#include "_mulle_array.h"
-#include "mulle_array.h"
-
-#include "_mulle_indexedbucket.h"
-#include "_mulle_set.h"
-#include "mulle_set.h"
-
-#include "_mulle_indexedkeyvaluebucket.h"
-#include "_mulle_map.h"
-#include "mulle_map.h"
-
-#include "mulle_container_callback.h"
-#include "mulle_container_operation.h"
+#include <limits.h>
 
 
-#endif /* mulle_container_h */
+enum mulle_container_set_mode
+{
+   mulle_container_insert_e,
+   mulle_container_put_e
+};
+
+enum mulle_container_find_status
+{
+   mulle_not_found_e = LONG_MAX
+};
+
+#endif /* mulle_container_operation_h */

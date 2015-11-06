@@ -1,9 +1,10 @@
 //
-//  mulle_container.h
+//  mulle_buffer.c
 //  mulle-container
 //
-//  Created by Nat! on 02/11/15.
+//  Created by Nat! on 04/11/15.
 //  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -31,32 +32,15 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
-
-#include "mulle_allocator.h"
-#include "mulle_container_operation.h"
-#include "mulle_container_callback.h"
-
-#include "mulle_prime.h"
-#include "mulle_hash.h"
-
-#include "_mulle_buffer.h"
 #include "mulle_buffer.h"
 
-#include "_mulle_array.h"
-#include "mulle_array.h"
 
-#include "_mulle_indexedbucket.h"
-#include "_mulle_set.h"
-#include "mulle_set.h"
-
-#include "_mulle_indexedkeyvaluebucket.h"
-#include "_mulle_map.h"
-#include "mulle_map.h"
-
-#include "mulle_container_callback.h"
-#include "mulle_container_operation.h"
-
-
-#endif /* mulle_container_h */
+struct mulle_buffer   *mulle_buffer_create( struct mulle_allocator *allocator)
+{
+   struct mulle_buffer  *buffer;
+   
+   buffer = mulle_allocator_malloc( allocator, sizeof( struct mulle_buffer));
+   if( buffer)
+      mulle_buffer_init( buffer, allocator);
+   return( buffer);
+}

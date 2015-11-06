@@ -1,9 +1,5 @@
 //
-//  mulle_container.h
-//  mulle-container
-//
-//  Created by Nat! on 02/11/15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (C) 2011 Nat!, Mulle kybernetiK.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -31,32 +27,29 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
-
-#include "mulle_allocator.h"
-#include "mulle_container_operation.h"
-#include "mulle_container_callback.h"
-
-#include "mulle_prime.h"
-#include "mulle_hash.h"
-
-#include "_mulle_buffer.h"
-#include "mulle_buffer.h"
-
-#include "_mulle_array.h"
-#include "mulle_array.h"
-
-#include "_mulle_indexedbucket.h"
-#include "_mulle_set.h"
 #include "mulle_set.h"
-
-#include "_mulle_indexedkeyvaluebucket.h"
-#include "_mulle_map.h"
-#include "mulle_map.h"
-
 #include "mulle_container_callback.h"
-#include "mulle_container_operation.h"
 
 
-#endif /* mulle_container_h */
+void   mulle_set_init( struct mulle_set *set,
+                       size_t capacity,
+                       struct mulle_container_keycallback *callback)
+{
+   _mulle_set_init( (struct _mulle_set *) set, capacity, callback);
+
+   set->_callback = *callback;
+   mulle_container_keycallback_set_default_values( &set->_callback);
+}
+
+
+struct mulle_set   *mulle_set_create( size_t capacity,
+                                      struct mulle_container_keycallback *callback)
+{
+   struct mulle_set *set;
+   
+   set = mulle_allocator_malloc( callback->allocator, sizeof( struct mulle_set));
+   if( set)
+      mulle_set_init( set, capacity, callback);
+   return( set);
+}
+
