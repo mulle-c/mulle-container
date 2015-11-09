@@ -35,7 +35,7 @@
 #include "mulle_prime.h"
 
 #include "_mulle_indexedkeyvaluebucket.h"
-#include "mulle_container_attributes.h"
+#include "mulle_container_compiler_attributes.h"
 #include <assert.h>
 #include <string.h>
 

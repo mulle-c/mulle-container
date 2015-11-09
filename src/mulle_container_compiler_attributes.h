@@ -1,5 +1,5 @@
 //
-//  mulle_container_attributes.h
+//  mulle_container_compiler_attributes.h
 //  mulle-container
 //
 //  Created by Nat! on 05.11.15.
