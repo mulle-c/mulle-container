@@ -35,7 +35,7 @@
 #define _mulle_keyvaluepair_h
 
 #include "mulle_container_callback.h"
-#include "mulle_container_attributes.h"
+#include "mulle_container_compiler_attributes.h"
 
 
 struct _mulle_keyvaluepair

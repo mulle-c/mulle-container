@@ -33,7 +33,7 @@
 #ifndef _mulle_array__h__
 #define _mulle_array__h__
 
-#include "mulle_container_attributes.h"
+#include "mulle_container_compiler_attributes.h"
 #include "mulle_container_callback.h"
 
 #include <stddef.h>

@@ -50,6 +50,7 @@
 		416C57F51BEA5D4A007F4691 /* _mulle_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 416C57F31BEA5D4A007F4691 /* _mulle_buffer.c */; };
 		416C57F81BEA6B3C007F4691 /* mulle_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 416C57F61BEA6B3C007F4691 /* mulle_buffer.c */; };
 		416C57F91BEA6B3C007F4691 /* mulle_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 416C57F71BEA6B3C007F4691 /* mulle_buffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4170B27E1BF0C01B002F7143 /* mulle_container_compiler_attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		417582A51BE8BE2B005F0CE4 /* mulle_prime.h in Headers */ = {isa = PBXBuildFile; fileRef = 417582A31BE8BE2B005F0CE4 /* mulle_prime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		417582A61BE8BE2B005F0CE4 /* mulle_prime.c in Sources */ = {isa = PBXBuildFile; fileRef = 417582A41BE8BE2B005F0CE4 /* mulle_prime.c */; };
 		4198C8901BE7AD9500EE1FF5 /* mulle_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8891BE7AD9500EE1FF5 /* mulle_set.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -201,7 +202,7 @@
 		41BCA5051BE8E58300504AAD /* _mulle_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_map.h; sourceTree = "<group>"; };
 		41BCA5061BE8E58300504AAD /* _mulle_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_map.c; sourceTree = "<group>"; };
 		41F14FE61B68F098002189F1 /* libmulle_container.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmulle_container.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		41F5680F1BEB81C200177E65 /* mulle_container_attributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container_attributes.h; sourceTree = "<group>"; };
+		41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container_compiler_attributes.h; sourceTree = "<group>"; };
 		41F568141BEBAB5500177E65 /* test-map */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-map"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41F568161BEBAB5500177E65 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -271,7 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				4198C8A81BE7DB6C00EE1FF5 /* mulle_container.h */,
-				41F5680F1BEB81C200177E65 /* mulle_container_attributes.h */,
+				41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */,
 				41BCA4FE1BE8DBF900504AAD /* array */,
 				416C57F11BEA5D28007F4691 /* buffer */,
 				4198C8971BE7CEAC00EE1FF5 /* hash */,
@@ -401,6 +402,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4170B27E1BF0C01B002F7143 /* mulle_container_compiler_attributes.h in Headers */,
 				414945741BEA930000C92587 /* mulle_container.h in Headers */,
 				416C57F91BEA6B3C007F4691 /* mulle_buffer.h in Headers */,
 				416C57F41BEA5D4A007F4691 /* _mulle_buffer.h in Headers */,

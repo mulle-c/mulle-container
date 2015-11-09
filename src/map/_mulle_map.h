@@ -34,7 +34,7 @@
 #define _mulle_map__h__
  
 #include "_mulle_indexedkeyvaluebucket.h"
-#include "mulle_container_attributes.h"
+#include "mulle_container_compiler_attributes.h"
 #include "mulle_container_operation.h"
 #include <stdarg.h>
 
