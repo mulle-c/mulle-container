@@ -18,21 +18,21 @@ set(HEADERS
 src/mulle_allocator.h
 src/mulle_container.h
 src/mulle_container_callback.h
-src/mulle_container_compiler_attributes.h
 src/mulle_container_operation.h
+src/mulle_container_compiler_attributes.h
 src/array/mulle_array.h
 src/array/_mulle_array.h
 src/buffer/mulle_buffer.h
 src/buffer/_mulle_buffer.h
 src/hash/mulle_hash.h
 src/hash/mulle_prime.h
-src/set/_mulle_set.h
 src/set/mulle_set.h
-src/set/mulle_indexedbucket.h
-src/map/_mulle_map.h
+src/set/_mulle_set.h
+src/set/_mulle_indexedbucket.h
 src/map/mulle_map.h
-src/map/_mulle_keyvaluepair.h
+src/map/_mulle_map.h
 src/map/_mulle_indexedkeyvaluebucket.h
+src/map/_mulle_keyvaluepair.h
 )
 
 add_library(mulle_container
