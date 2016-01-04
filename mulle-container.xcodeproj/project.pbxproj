@@ -402,12 +402,15 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4170B27E1BF0C01B002F7143 /* mulle_container_compiler_attributes.h in Headers */,
+				4198C8A71BE7D89F00EE1FF5 /* mulle_allocator.h in Headers */,
 				414945741BEA930000C92587 /* mulle_container.h in Headers */,
-				416C57F91BEA6B3C007F4691 /* mulle_buffer.h in Headers */,
-				416C57F41BEA5D4A007F4691 /* _mulle_buffer.h in Headers */,
+				4105ABF11BCB089600D45AA8 /* mulle_container_callback.h in Headers */,
+				414945751BEA932100C92587 /* mulle_container_operation.h in Headers */,
+				4170B27E1BF0C01B002F7143 /* mulle_container_compiler_attributes.h in Headers */,
 				419E7F551BEA1B660000D1A7 /* mulle_array.h in Headers */,
 				41014CC11BE9521400BE18B5 /* _mulle_array.h in Headers */,
+				416C57F91BEA6B3C007F4691 /* mulle_buffer.h in Headers */,
+				416C57F41BEA5D4A007F4691 /* _mulle_buffer.h in Headers */,
 				4198C89A1BE7CED300EE1FF5 /* mulle_hash.h in Headers */,
 				417582A51BE8BE2B005F0CE4 /* mulle_prime.h in Headers */,
 				4198C8901BE7AD9500EE1FF5 /* mulle_set.h in Headers */,
@@ -417,9 +420,6 @@
 				41BCA50D1BE8E58300504AAD /* _mulle_map.h in Headers */,
 				41BCA50A1BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.h in Headers */,
 				414945761BEA935700C92587 /* _mulle_keyvaluepair.h in Headers */,
-				4198C8A71BE7D89F00EE1FF5 /* mulle_allocator.h in Headers */,
-				414945751BEA932100C92587 /* mulle_container_operation.h in Headers */,
-				4105ABF11BCB089600D45AA8 /* mulle_container_callback.h in Headers */,
 				4198C8A01BE7CEFF00EE1FF5 /* city.h in Headers */,
 				4198C8A11BE7CEFF00EE1FF5 /* citycrc.h in Headers */,
 				4198C8A31BE7D27400EE1FF5 /* config.h in Headers */,
@@ -582,21 +582,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4198C89F1BE7CEFF00EE1FF5 /* city.c in Sources */,
+				4198C8A61BE7D89F00EE1FF5 /* mulle_allocator.c in Sources */,
+				41F14FEB1B68F0AE002189F1 /* mulle_container_callback.c in Sources */,
 				4198C89B1BE7CED300EE1FF5 /* mulle_hash.c in Sources */,
-				41014CC21BE9521400BE18B5 /* _mulle_array.c in Sources */,
 				417582A61BE8BE2B005F0CE4 /* mulle_prime.c in Sources */,
+				4198C89F1BE7CEFF00EE1FF5 /* city.c in Sources */,
+				41014CC21BE9521400BE18B5 /* _mulle_array.c in Sources */,
+				419E7F541BEA1B660000D1A7 /* mulle_array.c in Sources */,
 				416C57F51BEA5D4A007F4691 /* _mulle_buffer.c in Sources */,
+				416C57F81BEA6B3C007F4691 /* mulle_buffer.c in Sources */,
 				4198C8911BE7AD9500EE1FF5 /* mulle_set.c in Sources */,
 				4198C8961BE7AD9500EE1FF5 /* _mulle_indexedbucket.c in Sources */,
 				4198C8941BE7AD9500EE1FF5 /* _mulle_set.c in Sources */,
 				41BCA5091BE8E58300504AAD /* mulle_map.c in Sources */,
 				41BCA50B1BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.c in Sources */,
 				41BCA50E1BE8E58300504AAD /* _mulle_map.c in Sources */,
-				419E7F541BEA1B660000D1A7 /* mulle_array.c in Sources */,
-				4198C8A61BE7D89F00EE1FF5 /* mulle_allocator.c in Sources */,
-				41F14FEB1B68F0AE002189F1 /* mulle_container_callback.c in Sources */,
-				416C57F81BEA6B3C007F4691 /* mulle_buffer.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
