@@ -29,7 +29,7 @@
 //
 #include "mulle_hash.h"
 
-#include "city.h"
+#include <city.h>
 
 // lots of other code snipped
 
