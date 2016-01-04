@@ -2,10 +2,14 @@ cmake_minimum_required (VERSION 3.0)
 
 project (mulle-container)
 
-#
-# dont forget to wipe all cmake produced files before
-# changing this
-#
+
+# using include_directories is a little bit shitty
+include_directories( "src"
+"src/hash")
+
+include_directories( SYSTEM
+"cityhash"
+"cityhash/src")
 
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG -DMULLE_ABA_TRACE_LIST -DMULLE_ABA_TRACE_SWAP")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -g -DNDEBUG")
@@ -21,7 +25,7 @@ src/array/_mulle_array.h
 src/buffer/mulle_buffer.h
 src/buffer/_mulle_buffer.h
 src/hash/mulle_hash.h
-src/hash/_mulle_prime.h
+src/hash/mulle_prime.h
 src/set/_mulle_set.h
 src/set/mulle_set.h
 src/set/mulle_indexedbucket.h
@@ -50,4 +54,5 @@ src/map/_mulle_indexedkeyvaluebucket.c
 
 INSTALL(TARGETS mulle_container DESTINATION "lib")
 INSTALL(FILES ${HEADERS} DESTINATION "include/mulle_container")
+
 
