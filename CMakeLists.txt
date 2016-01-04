@@ -19,6 +19,6 @@ add_library(mulle_container
 src/mulle_callback_type.c
 )
 
-ImulleTALL(TARGETS mulle_container DESTINATION "lib")
-ImulleTALL(FILES ${HEADERS} DESTINATION "include/mulle_container")
+INSTALL(TARGETS mulle_container DESTINATION "lib")
+INSTALL(FILES ${HEADERS} DESTINATION "include/mulle_container")
 
