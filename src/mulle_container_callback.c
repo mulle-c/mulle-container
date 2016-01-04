@@ -32,7 +32,7 @@
 
 
 #include "mulle_container_callback.h"
-#include "mulle_hash.h"
+#include "hash/mulle_hash.h"
 
 #include <stdlib.h>
 #include <string.h>
