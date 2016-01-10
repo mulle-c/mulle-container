@@ -354,7 +354,7 @@ static inline void   _mulle_buffer_add_string( struct _mulle_buffer *buffer,
 {
    char   c;
    
-   while( c = *bytes++)
+   while( (c = *bytes++))
       _mulle_buffer_add_byte( buffer, c, allocator);
 }
 
