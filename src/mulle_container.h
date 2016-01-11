@@ -34,7 +34,8 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#include "mulle_allocator.h"
+#include <mulle_allocator/mulle_allocator.h>
+
 #include "mulle_container_operation.h"
 #include "mulle_container_callback.h"
 
