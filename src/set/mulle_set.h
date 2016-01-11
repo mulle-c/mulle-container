@@ -31,8 +31,8 @@
 #define mulle_set__h__
 
 #include "_mulle_set.h"
-#include "mulle_allocator.h"
 #include "mulle_container_callback.h"
+#include <mulle_allocator/mulle_allocator.h>
 
 
 //
