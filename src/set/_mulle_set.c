@@ -43,9 +43,9 @@ int    __mulle_set_copy( struct _mulle_set *dst,
                          struct mulle_container_keycallback *callback);
 
 void   *__mulle_set_put( struct _mulle_set *set,
-                            void *p,
-                            enum mulle_container_set_mode mode,
-                            struct mulle_container_keycallback *callback);
+                         void *p,
+                         enum mulle_container_set_mode mode,
+                         struct mulle_container_keycallback *callback);
 
 
 #define _MULLE_SET_MAX_DEPTH              30
@@ -53,7 +53,7 @@ void   *__mulle_set_put( struct _mulle_set *set,
 #define _MULLE_SET_MIN_INITIAL_DEPTH      0  
 #define _MULLE_SET_INITIAL_DEPTH          3
 #define _MULLE_SET_MAX_INITIAL_DEPTH      16  
-#define _MULLE_HASH_STOP_SINGLE_DIMEmulleION_GROWTH 5
+#define _MULLE_HASH_STOP_SINGLE_DIMENSION_GROWTH 5
 
 static short   good_depth_for_depth( short depth)
 {
@@ -317,7 +317,7 @@ short_circuit:
       //
       // a) grow vertically or start a struct _mulle_indexedbucket chain
       //
-      if( set->_depth < _MULLE_HASH_STOP_SINGLE_DIMEmulleION_GROWTH)
+      if( set->_depth < _MULLE_HASH_STOP_SINGLE_DIMENSION_GROWTH)
          if( grow_vertically( set, callback))
             goto retry;
       
