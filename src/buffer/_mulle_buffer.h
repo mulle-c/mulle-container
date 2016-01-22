@@ -66,9 +66,9 @@ typedef size_t   _mulle_flushablebuffer_flusher( void *, size_t len, size_t, voi
 
 
 #define _MULLE_FLUSHABLEBUFFER_BASE             \
-_MULLE_BUFFER_BASE;                          \
-_mulle_flushablebuffer_flusher   *_flusher;  \
-void                            *_userinfo
+   _MULLE_BUFFER_BASE;                          \
+   _mulle_flushablebuffer_flusher   *_flusher;  \
+   void                             *_userinfo
 
 
 struct _mulle_flushablebuffer
@@ -82,7 +82,7 @@ struct _mulle_flushablebuffer
 
 struct _mulle_buffer     *_mulle_buffer_create( struct mulle_allocator *allocator);
 void                     _mulle_buffer_free( struct _mulle_buffer *buffer,
-                                            struct mulle_allocator *allocator);
+                                             struct mulle_allocator *allocator);
 
 #pragma mark -
 #pragma mark initialization
@@ -98,7 +98,7 @@ static inline void    _mulle_flushablebuffer_init( struct _mulle_flushablebuffer
    buffer->_initial_storage =
    buffer->_curr            =
    buffer->_storage         = storage;
-   buffer->_sentinel        = &storage[ length];
+   buffer->_sentinel        = &buffer->_storage[ length];
    buffer->_size            = (size_t) -2;
    
    buffer->_flusher         = flusher;
@@ -115,7 +115,7 @@ static inline void    _mulle_buffer_init_with_static_bytes( struct _mulle_buffer
    buffer->_initial_storage =
    buffer->_curr            =
    buffer->_storage         = storage;
-   buffer->_sentinel        = &((unsigned char *) storage)[ length];
+   buffer->_sentinel        = &buffer->_storage[ length];
    buffer->_size            = length;
 }
 
@@ -136,7 +136,7 @@ static inline void    _mulle_buffer_set_initial_capacity( struct _mulle_buffer *
 
 
 static inline void    _mulle_buffer_init_with_capacity( struct _mulle_buffer *buffer,
-                                                       size_t capacity)
+                                                        size_t capacity)
 {
    buffer->_initial_storage  =
    buffer->_curr             =
@@ -155,7 +155,7 @@ static inline void    _mulle_buffer_init_inflexable_with_static_bytes( struct _m
    buffer->_initial_storage  =
    buffer->_curr             =
    buffer->_storage          = storage;
-   buffer->_sentinel         = &((unsigned char *) storage)[ length];
+   buffer->_sentinel         = &buffer->_storage[ length];
    buffer->_size             = (size_t) -1;
 }
 
