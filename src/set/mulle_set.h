@@ -89,13 +89,13 @@ static inline void   mulle_set_reset( struct mulle_set *set)
 
 static inline void   *mulle_set_get( struct mulle_set *set, void *p)
 {
-   return( _mulle_set_get( (struct _mulle_set *) set, &set->_callback, p));
+   return( _mulle_set_get( (struct _mulle_set *) set, p, &set->_callback));
 }
 
 
 static inline void   mulle_set_remove( struct mulle_set *set, void *p)
 {
-   _mulle_set_remove( (struct _mulle_set *) set, &set->_callback, p);
+   _mulle_set_remove( (struct _mulle_set *) set, p, &set->_callback);
 }
 
 

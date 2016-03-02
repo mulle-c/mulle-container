@@ -140,7 +140,7 @@ void   _mulle_set_reset( struct _mulle_set *set,
 
 
 void   _mulle_set_done( struct _mulle_set *set,
-                          struct mulle_container_keycallback *callback)
+                        struct mulle_container_keycallback *callback)
 {
    void    **p;
    void    **sentinel;
@@ -255,9 +255,9 @@ static int   grow_vertically( struct _mulle_set *set,
 //      vertical space is preallocated
 //      
 void   *__mulle_set_put( struct _mulle_set *set,
-                            void *p,
-                            enum mulle_container_set_mode mode,
-                            struct mulle_container_keycallback *callback)
+                         void *p,
+                         enum mulle_container_set_mode mode,
+                         struct mulle_container_keycallback *callback)
 {
    struct _mulle_indexedbucket  *bucket;
    size_t   hash;
@@ -443,7 +443,7 @@ void   *_mulle_setenumerator_next( struct _mulle_setenumerator *rover)
    --rover->_left;
 retry:   
    q = _mulle_indexedbucketenumerator_next( &rover->_bucket_rover);
-   if( ! q)
+   if( q == rover->_bucket_rover._not_a_key_marker)
    {
       storage = rover->_table->_storage;
       while( ! (q = storage[ rover->_index]))

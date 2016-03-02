@@ -39,6 +39,10 @@
 
 #include <mulle_allocator/mulle_allocator.h>
 
+#if MULLE_ALLOCATOR_VERSION < ((0 << 20) | (1 << 8) | 0)
+# error "mulle_allocator is too old"
+#endif
+
 
 #pragma mark -
 #pragma mark callback schemes for containers
