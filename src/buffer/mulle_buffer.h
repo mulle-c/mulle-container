@@ -163,7 +163,6 @@ static inline void    mulle_buffer_init_with_static_bytes( struct mulle_buffer *
 static inline void    mulle_buffer_init( struct mulle_buffer *buffer, struct mulle_allocator *allocator)
 {
    assert( allocator);
-   assert( allocator->calloc && allocator->realloc && allocator->free);
    
    _mulle_buffer_init( (struct _mulle_buffer *) buffer);
 

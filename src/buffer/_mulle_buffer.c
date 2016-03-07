@@ -48,7 +48,7 @@ void   *_mulle_buffer_extract( struct _mulle_buffer *buffer, struct mulle_alloca
    if( buffer->_storage == buffer->_initial_storage)
    {
       size  = _mulle_buffer_get_length( buffer);
-      block = (*allocator->realloc)( NULL, size);
+      block = _mulle_allocator_malloc( allocator, size);
       memcpy( block, buffer->_storage, size);
    }
    
@@ -73,7 +73,7 @@ void    _mulle_buffer_size_to_fit( struct _mulle_buffer *buffer, struct mulle_al
       
    length  = _mulle_buffer_get_length( buffer);
 
-   buffer->_storage  = (*allocator->realloc)( buffer->_storage, sizeof( unsigned char) * length);
+   buffer->_storage  = _mulle_allocator_realloc( allocator, buffer->_storage, sizeof( unsigned char) * length);
    if( buffer->_storage)
    {
       buffer->_curr     = &buffer->_storage[ length];
@@ -136,7 +136,7 @@ int   _mulle_buffer_grow( struct _mulle_buffer *buffer, size_t min_amount, struc
    assert( new_size >= min_amount);
    
    len               = buffer->_curr - buffer->_storage;
-   buffer->_storage  = (*allocator->realloc)( malloc_block, sizeof( unsigned char) * new_size);
+   buffer->_storage  = _mulle_allocator_realloc( allocator, malloc_block, sizeof( unsigned char) * new_size);
    if( buffer->_storage)
    {
       buffer->_curr     = &buffer->_storage[ len];
@@ -167,7 +167,7 @@ void   _mulle_buffer_make_inflexable( struct _mulle_buffer *buffer,
                                      struct mulle_allocator *allocator)
 {
    if( buffer->_storage != buffer->_initial_storage)
-      (*allocator->free)( buffer->_storage);
+      _mulle_allocator_free( allocator, buffer->_storage);
    
    buffer->_storage         = 
    buffer->_initial_storage = buf;
@@ -182,7 +182,7 @@ void   _mulle_buffer_done( struct _mulle_buffer *buffer,
                           struct mulle_allocator *allocator)
 {
    if( buffer->_storage != buffer->_initial_storage)
-      (*allocator->free)( buffer->_storage);
+      _mulle_allocator_free( allocator, buffer->_storage);
 }
 
 
@@ -190,7 +190,7 @@ struct _mulle_buffer   *_mulle_buffer_create( struct mulle_allocator *allocator)
 {
    struct _mulle_buffer  *buffer;
    
-   buffer = (*allocator->realloc)( NULL, sizeof( struct _mulle_buffer));
+   buffer = _mulle_allocator_malloc( allocator, sizeof( struct _mulle_buffer));
    _mulle_buffer_init( buffer);
    return( buffer);
 }
@@ -199,7 +199,7 @@ struct _mulle_buffer   *_mulle_buffer_create( struct mulle_allocator *allocator)
 void   _mulle_buffer_free( struct _mulle_buffer *buffer,
                           struct mulle_allocator *allocator)
 {
-   (*allocator->free)( buffer);
+   _mulle_allocator_free( allocator, buffer);
 }
 
 

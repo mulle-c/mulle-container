@@ -157,7 +157,7 @@ void   _mulle_indexedkeyvaluebucket_done( struct _mulle_indexedkeyvaluebucket *b
    }
    _mulle_indexedkeyvaluebucketenumerator_done( &rover); 
    
-   (*callback->keycallback.allocator->free)( bucket->_storage);
+   _mulle_allocator_free( callback->keycallback.allocator, bucket->_storage);
 }
 
 
@@ -165,7 +165,7 @@ void   _mulle_indexedkeyvaluebucket_free( struct _mulle_indexedkeyvaluebucket *b
                                           struct mulle_container_keyvaluecallback *callback)
 {
    _mulle_indexedkeyvaluebucket_done( bucket, callback);
-   (*callback->keycallback.allocator->free)( bucket);
+   _mulle_allocator_free( callback->keycallback.allocator, bucket);
 }
 
 

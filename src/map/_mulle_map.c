@@ -154,7 +154,7 @@ void  _mulle_map_init( struct _mulle_map *map, size_t capacity, struct mulle_con
 void   _mulle_map_free( struct _mulle_map *map, struct mulle_container_keyvaluecallback *callback)
 {
    _mulle_map_done( map, callback);
-   (*callback->keycallback.allocator->free)( map);
+   _mulle_allocator_free( callback->keycallback.allocator, map);
 }
 
 
@@ -218,7 +218,7 @@ void   _mulle_map_done( struct _mulle_map *map, struct mulle_container_keyvaluec
       }
       _mulle_indexedkeyvaluebucket_free( pair->_value, callback);
    }
-   (*callback->keycallback.allocator->free)( map->_storage);
+   _mulle_allocator_free( callback->keycallback.allocator, map->_storage);
 }
 
 
