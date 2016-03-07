@@ -405,20 +405,20 @@ void   *_mulle_set_get( struct _mulle_set *set,
    // for small maps try quick check
    switch( modulo)
    {
-   case 5 : if( *storage)
-               return( *storage);
+   case 5 : if( *storage == p)
+               return( p);
             ++storage;
-            if( *storage)
-               return( *storage);
+            if( *storage == p)
+               return( p);
             ++storage;
-            if( *storage)
-               return( *storage);
+            if( *storage == p)
+               return( p);
             ++storage;
-   case 2 : if( *storage)
-               return( *storage);
+   case 2 : if( *storage == p)
+               return( p);
             ++storage;
-   case 1 : if( *storage)
-               return( *storage);
+   case 1 : if( *storage == p)
+               return( p);
    }  
    
    hash = (*callback->hash)( callback, p);

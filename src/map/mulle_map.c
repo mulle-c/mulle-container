@@ -70,7 +70,7 @@ struct mulle_map   *mulle_map_create_separated_callback( size_t capacity,
    if( ! keycallback)
       keycallback = &mulle_container_keycallback_nonowned_pointer;
    
-   map = (*keycallback->allocator->realloc)( NULL, sizeof( struct mulle_map));
+   map = _mulle_allocator_malloc( keycallback->allocator, sizeof( struct mulle_map));
    if( map)
       mulle_map_init_separated_callback( map, capacity, keycallback, valuecallback);
    return( map);

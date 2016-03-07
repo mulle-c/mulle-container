@@ -82,9 +82,9 @@ static void  simple( void)
 // the mulle_test_allocator detects and aborts on leaks
 static void  run_test( void (*f)( void))
 {
-   mulle_test_allocator_reset_memory();
+   mulle_test_allocator_reset();
    (f)();
-   mulle_test_allocator_reset_memory();
+   mulle_test_allocator_reset();
 }
 
 
