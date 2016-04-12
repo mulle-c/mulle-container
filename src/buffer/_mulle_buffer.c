@@ -30,6 +30,9 @@
 
 #include "_mulle_buffer.h"
 
+#include <mulle_allocator/mulle_allocator.h>
+
+
 #if DEBUG
 # define MULLE_BUFFER_MIN_GROW_SIZE    16      // minimum realloc increment
 # define MULLE_BUFFER_MIN_DOUBLE_SIZE  512     // when we start doubling the buffer
@@ -39,7 +42,7 @@
 #endif
 
 
-void   *_mulle_buffer_extract( struct _mulle_buffer *buffer, struct mulle_allocator *allocator)
+void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer, struct mulle_allocator *allocator)
 {
    size_t   size;
    void     *block;
@@ -197,8 +200,9 @@ struct _mulle_buffer   *_mulle_buffer_create( struct mulle_allocator *allocator)
 
 
 void   _mulle_buffer_free( struct _mulle_buffer *buffer,
-                          struct mulle_allocator *allocator)
+                           struct mulle_allocator *allocator)
 {
+   _mulle_buffer_done( buffer, allocator);
    _mulle_allocator_free( allocator, buffer);
 }
 

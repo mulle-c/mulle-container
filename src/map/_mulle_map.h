@@ -39,6 +39,11 @@
 #include <stdarg.h>
 
 
+//
+// this a hash table, that indexes another hashtable if it outgrows it's
+// capacity. Advantage: doesn't need to copy during growth so much
+// Disadvantage: can be slower
+//
 #define _MULLE_MAP_BASE                        \
    struct _mulle_keyvaluepair   *_storage;     \
    size_t                       _count;        \
@@ -64,38 +69,54 @@ struct  _mulle_mapenumerator
 };
 
 
-void   _mulle_map_init( struct _mulle_map *map,
-                        size_t capacity,
-                        struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_third;
+void  _mulle_map_init( struct _mulle_map *map,
+                       size_t capacity,
+                       struct mulle_container_keyvaluecallback *callback,
+                       struct mulle_allocator *allocator)
+                          mulle_nonnull_first_third_fourth;
                        
 
-void   _mulle_map_done( struct _mulle_map *map, struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_second;
+void   _mulle_map_done( struct _mulle_map *map,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator)
+                           mulle_nonnull_first_second_third;
 
 
 struct _mulle_map   *_mulle_map_create( size_t capacity,
-                                        struct mulle_container_keyvaluecallback *callback) mulle_nonnull_second;
+                                        struct mulle_container_keyvaluecallback *callback,
+                                        struct mulle_allocator *allocator)
+                                             mulle_nonnull_second_third;
 
 
 
-void   _mulle_map_free( struct _mulle_map *map, struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_second;
+void   _mulle_map_free( struct _mulle_map *map,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator)
+                             mulle_nonnull_second_third;
 
-void   *_mulle_map_get( struct _mulle_map *map, void *key, struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_third;
-void   _mulle_map_remove( struct _mulle_map *map, void *key, struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_third;
+void   *_mulle_map_get( struct _mulle_map *map,
+                        void *key,
+                        struct mulle_container_keyvaluecallback *callback)
+                           mulle_nonnull_first_third;
+
+void   _mulle_map_remove( struct _mulle_map *map,
+                          void *key,
+                          struct mulle_container_keyvaluecallback *callback,
+                          struct mulle_allocator *allocator)
+                             mulle_nonnull_first_third;
 
 void _mulle_map_insert_keys_and_valuesv( struct _mulle_map *map,
                                          void *firstkey,
                                          void *firstvalue,
                                          va_list arg,
-                                         struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_fifth;
+                                         struct mulle_container_keyvaluecallback *callback,
+                                         struct mulle_allocator *allocator)
+                                            mulle_nonnull_first_fifth;
 
 
 static inline void  _mulle_map_insert_keys_and_values( struct _mulle_map *map,
                                                        struct mulle_container_keyvaluecallback *callback,
-                                                       void *firstkey,
-                                                       void *firstvalue,
-                                                       ...) mulle_nonnull_first_second;
-static inline void  _mulle_map_insert_keys_and_values( struct _mulle_map *map,
-                                                       struct mulle_container_keyvaluecallback *callback,
+                                                       struct mulle_allocator *allocator,
                                                        void *firstkey,
                                                        void *firstvalue,
                                                        ...)
@@ -103,13 +124,12 @@ static inline void  _mulle_map_insert_keys_and_values( struct _mulle_map *map,
    va_list   args;
    
    va_start( args, firstvalue);
-   _mulle_map_insert_keys_and_valuesv( map, firstkey, firstvalue, args, callback);
+   _mulle_map_insert_keys_and_valuesv( map, firstkey, firstvalue, args, callback, allocator);
    va_end( args);
 }
 
 
-static inline size_t   _mulle_map_count( struct _mulle_map *map) mulle_nonnull_first;
-static inline size_t   _mulle_map_count( struct _mulle_map *map)
+static inline size_t   _mulle_map_get_count( struct _mulle_map *map)
 {
    return( map->_count);
 }
@@ -118,52 +138,47 @@ static inline size_t   _mulle_map_count( struct _mulle_map *map)
 void   *__mulle_map_put( struct _mulle_map *,
                          struct _mulle_keyvaluepair *,
                          enum mulle_container_set_mode,
-                         struct mulle_container_keyvaluecallback *) mulle_nonnull_first_second_fourth;
+                         struct mulle_container_keyvaluecallback *,
+                         struct mulle_allocator *allocator) mulle_nonnull_first_second_fourth_fifth;
 
 
 static inline void   _mulle_map_put( struct _mulle_map *map,
                                      void *key,
                                      void *value,
-                                     struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_fourth;
-static inline void   _mulle_map_put( struct _mulle_map *map,
-                                     void *key,
-                                     void *value,
-                                     struct mulle_container_keyvaluecallback *callback)
+                                     struct mulle_container_keyvaluecallback *callback,
+                                     struct mulle_allocator *allocator)
 {
    struct _mulle_keyvaluepair   pair;
    
    pair._key   = key;
    pair._value = value;
 
-   __mulle_map_put( map, &pair, mulle_container_put_e, callback);
+   __mulle_map_put( map, &pair, mulle_container_put_e, callback, allocator);
 }
 
 
 static inline void   *_mulle_map_insert( struct _mulle_map *map,
                                          void *key,
                                          void *value,
-                                         struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_fourth;
-static inline void   *_mulle_map_insert( struct _mulle_map *map,
-                                         void *key,
-                                         void *value,
-                                         struct mulle_container_keyvaluecallback *callback)
+                                         struct mulle_container_keyvaluecallback *callback,
+                                         struct mulle_allocator *allocator)
 {
    struct _mulle_keyvaluepair   pair;
    
    pair._key   = key;
    pair._value = value;
 
-   return( __mulle_map_put( map, &pair, mulle_container_insert_e, callback));
+   return( __mulle_map_put( map, &pair, mulle_container_insert_e, callback, allocator));
 }
 
 
 
 struct _mulle_map   *_mulle_map_copy( struct _mulle_map *map, 
-                                      struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_second;
+                                      struct mulle_container_keyvaluecallback *callback,
+                                      struct mulle_allocator *allocator)
+                                         mulle_nonnull_first_second;
 
 
-static inline struct _mulle_mapenumerator   _mulle_map_enumerate( struct _mulle_map *map,
-                                                                  struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_second;
 static inline struct _mulle_mapenumerator   _mulle_map_enumerate( struct _mulle_map *map,
                                                                   struct mulle_container_keyvaluecallback *callback)
 {
@@ -183,12 +198,13 @@ static inline struct _mulle_mapenumerator   _mulle_map_enumerate( struct _mulle_
 int    _mulle_mapenumerator_next( struct _mulle_mapenumerator *enumerator, void **key, void **value) mulle_nonnull_first;
 
 
-static inline void    _mulle_mapenumerator_done( struct _mulle_mapenumerator *enumerator) mulle_nonnull_first;
 static inline void    _mulle_mapenumerator_done( struct _mulle_mapenumerator *enumerator)
 {
 }
 
-void    _mulle_map_reset( struct _mulle_map *map, struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_second;
-
+void    _mulle_map_reset( struct _mulle_map *map,
+                          struct mulle_container_keyvaluecallback *callback,
+                          struct mulle_allocator *allocator)
+                             mulle_nonnull_first_second;
 
 #endif

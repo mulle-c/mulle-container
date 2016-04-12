@@ -37,12 +37,12 @@
 
 //
 // a mulle_set is a mulle_hashtable, with callbacks added
-// this makes a mulle_set more convenient, but also quite a
-// bit bigger for small sets
+// this makes a mulle_set more convenient.
 //
-#define MULLE_SET_BASE                              \
-   _MULLE_SET_BASE;                                 \
-   struct mulle_container_keycallback   _callback   \
+#define MULLE_SET_BASE                                \
+   _MULLE_SET_BASE;                                   \
+   struct mulle_container_keycallback   *_callback;   \
+   struct mulle_allocator               *_allocator
 
 
 struct mulle_set
@@ -62,52 +62,54 @@ struct  mulle_setenumerator
 
 
 struct mulle_set   *mulle_set_create( size_t capacity,
-                                      struct mulle_container_keycallback *callback);
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator);
 
 void   mulle_set_init( struct mulle_set *set,
                        size_t capacity,
-                       struct mulle_container_keycallback *callback);
+                       struct mulle_container_keycallback *callback,
+                       struct mulle_allocator *allocator);
 
 
 static inline void   mulle_set_done( struct mulle_set *set)
 {
-   _mulle_set_done( (struct _mulle_set *) set, &set->_callback);
+   _mulle_set_done( (struct _mulle_set *) set, set->_callback, set->_allocator);
 }
 
 
 static inline void   mulle_set_free( struct mulle_set *set)
 {
-   _mulle_set_free( (struct _mulle_set *) set, &set->_callback);
+   _mulle_set_free( (struct _mulle_set *) set, set->_callback, set->_allocator);
 }
 
 
 static inline void   mulle_set_reset( struct mulle_set *set)
 {
-   _mulle_set_reset( (struct _mulle_set *) set, &set->_callback);
+   _mulle_set_reset( (struct _mulle_set *) set, set->_callback, set->_allocator);
 }
 
 
 static inline void   *mulle_set_get( struct mulle_set *set, void *p)
 {
-   return( _mulle_set_get( (struct _mulle_set *) set, p, &set->_callback));
+   return( _mulle_set_get( (struct _mulle_set *) set, p, set->_callback));
 }
 
 
 static inline void   mulle_set_remove( struct mulle_set *set, void *p)
 {
-   _mulle_set_remove( (struct _mulle_set *) set, p, &set->_callback);
+   _mulle_set_remove( (struct _mulle_set *) set, p, set->_callback, set->_allocator);
 }
 
 
-static inline size_t   mulle_set_count( struct mulle_set *set)
+static inline size_t   mulle_set_get_count( struct mulle_set *set)
 {
-   return( _mulle_set_count( (struct _mulle_set *) set));
+   return( _mulle_set_get_count( (struct _mulle_set *) set));
 }
 
 
 static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 {
-   return( (struct mulle_set *) _mulle_set_copy( (struct _mulle_set *) set, &set->_callback));
+   return( (struct mulle_set *) _mulle_set_copy( (struct _mulle_set *) set, set->_callback, set->_allocator));
 }
 
 
@@ -115,7 +117,7 @@ static inline struct mulle_setenumerator   mulle_set_enumerate( struct mulle_set
 {
    struct _mulle_setenumerator  rover;
    
-   rover = _mulle_set_enumerate( (struct _mulle_set *) set, &set->_callback);
+   rover = _mulle_set_enumerate( (struct _mulle_set *) set, set->_callback);
    return( *(struct mulle_setenumerator *) &rover);
 }
 
@@ -134,7 +136,14 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
 
 static inline void   mulle_set_put( struct mulle_set *set, void *p)
 {
-   _mulle_set_put( (struct _mulle_set *) set, p, &set->_callback);
+   _mulle_set_put( (struct _mulle_set *) set, p, set->_callback, set->_allocator);
+}
+
+
+static inline void   *mulle_set_insert( struct mulle_set *set,
+                                        void *p)
+{
+   return( __mulle_set_put( (struct _mulle_set *) set, p, mulle_container_insert_e, set->_callback, set->_allocator));
 }
 
 #endif

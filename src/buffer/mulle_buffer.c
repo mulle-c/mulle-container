@@ -34,10 +34,15 @@
 //
 #include "mulle_buffer.h"
 
+#include <mulle_allocator/mulle_allocator.h>
+
 
 struct mulle_buffer   *mulle_buffer_create( struct mulle_allocator *allocator)
 {
    struct mulle_buffer  *buffer;
+   
+   if( ! allocator)
+      allocator = &mulle_default_allocator;
    
    buffer = mulle_allocator_malloc( allocator, sizeof( struct mulle_buffer));
    if( buffer)

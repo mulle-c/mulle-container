@@ -19,15 +19,19 @@ static void  simple( void)
    int                           rval;
    int                           i;
    int                           state;
+   struct mulle_container_keyvaluecallback      callback;
    
-   map = mulle_map_create_separated_callback( 0, &mulle_container_keycallback_copied_cstring, &mulle_container_valuecallback_copied_cstring);
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+   
+   map = mulle_map_create( 0, &callback, NULL);
    mulle_map_put( map, "VfL", "VFL");
    assert( "VFL" != mulle_map_get( map, "VfL")); // must have been copied
    
    mulle_map_put( map, "Bochum", "BOCHUM");
    mulle_map_put( map, "1848", "1848");
    
-   assert( mulle_map_count( map) == 3);
+   assert( mulle_map_get_count( map) == 3);
    
    assert( ! strcmp( "VFL", mulle_map_get( map, "VfL")));
    assert( ! strcmp( "BOCHUM", mulle_map_get( map, "Bochum")));
@@ -65,15 +69,15 @@ static void  simple( void)
    assert( ! rval);
    mulle_mapenumerator_done( &rover);
    
-   assert( mulle_map_count( map) == 3);
+   assert( mulle_map_get_count( map) == 3);
    mulle_map_remove( map, "xxx");
-   assert( mulle_map_count( map) == 3);
+   assert( mulle_map_get_count( map) == 3);
    mulle_map_remove( map, "VfL");
-   assert( mulle_map_count( map) == 2);
+   assert( mulle_map_get_count( map) == 2);
    mulle_map_remove( map, "Bochum");
-   assert( mulle_map_count( map) == 1);
+   assert( mulle_map_get_count( map) == 1);
    mulle_map_remove( map, "1848");
-   assert( mulle_map_count( map) == 0);
+   assert( mulle_map_get_count( map) == 0);
       
    mulle_map_free( map);
 }

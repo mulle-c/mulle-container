@@ -38,9 +38,10 @@
 #include "_mulle_array.h"
 
 
-#define MULLE_ARRAY_BASE                           \
-   _MULLE_ARRAY_BASE;                              \
-   struct mulle_container_keycallback   callback
+#define MULLE_ARRAY_BASE                            \
+   _MULLE_ARRAY_BASE;                               \
+   struct mulle_container_keycallback   *_callback; \
+   struct mulle_allocator               *_allocator
 
 
 struct mulle_array
@@ -57,111 +58,99 @@ struct mulle_arrayenumerator
 };
 
 
-struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback);
+struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback,
+                                           struct mulle_allocator *allocator);
 
 
-static inline void   mulle_array_free( struct mulle_array *array) mulle_nonnull_first;
 static inline void   mulle_array_free( struct mulle_array *array)
 {
-   return( _mulle_array_free( (struct _mulle_array *) array, &array->callback));
+   return( _mulle_array_free( (struct _mulle_array *) array, array->_callback, array->_allocator));
 }
 
 
-static inline void   mulle_array_done( struct mulle_array *array) mulle_nonnull_first;
 static inline void   mulle_array_done( struct mulle_array *array)
 {
-   return( _mulle_array_done( (struct _mulle_array *) array, &array->callback));
+   return( _mulle_array_done( (struct _mulle_array *) array, array->_callback, array->_allocator));
 }
 
 
-static inline int    mulle_array_grow( struct mulle_array *array) mulle_nonnull_first;
 static inline int    mulle_array_grow( struct mulle_array *array)
 {
-   return( _mulle_array_grow( (struct _mulle_array *) array, &array->callback));
+   return( _mulle_array_grow( (struct _mulle_array *) array, array->_callback, array->_allocator));
 }
 
 
-static inline int    mulle_array_size_to_fit( struct mulle_array *array) mulle_nonnull_first;
 static inline int    mulle_array_size_to_fit( struct mulle_array *array)
 {
-   return( _mulle_array_size_to_fit( (struct _mulle_array *) array, &array->callback));
+   return( _mulle_array_size_to_fit( (struct _mulle_array *) array, array->_callback, array->_allocator));
 }
 
 
-static inline void   mulle_array_remove_in_range( struct mulle_array *array, size_t location, size_t length) mulle_nonnull_first;
 static inline void   mulle_array_remove_in_range( struct mulle_array *array, size_t location, size_t length)
 {
    _mulle_array_remove_in_range( (struct _mulle_array *) array,
                                  location,
                                  length,
-                                 &array->callback);
+                                 array->_callback,
+                                 array->_allocator);
 }
 
 
-static inline void   mulle_array_zero_in_range( struct mulle_array *array, size_t location, size_t length) mulle_nonnull_first;
 static inline void   mulle_array_zero_in_range( struct mulle_array *array, size_t location, size_t length)
 {
    _mulle_array_zero_in_range( (struct _mulle_array *) array,
                                location,
                                length,
-                               &array->callback);
+                               array->_callback);
 }
 
 
-static inline void   mulle_array_compact_zeroes( struct mulle_array *array) mulle_nonnull_first;
 static inline void   mulle_array_compact_zeroes( struct mulle_array *array)
 {
-   return( _mulle_array_compact_zeroes( (struct _mulle_array *) array, &array->callback));
+   return( _mulle_array_compact_zeroes( (struct _mulle_array *) array, array->_callback));
 }
 
 
-static inline void   mulle_array_remove_all( struct mulle_array *array) mulle_nonnull_first;
 static inline void   mulle_array_remove_all( struct mulle_array *array)
 {
-   return( _mulle_array_remove_all( (struct _mulle_array *) array, &array->callback));
+   return( _mulle_array_remove_all( (struct _mulle_array *) array, array->_callback, array->_allocator));
 }
 
 
 static inline void    mulle_array_init( struct mulle_array *array,
                                         size_t length,
-                                        struct mulle_container_keycallback *callback) mulle_nonnull_first;
-static inline void    mulle_array_init( struct mulle_array *array,
-                                        size_t length,
-                                        struct mulle_container_keycallback *callback)
+                                        struct mulle_container_keycallback *callback,
+                                        struct mulle_allocator *allocator)
 {
+   if( ! allocator)
+      allocator = &mulle_default_allocator;
+      
    _mulle_array_init( (struct _mulle_array *) array, length);
 
-   if( ! callback)
-      callback = &mulle_container_keycallback_nonowned_pointer;
-   array->callback = *callback;
-   mulle_container_keycallback_set_default_values( &array->callback);
+   array->_callback  = callback;
+   array->_allocator = allocator;
 }
 
 
-static inline void   **mulle_array_get_all( struct mulle_array *array) mulle_nonnull_first;
 static inline void   **mulle_array_get_all( struct mulle_array *array)
 {
    return( _mulle_array_get_all( (struct _mulle_array *) array));
 }
 
 
-static inline size_t   mulle_array_count( struct mulle_array *array) mulle_nonnull_first;
-static inline size_t   mulle_array_count( struct mulle_array *array)
+static inline size_t   mulle_array_get_count( struct mulle_array *array)
 {
-   return( _mulle_array_count( (struct _mulle_array *) array));
+   return( _mulle_array_get_count( (struct _mulle_array *) array));
 }
 
 
-static inline void   **mulle_array_advance( struct mulle_array *array,
-                                            size_t length) mulle_nonnull_first;
 static inline void   **mulle_array_advance( struct mulle_array *array,
                                             size_t length)
 {
-   return( _mulle_array_advance( (struct _mulle_array *) array, length, &array->callback));
+   return( _mulle_array_advance( (struct _mulle_array *) array, length, array->_callback, array->_allocator));
 }
 
 
-static inline int   mulle_array_is_full( struct mulle_array *array) mulle_nonnull_first;
 static inline int   mulle_array_is_full( struct mulle_array *array)
 {
    return( _mulle_array_is_full( (struct _mulle_array *) array));
@@ -169,83 +158,69 @@ static inline int   mulle_array_is_full( struct mulle_array *array)
 
 
 // will use callbacks of array to determine equality
-static inline int   mulle_array_is_equal( struct mulle_array *array, struct mulle_array *other) mulle_nonnull_first;
 static inline int   mulle_array_is_equal( struct mulle_array *array, struct mulle_array *other)
 {
-   assert( ! other || array->callback.is_equal == other->callback.is_equal);
-   return( _mulle_array_is_equal( (struct _mulle_array *) array, (struct _mulle_array *) other, &array->callback));
+   assert( ! other || array->_callback->is_equal == other->_callback->is_equal);
+   return( _mulle_array_is_equal( (struct _mulle_array *) array, (struct _mulle_array *) other, array->_callback));
 }
 
 
 
-static inline size_t   mulle_array_guaranteedsize( struct mulle_array *array) mulle_nonnull_first;
 static inline size_t   mulle_array_guaranteedsize( struct mulle_array *array)
 {
    return( _mulle_array_guaranteedsize( (struct _mulle_array *) array));
 }
 
 
-static inline void   **mulle_array_guarantee( struct mulle_array *array, size_t length) mulle_nonnull_first;
 static inline void   **mulle_array_guarantee( struct mulle_array *array, size_t length)
 {
-   return( _mulle_array_guarantee( (struct _mulle_array *) array, length, &array->callback));
+   return( _mulle_array_guarantee( (struct _mulle_array *) array, length, array->_callback, array->_allocator));
 }
 
 
-static inline void    mulle_array_add( struct mulle_array *array,
-                                       void  *p) mulle_nonnull_first;
 static inline void    mulle_array_add( struct mulle_array *array,
                                        void  *p)
 {
-   _mulle_array_add( (struct _mulle_array *) array, p, &array->callback);
+   _mulle_array_add( (struct _mulle_array *) array, p, array->_callback, array->_allocator);
 }
 
 
-static inline void   *mulle_array_get( struct mulle_array *array, size_t index) mulle_nonnull_first;
 static inline void   *mulle_array_get( struct mulle_array *array, size_t index)
 {
    return( _mulle_array_get( (struct _mulle_array *) array, index));
 }
 
 
-static inline void   *mulle_array_get_last( struct mulle_array *array) mulle_nonnull_first;
 static inline void   *mulle_array_get_last( struct mulle_array *array)
 {
    return( _mulle_array_get_last( (struct _mulle_array *) array));
 }
 
 
-static inline void   mulle_array_remove_last( struct mulle_array *array) mulle_nonnull_first;
 static inline void   mulle_array_remove_last( struct mulle_array *array)
 {
-   _mulle_array_remove_last( (struct _mulle_array *) array, &array->callback);
+   _mulle_array_remove_last( (struct _mulle_array *) array, array->_callback, array->_allocator);
 }
 
 
-static inline void   mulle_array_add_multiple( struct mulle_array *array,
-                                               void **pointers,
-                                               size_t length) mulle_nonnull_first;
 static inline void   mulle_array_add_multiple( struct mulle_array *array,
                                                void **pointers,
                                                size_t length)
 {
-   _mulle_array_add_multiple( (struct _mulle_array *) array, pointers, length, &array->callback);
+   _mulle_array_add_multiple( (struct _mulle_array *) array, pointers, length, array->_callback, array->_allocator);
 }
 
 
-static inline void    mulle_array_add_array( struct mulle_array *array,
-                                             struct mulle_array *other) mulle_nonnull_first_second;
 static inline void    mulle_array_add_array( struct mulle_array *array,
                                              struct mulle_array *other)
 {
-   _mulle_array_add_array( (struct _mulle_array *) array, (struct _mulle_array *) other, &array->callback);
+   _mulle_array_add_array( (struct _mulle_array *) array, (struct _mulle_array *) other, array->_callback, array->_allocator);
 }
 
 
-static inline void   mulle_array_reset( struct mulle_array *array) mulle_nonnull_first;
 static inline void   mulle_array_reset( struct mulle_array *array)
 {
-   _mulle_array_reset( (struct _mulle_array *) array, &array->callback);
+   _mulle_array_reset( (struct _mulle_array *) array, array->_callback, array->_allocator);
 }
 
 
@@ -255,7 +230,6 @@ static inline void   mulle_array_reset( struct mulle_array *array)
 //
 // you now own the allocated block now
 //
-static inline void   *mulle_array_extract( struct mulle_array *array) mulle_nonnull_first;
 static inline void   *mulle_array_extract( struct mulle_array *array)
 {
    return( _mulle_array_extract( (struct _mulle_array *) array));
@@ -268,10 +242,6 @@ static inline void   *mulle_array_extract( struct mulle_array *array)
 static inline size_t  mulle_array_find_in_range_identical( struct mulle_array *array,
                                                            void *obj,
                                                            size_t location,
-                                                           size_t length) mulle_nonnull_first;
-static inline size_t  mulle_array_find_in_range_identical( struct mulle_array *array,
-                                                           void *obj,
-                                                           size_t location,
                                                            size_t length)
 {
    return( _mulle_array_find_in_range_identical( (struct _mulle_array *) array, obj, location, length));
@@ -281,13 +251,9 @@ static inline size_t  mulle_array_find_in_range_identical( struct mulle_array *a
 static inline size_t  mulle_array_find_in_range( struct mulle_array *array,
                                                  void *obj,
                                                  size_t location,
-                                                 size_t length) mulle_nonnull_first;
-static inline size_t  mulle_array_find_in_range( struct mulle_array *array,
-                                                 void *obj,
-                                                 size_t location,
                                                  size_t length)
 {
-   return( _mulle_array_find_in_range( (struct _mulle_array *) array, obj, location, length, &array->callback));
+   return( _mulle_array_find_in_range( (struct _mulle_array *) array, obj, location, length, array->_callback));
 }
 
 
@@ -295,24 +261,21 @@ static inline size_t  mulle_array_find_in_range( struct mulle_array *array,
 #pragma mark -
 #pragma mark enumeration
 
-static inline struct mulle_arrayenumerator   mulle_array_enumerate( struct mulle_array *array) mulle_nonnull_first;
 static inline struct mulle_arrayenumerator   mulle_array_enumerate( struct mulle_array *array)
 {
    struct _mulle_arrayenumerator   rover;
    
-   rover = _mulle_array_enumerate( (struct _mulle_array *) array, &array->callback);
+   rover = _mulle_array_enumerate( (struct _mulle_array *) array, array->_callback);
    return( *(struct mulle_arrayenumerator *) &rover);  // should be harmless
 }
 
 
-static inline void   *mulle_arrayenumerator_next( struct mulle_arrayenumerator *rover) mulle_nonnull_first;
 static inline void   *mulle_arrayenumerator_next( struct mulle_arrayenumerator *rover)
 {
    return( _mulle_arrayenumerator_next( (struct _mulle_arrayenumerator *) rover));
 }
 
 
-static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover) mulle_nonnull_first;
 static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover)
 {
    _mulle_arrayenumerator_done( (struct _mulle_arrayenumerator *) rover);
@@ -322,16 +285,12 @@ static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *r
 #pragma mark integer convenience
 
 static inline void    mulle_array_add_intptr( struct mulle_array *array,
-                                              intptr_t v) mulle_nonnull_first;
-static inline void    mulle_array_add_intptr( struct mulle_array *array,
                                               intptr_t v)
 {
-   _mulle_array_add( (struct _mulle_array *) array, (void *) v, &array->callback);
+   _mulle_array_add( (struct _mulle_array *) array, (void *) v, array->_callback, array->_allocator);
 }
 
 
-static inline void    mulle_array_add_int( struct mulle_array *array,
-                                           int v) mulle_nonnull_first;
 static inline void    mulle_array_add_int( struct mulle_array *array,
                                            int v)
 {
@@ -339,28 +298,24 @@ static inline void    mulle_array_add_int( struct mulle_array *array,
 }
 
 
-static inline intptr_t    mulle_array_get_intptr( struct mulle_array *array, size_t index) mulle_nonnull_first;
 static inline intptr_t    mulle_array_get_intptr( struct mulle_array *array, size_t index)
 {
    return( (intptr_t) mulle_array_get( array, index));
 }
 
 
-static inline int    mulle_array_get_int( struct mulle_array *array, size_t index) mulle_nonnull_first;
 static inline int    mulle_array_get_int( struct mulle_array *array, size_t index)
 {
    return( (int) mulle_array_get_intptr( array, index));
 }
 
 
-static inline intptr_t   mulle_arrayenumerator_next_intptr( struct mulle_arrayenumerator *rover) mulle_nonnull_first;
 static inline intptr_t   mulle_arrayenumerator_next_intptr( struct mulle_arrayenumerator *rover)
 {
    return( (intptr_t) mulle_arrayenumerator_next( rover));
 }
 
 
-static inline int   mulle_arrayenumerator_next_int( struct mulle_arrayenumerator *rover) mulle_nonnull_first;
 static inline int   mulle_arrayenumerator_next_int( struct mulle_arrayenumerator *rover)
 {
    return( (int) mulle_arrayenumerator_next_intptr( rover));
@@ -371,10 +326,6 @@ static inline int   mulle_arrayenumerator_next_int( struct mulle_arrayenumerator
 static inline size_t  mulle_array_find_in_range_identical_intptr( struct mulle_array *array,
                                                                   intptr_t v,
                                                                   size_t location,
-                                                                  size_t length) mulle_nonnull_first;
-static inline size_t  mulle_array_find_in_range_identical_intptr( struct mulle_array *array,
-                                                                  intptr_t v,
-                                                                  size_t location,
                                                                   size_t length)
 {
    // ints are always identical
@@ -382,10 +333,6 @@ static inline size_t  mulle_array_find_in_range_identical_intptr( struct mulle_a
 }
 
 
-static inline size_t   mulle_array_find_in_range_identical_int( struct mulle_array *array,
-                                                             int v,
-                                                             size_t location,
-                                                             size_t length) mulle_nonnull_first;
 static inline size_t   mulle_array_find_in_range_identical_int( struct mulle_array *array,
                                                              int v,
                                                              size_t location,

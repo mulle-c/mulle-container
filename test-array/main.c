@@ -17,14 +17,14 @@ static void  simple( void)
    struct mulle_arrayenumerator    rover;
    void                            *item;
    
-   array = mulle_array_create( &mulle_container_keycallback_copied_cstring);
+   array = mulle_array_create( &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_add( array, "VfL");
    assert("VfL" != mulle_array_get( array, 0)); // must have been copied
    
    mulle_array_add( array, "Bochum");
    mulle_array_add( array, "1848");
    
-   assert( mulle_array_count( array) == 3);
+   assert( mulle_array_get_count( array) == 3);
    
    assert( ! strcmp( "VfL", mulle_array_get( array, 0)));
    assert( ! strcmp( "Bochum", mulle_array_get( array, 1)));
@@ -45,11 +45,11 @@ static void  simple( void)
    mulle_arrayenumerator_done( &rover);
    
    mulle_array_remove_last( array);
-   assert( mulle_array_count( array) == 2);
+   assert( mulle_array_get_count( array) == 2);
    mulle_array_remove_last( array);
-   assert( mulle_array_count( array) == 1);
+   assert( mulle_array_get_count( array) == 1);
    mulle_array_remove_last( array);
-   assert( mulle_array_count( array) == 0);
+   assert( mulle_array_get_count( array) == 0);
       
    mulle_array_free( array);
 }
@@ -59,7 +59,7 @@ static void  ephemeral( void)
 {
    struct mulle_array   array;
 
-   mulle_array_init( &array, 10, &mulle_container_keycallback_copied_cstring);
+   mulle_array_init( &array, 10, &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_add( &array, "VfL");
    mulle_array_is_full( &array);
    mulle_array_done( &array);
@@ -74,7 +74,7 @@ static void  grow( void)
    void                 *memo_storage;
    size_t               i, n;
    
-   mulle_array_init( &array, 10, &mulle_container_keycallback_copied_cstring);
+   mulle_array_init( &array, 10, &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_guarantee( &array, 20);
    assert( mulle_array_guaranteedsize( &array) >= 20);
 
@@ -107,7 +107,7 @@ static void  notakeymarker( void)
    int                             item;
    size_t                          index;
    
-   array = mulle_array_create( &mulle_container_keycallback_int);
+   array = mulle_array_create( &mulle_container_keycallback_int, NULL);
    mulle_array_add_int( array, 0);
    mulle_array_add_int( array, 1);
    mulle_array_add_int( array, 2);
@@ -116,7 +116,7 @@ static void  notakeymarker( void)
    assert( 1 == mulle_array_get_int( array, 1));
    assert( 2 == mulle_array_get_int( array, 2));
    
-   assert( mulle_array_count( array) == 3);
+   assert( mulle_array_get_count( array) == 3);
    
    rover = mulle_array_enumerate( array);
    item = mulle_arrayenumerator_next_int( &rover);
@@ -143,18 +143,18 @@ static void  copy( void)
    struct mulle_array   array;
    struct mulle_array   copy;
    
-   mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring);
+   mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
 
    mulle_array_add( &array, "VfL");
    mulle_array_add( &array, "Bochum");
    mulle_array_add( &array, "1848");
-   assert( mulle_array_count( &array) == 3);
+   assert( mulle_array_get_count( &array) == 3);
    
-   mulle_array_init( &copy, 0, &mulle_container_keycallback_copied_cstring);
-   assert( mulle_array_count( &copy) == 0);
+   mulle_array_init( &copy, 0, &mulle_container_keycallback_copied_cstring, NULL);
+   assert( mulle_array_get_count( &copy) == 0);
    mulle_array_add_array( &copy, &array);
-   assert( mulle_array_count( &copy) == 3);
-   assert( mulle_array_count( &array) == 3);
+   assert( mulle_array_get_count( &copy) == 3);
+   assert( mulle_array_get_count( &array) == 3);
    assert( mulle_array_is_equal( &copy, &array));
    
    mulle_array_done( &copy);

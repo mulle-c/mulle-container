@@ -35,15 +35,13 @@
 #include "mulle_array.h"
 
 /* nothing here yet */
-struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback)
+struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback,
+                                           struct mulle_allocator *allocator)
 {
    struct mulle_array  *buffer;
    
-   if( ! callback)
-      callback = &mulle_container_keycallback_nonowned_pointer;
-      
-   buffer = mulle_allocator_malloc( callback->allocator, sizeof( struct mulle_array));
+   buffer = mulle_allocator_malloc( allocator, sizeof( struct mulle_array));
    if( buffer)
-      mulle_array_init( buffer, 0, callback);
+      mulle_array_init( buffer, 0, callback, allocator);
    return( buffer);
 }
