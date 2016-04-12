@@ -28,13 +28,15 @@ src/buffer/mulle_buffer.h
 src/buffer/_mulle_buffer.h
 src/hash/mulle_hash.h
 src/hash/mulle_prime.h
-src/set/mulle_set.h
-src/set/_mulle_set.h
-src/set/_mulle_indexedbucket.h
 src/map/mulle_map.h
 src/map/_mulle_map.h
 src/map/_mulle_indexedkeyvaluebucket.h
 src/map/_mulle_keyvaluepair.h
+src/queue/_mulle_queue.h
+src/set/mulle_set.h
+src/set/_mulle_set.h
+src/set/_mulle_indexedbucket.h
+src/set/_mulle_pointerset.h
 )
 
 add_library( mulle_container
@@ -45,12 +47,14 @@ src/hash/mulle_prime.c
 cityhash/src/city.c
 src/buffer/_mulle_buffer.c
 src/buffer/mulle_buffer.c
-src/set/_mulle_set.c
-src/set/mulle_set.c
-src/set/_mulle_indexedbucket.c
 src/map/_mulle_map.c
 src/map/mulle_map.c
 src/map/_mulle_indexedkeyvaluebucket.c
+src/queue/_mulle_queue.c
+src/set/_mulle_set.c
+src/set/mulle_set.c
+src/set/_mulle_indexedbucket.c
+src/set/_mulle_pointerset.c
 )
 
 INSTALL( TARGETS mulle_container DESTINATION "lib")
