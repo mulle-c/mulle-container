@@ -58,10 +58,13 @@
 #include "_mulle_map.h"
 #include "mulle_map.h"
 
+#include "_mulle_queue.h"
+#include "mulle_pointerset.h"
+
 #include "mulle_container_callback.h"
 #include "mulle_container_operation.h"
 
-#if MULLE_ALLOCATOR_VERSION < ((0 << 20) | (1 << 8) | 0)
+#if MULLE_ALLOCATOR_VERSION < ((1 << 20) | (1 << 8) | 0)
 # error "mulle_allocator is too old"
 #endif
 

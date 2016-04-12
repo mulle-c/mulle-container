@@ -34,9 +34,11 @@
 #include <assert.h>
 #include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
-#include <mulle_allocator/mulle_allocator.h>
 
+
+struct mulle_allocator;
 
 
 #define _MULLE_BUFFER_BASE            \
@@ -129,6 +131,7 @@ static inline void    _mulle_buffer_init( struct _mulle_buffer *buffer)
 static inline void    _mulle_buffer_set_initial_capacity( struct _mulle_buffer *buffer,
                                                          size_t capacity)
 {
+   assert( buffer);
    assert( buffer->_storage  == 0);
    assert( buffer->_size == 0);
    buffer->_size =  capacity >> 1;
@@ -153,8 +156,8 @@ static inline void    _mulle_buffer_init_inflexable_with_static_bytes( struct _m
    assert( length != (size_t) -1);
    
    buffer->_initial_storage  =
-   buffer->_curr             =
    buffer->_storage          = storage;
+   buffer->_curr             =
    buffer->_sentinel         = &buffer->_storage[ length];
    buffer->_size             = (size_t) -1;
 }
@@ -179,9 +182,9 @@ static inline void   _mulle_buffer_reset( struct _mulle_buffer *buffer,
 
 
 void   _mulle_buffer_make_inflexable( struct _mulle_buffer *buffer,
-                                     void *_storage,
-                                     size_t length,
-                                     struct mulle_allocator *allocator);
+                                      void *_storage,
+                                      size_t length,
+                                      struct mulle_allocator *allocator);
 
 #pragma mark -
 #pragma mark resize
@@ -228,35 +231,6 @@ static inline void   *_mulle_buffer_guarantee( struct _mulle_buffer *buffer,
       if( _mulle_buffer_grow( buffer, length, allocator))
          return( NULL);
    return( buffer->_curr);
-}
-
-
-#pragma mark -
-#pragma mark retrieval
-//
-// you only do this once!, because you now own the malloc block
-//
-void   *_mulle_buffer_extract( struct _mulle_buffer *buffer,
-                              struct mulle_allocator *allocator);
-
-
-static inline void   *_mulle_buffer_get_bytes( struct _mulle_buffer *buffer)
-{
-   return( buffer->_storage);
-}
-
-
-static inline size_t   _mulle_buffer_get_length( struct _mulle_buffer *buffer)
-{
-   return( buffer->_curr - buffer->_storage);
-}
-
-
-static inline size_t   _mulle_buffer_get_static_bytes( struct _mulle_buffer *buffer)
-{
-   return( buffer->_storage == buffer->_initial_storage
-          ? (buffer->_storage - buffer->_initial_storage)
-          : 0);
 }
 
 
@@ -310,6 +284,37 @@ static inline int   _mulle_buffer_has_overflown( struct _mulle_buffer *buffer)
 
 
 #pragma mark -
+#pragma mark retrieval
+//
+// you only do this once!, because you now own the malloc block
+//
+void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer,
+                              struct mulle_allocator *allocator);
+
+
+static inline void   *_mulle_buffer_get_bytes( struct _mulle_buffer *buffer)
+{
+   return( buffer->_storage);
+}
+
+
+static inline size_t   _mulle_buffer_get_length( struct _mulle_buffer *buffer)
+{
+   return( _mulle_buffer_has_overflown( buffer)
+               ? buffer->_sentinel - buffer->_storage
+               : buffer->_curr - buffer->_storage);
+}
+
+
+static inline size_t   _mulle_buffer_get_static_bytes_length( struct _mulle_buffer *buffer)
+{
+   return( buffer->_storage == buffer->_initial_storage
+          ? _mulle_buffer_get_length( buffer)
+          : 0);
+}
+
+
+#pragma mark -
 #pragma mark modification
 
 
@@ -334,6 +339,62 @@ static inline void    _mulle_buffer_add_char( struct _mulle_buffer *buffer,
    assert( c <= CHAR_MAX && c >= CHAR_MIN);
    _mulle_buffer_add_byte( buffer, (unsigned char) c, allocator);
 }
+
+
+static inline void    _mulle_buffer_add_uint16( struct _mulle_buffer *buffer,
+                                                uint16_t c,
+                                                struct mulle_allocator *allocator)
+{
+   unsigned char   lsb;
+   unsigned char   msb;
+   
+   if( ! _mulle_buffer_guarantee( buffer, 2, allocator))
+      return;
+
+   lsb = c & 0xFF;
+   msb = c >> 8;
+#ifdef __BIG_ENDIAN__
+   *buffer->_curr++ = msb;
+   *buffer->_curr++ = lsb;
+#else
+   *buffer->_curr++ = lsb;
+   *buffer->_curr++ = msb;
+#endif
+
+}
+
+
+
+static inline void    _mulle_buffer_add_uint32( struct _mulle_buffer *buffer,
+                                                uint32_t c,
+                                                struct mulle_allocator *allocator)
+{
+   unsigned char   lsb;
+   unsigned char   nsb;
+   unsigned char   qsb;
+   unsigned char   msb;
+   
+   if( ! _mulle_buffer_guarantee( buffer, 4, allocator))
+      return;
+   
+   lsb = c & 0xFF;
+   nsb = (c >> 8) & 0xFF;
+   qsb = (c >> 16) & 0xFF;
+   msb = (c >> 24) & 0xFF;
+   
+#ifdef __BIG_ENDIAN__
+   *buffer->_curr++ = msb;
+   *buffer->_curr++ = qsb;
+   *buffer->_curr++ = nsb;
+   *buffer->_curr++ = lsb;
+#else
+   *buffer->_curr++ = lsb;
+   *buffer->_curr++ = nsb;
+   *buffer->_curr++ = qsb;
+   *buffer->_curr++ = msb;
+#endif
+}
+
 
 
 static inline void   _mulle_buffer_add_bytes( struct _mulle_buffer *buffer,
@@ -389,6 +450,11 @@ static inline void   _mulle_buffer_memset( struct _mulle_buffer *buffer,
 }
 
 
+//
+// a bit weird, but it is used to truncate or a append a 0 string
+// but size is not adjusted, useful when retrieving the buffer and
+// use it as cString
+//
 static inline void   _mulle_buffer_zero_last_byte( struct _mulle_buffer *buffer)
 {
    if( ! _mulle_buffer_is_void( buffer))
@@ -412,6 +478,7 @@ static inline void    _mulle_buffer_add_buffer( struct _mulle_buffer *buffer,
    
    _mulle_buffer_add_bytes( buffer, _mulle_buffer_get_bytes( other), _mulle_buffer_get_length( other), allocator);
 }
+
 
 #pragma mark -
 #pragma mark reading

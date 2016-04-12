@@ -41,6 +41,7 @@
 # define mulle_nonnull_first_second_third   __attribute__((nonnull(1,2,3)))
 # define mulle_nonnull_first_second_fourth  __attribute__((nonnull(1,2,4)))
 # define mulle_nonnull_first_second_fifth   __attribute__((nonnull(1,2,5)))
+# define mulle_nonnull_first_second_fourth_fifth __attribute__((nonnull(1,2,4,5)))
 # define mulle_nonnull_first_third          __attribute__((nonnull(1,3)))
 # define mulle_nonnull_first_third_fourth   __attribute__((nonnull(3,4)))
 # define mulle_nonnull_first_fourth         __attribute__((nonnull(1,4)))
@@ -48,7 +49,6 @@
 # define mulle_nonnull_second               __attribute__((nonnull(2)))
 # define mulle_nonnull_second_third         __attribute__((nonnull(2,3)))
 # define mulle_nonnull_third_fourth         __attribute__((nonnull(3,4)))
-
 #endif
 
 #endif /* mulle_container_attributes_h */

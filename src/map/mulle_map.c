@@ -36,65 +36,35 @@
 #include "mulle_container_callback.h"
 
 #include <string.h>
-
-
-void   mulle_map_init_separated_callback( struct mulle_map *map,
-                                          size_t capacity,
-                                          struct mulle_container_keycallback *keycallback,
-                                          struct mulle_container_valuecallback *valuecallback)
-{
-   if( keycallback)
-      map->_callback.keycallback   = *keycallback;
-   else
-      memset( &map->_callback.keycallback, 0, sizeof( struct mulle_container_keycallback));
-   
-   if( valuecallback)
-      map->_callback.valuecallback = *valuecallback;
-   else
-      memset( &map->_callback.valuecallback, 0, sizeof( struct mulle_container_valuecallback));
-
-   mulle_container_keycallback_set_default_values( &map->_callback.keycallback);
-   mulle_container_valuecallback_set_default_values( &map->_callback.valuecallback);
-
-   _mulle_map_init( (struct _mulle_map *) map, capacity, &map->_callback);
-}
-
-
-
-struct mulle_map   *mulle_map_create_separated_callback( size_t capacity,
-                                                         struct mulle_container_keycallback *keycallback,
-                                                         struct mulle_container_valuecallback *valuecallback)
-{
-   struct mulle_map   *map;
-   
-   if( ! keycallback)
-      keycallback = &mulle_container_keycallback_nonowned_pointer;
-   
-   map = _mulle_allocator_malloc( keycallback->allocator, sizeof( struct mulle_map));
-   if( map)
-      mulle_map_init_separated_callback( map, capacity, keycallback, valuecallback);
-   return( map);
-}
+#include <mulle_allocator/mulle_allocator.h>
 
 
 void   mulle_map_init( struct mulle_map *map,
                        size_t capacity,
-                       struct mulle_container_keyvaluecallback *callback)
+                       struct mulle_container_keyvaluecallback *callback,
+                       struct mulle_allocator *allocator)
 {
-   mulle_map_init_separated_callback( map,
-                                      capacity,
-                                      callback ? &callback->keycallback : NULL,
-                                      callback ? &callback->valuecallback : NULL);
+   if( ! allocator)
+      allocator = &mulle_default_allocator;
+   
+   _mulle_map_init( (struct _mulle_map *) map, capacity, callback, allocator);
+   
+   map->_callback  = callback;
+   map->_allocator = allocator;
 }
 
 
 
 struct mulle_map   *mulle_map_create( size_t capacity,
-                                      struct mulle_container_keyvaluecallback *callback)
+                                      struct mulle_container_keyvaluecallback *callback,
+                                      struct mulle_allocator *allocator)
 {
-   return( mulle_map_create_separated_callback( capacity,
-                                                callback ? &callback->keycallback   : NULL,
-                                                callback ? &callback->valuecallback : NULL));
+   struct mulle_map   *map;
+   
+   map = mulle_allocator_malloc( allocator, sizeof( struct mulle_map));
+   if( map)
+      mulle_map_init( map, capacity, callback, allocator);
+   return( map);
 }
 
 

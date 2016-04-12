@@ -57,17 +57,22 @@ struct _mulle_indexedbucketenumerator
 
 struct _mulle_indexedbucket   *_mulle_indexedbucket_create( size_t capacity,
                                                             size_t extra,
-                                                            struct mulle_container_keycallback *callback);
+                                                            struct mulle_container_keycallback *callback,
+                                                            struct mulle_allocator *allocator);
 
 void    _mulle_indexedbucket_free( struct _mulle_indexedbucket *bucket,
-                                   struct mulle_container_keycallback *callback);
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator);
+
 
 void    _mulle_indexedbucket_init( struct _mulle_indexedbucket *bucket, 
                                    size_t capacity,
-                                   struct mulle_container_keycallback *callback);
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator);
 
 void    _mulle_indexedbucket_done( struct _mulle_indexedbucket *bucket, 
-                                    struct mulle_container_keycallback *callback);
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator);
 
 
 static inline size_t   _mulle_indexedbucket_is_fuller_than( struct _mulle_indexedbucket *bucket, size_t size)
@@ -90,26 +95,32 @@ static inline size_t   _mulle_indexedbucket_is_full( struct _mulle_indexedbucket
 
 // don't inline this (!)
 void   _mulle_indexedbucket_reset( struct _mulle_indexedbucket *bucket,
-                                   struct mulle_container_keycallback *callback);
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator);
+
 
 void   *_mulle_indexedbucket_set_with_mode( struct _mulle_indexedbucket *bucket,
                                             void *p,
                                             uintptr_t hash,
                                             enum mulle_container_set_mode mode,
-                                            struct mulle_container_keycallback *callback);
+                                            struct mulle_container_keycallback *callback,
+                                            struct mulle_allocator *allocator);
 
 void   _mulle_indexedbucket_put( struct _mulle_indexedbucket *bucket,
                                  void *p,
-                                 struct mulle_container_keycallback *callback);
+                                 struct mulle_container_keycallback *callback,
+                                 struct mulle_allocator *allocator);
 
 void    *_mulle_indexedbucket_insert( struct _mulle_indexedbucket *bucket,
-                                                void *p,
-                                                struct mulle_container_keycallback *callback);
+                                      void *p,
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator);
 
 int   _mulle_indexedbucket_remove( struct _mulle_indexedbucket *bucket,
                                    void *p,
                                    uintptr_t hash,
-                                   struct mulle_container_keycallback *callback);
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator);
 
 void   *_mulle_indexedbucket_get( struct _mulle_indexedbucket *bucket,
                                   void *p,
@@ -160,7 +171,7 @@ static inline void   _mulle_indexedbucketenumerator_done( struct _mulle_indexedb
 }                                    
 
 
-static inline size_t   _mulle_indexedbucket_count( struct _mulle_indexedbucket *bucket)
+static inline size_t   _mulle_indexedbucket_get_count( struct _mulle_indexedbucket *bucket)
 {
    return( bucket->_count);
 }

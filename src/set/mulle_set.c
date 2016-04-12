@@ -33,23 +33,28 @@
 
 void   mulle_set_init( struct mulle_set *set,
                        size_t capacity,
-                       struct mulle_container_keycallback *callback)
+                       struct mulle_container_keycallback *callback,
+                       struct mulle_allocator *allocator)
 {
-   _mulle_set_init( (struct _mulle_set *) set, capacity, callback);
+   _mulle_set_init( (struct _mulle_set *) set, capacity, callback, allocator);
 
-   set->_callback = *callback;
-   mulle_container_keycallback_set_default_values( &set->_callback);
+   set->_callback  = callback;
+   set->_allocator = allocator;
 }
 
 
 struct mulle_set   *mulle_set_create( size_t capacity,
-                                      struct mulle_container_keycallback *callback)
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator)
 {
    struct mulle_set *set;
    
-   set = mulle_allocator_malloc( callback->allocator, sizeof( struct mulle_set));
+   if( ! allocator)
+      allocator = &mulle_default_allocator;
+   
+   set = mulle_allocator_malloc( allocator, sizeof( struct mulle_set));
    if( set)
-      mulle_set_init( set, capacity, callback);
+      mulle_set_init( set, capacity, callback, allocator);
    return( set);
 }
 

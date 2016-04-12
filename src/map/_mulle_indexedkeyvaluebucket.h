@@ -37,12 +37,15 @@
 #include "mulle_container_callback.h"
 #include "_mulle_keyvaluepair.h"
 
-
+//
+// this is like your traditional non-growing hash table, its called like this
+// because its a constituent of mulle_map
+// 
 #define _MULLE_INDEXEDKEYVALUEBUCKET_BASE   \
    struct _mulle_keyvaluepair *_storage;    \
-   size_t         _count;                   \
-   short          _depth;                   \
-   short          _inZone
+   size_t                      _count;      \
+   short                       _depth;      \
+   short                       _inZone
 
 struct _mulle_indexedkeyvaluebucket
 {
@@ -64,25 +67,27 @@ struct _mulle_indexedkeyvaluebucketenumerator
 
 struct _mulle_indexedkeyvaluebucket   *_mulle_indexedkeyvaluebucket_create( size_t capacity,
                                                                             size_t extra,
-                                                                            struct mulle_container_keyvaluecallback *callback);
-
+                                         struct mulle_container_keyvaluecallback *callback,
+                                         struct mulle_allocator *allocator);
 
 void   _mulle_indexedkeyvaluebucket_free( struct _mulle_indexedkeyvaluebucket *bucket,
-                                          struct mulle_container_keyvaluecallback *callback);
-
+                                          struct mulle_container_keyvaluecallback *callback,
+                                          struct mulle_allocator *allocator);
 void   _mulle_indexedkeyvaluebucket_init( struct _mulle_indexedkeyvaluebucket *bucket,
                                           size_t capacity,
-                                          struct mulle_container_keyvaluecallback *callback);
+                                          struct mulle_container_keyvaluecallback *callback,
+                                          struct mulle_allocator *allocator);
 
 
 void   _mulle_indexedkeyvaluebucket_done( struct _mulle_indexedkeyvaluebucket *bucket,
-                                            struct mulle_container_keyvaluecallback *callback);
+                                          struct mulle_container_keyvaluecallback *callback,
+                                          struct mulle_allocator *allocator);
 
 
 static inline size_t   _mulle_indexedkeyvaluebucket_is_fuller_than( struct _mulle_indexedkeyvaluebucket *bucket,
                                                                     size_t size)
 {
-   return( bucket->_count >= (size - (size >> 1)));  // full when only 25% free 
+   return( bucket->_count >= size);
 }
 
 
@@ -94,34 +99,43 @@ static inline size_t   _mulle_indexedkeyvaluebucket_size_for_depth( int depth)
 
 static inline size_t   _mulle_indexedkeyvaluebucket_is_full( struct _mulle_indexedkeyvaluebucket *bucket)
 {
-   return( _mulle_indexedkeyvaluebucket_is_fuller_than( bucket, _mulle_indexedkeyvaluebucket_size_for_depth( bucket->_depth)));
+   size_t    size;
+   
+   size = _mulle_indexedkeyvaluebucket_size_for_depth( bucket->_depth);
+   size = (size - (size >> 1));  // full when only 25% free
+   return( _mulle_indexedkeyvaluebucket_is_fuller_than( bucket, size));
 }
 
 
 void   _mulle_indexedkeyvaluebucket_reset( struct _mulle_indexedkeyvaluebucket *bucket, 
-                                           struct mulle_container_keyvaluecallback *callback);
+                                           struct mulle_container_keyvaluecallback *callback,
+                                           struct mulle_allocator *allocator);
 
-
-void   _mulle_indexedkeyvaluebucket_put( struct _mulle_indexedkeyvaluebucket *bucket, 
-                                            struct _mulle_keyvaluepair *pair,
-                                            struct mulle_container_keyvaluecallback *callback);
+void   _mulle_indexedkeyvaluebucket_put( struct _mulle_indexedkeyvaluebucket *bucket,
+                                         struct _mulle_keyvaluepair *pair,
+                                         struct mulle_container_keyvaluecallback *callback,
+                                         struct mulle_allocator *allocator);
 
 void    *_mulle_indexedkeyvaluebucket_insert( struct _mulle_indexedkeyvaluebucket *bucket,
-                                                        struct _mulle_keyvaluepair *pair,
-                                                       struct mulle_container_keyvaluecallback *callback);
+                                              struct _mulle_keyvaluepair *pair,
+                                              struct mulle_container_keyvaluecallback *callback,
+                                              struct mulle_allocator *allocator);
 
 void   *_mulle_indexedkeyvaluebucket_insert_known_absent( struct _mulle_indexedkeyvaluebucket *bucket,
                                                           struct _mulle_keyvaluepair *pair,
-                                                         struct mulle_container_keyvaluecallback *callback);
+                                                          struct mulle_container_keyvaluecallback *callback,
+                                                          struct mulle_allocator *allocator);
 
 int   __mulle_indexedkeyvaluebucket_remove( struct _mulle_indexedkeyvaluebucket *bucket,
                                             void *key,
                                             uintptr_t hash,
-                                            struct mulle_container_keyvaluecallback *callback);
+                                            struct mulle_container_keyvaluecallback *callback,
+                                            struct mulle_allocator *allocator);
 
 int   _mulle_indexedkeyvaluebucket_remove( struct _mulle_indexedkeyvaluebucket *bucket,
                                            void *key,
-                                           struct mulle_container_keyvaluecallback *callback);
+                                           struct mulle_container_keyvaluecallback *callback,
+                                           struct mulle_allocator *allocator);
 
 void   *_mulle_indexedkeyvaluebucket_get( struct _mulle_indexedkeyvaluebucket *bucket,
                                           void *key,
@@ -129,7 +143,7 @@ void   *_mulle_indexedkeyvaluebucket_get( struct _mulle_indexedkeyvaluebucket *b
                                           struct mulle_container_keyvaluecallback *callback);
 
 
-static inline size_t   _mulle_indexedkeyvaluebucket_count( struct _mulle_indexedkeyvaluebucket *bucket)
+static inline size_t   _mulle_indexedkeyvaluebucket_get_count( struct _mulle_indexedkeyvaluebucket *bucket)
 {
    return( bucket->_count);
 }

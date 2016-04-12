@@ -38,10 +38,11 @@
 
 
 void   *_mulle_indexedbucket_set_with_mode( struct _mulle_indexedbucket *bucket,
-                                               void *p,
-                                               uintptr_t hash,
-                                               enum mulle_container_set_mode mode,
-                                               struct mulle_container_keycallback *callback);
+                                            void *p,
+                                            uintptr_t hash,
+                                            enum mulle_container_set_mode mode,
+                                            struct mulle_container_keycallback *callback,
+                                            struct mulle_allocator *allocator);
 /*
  *
  */
@@ -100,7 +101,8 @@ static inline uintptr_t   _mulle_indexedbucket_hash( struct mulle_container_keyc
 
 void    _mulle_indexedbucket_init( struct _mulle_indexedbucket *p,
                                    size_t capacity,
-                                   struct mulle_container_keycallback *callback)
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator)
 {
    size_t   n;
    short    depth;
@@ -109,43 +111,46 @@ void    _mulle_indexedbucket_init( struct _mulle_indexedbucket *p,
    n           = _mulle_indexedbucket_size_for_depth( depth) + 1;
    p->_count   = 0;
    p->_depth   = depth;
-   p->_storage = mulle_allocator_calloc( callback->allocator, n, sizeof( void *));
+   p->_storage = mulle_allocator_calloc( allocator, n, sizeof( void *));
 }
 
 
 struct _mulle_indexedbucket   *_mulle_indexedbucket_create( size_t capacity,
                                                             size_t extra,
-                                                            struct mulle_container_keycallback *callback)
+                                                            struct mulle_container_keycallback *callback,
+                                                            struct mulle_allocator *allocator)
 {
    struct _mulle_indexedbucket   *p;
    
-   p = mulle_allocator_calloc( callback->allocator, 1, sizeof( struct _mulle_indexedbucket) + extra);
+   p = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_indexedbucket) + extra);
    if( p)
-      _mulle_indexedbucket_init( p, capacity, callback);
+      _mulle_indexedbucket_init( p, capacity, callback, allocator);
    return( p);
 }
 
 
 void   _mulle_indexedbucket_done( struct _mulle_indexedbucket *bucket,
-                                    struct mulle_container_keycallback *callback)
+                                  struct mulle_container_keycallback *callback,
+                                  struct mulle_allocator *allocator)
 {
    struct _mulle_indexedbucketenumerator  rover;
    void   *item;
    
    rover = _mulle_indexedbucket_enumerate( bucket, callback);
    while( item = _mulle_indexedbucketenumerator_next( &rover))
-      (*callback->release)( callback, item);
+      (*callback->release)( callback, item, allocator);
    _mulle_indexedbucketenumerator_done( &rover);
    
-   mulle_allocator_free( callback->allocator, bucket->_storage);
+   mulle_allocator_free( allocator, bucket->_storage);
 }
 
 
 void    _mulle_indexedbucket_free( struct _mulle_indexedbucket *bucket, 
-                                   struct mulle_container_keycallback *callback)
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator)
 {
-   _mulle_indexedbucket_done( bucket, callback);
-   mulle_allocator_free( callback->allocator, bucket);
+   _mulle_indexedbucket_done( bucket, callback, allocator);
+   mulle_allocator_free( allocator, bucket);
 }
 
 
@@ -191,7 +196,8 @@ static void   copy_buckets( void **dst,
 
 
 static size_t   grow( struct _mulle_indexedbucket *bucket,
-                      struct mulle_container_keycallback *callback)
+                      struct mulle_container_keycallback *callback,
+                      struct mulle_allocator *allocator)
 {
    size_t   modulo;
    size_t   new_modulo;
@@ -217,12 +223,12 @@ static size_t   grow( struct _mulle_indexedbucket *bucket,
    
    new_modulo = mask_for_depth( ++depth);
 
-   buf = mulle_allocator_calloc( callback->allocator, (new_modulo + 1), sizeof( void *));
+   buf = mulle_allocator_calloc( allocator, (new_modulo + 1), sizeof( void *));
    if( ! buf)
       return( modulo);
    
    copy_buckets( buf, new_modulo, bucket->_storage, modulo + 1, callback);
-   mulle_allocator_free( callback->allocator, bucket->_storage);
+   mulle_allocator_free( allocator, bucket->_storage);
    
    bucket->_depth   = depth;
    bucket->_storage = buf;
@@ -251,9 +257,8 @@ static size_t  _find_index( void  **storage,
    {
       if( (*f)( param1, param2, q))
          return( i);
-      if( ++i < limit)
-         continue;
-      i = 0;
+      if( ++i >= limit)
+         i = 0;
    }
    while( q = storage[ i]);
    
@@ -284,10 +289,11 @@ static inline size_t  find_index( void **storage,
 
 
 void   *_mulle_indexedbucket_set_with_mode( struct _mulle_indexedbucket *bucket,
-                                               void *p,
-                                               uintptr_t hash,
-                                               enum mulle_container_set_mode mode,
-                                               struct mulle_container_keycallback *callback)
+                                            void *p,
+                                            uintptr_t hash,
+                                            enum mulle_container_set_mode mode,
+                                            struct mulle_container_keycallback *callback,
+                                            struct mulle_allocator *allocator)
 {
    void       *q;
    size_t     i;
@@ -304,8 +310,12 @@ void   *_mulle_indexedbucket_set_with_mode( struct _mulle_indexedbucket *bucket,
       {
       case mulle_container_put_e  :
          q = bucket->_storage[ i];
-         (*callback->release)( callback, q);
-         bucket->_storage[ i] = p;
+         if( p != q)
+         {
+            p = (*callback->retain)( callback, p, allocator);
+            (*callback->release)( callback, q, allocator);
+            bucket->_storage[ i] = p;
+         }
          return( NULL);  
          
       case mulle_container_insert_e :
@@ -313,6 +323,8 @@ void   *_mulle_indexedbucket_set_with_mode( struct _mulle_indexedbucket *bucket,
       }
    }
       
+   p = (*callback->retain)( callback, p, allocator);
+
    i = hole_index;
    if( ! _mulle_indexedbucket_is_fuller_than( bucket, modulo))
    {
@@ -321,7 +333,7 @@ void   *_mulle_indexedbucket_set_with_mode( struct _mulle_indexedbucket *bucket,
       return( NULL);
    }
 
-   modulo = grow( bucket, callback);
+   modulo = grow( bucket, callback, allocator);
 
    i = hash_for_modulo( hash, modulo);
    store_pointer( bucket->_storage, i, modulo, p);
@@ -332,28 +344,26 @@ void   *_mulle_indexedbucket_set_with_mode( struct _mulle_indexedbucket *bucket,
 
 
 void    _mulle_indexedbucket_put( struct _mulle_indexedbucket *bucket, 
-                                     void *p,
-                                     struct mulle_container_keycallback *callback)
+                                  void *p,
+                                  struct mulle_container_keycallback *callback,
+                                  struct mulle_allocator *allocator)
 {
    size_t   hash;
 
-   p    = (*callback->retain)( callback, p);
    hash = (*callback->hash)( callback, p);
-   
-   _mulle_indexedbucket_set_with_mode( bucket, p, hash, mulle_container_put_e, callback);
+   _mulle_indexedbucket_set_with_mode( bucket, p, hash, mulle_container_put_e, callback, allocator);
 }
 
 
 void    *_mulle_indexedbucket_insert( struct _mulle_indexedbucket *bucket,
-                                                void *p,
-                                                struct mulle_container_keycallback *callback)
+                                      void *p,
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator)
 {
    size_t   hash;
    
-   p    = (*callback->retain)( callback, p);
    hash = (*callback->hash)( callback, p);
-   
-   return( _mulle_indexedbucket_set_with_mode( bucket, p, hash, mulle_container_insert_e, callback));
+   return( _mulle_indexedbucket_set_with_mode( bucket, p, hash, mulle_container_insert_e, callback, allocator));
 }                                       
 
 
@@ -390,7 +400,8 @@ void   *_mulle_indexedbucket_get( struct _mulle_indexedbucket *bucket,
 int   _mulle_indexedbucket_remove( struct _mulle_indexedbucket *bucket,
                                    void *p,
                                    uintptr_t hash,
-                                   struct mulle_container_keycallback *callback)
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator)
 {
    size_t   hole_index;
    size_t   i;
@@ -405,7 +416,7 @@ int   _mulle_indexedbucket_remove( struct _mulle_indexedbucket *bucket,
       return( 0);
 
    q = bucket->_storage[ i];
-   (callback->release)( callback, q);  // get rid of it
+   (callback->release)( callback, q, allocator);  // get rid of it
    bucket->_count--;
    
    // now we may need to do a whole lot of shifting, if 
@@ -526,10 +537,11 @@ int   _mulle_indexedbucket_remove( struct _mulle_indexedbucket *bucket,
 
 // don't inline this (!)
 void   _mulle_indexedbucket_reset( struct _mulle_indexedbucket *bucket,
-                                   struct mulle_container_keycallback *callback)
+                                   struct mulle_container_keycallback *callback,
+                                   struct mulle_allocator *allocator)
 {
-   _mulle_indexedbucket_done( bucket, callback);
-   _mulle_indexedbucket_init( bucket, _mulle_indexedbucket_size_for_depth( bucket->_depth), callback);
+   _mulle_indexedbucket_done( bucket, callback, allocator);
+   _mulle_indexedbucket_init( bucket, _mulle_indexedbucket_size_for_depth( bucket->_depth), callback, allocator);
 }
 
 

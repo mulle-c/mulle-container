@@ -69,25 +69,26 @@ struct  _mulle_setenumerator
 
 
 
-struct _mulle_set   *_mulle_set_create( size_t capacity, struct mulle_container_keycallback *callback);
+struct _mulle_set   *_mulle_set_create( size_t capacity, struct mulle_container_keycallback *callback, struct mulle_allocator *allocator);
 
-void   _mulle_set_init( struct _mulle_set *set, size_t capacity, struct mulle_container_keycallback *callback);
-void   _mulle_set_done( struct _mulle_set *set, struct mulle_container_keycallback *callback);
-void   _mulle_set_free( struct _mulle_set *set, struct mulle_container_keycallback *callback);
-void   _mulle_set_reset( struct _mulle_set *set, struct mulle_container_keycallback *callback);
+void   _mulle_set_init( struct _mulle_set *set, size_t capacity, struct mulle_container_keycallback *callback, struct mulle_allocator *allocator);
+void   _mulle_set_done( struct _mulle_set *set, struct mulle_container_keycallback *callback, struct mulle_allocator *allocator);
+void   _mulle_set_free( struct _mulle_set *set, struct mulle_container_keycallback *callback, struct mulle_allocator *allocator);
+void   _mulle_set_reset( struct _mulle_set *set, struct mulle_container_keycallback *callback, struct mulle_allocator *allocator);
 
 void   *_mulle_set_get( struct _mulle_set *set, void *p, struct mulle_container_keycallback *callback);
-void   _mulle_set_remove( struct _mulle_set *set, void *p, struct mulle_container_keycallback *callback);
+void   _mulle_set_remove( struct _mulle_set *set, void *p, struct mulle_container_keycallback *callback, struct mulle_allocator *allocator);
 
 
-static inline size_t   _mulle_set_count( struct _mulle_set *set)
+static inline size_t   _mulle_set_get_count( struct _mulle_set *set)
 {
    return( set->_count);
 }
 
 
 struct _mulle_set   *_mulle_set_copy( struct _mulle_set *set,
-                                      struct mulle_container_keycallback *callback);
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator);
 
 
 # pragma mark -
@@ -103,7 +104,7 @@ static inline struct _mulle_setenumerator   _mulle_set_enumerate( struct _mulle_
    rover._index    = 0;
    rover._left     = set->_count;
    rover._table    = set;
-   rover._callback = callback;
+   rover._callback = callback;  // for not a key marker
    return( rover);
 }
 
@@ -122,21 +123,24 @@ static inline void   _mulle_setenumerator_done( struct _mulle_setenumerator *rov
 void   *__mulle_set_put( struct _mulle_set *,
                          void *,
                          enum mulle_container_set_mode,
-                         struct mulle_container_keycallback *);
+                         struct mulle_container_keycallback *,
+                         struct mulle_allocator *allocator);
 
 static inline void   _mulle_set_put( struct _mulle_set *set,
                                      void *p,
-                                     struct mulle_container_keycallback *callback)
+                                     struct mulle_container_keycallback *callback,
+                                     struct mulle_allocator *allocator)
 {
-   __mulle_set_put( set, p, mulle_container_put_e, callback);
+   __mulle_set_put( set, p, mulle_container_put_e, callback, allocator);
 }
 
 
 static inline void   *_mulle_set_insert( struct _mulle_set *set,
                                          void *p,
-                                         struct mulle_container_keycallback *callback)
+                                         struct mulle_container_keycallback *callback,
+                                         struct mulle_allocator *allocator)
 {
-   return( __mulle_set_put( set, p, mulle_container_insert_e, callback));
+   return( __mulle_set_put( set, p, mulle_container_insert_e, callback, allocator));
 }
 
 #endif
