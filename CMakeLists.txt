@@ -3,9 +3,32 @@ cmake_minimum_required (VERSION 3.0)
 project (mulle-container)
 
 
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG -DMULLE_ABA_TRACE_LIST -DMULLE_ABA_TRACE_SWAP")
+
+set( XXXX "VfL Bochum")
+
+set( CMAKE_MODULE_PATH
+${CMAKE_MODULE_PATH}
+${CMAKE_SOURCE_DIR}/mulle-configuration
+)
+
+message(STATUS "CMAKE_MODULE_PATH is ${CMAKE_MODULE_PATH}")
+
+include( staticlibrary)
+
+find_library ( MULLE_ALLOCATOR_PATH mulle_allocator
+${DEPENDENCY_FRAMEWORK_DIRS}
+${DEPENDENCY_LIBRARY_DIRS}
+)
+
 # using include_directories is a little bit shitty
 include_directories( src
+src/array
+src/buffer
 src/hash
+src/map
+src/queue
+src/set
 )
 
 include_directories( SYSTEM
@@ -14,8 +37,6 @@ cityhash/src
 dependencies/include
 )
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG -DMULLE_ABA_TRACE_LIST -DMULLE_ABA_TRACE_SWAP")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -g -DNDEBUG")
 
 set( HEADERS
 src/mulle_container.h
@@ -36,10 +57,11 @@ src/queue/_mulle_queue.h
 src/set/mulle_set.h
 src/set/_mulle_set.h
 src/set/_mulle_indexedbucket.h
-src/set/_mulle_pointerset.h
+src/set/mulle_pointerset.h
 )
 
-add_library( mulle_container
+
+set( SOURCES
 src/mulle_container_callback.c
 src/array/mulle_array.c
 src/hash/mulle_hash.c
@@ -54,10 +76,26 @@ src/queue/_mulle_queue.c
 src/set/_mulle_set.c
 src/set/mulle_set.c
 src/set/_mulle_indexedbucket.c
-src/set/_mulle_pointerset.c
+src/set/mulle_pointerset.c
 )
 
-INSTALL( TARGETS mulle_container DESTINATION "lib")
+add_library(mulle_standalone_container SHARED
+${SOURCES}
+src/mulle_standalone_container.c
+)
+
+add_library(mulle_container STATIC
+${SOURCES}
+)
+
+add_dependencies( mulle_standalone_container mulle_container)
+
+TARGET_LINK_LIBRARIES( mulle_standalone_container
+mulle_container
+${MULLE_ALLOCATOR_PATH} )
+
+INSTALL( TARGETS mulle_container mulle_standalone_container DESTINATION "lib")
 INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
+INSTALL( FILES src/mulle_standalone_container.h DESTINATION "include/mulle_standalone_container")
 
 
