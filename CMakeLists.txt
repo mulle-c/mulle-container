@@ -5,21 +5,15 @@ project (mulle-container)
 
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG -DMULLE_ABA_TRACE_LIST -DMULLE_ABA_TRACE_SWAP")
 
-set( XXXX "VfL Bochum")
-
-set( CMAKE_MODULE_PATH
-${CMAKE_MODULE_PATH}
-${CMAKE_SOURCE_DIR}/mulle-configuration
-)
-
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/mulle-configuration)
 message(STATUS "CMAKE_MODULE_PATH is ${CMAKE_MODULE_PATH}")
+message(STATUS "CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}")
+if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  include( Debug)
+else()
+  include( Release)
+endif()
 
-include( staticlibrary)
-
-find_library ( MULLE_ALLOCATOR_PATH mulle_allocator
-${DEPENDENCY_FRAMEWORK_DIRS}
-${DEPENDENCY_LIBRARY_DIRS}
-)
 
 # using include_directories is a little bit shitty
 include_directories( src
@@ -92,7 +86,7 @@ add_dependencies( mulle_standalone_container mulle_container)
 
 TARGET_LINK_LIBRARIES( mulle_standalone_container
 mulle_container
-${MULLE_ALLOCATOR_PATH} )
+mulle_allocator )
 
 INSTALL( TARGETS mulle_container mulle_standalone_container DESTINATION "lib")
 INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
