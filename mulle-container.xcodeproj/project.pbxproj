@@ -37,6 +37,11 @@
 		41014CC11BE9521400BE18B5 /* _mulle_array.h in Headers */ = {isa = PBXBuildFile; fileRef = 41014CBF1BE9521400BE18B5 /* _mulle_array.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41014CC21BE9521400BE18B5 /* _mulle_array.c in Sources */ = {isa = PBXBuildFile; fileRef = 41014CC01BE9521400BE18B5 /* _mulle_array.c */; };
 		4105ABF11BCB089600D45AA8 /* mulle_container_callback.h in Headers */ = {isa = PBXBuildFile; fileRef = 414AC1AA1AC2C45800DCA3CC /* mulle_container_callback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		411D23A61CC3AC2900D92786 /* mulle_pointerarray.h in Headers */ = {isa = PBXBuildFile; fileRef = 411D23A51CC3AC2900D92786 /* mulle_pointerarray.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		411D23AA1CC3B1B200D92786 /* mulle_set.c in Sources */ = {isa = PBXBuildFile; fileRef = 411D23A81CC3B1B200D92786 /* mulle_set.c */; };
+		411D23AB1CC3B1B200D92786 /* mulle_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 411D23A91CC3B1B200D92786 /* mulle_set.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		412ED7D11CC3B50300E64506 /* mulle_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 412ED7CF1CC3B50300E64506 /* mulle_map.c */; };
+		412ED7D21CC3B50300E64506 /* mulle_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 412ED7D01CC3B50300E64506 /* mulle_map.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		414945741BEA930000C92587 /* mulle_container.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8A81BE7DB6C00EE1FF5 /* mulle_container.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		414945751BEA932100C92587 /* mulle_container_operation.h in Headers */ = {isa = PBXBuildFile; fileRef = 417582A71BE8BEE1005F0CE4 /* mulle_container_operation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		414945761BEA935700C92587 /* _mulle_keyvaluepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 41B440AF1BE8EC94004E7B2D /* _mulle_keyvaluepair.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -60,12 +65,12 @@
 		418F93501C4426D1008EC017 /* libmulle_test_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */; };
 		418F93521C442755008EC017 /* libmulle_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F93511C442755008EC017 /* libmulle_allocator.a */; };
 		418F93541C44277C008EC017 /* libmulle_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F93511C442755008EC017 /* libmulle_allocator.a */; };
-		4198C8901BE7AD9500EE1FF5 /* mulle_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8891BE7AD9500EE1FF5 /* mulle_set.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4198C8911BE7AD9500EE1FF5 /* mulle_set.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C88A1BE7AD9500EE1FF5 /* mulle_set.c */; };
-		4198C8931BE7AD9500EE1FF5 /* _mulle_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C88C1BE7AD9500EE1FF5 /* _mulle_set.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4198C8941BE7AD9500EE1FF5 /* _mulle_set.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C88D1BE7AD9500EE1FF5 /* _mulle_set.c */; };
-		4198C8951BE7AD9500EE1FF5 /* _mulle_indexedbucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C88E1BE7AD9500EE1FF5 /* _mulle_indexedbucket.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4198C8961BE7AD9500EE1FF5 /* _mulle_indexedbucket.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C88F1BE7AD9500EE1FF5 /* _mulle_indexedbucket.c */; };
+		4198C8901BE7AD9500EE1FF5 /* mulle_bigset.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8891BE7AD9500EE1FF5 /* mulle_bigset.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4198C8911BE7AD9500EE1FF5 /* mulle_bigset.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C88A1BE7AD9500EE1FF5 /* mulle_bigset.c */; };
+		4198C8931BE7AD9500EE1FF5 /* _mulle_bigset.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C88C1BE7AD9500EE1FF5 /* _mulle_bigset.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4198C8941BE7AD9500EE1FF5 /* _mulle_bigset.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C88D1BE7AD9500EE1FF5 /* _mulle_bigset.c */; };
+		4198C8951BE7AD9500EE1FF5 /* _mulle_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C88E1BE7AD9500EE1FF5 /* _mulle_set.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4198C8961BE7AD9500EE1FF5 /* _mulle_set.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C88F1BE7AD9500EE1FF5 /* _mulle_set.c */; };
 		4198C89A1BE7CED300EE1FF5 /* mulle_hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8981BE7CED300EE1FF5 /* mulle_hash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4198C89B1BE7CED300EE1FF5 /* mulle_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C8991BE7CED300EE1FF5 /* mulle_hash.c */; };
 		4198C89F1BE7CEFF00EE1FF5 /* city.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C89C1BE7CEFF00EE1FF5 /* city.c */; };
@@ -74,17 +79,19 @@
 		4198C8A31BE7D27400EE1FF5 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8A21BE7D27400EE1FF5 /* config.h */; };
 		419E7F541BEA1B660000D1A7 /* mulle_array.c in Sources */ = {isa = PBXBuildFile; fileRef = 419E7F521BEA1B660000D1A7 /* mulle_array.c */; };
 		419E7F551BEA1B660000D1A7 /* mulle_array.h in Headers */ = {isa = PBXBuildFile; fileRef = 419E7F531BEA1B660000D1A7 /* mulle_array.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41BCA5081BE8E58300504AAD /* mulle_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5001BE8E58300504AAD /* mulle_map.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41BCA5091BE8E58300504AAD /* mulle_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5011BE8E58300504AAD /* mulle_map.c */; };
-		41BCA50A1BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5021BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41BCA50B1BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5031BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.c */; };
-		41BCA50D1BE8E58300504AAD /* _mulle_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5051BE8E58300504AAD /* _mulle_map.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41BCA50E1BE8E58300504AAD /* _mulle_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5061BE8E58300504AAD /* _mulle_map.c */; };
+		41BCA5081BE8E58300504AAD /* mulle_bigmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5001BE8E58300504AAD /* mulle_bigmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		41BCA5091BE8E58300504AAD /* mulle_bigmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5011BE8E58300504AAD /* mulle_bigmap.c */; };
+		41BCA50A1BE8E58300504AAD /* _mulle_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5021BE8E58300504AAD /* _mulle_map.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		41BCA50B1BE8E58300504AAD /* _mulle_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5031BE8E58300504AAD /* _mulle_map.c */; };
+		41BCA50D1BE8E58300504AAD /* _mulle_bigmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5051BE8E58300504AAD /* _mulle_bigmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		41BCA50E1BE8E58300504AAD /* _mulle_bigmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5061BE8E58300504AAD /* _mulle_bigmap.c */; };
 		41BEC59A1CB131C4006531B6 /* _mulle_queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BEC5981CB131C4006531B6 /* _mulle_queue.c */; };
 		41BEC59B1CB131C4006531B6 /* _mulle_queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BEC5991CB131C4006531B6 /* _mulle_queue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41BEC59E1CB14A3E006531B6 /* mulle_pointerset.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BEC59C1CB14A3E006531B6 /* mulle_pointerset.c */; };
 		41BEC59F1CB14A3E006531B6 /* mulle_pointerset.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BEC59D1CB14A3E006531B6 /* mulle_pointerset.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41D53B801CB7B990006BFF0E /* indexedkvbucket.c in Sources */ = {isa = PBXBuildFile; fileRef = 41D53B7F1CB7B990006BFF0E /* indexedkvbucket.c */; };
+		41E8C84C1CC57FA40049B8C1 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 41E8C84B1CC57FA40049B8C1 /* main.c */; };
+		41E8C8521CC57FB60049B8C1 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
 		41F14FEB1B68F0AE002189F1 /* mulle_container_callback.c in Sources */ = {isa = PBXBuildFile; fileRef = 414AC1AB1AC2C45800DCA3CC /* mulle_container_callback.c */; };
 		41F568171BEBAB5500177E65 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 41F568161BEBAB5500177E65 /* main.c */; };
 		41F5681F1BEBAB7A00177E65 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
@@ -126,6 +133,13 @@
 			remoteGlobalIDString = 41F14FE51B68F098002189F1;
 			remoteInfo = mulle_container;
 		};
+		41E8C8501CC57FB10049B8C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 41F14FE51B68F098002189F1;
+			remoteInfo = mulle_container;
+		};
 		41F5681B1BEBAB7400177E65 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
@@ -149,10 +163,28 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		41E8C8471CC57FA40049B8C1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		41014CBF1BE9521400BE18B5 /* _mulle_array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_array.h; sourceTree = "<group>"; };
 		41014CC01BE9521400BE18B5 /* _mulle_array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_array.c; sourceTree = "<group>"; };
 		411A28C11BCD446E00D39FF7 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		411D23A51CC3AC2900D92786 /* mulle_pointerarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_pointerarray.h; sourceTree = "<group>"; };
+		411D23A71CC3B07100D92786 /* _mulle_bigmap_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _mulle_bigmap_private.h; sourceTree = "<group>"; };
+		411D23A81CC3B1B200D92786 /* mulle_set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_set.c; sourceTree = "<group>"; };
+		411D23A91CC3B1B200D92786 /* mulle_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_set.h; sourceTree = "<group>"; };
+		412ED7CF1CC3B50300E64506 /* mulle_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_map.c; sourceTree = "<group>"; };
+		412ED7D01CC3B50300E64506 /* mulle_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_map.h; sourceTree = "<group>"; };
 		414945891BEAAC3800C92587 /* test-array */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-array"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4149458B1BEAAC3800C92587 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		414AC1AA1AC2C45800DCA3CC /* mulle_container_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_container_callback.h; sourceTree = "<group>"; };
@@ -178,12 +210,12 @@
 		41817B901CB69D6C00C55990 /* mulle_standalone_container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_standalone_container.h; sourceTree = "<group>"; };
 		418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_test_allocator.a; path = ../dependencies/lib/Debug/libmulle_test_allocator.a; sourceTree = "<group>"; };
 		418F93511C442755008EC017 /* libmulle_allocator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_allocator.a; path = ../dependencies/lib/Debug/libmulle_allocator.a; sourceTree = "<group>"; };
-		4198C8891BE7AD9500EE1FF5 /* mulle_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_set.h; sourceTree = "<group>"; };
-		4198C88A1BE7AD9500EE1FF5 /* mulle_set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_set.c; sourceTree = "<group>"; };
-		4198C88C1BE7AD9500EE1FF5 /* _mulle_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_set.h; sourceTree = "<group>"; };
-		4198C88D1BE7AD9500EE1FF5 /* _mulle_set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_set.c; sourceTree = "<group>"; };
-		4198C88E1BE7AD9500EE1FF5 /* _mulle_indexedbucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_indexedbucket.h; sourceTree = "<group>"; };
-		4198C88F1BE7AD9500EE1FF5 /* _mulle_indexedbucket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_indexedbucket.c; sourceTree = "<group>"; };
+		4198C8891BE7AD9500EE1FF5 /* mulle_bigset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_bigset.h; sourceTree = "<group>"; };
+		4198C88A1BE7AD9500EE1FF5 /* mulle_bigset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_bigset.c; sourceTree = "<group>"; };
+		4198C88C1BE7AD9500EE1FF5 /* _mulle_bigset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_bigset.h; sourceTree = "<group>"; };
+		4198C88D1BE7AD9500EE1FF5 /* _mulle_bigset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_bigset.c; sourceTree = "<group>"; };
+		4198C88E1BE7AD9500EE1FF5 /* _mulle_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_set.h; sourceTree = "<group>"; };
+		4198C88F1BE7AD9500EE1FF5 /* _mulle_set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_set.c; sourceTree = "<group>"; };
 		4198C8981BE7CED300EE1FF5 /* mulle_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_hash.h; sourceTree = "<group>"; };
 		4198C8991BE7CED300EE1FF5 /* mulle_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_hash.c; sourceTree = "<group>"; };
 		4198C89C1BE7CEFF00EE1FF5 /* city.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = city.c; path = cityhash/src/city.c; sourceTree = SOURCE_ROOT; };
@@ -194,12 +226,12 @@
 		419E7F521BEA1B660000D1A7 /* mulle_array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_array.c; sourceTree = "<group>"; };
 		419E7F531BEA1B660000D1A7 /* mulle_array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_array.h; sourceTree = "<group>"; };
 		41B440AF1BE8EC94004E7B2D /* _mulle_keyvaluepair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _mulle_keyvaluepair.h; sourceTree = "<group>"; };
-		41BCA5001BE8E58300504AAD /* mulle_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_map.h; sourceTree = "<group>"; };
-		41BCA5011BE8E58300504AAD /* mulle_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_map.c; sourceTree = "<group>"; };
-		41BCA5021BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_indexedkeyvaluebucket.h; sourceTree = "<group>"; };
-		41BCA5031BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_indexedkeyvaluebucket.c; sourceTree = "<group>"; };
-		41BCA5051BE8E58300504AAD /* _mulle_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_map.h; sourceTree = "<group>"; };
-		41BCA5061BE8E58300504AAD /* _mulle_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_map.c; sourceTree = "<group>"; };
+		41BCA5001BE8E58300504AAD /* mulle_bigmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_bigmap.h; sourceTree = "<group>"; };
+		41BCA5011BE8E58300504AAD /* mulle_bigmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_bigmap.c; sourceTree = "<group>"; };
+		41BCA5021BE8E58300504AAD /* _mulle_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_map.h; sourceTree = "<group>"; };
+		41BCA5031BE8E58300504AAD /* _mulle_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_map.c; sourceTree = "<group>"; };
+		41BCA5051BE8E58300504AAD /* _mulle_bigmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_bigmap.h; sourceTree = "<group>"; };
+		41BCA5061BE8E58300504AAD /* _mulle_bigmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_bigmap.c; sourceTree = "<group>"; };
 		41BEC5981CB131C4006531B6 /* _mulle_queue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_queue.c; sourceTree = "<group>"; };
 		41BEC5991CB131C4006531B6 /* _mulle_queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_queue.h; sourceTree = "<group>"; };
 		41BEC59C1CB14A3E006531B6 /* mulle_pointerset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_pointerset.c; sourceTree = "<group>"; };
@@ -207,6 +239,9 @@
 		41D04AB81C8DDCF500CC8F11 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		41D04AB91C8DDD1800CC8F11 /* RELEASENOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = RELEASENOTES.md; sourceTree = "<group>"; };
 		41D53B7F1CB7B990006BFF0E /* indexedkvbucket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = indexedkvbucket.c; path = tests/map/indexedkvbucket.c; sourceTree = SOURCE_ROOT; };
+		41E8C8491CC57FA40049B8C1 /* mulle_hash */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mulle_hash; sourceTree = BUILT_PRODUCTS_DIR; };
+		41E8C84B1CC57FA40049B8C1 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		41E9C6781CC5292800ED4145 /* TYPES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TYPES.md; sourceTree = "<group>"; };
 		41F14FE61B68F098002189F1 /* libmulle_container.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmulle_container.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container_compiler_attributes.h; sourceTree = "<group>"; };
 		41F568141BEBAB5500177E65 /* test-map */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-map"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -243,6 +278,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		41E8C8461CC57FA40049B8C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41E8C8521CC57FB60049B8C1 /* libmulle_container.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		41F14FE31B68F098002189F1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -270,12 +313,14 @@
 				41D04AB81C8DDCF500CC8F11 /* README.md */,
 				41D04AB91C8DDD1800CC8F11 /* RELEASENOTES.md */,
 				416C57EF1BEA545B007F4691 /* VERBS.md */,
+				41E9C6781CC5292800ED4145 /* TYPES.md */,
 				417C02631BD8404E005A3751 /* mulle-configuration */,
 				4147852E1ABAF290002DBAE4 /* src */,
 				4149458A1BEAAC3800C92587 /* test-array */,
 				41F568151BEBAB5500177E65 /* test-map */,
 				41709A991CB6BEB7002A1BDA /* Libraries */,
 				415745981CB6C2F50037CF80 /* run-test */,
+				41E8C84A1CC57FA40049B8C1 /* mulle_hash */,
 				4147852D1ABAF290002DBAE4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -288,6 +333,7 @@
 				41F568141BEBAB5500177E65 /* test-map */,
 				41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */,
 				415745971CB6C2F50037CF80 /* run-test */,
+				41E8C8491CC57FA40049B8C1 /* mulle_hash */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -363,12 +409,14 @@
 		4198C8881BE7AD5600EE1FF5 /* set */ = {
 			isa = PBXGroup;
 			children = (
-				4198C8891BE7AD9500EE1FF5 /* mulle_set.h */,
-				4198C88A1BE7AD9500EE1FF5 /* mulle_set.c */,
-				4198C88C1BE7AD9500EE1FF5 /* _mulle_set.h */,
-				4198C88D1BE7AD9500EE1FF5 /* _mulle_set.c */,
-				4198C88E1BE7AD9500EE1FF5 /* _mulle_indexedbucket.h */,
-				4198C88F1BE7AD9500EE1FF5 /* _mulle_indexedbucket.c */,
+				4198C8891BE7AD9500EE1FF5 /* mulle_bigset.h */,
+				4198C88A1BE7AD9500EE1FF5 /* mulle_bigset.c */,
+				4198C88C1BE7AD9500EE1FF5 /* _mulle_bigset.h */,
+				4198C88D1BE7AD9500EE1FF5 /* _mulle_bigset.c */,
+				411D23A91CC3B1B200D92786 /* mulle_set.h */,
+				411D23A81CC3B1B200D92786 /* mulle_set.c */,
+				4198C88E1BE7AD9500EE1FF5 /* _mulle_set.h */,
+				4198C88F1BE7AD9500EE1FF5 /* _mulle_set.c */,
 				41BEC59D1CB14A3E006531B6 /* mulle_pointerset.h */,
 				41BEC59C1CB14A3E006531B6 /* mulle_pointerset.c */,
 			);
@@ -397,6 +445,7 @@
 				419E7F521BEA1B660000D1A7 /* mulle_array.c */,
 				41014CBF1BE9521400BE18B5 /* _mulle_array.h */,
 				41014CC01BE9521400BE18B5 /* _mulle_array.c */,
+				411D23A51CC3AC2900D92786 /* mulle_pointerarray.h */,
 			);
 			path = array;
 			sourceTree = "<group>";
@@ -404,13 +453,16 @@
 		41BCA4FF1BE8E51800504AAD /* map */ = {
 			isa = PBXGroup;
 			children = (
-				41BCA5001BE8E58300504AAD /* mulle_map.h */,
-				41BCA5011BE8E58300504AAD /* mulle_map.c */,
-				41BCA5021BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.h */,
-				41BCA5031BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.c */,
+				41BCA5001BE8E58300504AAD /* mulle_bigmap.h */,
+				41BCA5011BE8E58300504AAD /* mulle_bigmap.c */,
+				41BCA5021BE8E58300504AAD /* _mulle_map.h */,
+				41BCA5031BE8E58300504AAD /* _mulle_map.c */,
+				412ED7D01CC3B50300E64506 /* mulle_map.h */,
+				412ED7CF1CC3B50300E64506 /* mulle_map.c */,
 				41B440AF1BE8EC94004E7B2D /* _mulle_keyvaluepair.h */,
-				41BCA5051BE8E58300504AAD /* _mulle_map.h */,
-				41BCA5061BE8E58300504AAD /* _mulle_map.c */,
+				41BCA5051BE8E58300504AAD /* _mulle_bigmap.h */,
+				41BCA5061BE8E58300504AAD /* _mulle_bigmap.c */,
+				411D23A71CC3B07100D92786 /* _mulle_bigmap_private.h */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -422,6 +474,14 @@
 				41BEC5981CB131C4006531B6 /* _mulle_queue.c */,
 			);
 			path = queue;
+			sourceTree = "<group>";
+		};
+		41E8C84A1CC57FA40049B8C1 /* mulle_hash */ = {
+			isa = PBXGroup;
+			children = (
+				41E8C84B1CC57FA40049B8C1 /* main.c */,
+			);
+			path = mulle_hash;
 			sourceTree = "<group>";
 		};
 		41F568151BEBAB5500177E65 /* test-map */ = {
@@ -451,13 +511,16 @@
 				416C57F41BEA5D4A007F4691 /* _mulle_buffer.h in Headers */,
 				4198C89A1BE7CED300EE1FF5 /* mulle_hash.h in Headers */,
 				417582A51BE8BE2B005F0CE4 /* mulle_prime.h in Headers */,
-				4198C8901BE7AD9500EE1FF5 /* mulle_set.h in Headers */,
-				4198C8931BE7AD9500EE1FF5 /* _mulle_set.h in Headers */,
-				4198C8951BE7AD9500EE1FF5 /* _mulle_indexedbucket.h in Headers */,
-				41BCA5081BE8E58300504AAD /* mulle_map.h in Headers */,
-				41BCA50D1BE8E58300504AAD /* _mulle_map.h in Headers */,
+				4198C8901BE7AD9500EE1FF5 /* mulle_bigset.h in Headers */,
+				4198C8931BE7AD9500EE1FF5 /* _mulle_bigset.h in Headers */,
+				4198C8951BE7AD9500EE1FF5 /* _mulle_set.h in Headers */,
+				41BCA5081BE8E58300504AAD /* mulle_bigmap.h in Headers */,
+				41BCA50D1BE8E58300504AAD /* _mulle_bigmap.h in Headers */,
 				41BEC59B1CB131C4006531B6 /* _mulle_queue.h in Headers */,
-				41BCA50A1BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.h in Headers */,
+				41BCA50A1BE8E58300504AAD /* _mulle_map.h in Headers */,
+				411D23A61CC3AC2900D92786 /* mulle_pointerarray.h in Headers */,
+				411D23AB1CC3B1B200D92786 /* mulle_set.h in Headers */,
+				412ED7D21CC3B50300E64506 /* mulle_map.h in Headers */,
 				41BEC59F1CB14A3E006531B6 /* mulle_pointerset.h in Headers */,
 				414945761BEA935700C92587 /* _mulle_keyvaluepair.h in Headers */,
 				4198C8A01BE7CEFF00EE1FF5 /* city.h in Headers */,
@@ -529,6 +592,24 @@
 			productReference = 41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		41E8C8481CC57FA40049B8C1 /* mulle_hash */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 41E8C84F1CC57FA40049B8C1 /* Build configuration list for PBXNativeTarget "mulle_hash" */;
+			buildPhases = (
+				41E8C8451CC57FA40049B8C1 /* Sources */,
+				41E8C8461CC57FA40049B8C1 /* Frameworks */,
+				41E8C8471CC57FA40049B8C1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				41E8C8511CC57FB10049B8C1 /* PBXTargetDependency */,
+			);
+			name = mulle_hash;
+			productName = mulle_hash;
+			productReference = 41E8C8491CC57FA40049B8C1 /* mulle_hash */;
+			productType = "com.apple.product-type.tool";
+		};
 		41F14FE51B68F098002189F1 /* mulle_container */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 41F14FE71B68F098002189F1 /* Build configuration list for PBXNativeTarget "mulle_container" */;
@@ -584,6 +665,9 @@
 					41817B611CB6997700C55990 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
+					41E8C8481CC57FA40049B8C1 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 					41F14FE51B68F098002189F1 = {
 						CreatedOnToolsVersion = 6.2;
 					};
@@ -615,6 +699,7 @@
 				414945881BEAAC3800C92587 /* test-array */,
 				41F568131BEBAB5500177E65 /* test-map */,
 				415745961CB6C2F50037CF80 /* run-test */,
+				41E8C8481CC57FA40049B8C1 /* mulle_hash */,
 			);
 		};
 /* End PBXProject section */
@@ -644,6 +729,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		41E8C8451CC57FA40049B8C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41E8C84C1CC57FA40049B8C1 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		41F14FE21B68F098002189F1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -651,19 +744,21 @@
 				41F14FEB1B68F0AE002189F1 /* mulle_container_callback.c in Sources */,
 				4198C89B1BE7CED300EE1FF5 /* mulle_hash.c in Sources */,
 				417582A61BE8BE2B005F0CE4 /* mulle_prime.c in Sources */,
+				411D23AA1CC3B1B200D92786 /* mulle_set.c in Sources */,
 				4198C89F1BE7CEFF00EE1FF5 /* city.c in Sources */,
 				41014CC21BE9521400BE18B5 /* _mulle_array.c in Sources */,
+				412ED7D11CC3B50300E64506 /* mulle_map.c in Sources */,
 				419E7F541BEA1B660000D1A7 /* mulle_array.c in Sources */,
 				416C57F51BEA5D4A007F4691 /* _mulle_buffer.c in Sources */,
 				41BEC59A1CB131C4006531B6 /* _mulle_queue.c in Sources */,
 				416C57F81BEA6B3C007F4691 /* mulle_buffer.c in Sources */,
-				4198C8911BE7AD9500EE1FF5 /* mulle_set.c in Sources */,
-				4198C8961BE7AD9500EE1FF5 /* _mulle_indexedbucket.c in Sources */,
-				4198C8941BE7AD9500EE1FF5 /* _mulle_set.c in Sources */,
-				41BCA5091BE8E58300504AAD /* mulle_map.c in Sources */,
+				4198C8911BE7AD9500EE1FF5 /* mulle_bigset.c in Sources */,
+				4198C8961BE7AD9500EE1FF5 /* _mulle_set.c in Sources */,
+				4198C8941BE7AD9500EE1FF5 /* _mulle_bigset.c in Sources */,
+				41BCA5091BE8E58300504AAD /* mulle_bigmap.c in Sources */,
 				41BEC59E1CB14A3E006531B6 /* mulle_pointerset.c in Sources */,
-				41BCA50B1BE8E58300504AAD /* _mulle_indexedkeyvaluebucket.c in Sources */,
-				41BCA50E1BE8E58300504AAD /* _mulle_map.c in Sources */,
+				41BCA50B1BE8E58300504AAD /* _mulle_map.c in Sources */,
+				41BCA50E1BE8E58300504AAD /* _mulle_bigmap.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -702,6 +797,11 @@
 			isa = PBXTargetDependency;
 			target = 41F14FE51B68F098002189F1 /* mulle_container */;
 			targetProxy = 41817B681CB6998900C55990 /* PBXContainerItemProxy */;
+		};
+		41E8C8511CC57FB10049B8C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 41F14FE51B68F098002189F1 /* mulle_container */;
+			targetProxy = 41E8C8501CC57FB10049B8C1 /* PBXContainerItemProxy */;
 		};
 		41F5681C1BEBAB7400177E65 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -793,6 +893,87 @@
 			};
 			name = Release;
 		};
+		41E8C84D1CC57FA40049B8C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		41E8C84E1CC57FA40049B8C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		41F14FE81B68F098002189F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 417C026B1BD8404E005A3751 /* StaticLibraryOSX.xcconfig */;
@@ -877,6 +1058,15 @@
 			buildConfigurations = (
 				41817B641CB6997700C55990 /* Debug */,
 				41817B651CB6997700C55990 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		41E8C84F1CC57FA40049B8C1 /* Build configuration list for PBXNativeTarget "mulle_hash" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41E8C84D1CC57FA40049B8C1 /* Debug */,
+				41E8C84E1CC57FA40049B8C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

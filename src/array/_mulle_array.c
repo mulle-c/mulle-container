@@ -54,8 +54,8 @@ static inline struct _mulle_arrayrange   _mulle_arrayrange_make( void **p, void 
 
 
 static inline struct _mulle_arrayrange   _mulle_array_get_arrayrange( struct _mulle_array *array,
-                                                                      size_t location,
-                                                                      size_t length)
+                                                                      unsigned int location,
+                                                                      unsigned int length)
 {
    struct _mulle_arrayrange   range;
 
@@ -84,11 +84,11 @@ static inline void   _mulle_arrayrange_release( struct _mulle_arrayrange range,
 // all allocation is done in .c
 //
 static int  _mulle_array_set_size( struct _mulle_array *array,
-                                   size_t new_size,
+                                   unsigned int new_size,
                                    struct mulle_container_keycallback *callback,
                                    struct mulle_allocator *allocator)
 {
-   size_t    count;
+   unsigned int    count;
    
    count = _mulle_array_get_count( array);
    
@@ -113,7 +113,7 @@ int  _mulle_array_grow( struct _mulle_array *array,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator)
 {
-   size_t   new_size;
+   unsigned int   new_size;
    
    new_size = array->_size * 2;
    if( new_size < 16)
@@ -127,7 +127,7 @@ int  _mulle_array_size_to_fit( struct _mulle_array *array,
                                struct mulle_container_keycallback *callback,
                                struct mulle_allocator *allocator)
 {
-   size_t   new_size;
+   unsigned int   new_size;
    
    new_size = _mulle_array_get_count( array);
    return( _mulle_array_set_size( array, new_size, callback, allocator));
@@ -159,7 +159,7 @@ void   _mulle_array_done( struct _mulle_array *array,
 }
 
 
-void   _mulle_array_free( struct _mulle_array *array,
+void   _mulle_array_destroy( struct _mulle_array *array,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
@@ -172,7 +172,7 @@ void   _mulle_array_free( struct _mulle_array *array,
 #pragma mark search
 
 
-static void  assert_index( struct _mulle_array *array, size_t i)
+static void  assert_index( struct _mulle_array *array, unsigned int i)
 {
    assert( ! _mulle_array_has_overflown( array));
    assert( i < _mulle_array_get_count( array));
@@ -183,13 +183,13 @@ static void  assert_index( struct _mulle_array *array, size_t i)
 //
 // range must have been checked already
 //
-size_t   _mulle_array_find_in_range( struct _mulle_array *array,
-                                     void *obj,
-                                     size_t location,
-                                     size_t length,
-                                     struct mulle_container_keycallback *callback)
+unsigned long   _mulle_array_find_in_range( struct _mulle_array *array,
+                                            void *obj,
+                                            unsigned int location,
+                                            unsigned int length,
+                                            struct mulle_container_keycallback *callback)
 {
-   size_t   i, n;
+   unsigned int   i, n;
    
    // allow obj == nil
    if( ! obj || ! _mulle_array_get_count( array))
@@ -215,12 +215,12 @@ size_t   _mulle_array_find_in_range( struct _mulle_array *array,
    return( mulle_not_found_e);
 }
 
-size_t  _mulle_array_find_in_range_identical( struct _mulle_array *array,
-                                              void *obj,
-                                              size_t location,
-                                              size_t length)
+unsigned long  _mulle_array_find_in_range_identical( struct _mulle_array *array,
+                                                     void *obj,
+                                                     unsigned int location,
+                                                     unsigned int length)
 {
-   size_t   i, n;
+   unsigned int   i, n;
    
    n = length + location;
    
@@ -239,8 +239,8 @@ size_t  _mulle_array_find_in_range_identical( struct _mulle_array *array,
 #pragma mark removal
 
 void   _mulle_array_zero_in_range( struct _mulle_array *array,
-                                   size_t location,
-                                   size_t length,
+                                   unsigned int location,
+                                   unsigned int length,
                                    struct mulle_container_keycallback *callback)
 {
    struct _mulle_arrayrange   range;
@@ -298,12 +298,12 @@ void   _mulle_array_remove_all( struct _mulle_array *array,
 
 
 void   _mulle_array_remove_in_range( struct _mulle_array *array,
-                                     size_t location,
-                                     size_t length,
+                                     unsigned int location,
+                                     unsigned int length,
                                      struct mulle_container_keycallback *callback,
                                      struct mulle_allocator *allocator)
 {
-   size_t   n;
+   unsigned int   n;
    
    assert( ! _mulle_array_has_overflown( array));
    _mulle_arrayrange_release( _mulle_array_get_arrayrange( array, location, length), callback, allocator);
@@ -319,7 +319,7 @@ void   _mulle_array_remove_in_range( struct _mulle_array *array,
 
 int   _mulle_array_add_multiple( struct _mulle_array *array,
                                  void   **pointers,
-                                 size_t length,
+                                 unsigned int length,
                                  struct mulle_container_keycallback *callback,
                                  struct mulle_allocator *allocator)
 {
@@ -352,7 +352,7 @@ int    _mulle_array_is_equal( struct _mulle_array *array,
                               struct _mulle_array *other,
                               struct mulle_container_keycallback *callback)
 {
-   size_t   i, n;
+   unsigned int   i, n;
    
    assert( ! _mulle_array_has_overflown( array));
    if( ! other)

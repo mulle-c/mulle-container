@@ -49,7 +49,7 @@
    void      **_storage;    \
    void      **_curr;       \
    void      **_sentinel;   \
-   size_t    _size            
+   unsigned int   _size            
 
 
 struct _mulle_array
@@ -61,7 +61,7 @@ struct _mulle_array
 #define _MULLE_ARRAYENUMERATOR_BASE                   \
    void      **_curr;                                 \
    void      **_sentinel;                             \
-   void      *_not_a_key_marker
+   void      *_notakey
 
 
 struct _mulle_arrayenumerator
@@ -73,7 +73,7 @@ struct _mulle_arrayenumerator
 struct _mulle_array    *_mulle_array_create( struct mulle_allocator *allocator)
                                                 mulle_nonnull_first;
 
-void   _mulle_array_free( struct _mulle_array *array,
+void   _mulle_array_destroy( struct _mulle_array *array,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
                               mulle_nonnull_first_second;
@@ -91,14 +91,14 @@ int    _mulle_array_size_to_fit( struct _mulle_array *array,
                                     mulle_nonnull_first_second;
 
 void   _mulle_array_remove_in_range( struct _mulle_array *array,
-                                     size_t location,
-                                     size_t length,
+                                     unsigned int location,
+                                     unsigned int length,
                                      struct mulle_container_keycallback *callback,
                                      struct mulle_allocator *allocator)
                                         mulle_nonnull_first_fourth;
 void   _mulle_array_zero_in_range( struct _mulle_array *array,
-                                   size_t location,
-                                   size_t length,
+                                   unsigned int location,
+                                   unsigned int length,
                                    struct mulle_container_keycallback *callback)
                                        mulle_nonnull_first_fourth;
 void   _mulle_array_compact_zeroes( struct _mulle_array *array,
@@ -112,10 +112,10 @@ void   _mulle_array_remove_all( struct _mulle_array *array,
 
 
 static inline void    _mulle_array_init( struct _mulle_array *array,
-                                         size_t length)
+                                         unsigned int length)
 {
    assert( array);
-   assert( length != (size_t) -1);
+   assert( length != (unsigned int) -1);
    
    array->_curr     =
    array->_storage  = 
@@ -137,10 +137,10 @@ static inline void   **_mulle_array_get_all( struct _mulle_array *array)
 }
 
 
-static inline size_t   _mulle_array_get_count( struct _mulle_array *array)
+static inline unsigned int   _mulle_array_get_count( struct _mulle_array *array)
 {
    assert( ! _mulle_array_has_overflown( array));
-   return( array->_curr - array->_storage);
+   return( (unsigned int) (array->_curr - array->_storage));
 }
 
 
@@ -151,7 +151,7 @@ int    _mulle_array_is_equal( struct _mulle_array *array,
                                  mulle_nonnull_first_third;
 
 static inline void   **_mulle_array_advance( struct _mulle_array *array,
-                                             size_t length,
+                                             unsigned int length,
                                              struct mulle_container_keycallback *callback,
                                              struct mulle_allocator *allocator)
 {
@@ -175,16 +175,16 @@ static inline int   _mulle_array_is_full( struct _mulle_array *array)
 }
 
 
-static inline size_t   _mulle_array_guaranteedsize( struct _mulle_array *array) mulle_nonnull_first;
-static inline size_t   _mulle_array_guaranteedsize( struct _mulle_array *array)
+static inline unsigned int   _mulle_array_guaranteedsize( struct _mulle_array *array) mulle_nonnull_first;
+static inline unsigned int   _mulle_array_guaranteedsize( struct _mulle_array *array)
 {
    assert( ! _mulle_array_has_overflown( array));
-   return( array->_sentinel - array->_curr);
+   return( (unsigned int) (array->_sentinel - array->_curr));
 }
 
 
 static inline void   **_mulle_array_guarantee( struct _mulle_array *array,
-                                               size_t length,
+                                               unsigned int length,
                                                struct mulle_container_keycallback *callback,
                                                struct mulle_allocator *allocator)
 {
@@ -212,7 +212,7 @@ static inline void    _mulle_array_add( struct _mulle_array *array,
 }
 
 
-static inline void   *_mulle_array_get( struct _mulle_array *array, size_t index)
+static inline void   *_mulle_array_get( struct _mulle_array *array, unsigned int index)
 {
    assert( ! _mulle_array_has_overflown( array));
    assert( &array->_storage[ index] < array->_sentinel);
@@ -243,7 +243,7 @@ static inline void   _mulle_array_remove_last( struct _mulle_array *array,
 
 int   _mulle_array_add_multiple( struct _mulle_array *array,
                                  void **pointers,
-                                 size_t length,
+                                 unsigned int length,
                                  struct mulle_container_keycallback *callback,
                                  struct mulle_allocator *allocator)
                                     mulle_nonnull_first_fourth;
@@ -309,7 +309,7 @@ static inline struct _mulle_arrayenumerator   _mulle_array_enumerate( struct _mu
 
    rover._sentinel         = array->_curr;
    rover._curr             = array->_storage;
-   rover._not_a_key_marker = callback->not_a_key_marker;
+   rover._notakey = callback->not_a_key_marker;
 
    return( rover);
 }
@@ -323,10 +323,10 @@ static inline void   *_mulle_arrayenumerator_next( struct _mulle_arrayenumerator
    while( rover->_curr < rover->_sentinel)
    {
       p = *rover->_curr++;
-      if( p != rover->_not_a_key_marker)
+      if( p != rover->_notakey)
          return( p);
    }
-   return( rover->_not_a_key_marker);
+   return( rover->_notakey);
 }
 
 
@@ -336,16 +336,16 @@ static inline void   _mulle_arrayenumerator_done( struct _mulle_arrayenumerator 
 }
 
 
-size_t  _mulle_array_find_in_range_identical( struct _mulle_array *array,
-                                              void *obj,
-                                              size_t location,
-                                              size_t length) mulle_nonnull_first;
+unsigned long  _mulle_array_find_in_range_identical( struct _mulle_array *array,
+                                                     void *obj,
+                                                     unsigned int location,
+                                                     unsigned int length) mulle_nonnull_first;
 
-size_t  _mulle_array_find_in_range( struct _mulle_array *array,
-                                    void *obj,
-                                    size_t location,
-                                    size_t length,
-                                    struct mulle_container_keycallback *callback) mulle_nonnull_first_fifth;
+unsigned long  _mulle_array_find_in_range( struct _mulle_array *array,
+                                           void *obj,
+                                           unsigned int location,
+                                           unsigned int length,
+                                           struct mulle_container_keycallback *callback) mulle_nonnull_first_fifth;
 
 #endif
 

@@ -31,17 +31,30 @@
 
 #include <city.h>
 
+
 // lots of other code snipped
 
-uintptr_t   mulle_hash( void *buf, size_t len)
+uint32_t   mulle_hash_32( void *buf, size_t len)
 {
-   if( sizeof( uintptr_t) == sizeof( uint32_t))
-      return( (uintptr_t) CityHash32( buf, len));
-   return( (uintptr_t) CityHash64( buf, len));
+   return( (uint32_t) CityHash32( buf, len));
 }
 
 
-uintptr_t   mulle_chained_hash( void *buf, size_t len, uintptr_t hash)
+uint64_t   mulle_hash_64( void *buf, size_t len)
 {
-   return( (uintptr_t) CityHash64WithSeed( buf, len, hash));
+   return( (uint64_t) CityHash64( buf, len));
 }
+
+
+uint32_t   mulle_chained_hash_32( void *buf, size_t len, uint32_t hash)
+{
+   return( (uint32_t) CityHash64WithSeed( buf, len, hash));
+}
+
+
+uint64_t   mulle_chained_hash_64( void *buf, size_t len, uint64_t hash)
+{
+   return( (uint64_t) CityHash64WithSeed( buf, len, hash));
+}
+
+

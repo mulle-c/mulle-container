@@ -22,13 +22,13 @@ struct mulle_container_keyvaluecallback   _CALLBACK;
 static void   simple_fill_test()
 {
    char                          key[ 5];
-   struct _mulle_indexedkeyvaluebucket   *bucket;
+   struct _mulle_map   *bucket;
    unsigned int                  i;
    struct _mulle_keyvaluepair    pair;
    
-   bucket = _mulle_indexedkeyvaluebucket_create( 128, 0, CALLBACK, NULL);
+   bucket = _mulle_map_create( 128, 0, CALLBACK, NULL);
    
-   printf( "%ld\n", _mulle_indexedkeyvaluebucket_get_count( bucket));
+   printf( "%ld\n", _mulle_map_get_count( bucket));
 
    pair._key   = key;
    pair._value = key;
@@ -36,15 +36,15 @@ static void   simple_fill_test()
    for( i = 0; i < 100000; i++)
    {
       random_key( key);
-      _mulle_indexedkeyvaluebucket_put( bucket, &pair, CALLBACK, NULL);
+      _mulle_map_set( bucket, &pair, CALLBACK, NULL);
    }
 
-   _mulle_indexedkeyvaluebucket_reset( bucket, CALLBACK, NULL);
+   _mulle_map_reset( bucket, CALLBACK, NULL);
 
-   printf( "%ld\n", _mulle_indexedkeyvaluebucket_get_count( bucket));
-   _mulle_indexedkeyvaluebucket_put( bucket, &pair, CALLBACK, NULL);
-   printf( "%ld\n", _mulle_indexedkeyvaluebucket_get_count( bucket));
-   _mulle_indexedkeyvaluebucket_free( bucket, CALLBACK, NULL);
+   printf( "%ld\n", _mulle_map_get_count( bucket));
+   _mulle_map_set( bucket, &pair, CALLBACK, NULL);
+   printf( "%ld\n", _mulle_map_get_count( bucket));
+   _mulle_map_destroy( bucket, CALLBACK, NULL);
 }
 
 

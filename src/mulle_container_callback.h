@@ -36,6 +36,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <limits.h>
+#include <assert.h>
 
 #include <mulle_allocator/mulle_allocator.h>
 
@@ -51,6 +52,10 @@
 #define mulle_container_not_an_intptr_key	((void *) INTPTR_MIN)
 #define mulle_container_not_a_pointer_key	((void *) UINTPTR_MAX)
 
+
+//
+// describe returns a cstring that you must free
+//
 struct mulle_container_keycallback
 {
    uintptr_t   (*hash)( struct mulle_container_keycallback *callback, void *p);
@@ -62,6 +67,16 @@ struct mulle_container_keycallback
    void        *not_a_key_marker;
    void        *userinfo;
 };
+
+
+static inline void   assert_mulle_container_keycallback( struct mulle_container_keycallback *callback)
+{
+   assert( callback->hash);
+   assert( callback->is_equal);
+   assert( callback->retain);
+   assert( callback->release);
+   assert( callback->describe);
+}
 
 
 // when a pointer is passed in:
@@ -90,6 +105,14 @@ struct mulle_container_valuecallback
 };
 
 
+static inline void   assert_mulle_container_valuecallback( struct mulle_container_valuecallback *callback)
+{
+   assert( callback->retain);
+   assert( callback->release);
+   assert( callback->describe);
+}
+
+
 extern struct mulle_container_valuecallback   mulle_container_valuecallback_int;
 extern struct mulle_container_valuecallback   mulle_container_valuecallback_intptr;
 extern struct mulle_container_valuecallback   mulle_container_valuecallback_copied_cstring;
@@ -99,13 +122,9 @@ extern struct mulle_container_valuecallback   mulle_container_valuecallback_nono
 extern struct mulle_container_valuecallback   mulle_container_valuecallback_owned_pointer;
 
 
-void            mulle_container_keycallback_set_default_values( struct mulle_container_keycallback *p);
-void            mulle_container_valuecallback_set_default_values( struct mulle_container_valuecallback *p);
-
 void           *mulle_container_callback_self( void *ignore, void *p, struct mulle_allocator *a);
 void            mulle_container_callback_nop( void *ignore, void *p, struct mulle_allocator *a);
 void           *mulle_container_callback_no_value( void *ignore, void *p, struct mulle_allocator *allocator);
-unsigned long   mulle_container_callback_pointer_hash( void *ignore, void *p);
 int             mulle_container_callback_pointer_is_equal( void *ignore, void *a, void *b);
 
 void            mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
@@ -117,5 +136,12 @@ struct mulle_container_keyvaluecallback
    struct mulle_container_keycallback       keycallback;
    struct mulle_container_valuecallback     valuecallback;
 };
+
+
+static inline void   assert_mulle_container_keyvaluecallback( struct mulle_container_keyvaluecallback *callback)
+{
+   assert_mulle_container_keycallback( &callback->keycallback);
+   assert_mulle_container_valuecallback( &callback->valuecallback);
+}
 
 #endif

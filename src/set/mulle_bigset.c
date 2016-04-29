@@ -1,9 +1,5 @@
 //
-//  _mulle_keyvaluepair.h
-//  mulle-container
-//
-//  Created by Nat! on 03/11/15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (C) 2011 Nat!, Mulle kybernetiK.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -31,17 +27,34 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef _mulle_keyvaluepair_h
-#define _mulle_keyvaluepair_h
-
+#include "mulle_bigset.h"
 #include "mulle_container_callback.h"
-#include "mulle_container_compiler_attributes.h"
 
 
-struct _mulle_keyvaluepair
+void   mulle_bigset_init( struct mulle_bigset *set,
+                       size_t capacity,
+                       struct mulle_container_keycallback *callback,
+                       struct mulle_allocator *allocator)
 {
-   void   *_key;
-   void   *_value;
-};
+   _mulle_bigset_init( (struct _mulle_bigset *) set, capacity, callback, allocator);
 
-#endif /* _mulle_keyvaluepair_h */
+   set->_callback  = callback;
+   set->_allocator = allocator;
+}
+
+
+struct mulle_bigset   *mulle_bigset_create( size_t capacity,
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator)
+{
+   struct mulle_bigset *set;
+   
+   if( ! allocator)
+      allocator = &mulle_default_allocator;
+   
+   set = mulle_allocator_malloc( allocator, sizeof( struct mulle_bigset));
+   if( set)
+      mulle_bigset_init( set, capacity, callback, allocator);
+   return( set);
+}
+

@@ -33,11 +33,78 @@
 #include <stddef.h>
 #include <stdint.h>
 
-//
-// these two aren't compatible. You can't compare the hashes.
-// 
-uintptr_t   mulle_hash( void *buf, size_t len);
 
-uintptr_t   mulle_chained_hash( void *buf, size_t len, uintptr_t hash);
+// from code.google.com/p/smhasher/wiki/MurmurHash3
+static inline uint32_t  mulle_hash_avalanche32( uint32_t h)
+{
+   h ^= h >> 16;
+   h *= 0x85ebca6b;
+   h ^= h >> 13;
+   h *= 0xc2b2ae35;
+   h ^= h >> 16;
+   return h;
+}
+
+
+// from code.google.com/p/smhasher/wiki/MurmurHash3
+static inline uint64_t   mulle_hash_avalanche64(uint64_t h)
+{
+   h ^= h >> 33;
+   h *= 0xff51afd7ed558ccd;
+   h ^= h >> 33;
+   h *= 0xc4ceb9fe1a85ec53;
+   h ^= h >> 33;
+   return h;
+}
+
+
+static inline uintptr_t   mulle_hash_avalanche( uintptr_t h)
+{
+   if( sizeof( uintptr_t) == sizeof( uint64_t))
+      return( mulle_hash_avalanche64( h));
+   return( mulle_hash_avalanche32( h));
+}
+
+
+static inline uintptr_t   mulle_hash_integer( uintptr_t p)
+{
+   return( mulle_hash_avalanche( p));
+}
+
+
+static inline uintptr_t   mulle_hash_pointer( void *p)
+{
+   return( mulle_hash_avalanche( (uintptr_t) p));
+}
+
+
+//
+// the chained hash and the regular hash are not compatible!
+//
+// is the hash littleendian/bigendian agnostic ?
+//
+
+uint32_t   mulle_chained_hash_32( void *buf, size_t len, uint32_t hash);
+uint64_t   mulle_chained_hash_64( void *buf, size_t len, uint64_t hash);
+
+
+uint32_t   mulle_hash_32( void *buf, size_t len);
+uint64_t   mulle_hash_64( void *buf, size_t len);
+
+
+static inline uintptr_t   mulle_hash( void *buf, size_t len)
+{
+   if( sizeof( uintptr_t) == sizeof( uint32_t))
+      return( (uintptr_t) mulle_hash_32( buf, len));
+   return( (uintptr_t) mulle_hash_64( buf, len));
+}
+
+
+static inline uintptr_t   mulle_chained_hash( void *buf, size_t len, uintptr_t hash)
+{
+   if( sizeof( uintptr_t) == sizeof( uint32_t))
+      return( (uintptr_t) mulle_chained_hash_32( buf, len, (uint32_t) hash));
+   return( (uintptr_t) mulle_chained_hash_64( buf, len, (uint64_t) hash));
+}
 
 #endif

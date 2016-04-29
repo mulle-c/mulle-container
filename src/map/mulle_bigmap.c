@@ -1,9 +1,9 @@
 //
-//  _mulle_keyvaluepair.h
+//  mulle_bigmap.h
 //  mulle-container
 //
 //  Created by Nat! on 03/11/15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (C) 2011 Nat!, Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -31,17 +31,40 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef _mulle_keyvaluepair_h
-#define _mulle_keyvaluepair_h
+#include "mulle_bigmap.h"
 
 #include "mulle_container_callback.h"
-#include "mulle_container_compiler_attributes.h"
+
+#include <string.h>
+#include <mulle_allocator/mulle_allocator.h>
 
 
-struct _mulle_keyvaluepair
+void   mulle_bigmap_init( struct mulle_bigmap *map,
+                       size_t capacity,
+                       struct mulle_container_keyvaluecallback *callback,
+                       struct mulle_allocator *allocator)
 {
-   void   *_key;
-   void   *_value;
-};
+   if( ! allocator)
+      allocator = &mulle_default_allocator;
+   
+   _mulle_bigmap_init( (struct _mulle_bigmap *) map, capacity, callback, allocator);
+   
+   map->_callback  = callback;
+   map->_allocator = allocator;
+}
 
-#endif /* _mulle_keyvaluepair_h */
+
+
+struct mulle_bigmap   *mulle_bigmap_create( size_t capacity,
+                                      struct mulle_container_keyvaluecallback *callback,
+                                      struct mulle_allocator *allocator)
+{
+   struct mulle_bigmap   *map;
+   
+   map = mulle_allocator_malloc( allocator, sizeof( struct mulle_bigmap));
+   if( map)
+      mulle_bigmap_init( map, capacity, callback, allocator);
+   return( map);
+}
+
+
