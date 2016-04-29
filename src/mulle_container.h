@@ -50,16 +50,19 @@
 #include "_mulle_array.h"
 #include "mulle_array.h"
 
-#include "_mulle_indexedbucket.h"
 #include "_mulle_set.h"
 #include "mulle_set.h"
+#include "_mulle_bigset.h"
+#include "mulle_bigset.h"
 
-#include "_mulle_indexedkeyvaluebucket.h"
 #include "_mulle_map.h"
 #include "mulle_map.h"
+#include "_mulle_bigmap.h"
+#include "mulle_bigmap.h"
 
 #include "_mulle_queue.h"
 #include "mulle_pointerset.h"
+#include "mulle_pointerarray.h"
 
 #include "mulle_container_callback.h"
 #include "mulle_container_operation.h"

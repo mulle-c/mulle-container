@@ -28,156 +28,556 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #include "_mulle_set.h"
-
 #include "mulle_container_operation.h"
 #include "mulle_container_callback.h"
-#include "mulle_prime.h"
 
+#include <stddef.h>
 #include <assert.h>
+#include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
+/*
+ *
+ */
+#define _MULLE_SET_S_INITIAL_DEPTH    1
+#define _MULLE_SET_S_MAX_DEPTH        30
+
+//
+// with 4, large tables will be 1 MB pretty quickly even with little filling
+// try 8KB sometime and see the kernel go on a VM rampage, because of some
+// throttling mechanism its actually slowing down things...
+//
+#define _MULLE_SET_S_MIN_INITIAL_DEPTH    1
+#define _MULLE_SET_S_MAX_INITIAL_DEPTH    3
 
 
-int    __mulle_set_copy( struct _mulle_set *dst,
-                         struct _mulle_set *src,
-                         struct mulle_container_keycallback *callback,
-                         struct mulle_allocator *allocator);
-
-void   *__mulle_set_put( struct _mulle_set *set,
-                         void *p,
-                         enum mulle_container_set_mode mode,
-                         struct mulle_container_keycallback *callback,
-                         struct mulle_allocator *allocator);
-
-
-#define _MULLE_SET_MAX_DEPTH              30
-
-#define _MULLE_SET_MIN_INITIAL_DEPTH      0  
-#define _MULLE_SET_INITIAL_DEPTH          3
-#define _MULLE_SET_MAX_INITIAL_DEPTH      16  
-#define _MULLE_HASH_STOP_SINGLE_DIMENSION_GROWTH 5
-
-static short   good_depth_for_depth( short depth)
+static inline unsigned int   mask_for_depth( int depth)
 {
-   assert( depth >= 0);
-   return( depth < _MULLE_SET_INITIAL_DEPTH ? _MULLE_SET_INITIAL_DEPTH : depth); 
+   return( (1U << depth) - 1);
 }
 
 
-static short   depth_for_capacity( size_t capacity)
+// assume we have 
+// 0 1 2 3  (sentinel 0)
+//
+// we want to hash either
+// to 0 an 2 for better insert perfomance
+//
+// 0 2 
+static unsigned int   hash_for_modulo( unsigned int hash, unsigned int modulo)
 {
-   unsigned short  i;
+   modulo &= ~1;
+   hash   &= modulo;
+   return( hash);
+}
+
+
+static short   depth_for_capacity( unsigned int capacity)
+{
+   unsigned int  i;
    
-   if( ! capacity)
-      return( _MULLE_SET_MIN_INITIAL_DEPTH);
-      
-   capacity >>= 2;
-   for( i = _MULLE_SET_MIN_INITIAL_DEPTH; i <= _MULLE_SET_MAX_INITIAL_DEPTH; i++)
-      if( capacity <= mulle_prime_for_depth( i))
-         return( good_depth_for_depth( i));
-   return( _MULLE_SET_MAX_INITIAL_DEPTH);
+   capacity >>= 1;
+   for( i = _MULLE_SET_S_MIN_INITIAL_DEPTH; i <= _MULLE_SET_S_MAX_INITIAL_DEPTH; i++)
+      if( capacity <= _mulle_set_size_for_depth( i))
+         return( (short) i);
+   return( _MULLE_SET_S_MAX_INITIAL_DEPTH);
 }
 
 
-static void  _mulle_set_init_with_depth( struct _mulle_set *set,
-                                         int depth,
-                                         struct mulle_container_keycallback *callback,
-                                         struct mulle_allocator *allocator)
+static inline unsigned int   _mulle_set_hash( struct mulle_container_keycallback *callback, void *p)
 {
-   size_t   modulo;
-   
-   assert( depth >= 0 && depth < _MULLE_SET_MAX_DEPTH);
-   assert( callback);
-   
-   set->_count        = 0;
-   set->_storage      = NULL;
-   set->_storageTypes = NULL;
-   if( ! depth)
-      return;
-   
-   modulo        = mulle_prime_for_depth( depth);
-   set->_storage = mulle_allocator_calloc( allocator, modulo, (sizeof( void *) + sizeof( char)));
-   if( set->_storage)
-   {
-      set->_storageTypes = (char *) &set->_storage[ modulo];
-      set->_depth        = (short) depth;
-   }
-}
-
-
-void  _mulle_set_init( struct _mulle_set *set,
-                       size_t capacity,
-                       struct mulle_container_keycallback *callback,
-                       struct mulle_allocator *allocator)
-{
-   _mulle_set_init_with_depth( set, depth_for_capacity( capacity), callback, allocator);
+   return( (unsigned int) (*callback->hash)( callback, p));
 }
 
 
 
-struct _mulle_set   *_mulle_set_create( size_t capacity,
-                                        struct mulle_container_keycallback *callback,
-                                        struct mulle_allocator *allocator)
-{
-   struct _mulle_set *set;
-   
-   set  = mulle_allocator_malloc( allocator, sizeof( struct _mulle_set));
-   if( set)
-      _mulle_set_init( set, capacity, callback, allocator);
-   return( set);
-}
 
-
-void   _mulle_set_free( struct _mulle_set *set,
-                        struct mulle_container_keycallback *callback,
-                        struct mulle_allocator *allocator)
-{
-   _mulle_set_done( set, callback, allocator);
-   mulle_allocator_free( allocator, set);
-}
-
-
-void   _mulle_set_reset( struct _mulle_set *set,
+void    _mulle_set_init( struct _mulle_set *p,
+                         unsigned int capacity,
                          struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator)
 {
-   _mulle_set_done( set, callback, allocator);
-   _mulle_set_init( set, 0, callback, allocator);
+   unsigned int   n;
+   short          depth;
+      
+   depth       = depth_for_capacity( capacity);
+   n           = _mulle_set_size_for_depth( depth) + 1;
+   p->_count   = 0;
+   p->_depth   = depth;
+   p->_storage = mulle_allocator_calloc( allocator, n, sizeof( void *));
 }
 
 
-void   _mulle_set_done( struct _mulle_set *set,
-                        struct mulle_container_keycallback *callback,
-                        struct mulle_allocator *allocator)
+struct _mulle_set   *_mulle_set_create( unsigned int capacity,
+                                        size_t extra,
+                                        struct mulle_container_keycallback *callback,
+                                        struct mulle_allocator *allocator)
 {
-   void    **p;
-   void    **sentinel;
-   char    *q;
-
-   sentinel = &set->_storage[ mulle_prime_for_depth( set->_depth)];
-   for( q = set->_storageTypes, p = set->_storage; p < sentinel; p++, q++)
-   {
-      if( ! *p)
-         continue;
-      if( ! *q)
-      {
-         (*callback->release)( callback, *p, allocator);
-         continue;
-      }
-      _mulle_indexedbucket_free( *p, callback, allocator);
-   }
-   mulle_allocator_free( allocator, set->_storage);
+   struct _mulle_set   *p;
+   
+   p = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_set) + extra);
+   if( p)
+      _mulle_set_init( p, capacity, callback, allocator);
+   return( p);
 }
 
 
-int   __mulle_set_copy( struct _mulle_set *dst,
-                        struct _mulle_set *src,
+void   _mulle_set_done( struct _mulle_set *bucket,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator)
 {
    struct _mulle_setenumerator  rover;
-   void                               *item;
-   int                                rval;
+   void   *item;
+   
+   rover = _mulle_set_enumerate( bucket, callback);
+   while( item = _mulle_setenumerator_next( &rover))
+      (*callback->release)( callback, item, allocator);
+   _mulle_setenumerator_done( &rover);
+   
+   mulle_allocator_free( allocator, bucket->_storage);
+}
+
+
+// don't inline this (!)
+void   _mulle_set_reset( struct _mulle_set *bucket,
+                         struct mulle_container_keycallback *callback,
+                         struct mulle_allocator *allocator)
+{
+   _mulle_set_done( bucket, callback, allocator);
+   _mulle_set_init( bucket, _mulle_set_size_for_depth( bucket->_depth), callback, allocator);
+}
+
+
+
+void    _mulle_set_destroy( struct _mulle_set *bucket, 
+                            struct mulle_container_keycallback *callback,
+                            struct mulle_allocator *allocator)
+{
+   _mulle_set_done( bucket, callback, allocator);
+   mulle_allocator_free( allocator, bucket);
+}
+
+
+#pragma mark -
+#pragma mark operations
+
+static inline void   store_pointer( void **data, 
+                                    unsigned int i,
+                                    unsigned int modulo,
+                                    void *p)
+{
+   while( data[ i])
+   {
+      if( ++i <= modulo)
+         continue;
+      i = 0;
+   }
+   
+   data[ i] = p;
+}
+
+
+static void   copy_buckets( void **dst,
+                            unsigned int modulo,
+                            void **src, 
+                            unsigned int n,
+                            struct mulle_container_keycallback *callback)
+{
+   void           *p;
+   unsigned int   i;
+   unsigned int   hash;
+   
+   assert( modulo + 1 >= n);
+   
+   for( ;n--;)
+   {
+      p = *src++;
+      if( ! p)
+         continue;
+
+      hash = _mulle_set_hash( callback, p);
+      i    = (unsigned int) hash_for_modulo( hash, modulo);
+      store_pointer( dst, i, modulo, p);
+   }
+}
+
+
+static unsigned int   grow( struct _mulle_set *bucket,
+                      struct mulle_container_keycallback *callback,
+                      struct mulle_allocator *allocator)
+{
+   unsigned int   modulo;
+   unsigned int   new_modulo;
+   short    depth;
+   void     *buf;
+   
+   // for good "not found" performance, there should be a high possibility of 
+   // a NULL after each slot
+   //
+   depth  = bucket->_depth;
+   modulo = mask_for_depth( depth);
+   if( depth == _MULLE_SET_S_MAX_DEPTH)
+   {
+      static int  complain;
+      
+      if( ! complain)
+      {
+         fprintf( stderr, "Your hash is so weak, that you reached the end of the rope");
+         complain = 1;
+      }
+      return( modulo);
+   }
+   
+   new_modulo = mask_for_depth( ++depth);
+
+   buf = mulle_allocator_calloc( allocator, (new_modulo + 1), sizeof( void *));
+   if( ! buf)
+      return( modulo);
+   
+   copy_buckets( buf, new_modulo, bucket->_storage, modulo + 1, callback);
+   mulle_allocator_free( allocator, bucket->_storage);
+   
+   bucket->_depth   = depth;
+   bucket->_storage = buf;
+   
+   return( new_modulo);
+}
+
+
+static unsigned long  _find_index( void  **storage,
+                                   void *p,
+                                   void *q,
+                                   unsigned int limit,
+                                   unsigned int i,
+                                   unsigned int *hole_index,
+                                   struct mulle_container_keycallback *callback)
+{
+   int   (*f)( void *, void *, void *);
+   void   *param1;
+   void   *param2;
+   
+   f      = (void *) callback->is_equal;
+   param1 = callback;
+   param2 = p;
+   
+   do
+   {
+      if( (*f)( param1, param2, q))
+         return( i);
+      if( ++i >= limit)
+         i = 0;
+   }
+   while( q = storage[ i]);
+   
+   *hole_index = i;
+   return( mulle_not_found_e);
+}
+
+
+static inline unsigned long  find_index( void **storage,
+                                         void *p,
+                                         unsigned int hash,
+                                         unsigned int modulo,
+                                         unsigned int *hole_index,
+                                         struct mulle_container_keycallback *callback)
+{
+   void        *q;
+   unsigned int   i;
+   
+   i = hash_for_modulo( hash, modulo);
+   q = storage[ i];
+   if( ! q)
+   {
+      *hole_index = i;
+      return( mulle_not_found_e);
+   }
+   return( _find_index( storage, p, q, modulo + 1, i, hole_index, callback));
+}
+
+
+void   *_mulle_set_write( struct _mulle_set *bucket,
+                          void *p,
+                          unsigned int hash,
+                          enum mulle_container_write_mode mode,
+                          struct mulle_container_keycallback *callback,
+                          struct mulle_allocator *allocator)
+{
+   void             *q;
+   unsigned long    found;
+   unsigned int     i;
+   unsigned int     modulo;
+   unsigned int     hole_index;
+
+   modulo = mask_for_depth( bucket->_depth);
+   
+   found = find_index( bucket->_storage, p, hash, modulo, &hole_index, callback);
+   if( found != mulle_not_found_e)
+   {
+      i = (unsigned int) found;
+      q = bucket->_storage[ i];
+      switch( mode)
+      {
+      case mulle_container_overwrite_e  :
+         q = bucket->_storage[ i];
+         if( p != q)
+         {
+            p = (*callback->retain)( callback, p, allocator);
+            (*callback->release)( callback, q, allocator);
+            bucket->_storage[ i] = p;
+         }
+         return( NULL);  
+         
+      case mulle_container_insert_e :
+         return( q);
+      }
+   }
+      
+   p = (*callback->retain)( callback, p, allocator);
+
+   i = hole_index;
+   if( ! _mulle_set_is_fuller_than( bucket, modulo))
+   {
+      bucket->_storage[ i] = p;
+      bucket->_count++;
+      return( NULL);
+   }
+
+   modulo = grow( bucket, callback, allocator);
+
+   i = hash_for_modulo( hash, modulo);
+   store_pointer( bucket->_storage, i, modulo, p);
+   bucket->_count++;
+
+   return( NULL);
+}
+
+
+void    _mulle_set_set( struct _mulle_set *bucket, 
+                        void *p,
+                        struct mulle_container_keycallback *callback,
+                        struct mulle_allocator *allocator)
+{
+   unsigned int   hash;
+
+   hash = (unsigned int) (*callback->hash)( callback, p);
+   _mulle_set_write( bucket, p, hash, mulle_container_overwrite_e, callback, allocator);
+}
+
+
+void    *_mulle_set_insert( struct _mulle_set *bucket,
+                                      void *p,
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator)
+{
+   unsigned int   hash;
+   
+   hash = (unsigned int) (*callback->hash)( callback, p);
+   return( _mulle_set_write( bucket, p, hash, mulle_container_insert_e, callback, allocator));
+}                                       
+
+
+void   *__mulle_set_get( struct _mulle_set *bucket,
+                         void *p,
+                         unsigned int hash,
+                         struct mulle_container_keycallback *callback)
+{
+   void     *q;
+   int      (*f)( void *, void *, void *);
+   unsigned int   modulo;
+   unsigned int   limit;
+   unsigned int   i;
+   
+   modulo = mask_for_depth( bucket->_depth);
+   i      = hash_for_modulo( hash, modulo);
+   limit  = modulo + 1;
+
+   f = (void *) callback->is_equal;
+   while( q = bucket->_storage[ i])
+   {
+      if( p == q)
+         break;
+      if( (*f)( callback, p, q))
+         break;
+      if( ++i >= limit)
+         i = 0;
+   }
+
+   return( q);
+}
+
+
+int   __mulle_set_remove( struct _mulle_set *bucket,
+                          void *p,
+                          unsigned int hash,
+                          struct mulle_container_keycallback *callback,
+                          struct mulle_allocator *allocator)
+{
+   unsigned int   hole_index;
+   unsigned long  found;
+   unsigned int   i;
+   unsigned int   modulo;
+   unsigned int   dst_index;
+   unsigned int   search_start;
+   void     *q;
+   
+   modulo = mask_for_depth( bucket->_depth);
+   found  = find_index( bucket->_storage, p, hash, modulo, &hole_index, callback);
+   if( found == mulle_not_found_e)
+      return( 0);
+   
+   i = (unsigned int) found;
+   q = bucket->_storage[ i];
+   (callback->release)( callback, q, allocator);  // get rid of it
+   bucket->_count--;
+   
+   // now we may need to do a whole lot of shifting, if 
+   // the following object isn't in its proper hash index.
+   // Because of the way objects are inserted and deleted
+   // we have to possibly move EVERYTHING until we hit the
+   // hole.
+   
+   dst_index = i;
+   
+   for(;;)
+   {
+      i = (i + 1) & modulo;
+      
+      q = bucket->_storage[ i];
+      if( ! q)
+      {
+         bucket->_storage[ dst_index] = NULL;
+         break;
+      }
+   
+      // check if its in the slot it's expected
+      // otherwise it won't be found because of
+      // the "hole" in the front we just made
+      // but keep going because "wrong" hashes might be behind
+      // be sure not to move items that won't be found
+      hash         = _mulle_set_hash( callback, q);
+      search_start = hash_for_modulo( hash, modulo);
+
+      // object better off where it is ?
+      // CASE:   
+      // [
+      //    
+      //   
+      //    2 0x5205a0 (2 0xda000000)  *delete*
+      //    3 0x531ae0 (2 0xda000000)  comulleider
+      //   ]
+      // dst_index=2, search_start=2, index=3
+      //
+      // CASE:   
+      // [
+      //    
+      //    1 0x5671b0 (1 0xcad00000)  *delete*
+      //    2 0x5205a0 (2 0xda000000)  
+      //    3 0x531ae0 (3 0xdbfc0000)  comulleider
+      //   ]
+      // dst_index=1, search_start=3, index=3
+      //
+      // CASE:   
+      // [
+      //    
+      //    1 0x5671b0 (1 0xcad00000)  *delete*
+      //    2 0x5205a0 (2 0xda000000)  comulleider
+      //    
+      //   ]
+      // dst_index=1, search_start=2, index=2
+      //
+      // CASE:   
+      // [
+      //    0 0x537a40 (0 0xdbfc0000)  comulleider
+      //   
+      //    
+      //    3 0x531ae0 (3 0xdbfc0000)  *delete*
+      //   ]
+      // dst_index=3, search_start=0, index=0
+      //
+      // CASE:   
+      // [
+      //    0 0x537a40 (2 0xda000000)  comulleider
+      //   
+      //    2 0x5205a0 (2 0xda000000)
+      //    3 0x531ae0 (2 0xda000000)  *delete*
+      //   ]
+      // dst_index=3, search_start=2, index=0
+      //
+      // CASE:   
+      // [
+      //    0 0x537a40 (0 0xdbfc0000)
+      //    1 0x5205a0 (3 0xda000000)  comulleider
+      //   
+      //    3 0x531ae0 (3 0xdbfc0000)  *delete* 
+      //   ]
+      // dst_index=3, search_start=3, index=1
+      //
+      // CASE:   
+      // [
+      //    0 0x537a40 (0 0xdbfc0000)  *delete*
+      //    1 0x5205a0 (3 0xda000000)  comulleider
+      //   
+      //    3 0x531ae0 (3 0xdbfc0000)   
+      //   ]
+      // dst_index=0, search_start=3, index=1
+      
+      
+      if( search_start > i)  // object from wrapped insert ?
+      {                          // 
+         if( dst_index > i)  // would this move to a non-wrapped position ? 
+         {
+            if( search_start > dst_index)  // would it be found there ?
+               continue;                   // no ->
+         }
+         // wrapped objects love movin ahead ...
+      }
+      else
+      {
+         if( dst_index > i)           // hmm search wrapped, object is as happy as a pig in a sty
+            continue;
+         if( search_start > dst_index)    // would it be found there ?
+            continue;                     // no ->
+      }
+      // move it up
+      bucket->_storage[ dst_index] = q;
+      dst_index = i;
+   }
+   return( 1);
+}
+
+
+void   *_mulle_set_get( struct _mulle_set *set,
+                        void *p,
+                        struct mulle_container_keycallback *callback)
+{
+   unsigned int   hash;
+   
+   hash = (unsigned int) (*callback->hash)( callback, p);
+   return( __mulle_set_get( set, p, hash, callback));
+}
+
+
+int  _mulle_set_remove( struct _mulle_set *set,
+                        void *p,
+                        struct mulle_container_keycallback *callback,
+                        struct mulle_allocator *allocator)
+{
+   unsigned int   hash;
+   
+   hash = (unsigned int) (*callback->hash)( callback, p);
+   return( __mulle_set_remove( set, p, hash, callback, allocator));
+}
+
+
+int   _mulle_set_copy_items( struct _mulle_set *dst,
+                             struct _mulle_set *src,
+                             struct mulle_container_keycallback *callback,
+                             struct mulle_allocator *allocator)
+{
+   struct _mulle_setenumerator  rover;
+   void                         *item;
+   int                          rval;
    
    rval  = 0;
    rover = _mulle_set_enumerate( src, callback);
@@ -198,279 +598,57 @@ struct _mulle_set   *_mulle_set_copy( struct _mulle_set *set,
 {
    struct _mulle_set   *other;
    
-   other = _mulle_set_create( _mulle_set_get_count( set), callback, allocator);
-   if( __mulle_set_copy( other, set, callback, allocator))
+   other = _mulle_set_create( _mulle_set_get_count( set), 0, callback, allocator);
+   if( _mulle_set_copy_items( other, set, callback, allocator))
    {
-      _mulle_set_free( other, callback, allocator);
+      _mulle_set_destroy( other, callback, allocator);
       other = NULL;
    }
    return( other);
 }
 
 
-extern void   *mulle_container_callback_self( void *, void *, struct mulle_allocator *allocator);
-extern void   mulle_container_callback_nop( void *, void *, struct mulle_allocator *allocator);
-
-
-//
-// we "just" create a new hashtable with the new size and then copy
-// the other set into it. The we move the ivars around and delted the
-// new one...
-//
-static int   grow_vertically( struct _mulle_set *set,
-                              struct mulle_container_keycallback *callback,
-                              struct mulle_allocator *allocator)
+// use this only for debugging
+char   *_mulle_set_describe( struct _mulle_set *set,
+                            struct mulle_container_keycallback *callback,
+                            struct mulle_allocator *allocator)
 {
-   struct _mulle_set                     copy;
-   struct mulle_container_keycallback    tmpCallBacks;
-   short                                 depth;
-   int                                   rval;
-   depth = set->_depth;
-   if( depth < 0)
-      return( 0);
+   char                          *result;
+   char                          *s;
+   int                           separate;
+   size_t                        len;
+   size_t                        s_len;
+   struct _mulle_setenumerator   rover;
+   void                          *item;
+   
+   result = NULL;
+   len    = 0;
+   
+   rover = _mulle_set_enumerate( set, callback);
+   while( item = _mulle_setenumerator_next( &rover))
+   {
+      s      = (*callback->describe)( callback, item, allocator);
+      s_len  = strlen( s);
 
-   depth = good_depth_for_depth( depth + 1);
+      separate = result != NULL;
+      result = mulle_allocator_realloc( allocator, result, len + (separate * 2) + s_len + 1);
       
-   tmpCallBacks         = *callback;
-   tmpCallBacks.retain  = (void *) mulle_container_callback_self;
-   tmpCallBacks.release = (void *) mulle_container_callback_nop;
-    
-   _mulle_set_init( &copy, - depth, callback, allocator);  /* mark negative, so we don't grow within growing */
-   rval = __mulle_set_copy( &copy, set, callback, allocator);
-   if( rval)
-   {
-      _mulle_set_done( &copy, callback, allocator);
-      return( 0);
-   }
-   
-   _mulle_set_done( set, &tmpCallBacks, allocator);
-   
-   memcpy( set, &copy, sizeof( struct _mulle_set));
-   set->_depth = depth;
-   
-   return( 1);
-}
-
-
-//
-// what's the strategy ?
-//  1.) first we prefer vertical growth until we reach 31, to keep smallish
-//  2.) after that we prefer rectangular growth
-//       if an array becomes four times as large as the vertical plane
-//  3.) we quadruple the vertical plane, but then we have to reorg completely
-//      so, 
-//  4.) we do this until the vertical plane hits 509 * 1036 = 1 mio objects... 
-//      not too shabby. After that we don't want to reorg so much anymore
-//      we only reorg twice at 127 and 509 thefore 
-//  5.) this can be completely avoided by specifing a capacity, so that enough
-//      vertical space is preallocated
-//      
-void   *__mulle_set_put( struct _mulle_set *set,
-                         void *p,
-                         enum mulle_container_set_mode mode,
-                         struct mulle_container_keycallback *callback,
-                         struct mulle_allocator *allocator)
-{
-   struct _mulle_indexedbucket  *bucket;
-   size_t   hash;
-   size_t   other_hash;
-   size_t   modulo;
-   size_t   i;
-   size_t   size;
-   void     *q;
-   
-   assert(  p);
-
-   p    = (*callback->retain)( callback, p, allocator);
-   hash = (*callback->hash)( callback, p);
-   
-retry:
-   modulo = mulle_prime_for_depth( set->_depth);
-   if( ! modulo)
-   {
-      if( grow_vertically( set, callback, allocator))
-         goto retry;
-      return( NULL);
-   }
-      
-   i = hash % modulo; 
-
-   assert( set->_storage);
-   
-   q = set->_storage[ i];
-   if( ! q)
-   {
-      set->_count++;
-      set->_storage[ i] = p;
-      return( NULL);
-   }
-   
-   if( ! set->_storageTypes[ i])
-   {  
-      if( p == q)
-         goto short_circuit;
-         
-      other_hash = (*callback->hash)( callback, q);
-      if( hash == other_hash && (*callback->is_equal)( callback, p, q))
+      if( separate)
       {
-short_circuit:      
-         switch( mode)
-         {
-         case mulle_container_insert_e :
-            return( q);
-      
-         case mulle_container_put_e :
-            (*callback->release)( callback, q, allocator);
-            set->_storage[ i] = p;
-            return( NULL);
-         }
+         memcpy( &result[ len], ", ", 2);
+         len += 2;
       }
       
-      //
-      // a) grow vertically or start a struct _mulle_indexedbucket chain
-      //
-      if( set->_depth < _MULLE_HASH_STOP_SINGLE_DIMENSION_GROWTH)
-         if( grow_vertically( set, callback, allocator))
-            goto retry;
+      memcpy( &result[ len], s, s_len);
+      len += s_len;
       
-      // b) create a new bucket chain (quadruple size, of current vertical)
-      // start small
-      bucket = _mulle_indexedbucket_create( 4, 0, callback, allocator);
-      _mulle_indexedbucket_set_with_mode( bucket, q, other_hash, mulle_container_insert_e, callback, allocator);  // analyzer: not true
-      _mulle_indexedbucket_set_with_mode( bucket, p, hash, mulle_container_insert_e, callback, allocator);
-      set->_count++;
-      
-      set->_storage[ i]      = bucket;
-      set->_storageTypes[ i] = 1;
-      return( NULL);
+      mulle_allocator_free( allocator, s);
    }
+   _mulle_setenumerator_done( &rover);
    
-   // now make sure, the bucket don't grow to large
-   // with respect to vertical size
-   bucket = (struct _mulle_indexedbucket *) q;
-   if( _mulle_indexedbucket_is_full( bucket))
-   {
-      size = _mulle_indexedbucket_get_storagesize( bucket);
-      if( size * 2 > modulo * 4)
-         if( grow_vertically( set, callback, allocator))
-            goto retry;
-   }
+   result[ len] = 0;
    
-   if( ! _mulle_indexedbucket_set_with_mode( bucket, p, hash, mode, callback, allocator))
-      set->_count++;
-   return( NULL);
+   return( result);
 }
 
-
-void   _mulle_set_remove( struct _mulle_set *set,
-                          void *p,
-                          struct mulle_container_keycallback *callback,
-                          struct mulle_allocator *allocator)
-{
-   size_t   hash;
-   size_t   i;
-   size_t   modulo;
-   struct _mulle_indexedbucket  *bucket;
-   void         *q;
-   
-   modulo = mulle_prime_for_depth( set->_depth);
-   if( ! modulo)
-      return;
-      
-   hash = (*callback->hash)( callback, p);
-   i    = hash % modulo; 
-
-   q = set->_storage[ i];
-   if( ! q)
-      return;
-   
-   if( ! set->_storageTypes[ i])
-   {
-      if( p == q || (hash == (*callback->hash)( callback, q) && (*callback->is_equal)( callback, p, q)))
-      {
-         (*callback->release)( callback, q, allocator);
-         set->_storage[ i] = NULL;
-         set->_count--;
-      }
-      return;
-   }
-   
-   bucket = (struct _mulle_indexedbucket *) q;
-   if( _mulle_indexedbucket_remove( bucket, p, hash, callback, allocator))
-      set->_count--;
-}
-
-
-void   *_mulle_set_get( struct _mulle_set *set,
-                        void *p,
-                        struct mulle_container_keycallback *callback)
-{
-   size_t   hash;
-   size_t   modulo;
-   size_t   i;
-   void     *q;
-   void     **storage;
-   
-   modulo = mulle_prime_for_depth( set->_depth);
-   
-   // for small hashtables try quick check
-   storage = set->_storage;
-   switch( modulo)
-   {
-   case 5 : if( *storage == p)
-               return( p);
-            ++storage;
-            if( *storage == p)
-               return( p);
-            ++storage;
-            if( *storage == p)
-               return( p);
-            ++storage;
-   case 2 : if( *storage == p)
-               return( p);
-            ++storage;
-   case 1 : if( *storage == p)
-               return( p);
-   }  
-   
-   hash = (*callback->hash)( callback, p);
-   i    = mulle_prime_hash_for_depth( hash, set->_depth); 
-   
-   q = set->_storage[ i];
-   if( ! set->_storageTypes[ i])
-   {
-      if( p == q || (hash == (*callback->hash)( callback, q) && (*callback->is_equal)( callback, p, q)))
-         return( q);
-      return( NULL);
-   }
-   
-   return( _mulle_indexedbucket_get( q, p, hash, callback));
-}
-
-
-void   *_mulle_setenumerator_next( struct _mulle_setenumerator *rover)
-{
-   void   *q;
-   void   **storage;
-   
-   if( ! rover->_left)
-      return( NULL);
-
-   --rover->_left;
-retry:   
-   q = _mulle_indexedbucketenumerator_next( &rover->_bucket_rover);
-   if( q == rover->_bucket_rover._not_a_key_marker)
-   {
-      storage = rover->_table->_storage;
-      while( ! (q = storage[ rover->_index]))
-         ++rover->_index;
-
-      if( rover->_table->_storageTypes[ rover->_index++])
-      {
-         rover->_bucket_rover = _mulle_indexedbucket_enumerate( q, rover->_callback);
-         goto retry;
-      }
-   }
-   return( q);
-}
 

@@ -42,18 +42,21 @@ src/mulle_container_operation.h
 src/mulle_container_compiler_attributes.h
 src/array/mulle_array.h
 src/array/_mulle_array.h
+src/array/mulle_pointerarray.h
 src/buffer/mulle_buffer.h
 src/buffer/_mulle_buffer.h
 src/hash/mulle_hash.h
 src/hash/mulle_prime.h
+src/map/mulle_bigmap.h
+src/map/_mulle_bigmap.h
 src/map/mulle_map.h
 src/map/_mulle_map.h
-src/map/_mulle_indexedkeyvaluebucket.h
 src/map/_mulle_keyvaluepair.h
 src/queue/_mulle_queue.h
+src/set/mulle_bigset.h
+src/set/_mulle_bigset.h
 src/set/mulle_set.h
 src/set/_mulle_set.h
-src/set/_mulle_indexedbucket.h
 src/set/mulle_pointerset.h
 )
 
@@ -66,13 +69,15 @@ src/hash/mulle_prime.c
 cityhash/src/city.c
 src/buffer/_mulle_buffer.c
 src/buffer/mulle_buffer.c
-src/map/_mulle_map.c
+src/map/_mulle_bigmap.c
+src/map/mulle_bigmap.c
 src/map/mulle_map.c
-src/map/_mulle_indexedkeyvaluebucket.c
+src/map/_mulle_map.c
 src/queue/_mulle_queue.c
-src/set/_mulle_set.c
+src/set/_mulle_bigset.c
+src/set/mulle_bigset.c
 src/set/mulle_set.c
-src/set/_mulle_indexedbucket.c
+src/set/_mulle_set.c
 src/set/mulle_pointerset.c
 )
 

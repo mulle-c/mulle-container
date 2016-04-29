@@ -32,6 +32,7 @@
 
 #include <mulle_allocator/mulle_allocator.h>
 
+#include <unistd.h>  // for SEEK_SET
 
 #if DEBUG
 # define MULLE_BUFFER_MIN_GROW_SIZE    16      // minimum realloc increment
@@ -40,6 +41,47 @@
 # define MULLE_BUFFER_MIN_GROW_SIZE    64       // minimum realloc increment
 # define MULLE_BUFFER_MIN_DOUBLE_SIZE  1024    // when we start doubling the buffer
 #endif
+
+
+off_t   _mulle_buffer_get_seek( struct _mulle_buffer *buffer)
+{
+   static off_t                    len;
+   struct _mulle_flushablebuffer   *flushable;
+   
+   len = _mulle_buffer_get_length( buffer);
+   if( ! _mulle_buffer_is_flushable( buffer))
+      return( len);
+   
+   flushable = (struct _mulle_flushablebuffer *) buffer;
+   return( flushable->_flushed + len);
+}
+
+
+int   _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, off_t seek)
+{
+   unsigned char   *plan;
+   
+   switch( mode)
+   {
+   case SEEK_SET :
+      plan = &buffer->_storage[ seek];
+      break;
+      
+   case SEEK_CUR :
+      plan = &buffer->_curr[ seek];
+      break;
+
+   case SEEK_END :
+      plan = &buffer->_sentinel[ -seek];
+      break;
+   }
+   
+   if( plan > buffer->_sentinel || plan < buffer->_storage)
+      return( -1);
+
+   buffer->_curr = plan;
+   return( 0);
+}
 
 
 void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer, struct mulle_allocator *allocator)
@@ -110,13 +152,16 @@ int   _mulle_buffer_grow( struct _mulle_buffer *buffer, size_t min_amount, struc
       }
          
       ibuffer = (struct _mulle_flushablebuffer *) buffer;
-      if( 1 != (*ibuffer->_flusher)( ibuffer->_storage, ibuffer->_curr - ibuffer->_storage, 1, ibuffer->_userinfo))
+      len     = ibuffer->_curr - ibuffer->_storage;
+      if( 1 != (*ibuffer->_flusher)( ibuffer->_storage, len, 1, ibuffer->_userinfo))
       {
          ibuffer->_curr = ibuffer->_sentinel + 1;  // set "overflowed"
          return( -2);
       }
       
-      ibuffer->_curr = ibuffer->_storage;
+      ibuffer->_flushed += len;
+      ibuffer->_curr     = ibuffer->_storage;
+      
       return( 0);
    }
    
@@ -199,7 +244,7 @@ struct _mulle_buffer   *_mulle_buffer_create( struct mulle_allocator *allocator)
 }
 
 
-void   _mulle_buffer_free( struct _mulle_buffer *buffer,
+void   _mulle_buffer_destroy( struct _mulle_buffer *buffer,
                            struct mulle_allocator *allocator)
 {
    _mulle_buffer_done( buffer, allocator);

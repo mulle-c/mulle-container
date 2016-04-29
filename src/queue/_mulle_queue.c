@@ -97,7 +97,8 @@ void   _mulle_queue_done( struct _mulle_queue *queue, struct mulle_allocator *al
 }
 
 
-void   _mulle_queue_removeall( struct _mulle_queue *queue, struct mulle_allocator *allocator)
+void   _mulle_queue_removeall( struct _mulle_queue *queue,
+                               struct mulle_allocator *allocator)
 {
    struct _mulle_queuebucket  *p;
    
@@ -182,14 +183,16 @@ void  *_mulle_queue_pop( struct _mulle_queue *queue,
    return( p);
 }
    
-void   _mulle_queue_free( struct _mulle_queue *queue, struct mulle_allocator *allocator)
+void   _mulle_queue_destroy( struct _mulle_queue *queue,
+                             struct mulle_allocator *allocator)
 {  
    _mulle_queue_done( queue, allocator);
    mulle_allocator_free( allocator, queue);
 }
 
 
-void   _mulle_queue_reset( struct _mulle_queue *queue, struct mulle_allocator *allocator)
+void   _mulle_queue_reset( struct _mulle_queue *queue,
+                           struct mulle_allocator *allocator)
 {
    _mulle_queue_done( queue, allocator);
    _mulle_queue_init( queue, queue->_bucket_size, queue->_spare_allowance);

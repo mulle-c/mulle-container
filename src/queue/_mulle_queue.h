@@ -30,7 +30,7 @@ struct mulle_allocator;
    struct _mulle_queuebucket   *_spares;        \
    struct _mulle_queuebucket   *_read;          \
    struct _mulle_queuebucket   *_write;         \
-   size_t                     _count;           \
+   unsigned int               _count;           \
    unsigned short             _bucket_size;     \
                                                 \
    unsigned short             _read_index;      \
@@ -73,7 +73,7 @@ struct _mulle_queue   *_mulle_queue_create( unsigned short bucket_size,
                                             unsigned short spare_allowance,
                                             struct mulle_allocator *allocator);
 
-void   _mulle_queue_free( struct _mulle_queue *queue,  struct mulle_allocator *allocator);
+void   _mulle_queue_destroy( struct _mulle_queue *queue,  struct mulle_allocator *allocator);
 void   _mulle_queue_done( struct _mulle_queue *queue,  struct mulle_allocator *allocator);
 
 void   _mulle_queue_grow( struct _mulle_queue *queue, struct mulle_allocator *allocator);
@@ -139,11 +139,11 @@ static inline void  _mulle_queue_push( struct _mulle_queue *queue,
 
 
 void  *_mulle_queue_pop( struct _mulle_queue *queue,
-                        struct mulle_container_keycallback *callback,
-                        struct mulle_allocator *allocator);
+                         struct mulle_container_keycallback *callback,
+                         struct mulle_allocator *allocator);
 
 
-static inline size_t   _mulle_queue_get_count( struct _mulle_queue *queue)
+static inline unsigned int   _mulle_queue_get_count( struct _mulle_queue *queue)
 {
    return( queue->_count);
 }

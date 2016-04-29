@@ -36,6 +36,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h> // for off_t
 
 
 struct mulle_allocator;
@@ -70,6 +71,7 @@ typedef size_t   _mulle_flushablebuffer_flusher( void *, size_t len, size_t, voi
 #define _MULLE_FLUSHABLEBUFFER_BASE             \
    _MULLE_BUFFER_BASE;                          \
    _mulle_flushablebuffer_flusher   *_flusher;  \
+   off_t                            _flushed;   \
    void                             *_userinfo
 
 
@@ -83,7 +85,7 @@ struct _mulle_flushablebuffer
 #pragma mark creation destruction
 
 struct _mulle_buffer     *_mulle_buffer_create( struct mulle_allocator *allocator);
-void                     _mulle_buffer_free( struct _mulle_buffer *buffer,
+void                     _mulle_buffer_destroy( struct _mulle_buffer *buffer,
                                              struct mulle_allocator *allocator);
 
 #pragma mark -
@@ -104,6 +106,7 @@ static inline void    _mulle_flushablebuffer_init( struct _mulle_flushablebuffer
    buffer->_size            = (size_t) -2;
    
    buffer->_flusher         = flusher;
+   buffer->_flushed         = 0;
    buffer->_userinfo        = userinfo;
 }
 
@@ -265,6 +268,14 @@ static inline int   _mulle_buffer_is_full( struct _mulle_buffer *buffer)
 }
 
 
+
+static inline int   _mulle_buffer_is_big_enough( struct _mulle_buffer *buffer, size_t len)
+{
+   assert( len);
+   return( &buffer->_curr[ len] <= buffer->_sentinel);
+}
+
+
 static inline int   _mulle_buffer_is_empty( struct _mulle_buffer *buffer)
 {
    return( buffer->_curr == buffer->_storage);
@@ -283,27 +294,16 @@ static inline int   _mulle_buffer_has_overflown( struct _mulle_buffer *buffer)
 }
 
 
-#pragma mark -
-#pragma mark retrieval
-//
-// you only do this once!, because you now own the malloc block
-//
-void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer,
-                              struct mulle_allocator *allocator);
-
-
-static inline void   *_mulle_buffer_get_bytes( struct _mulle_buffer *buffer)
-{
-   return( buffer->_storage);
-}
-
-
 static inline size_t   _mulle_buffer_get_length( struct _mulle_buffer *buffer)
 {
    return( _mulle_buffer_has_overflown( buffer)
-               ? buffer->_sentinel - buffer->_storage
-               : buffer->_curr - buffer->_storage);
+          ? buffer->_sentinel - buffer->_storage
+          : buffer->_curr - buffer->_storage);
 }
+
+
+off_t   _mulle_buffer_get_seek( struct _mulle_buffer *buffer);
+int     _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, off_t seek);
 
 
 static inline size_t   _mulle_buffer_get_static_bytes_length( struct _mulle_buffer *buffer)
@@ -315,8 +315,22 @@ static inline size_t   _mulle_buffer_get_static_bytes_length( struct _mulle_buff
 
 
 #pragma mark -
-#pragma mark modification
+#pragma mark retrieval
+//
+// you only do this once!, because you now own the malloc block
+//
+void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer,
+                                     struct mulle_allocator *allocator);
 
+
+static inline void   *_mulle_buffer_get_bytes( struct _mulle_buffer *buffer)
+{
+   return( buffer->_storage);
+}
+
+
+#pragma mark -
+#pragma mark modification
 
 // instead of checking every char, run it for a while and then check
 // _mulle_buffer_has_overflown.
@@ -352,17 +366,13 @@ static inline void    _mulle_buffer_add_uint16( struct _mulle_buffer *buffer,
       return;
 
    lsb = c & 0xFF;
-   msb = c >> 8;
-#ifdef __BIG_ENDIAN__
-   *buffer->_curr++ = msb;
-   *buffer->_curr++ = lsb;
-#else
-   *buffer->_curr++ = lsb;
-   *buffer->_curr++ = msb;
-#endif
+   c >>= 8;
+   msb = c & 0xFF;
 
+   // always use network order
+   *buffer->_curr++ = msb;
+   *buffer->_curr++ = lsb;
 }
-
 
 
 static inline void    _mulle_buffer_add_uint32( struct _mulle_buffer *buffer,
@@ -378,23 +388,19 @@ static inline void    _mulle_buffer_add_uint32( struct _mulle_buffer *buffer,
       return;
    
    lsb = c & 0xFF;
-   nsb = (c >> 8) & 0xFF;
-   qsb = (c >> 16) & 0xFF;
-   msb = (c >> 24) & 0xFF;
+   c >>= 8;
+   nsb = c & 0xFF;
+   c >>= 8;
+   qsb = c & 0xFF;
+   c >>= 8;
+   msb = c & 0xFF;
    
-#ifdef __BIG_ENDIAN__
+// always use network order
    *buffer->_curr++ = msb;
    *buffer->_curr++ = qsb;
    *buffer->_curr++ = nsb;
    *buffer->_curr++ = lsb;
-#else
-   *buffer->_curr++ = lsb;
-   *buffer->_curr++ = nsb;
-   *buffer->_curr++ = qsb;
-   *buffer->_curr++ = msb;
-#endif
 }
-
 
 
 static inline void   _mulle_buffer_add_bytes( struct _mulle_buffer *buffer,
@@ -427,13 +433,20 @@ static inline size_t   _mulle_buffer_add_string_with_length( struct _mulle_buffe
                                                              struct mulle_allocator *allocator)
 {
    char   c;
+   char   *s;
+   char   *sentinel;
    
-   while( length && (c = *bytes++))
+   s        = bytes;
+   sentinel = &s[ length];
+   while( s < sentinel)
    {
+      if( ! (c = *s))
+         break;
+      
       _mulle_buffer_add_byte( buffer, c, allocator);
-      --length;
+      ++s;
    }
-   return( length);
+   return( s - bytes);
 }
 
 
@@ -493,6 +506,34 @@ static inline int   _mulle_buffer_next_byte( struct _mulle_buffer *buffer)
       return( -1);
    return( *buffer->_curr++);
 }
+
+
+static inline void   *_mulle_buffer_reference_bytes( struct _mulle_buffer *buffer, size_t len)
+{
+   void   *start;
+   
+   if( ! _mulle_buffer_is_big_enough( buffer, len))
+      return( NULL);
+
+   start = buffer->_curr;
+   buffer->_curr += len;
+   
+   return( start);
+}
+
+
+static inline int   _mulle_buffer_next_bytes( struct _mulle_buffer *buffer,
+                                              void *buf,
+                                              size_t len)
+{
+   if( ! _mulle_buffer_is_big_enough( buffer, len))
+      return( -1);
+
+   memcpy( buf, buffer->_curr, len);
+   buffer->_curr += len;
+   return( 0);
+}
+
 
 
 static inline int   _mulle_buffer_next_char( struct _mulle_buffer *buffer)

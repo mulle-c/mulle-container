@@ -62,9 +62,9 @@ struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *c
                                            struct mulle_allocator *allocator);
 
 
-static inline void   mulle_array_free( struct mulle_array *array)
+static inline void   mulle_array_destroy( struct mulle_array *array)
 {
-   return( _mulle_array_free( (struct _mulle_array *) array, array->_callback, array->_allocator));
+   return( _mulle_array_destroy( (struct _mulle_array *) array, array->_callback, array->_allocator));
 }
 
 
@@ -86,7 +86,7 @@ static inline int    mulle_array_size_to_fit( struct mulle_array *array)
 }
 
 
-static inline void   mulle_array_remove_in_range( struct mulle_array *array, size_t location, size_t length)
+static inline void   mulle_array_remove_in_range( struct mulle_array *array, unsigned int location, unsigned int length)
 {
    _mulle_array_remove_in_range( (struct _mulle_array *) array,
                                  location,
@@ -96,7 +96,7 @@ static inline void   mulle_array_remove_in_range( struct mulle_array *array, siz
 }
 
 
-static inline void   mulle_array_zero_in_range( struct mulle_array *array, size_t location, size_t length)
+static inline void   mulle_array_zero_in_range( struct mulle_array *array, unsigned int location, unsigned int length)
 {
    _mulle_array_zero_in_range( (struct _mulle_array *) array,
                                location,
@@ -118,7 +118,7 @@ static inline void   mulle_array_remove_all( struct mulle_array *array)
 
 
 static inline void    mulle_array_init( struct mulle_array *array,
-                                        size_t length,
+                                        unsigned int length,
                                         struct mulle_container_keycallback *callback,
                                         struct mulle_allocator *allocator)
 {
@@ -138,14 +138,14 @@ static inline void   **mulle_array_get_all( struct mulle_array *array)
 }
 
 
-static inline size_t   mulle_array_get_count( struct mulle_array *array)
+static inline unsigned int   mulle_array_get_count( struct mulle_array *array)
 {
    return( _mulle_array_get_count( (struct _mulle_array *) array));
 }
 
 
 static inline void   **mulle_array_advance( struct mulle_array *array,
-                                            size_t length)
+                                            unsigned int length)
 {
    return( _mulle_array_advance( (struct _mulle_array *) array, length, array->_callback, array->_allocator));
 }
@@ -166,13 +166,13 @@ static inline int   mulle_array_is_equal( struct mulle_array *array, struct mull
 
 
 
-static inline size_t   mulle_array_guaranteedsize( struct mulle_array *array)
+static inline unsigned int   mulle_array_guaranteedsize( struct mulle_array *array)
 {
    return( _mulle_array_guaranteedsize( (struct _mulle_array *) array));
 }
 
 
-static inline void   **mulle_array_guarantee( struct mulle_array *array, size_t length)
+static inline void   **mulle_array_guarantee( struct mulle_array *array, unsigned int length)
 {
    return( _mulle_array_guarantee( (struct _mulle_array *) array, length, array->_callback, array->_allocator));
 }
@@ -185,7 +185,7 @@ static inline void    mulle_array_add( struct mulle_array *array,
 }
 
 
-static inline void   *mulle_array_get( struct mulle_array *array, size_t index)
+static inline void   *mulle_array_get( struct mulle_array *array, unsigned int index)
 {
    return( _mulle_array_get( (struct _mulle_array *) array, index));
 }
@@ -205,7 +205,7 @@ static inline void   mulle_array_remove_last( struct mulle_array *array)
 
 static inline void   mulle_array_add_multiple( struct mulle_array *array,
                                                void **pointers,
-                                               size_t length)
+                                               unsigned int length)
 {
    _mulle_array_add_multiple( (struct _mulle_array *) array, pointers, length, array->_callback, array->_allocator);
 }
@@ -239,19 +239,19 @@ static inline void   *mulle_array_extract( struct mulle_array *array)
 #pragma mark -
 #pragma mark search
 
-static inline size_t  mulle_array_find_in_range_identical( struct mulle_array *array,
+static inline unsigned long  mulle_array_find_in_range_identical( struct mulle_array *array,
                                                            void *obj,
-                                                           size_t location,
-                                                           size_t length)
+                                                           unsigned int location,
+                                                           unsigned int length)
 {
    return( _mulle_array_find_in_range_identical( (struct _mulle_array *) array, obj, location, length));
 }
 
 
-static inline size_t  mulle_array_find_in_range( struct mulle_array *array,
+static inline unsigned long  mulle_array_find_in_range( struct mulle_array *array,
                                                  void *obj,
-                                                 size_t location,
-                                                 size_t length)
+                                                 unsigned int location,
+                                                 unsigned int length)
 {
    return( _mulle_array_find_in_range( (struct _mulle_array *) array, obj, location, length, array->_callback));
 }
@@ -298,13 +298,13 @@ static inline void    mulle_array_add_int( struct mulle_array *array,
 }
 
 
-static inline intptr_t    mulle_array_get_intptr( struct mulle_array *array, size_t index)
+static inline intptr_t    mulle_array_get_intptr( struct mulle_array *array, unsigned int index)
 {
    return( (intptr_t) mulle_array_get( array, index));
 }
 
 
-static inline int    mulle_array_get_int( struct mulle_array *array, size_t index)
+static inline int    mulle_array_get_int( struct mulle_array *array, unsigned int index)
 {
    return( (int) mulle_array_get_intptr( array, index));
 }
@@ -323,20 +323,20 @@ static inline int   mulle_arrayenumerator_next_int( struct mulle_arrayenumerator
 
 
 
-static inline size_t  mulle_array_find_in_range_identical_intptr( struct mulle_array *array,
+static inline unsigned long  mulle_array_find_in_range_identical_intptr( struct mulle_array *array,
                                                                   intptr_t v,
-                                                                  size_t location,
-                                                                  size_t length)
+                                                                  unsigned int location,
+                                                                  unsigned int length)
 {
    // ints are always identical
    return(  mulle_array_find_in_range_identical( array, (void *) v, location, length));
 }
 
 
-static inline size_t   mulle_array_find_in_range_identical_int( struct mulle_array *array,
+static inline unsigned long   mulle_array_find_in_range_identical_int( struct mulle_array *array,
                                                              int v,
-                                                             size_t location,
-                                                             size_t length)
+                                                             unsigned int location,
+                                                             unsigned int length)
 {
    return( mulle_array_find_in_range_identical_intptr( array, v, location, length));
 }

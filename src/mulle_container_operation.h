@@ -36,10 +36,10 @@
 #include <limits.h>
 
 
-enum mulle_container_set_mode
+enum mulle_container_write_mode
 {
    mulle_container_insert_e,
-   mulle_container_put_e
+   mulle_container_overwrite_e
 };
 
 enum mulle_container_find_status

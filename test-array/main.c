@@ -51,7 +51,7 @@ static void  simple( void)
    mulle_array_remove_last( array);
    assert( mulle_array_get_count( array) == 0);
       
-   mulle_array_free( array);
+   mulle_array_destroy( array);
 }
 
 
@@ -134,7 +134,7 @@ static void  notakeymarker( void)
    index = mulle_array_find_in_range_identical_int( array, 1, 0, 1);
    assert( index == mulle_not_found_e);
    mulle_arrayenumerator_done( &rover);
-   mulle_array_free( array);
+   mulle_array_destroy( array);
 }
 
 
