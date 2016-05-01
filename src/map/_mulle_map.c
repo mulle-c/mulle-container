@@ -104,6 +104,34 @@ static short   depth_for_capacity( size_t capacity)
 #pragma mark -
 #pragma mark setup and teardown
 
+
+static struct _mulle_keyvaluepair   *allocate_pairs( size_t n,
+                                                     void *not_a_key_marker,
+                                                     struct mulle_allocator *allocator)
+{
+   struct _mulle_keyvaluepair   *buf;
+   struct _mulle_keyvaluepair   *p;
+   struct _mulle_keyvaluepair   *sentinel;
+
+   if( ! not_a_key_marker)
+      return( mulle_allocator_calloc( allocator, n, sizeof( struct _mulle_keyvaluepair)));
+   
+   buf = mulle_allocator_malloc( allocator, n * sizeof( struct _mulle_keyvaluepair));
+   if( buf)
+   {
+      p        = &buf[ 0];
+      sentinel = &buf[ n];
+      while( p < sentinel)
+      {
+         p->_key = not_a_key_marker;
+         ++p;
+      }
+   }
+   return( buf);
+}
+
+
+
 void   _mulle_map_init( struct _mulle_map *p,
                         size_t capacity,
                         struct mulle_container_keyvaluecallback *callback,
@@ -111,29 +139,14 @@ void   _mulle_map_init( struct _mulle_map *p,
 {
    size_t   n;
    short    depth;
+
+   assert_mulle_container_keyvaluecallback( callback);
    
    depth       = depth_for_capacity( capacity);
    n           = _mulle_map_size_for_depth( depth);
    p->_count   = 0;
    p->_depth   = depth;
-   p->_storage = mulle_allocator_calloc( allocator, n, sizeof( struct _mulle_keyvaluepair));
-   
-   assert_mulle_container_keyvaluecallback( callback);
-   
-   if( callback->keycallback.not_a_key_marker)
-   {
-      struct _mulle_keyvaluepair   *start;
-      struct _mulle_keyvaluepair   *end;
-      
-      // set to ununused, if using special not_a_key_marker
-      start = &p->_storage[ 0];
-      end   = &start[ n];
-      while( start < end)
-      {
-         start->_key = callback->keycallback.not_a_key_marker;
-         start++;
-      }
-   }
+   p->_storage = allocate_pairs( n, callback->keycallback.not_a_key_marker, allocator);
 }
 
 
@@ -156,7 +169,7 @@ void   _mulle_map_done( struct _mulle_map *map,
                         struct mulle_allocator *allocator)
 {
    struct _mulle_mapenumerator   rover;
-   struct _mulle_keyvaluepair                       *pair;
+   struct _mulle_keyvaluepair    *pair;
    
    rover = _mulle_map_enumerate( map, callback);
    while( pair = _mulle_mapenumerator_next( &rover))
@@ -244,7 +257,6 @@ static void   copy_maps( struct _mulle_keyvaluepair *dst,
    }
 }
 
-
 static size_t   grow( struct _mulle_map *map,
                       struct mulle_container_keycallback *callback,
                       struct mulle_allocator *allocator)
@@ -273,24 +285,10 @@ static size_t   grow( struct _mulle_map *map,
    
    new_modulo = _mulle_map_mask_for_depth( ++depth);
 
-   buf = mulle_allocator_calloc( allocator, (new_modulo + 1), sizeof( struct _mulle_keyvaluepair));
-   if( callback->not_a_key_marker)
-   {
-      struct _mulle_keyvaluepair   *start;
-      struct _mulle_keyvaluepair   *end;
-      
-      // set fresh portion to unused, if using special _notakey
-      start = &buf[ modulo + 1];
-      end   = &buf[ new_modulo + 1];
-      while( start < end)
-      {
-         start->_key = callback->not_a_key_marker;
-         start++;
-      }
-   }
+   buf = allocate_pairs( new_modulo + 1, callback->not_a_key_marker, allocator);
    
    copy_maps( buf, new_modulo, map->_storage, modulo + 1, callback);
-   mulle_allocator_free( allocator,  map->_storage);
+   mulle_allocator_free( allocator, map->_storage);
    
    map->_depth   = depth;
    map->_storage = buf;
@@ -371,6 +369,8 @@ void   *_mulle_map_write( struct _mulle_map *map,
    size_t                       modulo;
    struct _mulle_keyvaluepair   *q;
    struct _mulle_keyvaluepair   new_pair;
+   
+   assert( pair->_key != callback->keycallback.not_a_key_marker);
    
    modulo = _mulle_map_mask_for_depth( map->_depth);
    

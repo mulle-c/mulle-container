@@ -132,6 +132,19 @@ static inline void   mulle_set_remove( struct mulle_set *set, void *p)
 }
 
 
+
+static inline void   *mulle_set_insert( struct mulle_set *set, void *p)
+{
+   return( _mulle_set_insert( (struct _mulle_set *) set, p, set->_callback, set->_allocator));
+}
+
+
+static inline void   mulle_set_set( struct mulle_set *set, void *p)
+{
+   _mulle_set_set( (struct _mulle_set *) set, p, set->_callback, set->_allocator);
+}
+
+
 #pragma mark -
 #pragma mark copy
 
@@ -186,12 +199,6 @@ static inline void   *mulle_setenumerator_next( struct mulle_setenumerator *rove
 static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover)
 {
    _mulle_setenumerator_done( (struct _mulle_setenumerator *) rover);
-}
-
-
-static inline void   mulle_set_set( struct mulle_set *set, void *p)
-{
-   _mulle_set_set( (struct _mulle_set *) set, p, set->_callback, set->_allocator);
 }
 
 #endif

@@ -92,6 +92,28 @@ static inline unsigned int   _mulle_set_hash( struct mulle_container_keycallback
 
 
 
+static void   **allocate_pointers( size_t n,
+                                   void *not_a_key_marker,
+                                   struct mulle_allocator *allocator)
+{
+   void   **buf;
+   void   **p;
+   void   **sentinel;
+
+   if( ! not_a_key_marker)
+      return( mulle_allocator_calloc( allocator, n, sizeof( void *)));
+   
+   buf      = mulle_allocator_malloc( allocator, n * sizeof( void *));
+   if( buf)
+   {
+      p        = &buf[ 0];
+      sentinel = &buf[ n];
+      while( p < sentinel)
+         *p++ = not_a_key_marker;
+   }
+   return( buf);
+}
+
 
 void    _mulle_set_init( struct _mulle_set *p,
                          unsigned int capacity,
@@ -105,7 +127,7 @@ void    _mulle_set_init( struct _mulle_set *p,
    n           = _mulle_set_size_for_depth( depth) + 1;
    p->_count   = 0;
    p->_depth   = depth;
-   p->_storage = mulle_allocator_calloc( allocator, n, sizeof( void *));
+   p->_storage = allocate_pointers( n, callback->not_a_key_marker, allocator);
 }
 
 
@@ -231,7 +253,7 @@ static unsigned int   grow( struct _mulle_set *bucket,
    
    new_modulo = mask_for_depth( ++depth);
 
-   buf = mulle_allocator_calloc( allocator, (new_modulo + 1), sizeof( void *));
+   buf = allocate_pointers( new_modulo + 1, callback->not_a_key_marker, allocator);
    if( ! buf)
       return( modulo);
    
