@@ -111,6 +111,20 @@ static inline void    _mulle_flushablebuffer_init( struct _mulle_flushablebuffer
 }
 
 
+static inline void    _mulle_buffer_init_with_allocated_bytes( struct _mulle_buffer *buffer,
+                                                               void *storage,
+                                                               size_t length)
+{
+   assert( length != (size_t) -1);
+   
+   buffer->_initial_storage = NULL;
+   buffer->_curr            =
+   buffer->_storage         = storage;
+   buffer->_sentinel        = &buffer->_storage[ length];
+   buffer->_size            = length;
+}
+
+
 static inline void    _mulle_buffer_init_with_static_bytes( struct _mulle_buffer *buffer,
                                                            void *storage,
                                                            size_t length)
@@ -193,8 +207,8 @@ void   _mulle_buffer_make_inflexable( struct _mulle_buffer *buffer,
 #pragma mark resize
 
 int    _mulle_buffer_grow( struct _mulle_buffer *buffer,
-                          size_t min_amount,
-                          struct mulle_allocator *allocator);
+                           size_t min_amount,
+                           struct mulle_allocator *allocator);
 
 void   _mulle_buffer_size_to_fit( struct _mulle_buffer *buffer,
                                  struct mulle_allocator *allocator);
@@ -203,39 +217,41 @@ void   _mulle_buffer_zero_to_length( struct _mulle_buffer *buffer,
                                     size_t length,
                                     struct mulle_allocator *allocator);
 
+// this zeroes, when advancing, shrinks otherwise
 size_t   _mulle_buffer_set_length( struct _mulle_buffer *buffer,
                                   size_t length,
                                   struct mulle_allocator *allocator);
 
 
+
+static inline int _mulle_buffer_guarantee( struct _mulle_buffer *buffer,
+                                               size_t length,
+                                               struct mulle_allocator *allocator)
+{
+   ptrdiff_t   missing;
+   
+   missing = &buffer->_curr[ length] - buffer->_sentinel;
+   if( missing <= 0)
+      return( 0);
+
+   return( _mulle_buffer_grow( buffer, (size_t) missing, allocator));
+}
+
+
 static inline void   *_mulle_buffer_advance( struct _mulle_buffer *buffer,
-                                            size_t length,
-                                            struct mulle_allocator *allocator)
+                                             size_t length,
+                                             struct mulle_allocator *allocator)
 {
-   void             *old;
-   unsigned char    *next;
+   unsigned char    *reserved;
    
-   while( (next = &buffer->_curr[ length]) > buffer->_sentinel)
-      if( _mulle_buffer_grow( buffer, length, allocator))
-         return( NULL);
+   if( _mulle_buffer_guarantee( buffer, length, allocator))
+      return( NULL);
    
-   old           = buffer->_curr;
-   buffer->_curr = next;
+   reserved      = buffer->_curr;
+   buffer->_curr = &buffer->_curr[ length];
    
-   return( old);
+   return( reserved);
 }
-
-
-static inline void   *_mulle_buffer_guarantee( struct _mulle_buffer *buffer,
-                                              size_t length,
-                                              struct mulle_allocator *allocator)
-{
-   while( &buffer->_curr[ length] > buffer->_sentinel)
-      if( _mulle_buffer_grow( buffer, length, allocator))
-         return( NULL);
-   return( buffer->_curr);
-}
-
 
 
 #pragma mark -
@@ -362,7 +378,7 @@ static inline void    _mulle_buffer_add_uint16( struct _mulle_buffer *buffer,
    unsigned char   lsb;
    unsigned char   msb;
    
-   if( ! _mulle_buffer_guarantee( buffer, 2, allocator))
+   if( _mulle_buffer_guarantee( buffer, 2, allocator))
       return;
 
    lsb = c & 0xFF;
@@ -384,7 +400,7 @@ static inline void    _mulle_buffer_add_uint32( struct _mulle_buffer *buffer,
    unsigned char   qsb;
    unsigned char   msb;
    
-   if( ! _mulle_buffer_guarantee( buffer, 4, allocator))
+   if( _mulle_buffer_guarantee( buffer, 4, allocator))
       return;
    
    lsb = c & 0xFF;
@@ -403,12 +419,32 @@ static inline void    _mulle_buffer_add_uint32( struct _mulle_buffer *buffer,
 }
 
 
+
+static inline int   _mulle_buffer_intersects_bytes( struct _mulle_buffer *buffer,
+                                                    void *bytes,
+                                                    size_t length)
+{
+   unsigned char   *start;
+   unsigned char   *end;
+   
+   if( ! length)
+      return( 0);
+   
+   start = bytes;
+   end   = &start[ length];
+
+   return( end > buffer->_storage && start < buffer->_sentinel);
+}
+
+
 static inline void   _mulle_buffer_add_bytes( struct _mulle_buffer *buffer,
                                               void *bytes,
                                               size_t length,
                                               struct mulle_allocator *allocator)
 {
    void   *s;
+   
+   assert( ! _mulle_buffer_intersects_bytes( buffer, bytes, length));
    
    s = _mulle_buffer_advance( buffer, length, allocator);
    if( s)
@@ -421,6 +457,8 @@ static inline void   _mulle_buffer_add_string( struct _mulle_buffer *buffer,
                                                struct mulle_allocator *allocator)
 {
    char   c;
+   
+   assert( ! _mulle_buffer_intersects_bytes( buffer, bytes, strlen( bytes)));
    
    while( (c = *bytes++))
       _mulle_buffer_add_byte( buffer, c, allocator);
@@ -435,6 +473,8 @@ static inline size_t   _mulle_buffer_add_string_with_length( struct _mulle_buffe
    char   c;
    char   *s;
    char   *sentinel;
+
+   assert( ! _mulle_buffer_intersects_bytes( buffer, bytes, length));
    
    s        = bytes;
    sentinel = &s[ length];

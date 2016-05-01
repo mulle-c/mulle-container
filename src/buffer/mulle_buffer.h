@@ -111,6 +111,16 @@ static inline void    mulle_buffer_set_allocator( struct mulle_buffer *buffer,
 }
 
 
+static inline void    mulle_buffer_init_with_allocated_bytes( struct mulle_buffer *buffer,
+                                                              void *storage,
+                                                              size_t length,
+                                                              struct mulle_allocator *allocator)
+{
+   _mulle_buffer_init_with_allocated_bytes( (struct _mulle_buffer *) buffer, storage, length);
+   mulle_buffer_set_allocator( buffer, allocator);
+}
+
+
 static inline void    mulle_buffer_init_with_static_bytes( struct mulle_buffer *buffer,
                                                            void *storage,
                                                            size_t length,
@@ -302,8 +312,8 @@ static inline int   mulle_buffer_has_overflown( struct mulle_buffer *buffer)
 #pragma mark -
 #pragma mark additions
 
-static inline void   *mulle_buffer_guarantee( struct mulle_buffer *buffer,
-                                              size_t length)
+static inline int   mulle_buffer_guarantee( struct mulle_buffer *buffer,
+                                            size_t length)
 {
    return( _mulle_buffer_guarantee( (struct _mulle_buffer *) buffer, length, buffer->_allocator));
 }
@@ -334,6 +344,17 @@ static inline void    mulle_buffer_add_uint32( struct mulle_buffer *buffer,
                                                uint32_t c)
 {
    _mulle_buffer_add_uint32( (struct _mulle_buffer *) buffer, c, buffer->_allocator);
+}
+
+
+#pragma mark -
+#pragma mark add memory ranges
+
+static inline int   mulle_buffer_intersects_bytes( struct mulle_buffer *buffer,
+                                                   void *bytes,
+                                                   size_t length)
+{
+   return( _mulle_buffer_intersects_bytes( (struct _mulle_buffer *) buffer, bytes, length));
 }
 
 

@@ -35,11 +35,9 @@
 #include <unistd.h>  // for SEEK_SET
 
 #if DEBUG
-# define MULLE_BUFFER_MIN_GROW_SIZE    16      // minimum realloc increment
-# define MULLE_BUFFER_MIN_DOUBLE_SIZE  512     // when we start doubling the buffer
+# define MULLE_BUFFER_MIN_GROW_SIZE    4        // minimum realloc increment
 #else
 # define MULLE_BUFFER_MIN_GROW_SIZE    64       // minimum realloc increment
-# define MULLE_BUFFER_MIN_DOUBLE_SIZE  1024    // when we start doubling the buffer
 #endif
 
 
@@ -138,7 +136,7 @@ int   _mulle_buffer_grow( struct _mulle_buffer *buffer, size_t min_amount, struc
 {
    void     *malloc_block;
    size_t   new_size;
-   size_t   diff;
+   size_t   plus;
    size_t   len;
    
    if( _mulle_buffer_is_inflexable( buffer))
@@ -172,14 +170,28 @@ int   _mulle_buffer_grow( struct _mulle_buffer *buffer, size_t min_amount, struc
    //
    // assume realloc is slow enough, to warrant all this code :)
    //
-   diff = MULLE_BUFFER_MIN_GROW_SIZE;
+   plus = MULLE_BUFFER_MIN_GROW_SIZE;
    if( min_amount > MULLE_BUFFER_MIN_GROW_SIZE)
-      diff = min_amount;
+      plus = min_amount;
 
-   if( min_amount >= MULLE_BUFFER_MIN_DOUBLE_SIZE && diff < buffer->_size)
-      diff = buffer->_size;
-      
-   new_size          = buffer->_size + diff;
+
+   //
+   // ! buffer->_curr,  buffer->size is capacity, which we should respect
+   //
+   if( ! buffer->_curr)
+   {
+      if( plus < buffer->_size)
+         new_size = buffer->_size;
+      else
+         new_size = plus;
+   }
+   else
+   {
+      // at least double buffer->size
+      if( plus < buffer->_size)
+         plus = buffer->_size;
+      new_size = buffer->_size + plus;
+   }
    
    assert( new_size >= min_amount);
    
@@ -210,9 +222,9 @@ int   _mulle_buffer_grow( struct _mulle_buffer *buffer, size_t min_amount, struc
 // into a inflexableBuffer 
 //
 void   _mulle_buffer_make_inflexable( struct _mulle_buffer *buffer,
-                                     void *buf,
-                                     size_t length,
-                                     struct mulle_allocator *allocator)
+                                      void *buf,
+                                      size_t length,
+                                      struct mulle_allocator *allocator)
 {
    if( buffer->_storage != buffer->_initial_storage)
       _mulle_allocator_free( allocator, buffer->_storage);
@@ -266,7 +278,7 @@ size_t   _mulle_buffer_set_length( struct _mulle_buffer *buffer,
       return( 0);
    }
    
-   _mulle_buffer_advance( buffer, (size_t) diff, allocator);
+   _mulle_buffer_memset( buffer, 0, (size_t) diff, allocator);
    return( (size_t) diff);
 }
 
