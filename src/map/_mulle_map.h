@@ -35,18 +35,18 @@
  
 
 #include "mulle_container_callback.h"
-#include "_mulle_keyvaluepair.h"
+#include "mulle_pointerpair.h"
 #include <stdarg.h>
 
 //
 // this is like your traditional  hash table, its called like this
 // because its a constituent of mulle_bigmap
 // 
-#define _MULLE_MAP_BASE   \
-   struct _mulle_keyvaluepair *_storage;    \
-   size_t                      _count;      \
-   short                       _depth;      \
-   short                       _inZone
+#define _MULLE_MAP_BASE                  \
+   struct mulle_pointerpair   *_storage; \
+   size_t                     _count;    \
+   short                      _depth;    \
+   short                      _inZone
 
 struct _mulle_map
 {
@@ -54,9 +54,9 @@ struct _mulle_map
 };
 
 
-#define _MULLE_MAPENUMERATOR_BASE         \
-   struct _mulle_keyvaluepair   *_curr;                     \
-   size_t                        _left;                     \
+#define _MULLE_MAPENUMERATOR_BASE                      \
+   struct mulle_pointerpair                  *_curr;   \
+   size_t                                    _left;    \
    struct mulle_container_keyvaluecallback   *_callback
 
 
@@ -96,7 +96,7 @@ void   _mulle_map_reset( struct _mulle_map *map,
 #pragma mark petty accessors
 
 static inline size_t   _mulle_map_is_fuller_than( struct _mulle_map *map,
-                                                                    size_t size)
+                                                  size_t size)
 {
    return( map->_count >= size);
 }
@@ -135,17 +135,17 @@ static inline size_t   _mulle_map_get_storagesize( struct _mulle_map *map)
 
 
 void   _mulle_map_set( struct _mulle_map *map,
-                       struct _mulle_keyvaluepair *pair,
+                       struct mulle_pointerpair *pair,
                        struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator);
 
 void    *_mulle_map_insert( struct _mulle_map *map,
-                            struct _mulle_keyvaluepair *pair,
+                            struct mulle_pointerpair *pair,
                             struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator);
 
 void   *_mulle_map_insert_known_absent( struct _mulle_map *map,
-                                        struct _mulle_keyvaluepair *pair,
+                                        struct mulle_pointerpair *pair,
                                         struct mulle_container_keyvaluecallback *callback,
                                         struct mulle_allocator *allocator);
 
@@ -214,9 +214,9 @@ static inline struct _mulle_mapenumerator
 }
 
 
-static inline struct _mulle_keyvaluepair   *_mulle_mapenumerator_next( struct _mulle_mapenumerator *rover)
+static inline struct mulle_pointerpair   *_mulle_mapenumerator_next( struct _mulle_mapenumerator *rover)
 {
-   struct _mulle_keyvaluepair   *p;
+   struct mulle_pointerpair   *p;
    
    if( ! rover->_left)
       return( 0);

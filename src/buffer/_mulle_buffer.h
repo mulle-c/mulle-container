@@ -362,6 +362,14 @@ static inline void    _mulle_buffer_add_byte( struct _mulle_buffer *buffer,
 }
 
 
+static inline void    _mulle_buffer_remove_last_byte( struct _mulle_buffer *buffer)
+{
+   assert( ! _mulle_buffer_is_empty( buffer));
+   
+   --buffer->_curr;
+}
+
+
 static inline void    _mulle_buffer_add_char( struct _mulle_buffer *buffer,
                                               int c,
                                               struct mulle_allocator *allocator)
@@ -465,19 +473,19 @@ static inline void   _mulle_buffer_add_string( struct _mulle_buffer *buffer,
 }
 
 
-static inline size_t   _mulle_buffer_add_string_with_length( struct _mulle_buffer *buffer,
+static inline size_t   _mulle_buffer_add_string_with_maxlength( struct _mulle_buffer *buffer,
                                                              char *bytes,
-                                                             size_t length,
+                                                             size_t maxlength,
                                                              struct mulle_allocator *allocator)
 {
    char   c;
    char   *s;
    char   *sentinel;
 
-   assert( ! _mulle_buffer_intersects_bytes( buffer, bytes, length));
+   assert( ! _mulle_buffer_intersects_bytes( buffer, bytes, strnlen( bytes, maxlength)));
    
    s        = bytes;
-   sentinel = &s[ length];
+   sentinel = &s[ maxlength];
    while( s < sentinel)
    {
       if( ! (c = *s))

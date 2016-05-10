@@ -44,7 +44,7 @@
 		412ED7D21CC3B50300E64506 /* mulle_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 412ED7D01CC3B50300E64506 /* mulle_map.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		414945741BEA930000C92587 /* mulle_container.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8A81BE7DB6C00EE1FF5 /* mulle_container.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		414945751BEA932100C92587 /* mulle_container_operation.h in Headers */ = {isa = PBXBuildFile; fileRef = 417582A71BE8BEE1005F0CE4 /* mulle_container_operation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		414945761BEA935700C92587 /* _mulle_keyvaluepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 41B440AF1BE8EC94004E7B2D /* _mulle_keyvaluepair.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		414945761BEA935700C92587 /* mulle_pointerpair.h in Headers */ = {isa = PBXBuildFile; fileRef = 41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4149458C1BEAAC3800C92587 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4149458B1BEAAC3800C92587 /* main.c */; };
 		414945921BEAAC5B00C92587 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
 		415745A01CB6C3030037CF80 /* libmulle_standalone_container.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */; };
@@ -56,6 +56,7 @@
 		4170B27E1BF0C01B002F7143 /* mulle_container_compiler_attributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		417582A51BE8BE2B005F0CE4 /* mulle_prime.h in Headers */ = {isa = PBXBuildFile; fileRef = 417582A31BE8BE2B005F0CE4 /* mulle_prime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		417582A61BE8BE2B005F0CE4 /* mulle_prime.c in Sources */ = {isa = PBXBuildFile; fileRef = 417582A41BE8BE2B005F0CE4 /* mulle_prime.c */; };
+		417CEB531CDFB1A60037B7BE /* mulle_pointerpairarray.h in Headers */ = {isa = PBXBuildFile; fileRef = 417CEB521CDFB1A60037B7BE /* mulle_pointerpairarray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41817B6A1CB6998E00C55990 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
 		41817B6B1CB699A300C55990 /* libmulle_test_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */; };
 		41817B6C1CB699A300C55990 /* libmulle_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F93511C442755008EC017 /* libmulle_allocator.a */; };
@@ -205,6 +206,7 @@
 		417C026A1BD8404E005A3751 /* StaticLibraryIOS.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = StaticLibraryIOS.xcconfig; sourceTree = "<group>"; };
 		417C026B1BD8404E005A3751 /* StaticLibraryOSX.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = StaticLibraryOSX.xcconfig; sourceTree = "<group>"; };
 		417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ToolOSX.xcconfig; sourceTree = "<group>"; };
+		417CEB521CDFB1A60037B7BE /* mulle_pointerpairarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_pointerpairarray.h; sourceTree = "<group>"; };
 		41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libmulle_standalone_container.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		41817B6D1CB699A300C55990 /* libmulle_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_thread.a; path = dependencies/lib/Debug/libmulle_thread.a; sourceTree = "<group>"; };
 		41817B901CB69D6C00C55990 /* mulle_standalone_container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_standalone_container.h; sourceTree = "<group>"; };
@@ -225,7 +227,7 @@
 		4198C8A81BE7DB6C00EE1FF5 /* mulle_container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container.h; sourceTree = "<group>"; };
 		419E7F521BEA1B660000D1A7 /* mulle_array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_array.c; sourceTree = "<group>"; };
 		419E7F531BEA1B660000D1A7 /* mulle_array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_array.h; sourceTree = "<group>"; };
-		41B440AF1BE8EC94004E7B2D /* _mulle_keyvaluepair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _mulle_keyvaluepair.h; sourceTree = "<group>"; };
+		41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_pointerpair.h; sourceTree = "<group>"; };
 		41BCA5001BE8E58300504AAD /* mulle_bigmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_bigmap.h; sourceTree = "<group>"; };
 		41BCA5011BE8E58300504AAD /* mulle_bigmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_bigmap.c; sourceTree = "<group>"; };
 		41BCA5021BE8E58300504AAD /* _mulle_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_map.h; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				41817B901CB69D6C00C55990 /* mulle_standalone_container.h */,
 				41709A9C1CB6BF02002A1BDA /* mulle_standalone_container.c */,
 				41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */,
+				417CEB4F1CDF6F460037B7BE /* New Group */,
 				417582A71BE8BEE1005F0CE4 /* mulle_container_operation.h */,
 				414AC1AA1AC2C45800DCA3CC /* mulle_container_callback.h */,
 				414AC1AB1AC2C45800DCA3CC /* mulle_container_callback.c */,
@@ -406,6 +409,13 @@
 			path = "mulle-configuration";
 			sourceTree = "<group>";
 		};
+		417CEB4F1CDF6F460037B7BE /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
 		4198C8881BE7AD5600EE1FF5 /* set */ = {
 			isa = PBXGroup;
 			children = (
@@ -446,6 +456,7 @@
 				41014CBF1BE9521400BE18B5 /* _mulle_array.h */,
 				41014CC01BE9521400BE18B5 /* _mulle_array.c */,
 				411D23A51CC3AC2900D92786 /* mulle_pointerarray.h */,
+				417CEB521CDFB1A60037B7BE /* mulle_pointerpairarray.h */,
 			);
 			path = array;
 			sourceTree = "<group>";
@@ -459,7 +470,7 @@
 				41BCA5031BE8E58300504AAD /* _mulle_map.c */,
 				412ED7D01CC3B50300E64506 /* mulle_map.h */,
 				412ED7CF1CC3B50300E64506 /* mulle_map.c */,
-				41B440AF1BE8EC94004E7B2D /* _mulle_keyvaluepair.h */,
+				41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */,
 				41BCA5051BE8E58300504AAD /* _mulle_bigmap.h */,
 				41BCA5061BE8E58300504AAD /* _mulle_bigmap.c */,
 				411D23A71CC3B07100D92786 /* _mulle_bigmap_private.h */,
@@ -522,7 +533,8 @@
 				411D23AB1CC3B1B200D92786 /* mulle_set.h in Headers */,
 				412ED7D21CC3B50300E64506 /* mulle_map.h in Headers */,
 				41BEC59F1CB14A3E006531B6 /* mulle_pointerset.h in Headers */,
-				414945761BEA935700C92587 /* _mulle_keyvaluepair.h in Headers */,
+				414945761BEA935700C92587 /* mulle_pointerpair.h in Headers */,
+				417CEB531CDFB1A60037B7BE /* mulle_pointerpairarray.h in Headers */,
 				4198C8A01BE7CEFF00EE1FF5 /* city.h in Headers */,
 				4198C8A11BE7CEFF00EE1FF5 /* citycrc.h in Headers */,
 				4198C8A31BE7D27400EE1FF5 /* config.h in Headers */,
@@ -825,7 +837,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 417C02651BD8404E005A3751 /* Debug.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 0.3;
+				CURRENT_PROJECT_VERSION = 0.4;
 			};
 			name = Debug;
 		};
@@ -833,7 +845,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 417C02681BD8404E005A3751 /* Release.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 0.3;
+				CURRENT_PROJECT_VERSION = 0.4;
 			};
 			name = Release;
 		};

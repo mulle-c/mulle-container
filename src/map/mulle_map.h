@@ -129,7 +129,7 @@ static inline void   mulle_map_insert_keys_and_values( struct mulle_map *map, vo
 
 static inline void   mulle_map_set( struct mulle_map *map, void *key, void *value)
 {
-   struct _mulle_keyvaluepair   pair;
+   struct mulle_pointerpair   pair;
    
    pair._key   = key;
    pair._value = value;
@@ -139,7 +139,7 @@ static inline void   mulle_map_set( struct mulle_map *map, void *key, void *valu
 
 static inline void   *mulle_map_insert( struct mulle_map *map, void *key, void *value)
 {
-   struct _mulle_keyvaluepair   pair;
+   struct mulle_pointerpair   pair;
    
    pair._key   = key;
    pair._value = value;
@@ -193,7 +193,7 @@ static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map
 
 static inline int    mulle_mapenumerator_next( struct mulle_mapenumerator *rover, void **key, void **value)
 {
-   struct _mulle_keyvaluepair  *pair;
+   struct mulle_pointerpair  *pair;
    
    pair = _mulle_mapenumerator_next( (struct _mulle_mapenumerator *) rover);
    if( ! pair)

@@ -63,7 +63,7 @@ static uintptr_t   _mulle_map_hash_for_modulo( uintptr_t hash, size_t modulo)
 
 
 void   *_mulle_map_write( struct _mulle_map *map,
-                          struct _mulle_keyvaluepair *p,
+                          struct mulle_pointerpair *p,
                           uintptr_t hash,
                           enum mulle_container_write_mode mode,
                           struct mulle_container_keyvaluecallback *callback,
@@ -105,18 +105,18 @@ static short   depth_for_capacity( size_t capacity)
 #pragma mark setup and teardown
 
 
-static struct _mulle_keyvaluepair   *allocate_pairs( size_t n,
+static struct mulle_pointerpair   *allocate_pairs( size_t n,
                                                      void *not_a_key_marker,
                                                      struct mulle_allocator *allocator)
 {
-   struct _mulle_keyvaluepair   *buf;
-   struct _mulle_keyvaluepair   *p;
-   struct _mulle_keyvaluepair   *sentinel;
+   struct mulle_pointerpair   *buf;
+   struct mulle_pointerpair   *p;
+   struct mulle_pointerpair   *sentinel;
 
    if( ! not_a_key_marker)
-      return( mulle_allocator_calloc( allocator, n, sizeof( struct _mulle_keyvaluepair)));
+      return( mulle_allocator_calloc( allocator, n, sizeof( struct mulle_pointerpair)));
    
-   buf = mulle_allocator_malloc( allocator, n * sizeof( struct _mulle_keyvaluepair));
+   buf = mulle_allocator_malloc( allocator, n * sizeof( struct mulle_pointerpair));
    if( buf)
    {
       p        = &buf[ 0];
@@ -169,7 +169,7 @@ void   _mulle_map_done( struct _mulle_map *map,
                         struct mulle_allocator *allocator)
 {
    struct _mulle_mapenumerator   rover;
-   struct _mulle_keyvaluepair    *pair;
+   struct mulle_pointerpair    *pair;
    
    rover = _mulle_map_enumerate( map, callback);
    while( pair = _mulle_mapenumerator_next( &rover))
@@ -209,10 +209,10 @@ void   _mulle_map_reset( struct _mulle_map *map,
 #pragma mark -
 #pragma mark mechanisms
 
-static inline void   store_key_value_pair( struct _mulle_keyvaluepair *data,
+static inline void   store_key_value_pair( struct mulle_pointerpair *data,
                                            size_t i,
                                            size_t modulo,
-                                           struct _mulle_keyvaluepair *p,
+                                           struct mulle_pointerpair *p,
                                            struct mulle_container_keycallback *callback)
 {
    size_t     limit;
@@ -233,13 +233,13 @@ static inline void   store_key_value_pair( struct _mulle_keyvaluepair *data,
 // this is not a "deep copy", the assumption is that the src will
 // disappear after copy
 //
-static void   copy_maps( struct _mulle_keyvaluepair *dst,
+static void   copy_maps( struct mulle_pointerpair *dst,
                             size_t modulo,
-                            struct _mulle_keyvaluepair *src, 
+                            struct mulle_pointerpair *src, 
                             size_t n,
                             struct mulle_container_keycallback *callback)
 {
-   struct _mulle_keyvaluepair *p;
+   struct mulle_pointerpair *p;
    size_t     i;
    uintptr_t  hash;
    
@@ -263,7 +263,7 @@ static size_t   grow( struct _mulle_map *map,
 {
    size_t                       modulo;
    size_t                       new_modulo;
-   struct _mulle_keyvaluepair   *buf;
+   struct mulle_pointerpair   *buf;
    short                        depth;
    
    // for good "not found" performance, there should be a high possibility of 
@@ -297,9 +297,9 @@ static size_t   grow( struct _mulle_map *map,
 }
 
 
-static size_t  _find_index( struct _mulle_keyvaluepair  *storage, 
+static size_t  _find_index( struct mulle_pointerpair  *storage, 
                             void *key,
-                            struct _mulle_keyvaluepair *q,
+                            struct mulle_pointerpair *q,
                             size_t limit,
                             size_t i,
                             size_t *hole_index,
@@ -331,14 +331,14 @@ static size_t  _find_index( struct _mulle_keyvaluepair  *storage,
 }
 
 
-static inline size_t  find_index( struct _mulle_keyvaluepair *storage,
+static inline size_t  find_index( struct mulle_pointerpair *storage,
                                   void *key,
                                   uintptr_t hash,
                                   size_t modulo,
                                   size_t *hole_index,
                                   struct mulle_container_keycallback *callback)
 {
-   struct _mulle_keyvaluepair   *q;
+   struct mulle_pointerpair   *q;
    size_t                       i;
    
    i = _mulle_map_hash_for_modulo( hash, modulo);
@@ -358,7 +358,7 @@ static inline size_t  find_index( struct _mulle_keyvaluepair *storage,
 #pragma mark operations
 
 void   *_mulle_map_write( struct _mulle_map *map,
-                          struct _mulle_keyvaluepair *pair,
+                          struct mulle_pointerpair *pair,
                           uintptr_t hash,
                           enum mulle_container_write_mode mode,
                           struct mulle_container_keyvaluecallback *callback,
@@ -367,8 +367,8 @@ void   *_mulle_map_write( struct _mulle_map *map,
    size_t                       hole_index;
    size_t                       i;
    size_t                       modulo;
-   struct _mulle_keyvaluepair   *q;
-   struct _mulle_keyvaluepair   new_pair;
+   struct mulle_pointerpair   *q;
+   struct mulle_pointerpair   new_pair;
    
    assert( pair->_key != callback->keycallback.not_a_key_marker);
    
@@ -426,7 +426,7 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
                          uintptr_t hash,
                          struct mulle_container_keyvaluecallback *callback)
 {
-   struct _mulle_keyvaluepair *q;
+   struct mulle_pointerpair *q;
    int         (*f)( void *, void *, void *);
    size_t   modulo;
    size_t   limit;
@@ -465,7 +465,7 @@ void   *_mulle_map_get( struct _mulle_map *map,
 
 
 void   _mulle_map_set( struct _mulle_map *map,
-                       struct _mulle_keyvaluepair *pair,
+                       struct mulle_pointerpair *pair,
                        struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
 {
@@ -478,7 +478,7 @@ void   _mulle_map_set( struct _mulle_map *map,
 
 
 void    *_mulle_map_insert( struct _mulle_map *map,
-                            struct _mulle_keyvaluepair *pair,
+                            struct mulle_pointerpair *pair,
                             struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator)
 {
@@ -491,7 +491,7 @@ void    *_mulle_map_insert( struct _mulle_map *map,
 
 
 void   *_mulle_map_insert_known_absent( struct _mulle_map *map,
-                                        struct _mulle_keyvaluepair *pair,
+                                        struct mulle_pointerpair *pair,
                                         struct mulle_container_keyvaluecallback *callback,
                                         struct mulle_allocator *allocator)
 {
@@ -512,7 +512,7 @@ int   _mulle_map_remove_with_hash( struct _mulle_map *map,
    size_t                       hole_index;
    size_t                       i;
    size_t                       modulo;
-   struct _mulle_keyvaluepair   *q;
+   struct mulle_pointerpair   *q;
    size_t                       dst_index;
    size_t                       search_start;
    
@@ -663,7 +663,7 @@ void   _mulle_map_insert_keys_and_valuesv( struct _mulle_map *map,
                                            struct mulle_container_keyvaluecallback *callback,
                                            struct mulle_allocator *allocator)
 {
-   struct _mulle_keyvaluepair   pair;
+   struct mulle_pointerpair   pair;
    
    pair._value = firstvalue;
    pair._key   = firstkey;
@@ -686,7 +686,7 @@ int   _mulle_map_copy_items( struct _mulle_map *dst,
                              struct mulle_allocator *allocator)
 {
    struct _mulle_mapenumerator  rover;
-   struct _mulle_keyvaluepair   *item;
+   struct mulle_pointerpair   *item;
    int                          rval;
    
    rval  = 0;
@@ -731,7 +731,7 @@ char   *_mulle_map_describe( struct _mulle_map *set,
    size_t                        key_len;
    size_t                        value_len;
    struct _mulle_mapenumerator   rover;
-   struct _mulle_keyvaluepair    *item;
+   struct mulle_pointerpair    *item;
    
    result = NULL;
    len  = 0;
