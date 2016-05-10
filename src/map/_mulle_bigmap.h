@@ -44,9 +44,9 @@
 // capacity. Advantage: doesn't need to copy during growth so much
 // Disadvantage: can be slower
 //
-#define _MULLE_BIGMAP_BASE                     \
-   struct _mulle_keyvaluepair   *_storage;     \
-   size_t                       _count;        \
+#define _MULLE_BIGMAP_BASE                 \
+   struct mulle_pointerpair   *_storage;   \
+   size_t                       _count;    \
    short                        _depth
 
 struct _mulle_bigmap
@@ -136,7 +136,7 @@ static inline size_t   _mulle_bigmap_get_count( struct _mulle_bigmap *map)
 
 
 void   *_mulle_bigmap_write( struct _mulle_bigmap *,
-                             struct _mulle_keyvaluepair *,
+                             struct mulle_pointerpair *,
                              enum mulle_container_write_mode,
                              struct mulle_container_keyvaluecallback *,
                              struct mulle_allocator *allocator) mulle_nonnull_first_second_fourth_fifth;
@@ -148,7 +148,7 @@ static inline void   _mulle_bigmap_set( struct _mulle_bigmap *map,
                                         struct mulle_container_keyvaluecallback *callback,
                                         struct mulle_allocator *allocator)
 {
-   struct _mulle_keyvaluepair   pair;
+   struct mulle_pointerpair   pair;
    
    pair._key   = key;
    pair._value = value;
@@ -163,7 +163,7 @@ static inline void   *_mulle_bigmap_insert( struct _mulle_bigmap *map,
                                             struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator)
 {
-   struct _mulle_keyvaluepair   pair;
+   struct mulle_pointerpair   pair;
    
    pair._key   = key;
    pair._value = value;

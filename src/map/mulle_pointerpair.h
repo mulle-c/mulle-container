@@ -1,5 +1,5 @@
 //
-//  _mulle_keyvaluepair.h
+//  _mulle_pointerpair.h
 //  mulle-container
 //
 //  Created by Nat! on 03/11/15.
@@ -31,17 +31,66 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef _mulle_keyvaluepair_h
-#define _mulle_keyvaluepair_h
+#ifndef mulle_pointerpair_h__
+#define mulle_pointerpair_h__
 
 #include "mulle_container_callback.h"
 #include "mulle_container_compiler_attributes.h"
 
 
-struct _mulle_keyvaluepair
+struct mulle_pointerpair
 {
-   void   *_key;
+   void   *_key;  // suggestively named
    void   *_value;
 };
 
-#endif /* _mulle_keyvaluepair_h */
+
+
+static inline struct mulle_pointerpair   mulle_pointerpair_create( void *key, void *value)
+{
+   struct mulle_pointerpair   result;
+   
+   result._key   = key;
+   result._value = value;
+   return( result);
+}
+
+
+static inline void   *_mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
+{
+   return( pair->_key);
+}
+
+
+static inline void   *mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
+{
+   return( pair ? pair->_key : NULL);
+}
+
+
+static inline void   *_mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
+{
+   return( pair->_value);
+}
+
+
+static inline void   *mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
+{
+   return( pair ? pair->_value : NULL);
+}
+
+
+static inline void   mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
+{
+   assert( pair);
+   pair->_key = key;
+}
+
+
+static inline void   mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void * value)
+{
+   assert( pair);
+   pair->_value = value;
+}
+
+#endif

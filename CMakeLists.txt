@@ -43,6 +43,7 @@ src/mulle_container_compiler_attributes.h
 src/array/mulle_array.h
 src/array/_mulle_array.h
 src/array/mulle_pointerarray.h
+src/array/mulle_pointerpairarray.h
 src/buffer/mulle_buffer.h
 src/buffer/_mulle_buffer.h
 src/hash/mulle_hash.h
@@ -51,7 +52,7 @@ src/map/mulle_bigmap.h
 src/map/_mulle_bigmap.h
 src/map/mulle_map.h
 src/map/_mulle_map.h
-src/map/_mulle_keyvaluepair.h
+src/map/mulle_pointerpair.h
 src/queue/_mulle_queue.h
 src/set/mulle_bigset.h
 src/set/_mulle_bigset.h
@@ -82,7 +83,6 @@ src/set/mulle_pointerset.c
 )
 
 add_library(mulle_standalone_container SHARED
-${SOURCES}
 src/mulle_standalone_container.c
 )
 

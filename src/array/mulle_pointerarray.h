@@ -38,8 +38,11 @@
 #include <string.h>
 #include <mulle_allocator/mulle_allocator.h>
 
+//
 // mulle_pointerarray, simple growing array of pointers
 // can overwrite pointers too (and keep count)
+// you can also use it as stack
+//
 struct mulle_pointerarray
 {
    unsigned int             _count;  // # pointers that are notapointer
@@ -164,6 +167,57 @@ static inline int   mulle_pointerarray_add( struct mulle_pointerarray *array, vo
    
    return( 0);
 }
+
+
+
+//
+// this removes _notapointer from the back, until it finds a pointer
+// then remove this
+//
+static inline void  *mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
+{
+   void   **p;
+   void   **sentinel;
+   void   *pointer;
+   
+   sentinel = array->_pointers;
+   p        = &sentinel[ array->_used];
+
+   while( p > sentinel)
+   {
+      pointer = *--p;
+      if( pointer != array->_notapointer)
+      {
+         array->_used = (unsigned int) (p - array->_pointers);
+         --array->_count;
+         return( pointer);
+      }
+   }
+   
+   return( NULL);
+}
+
+
+static inline void  *mulle_pointerarray_find_last( struct mulle_pointerarray *array)
+{
+   void   **p;
+   void   **sentinel;
+   void   *pointer;
+
+   pointer  = NULL;
+   sentinel = array->_pointers;
+   p        = &sentinel[ array->_used];
+   
+   while( p > sentinel)
+   {
+      pointer = *--p;
+      if( pointer != array->_notapointer)
+         break;
+   }
+   
+   return( pointer);
+}
+
 
 
 static inline void  *mulle_pointerarray_get( struct mulle_pointerarray *array, unsigned int i)

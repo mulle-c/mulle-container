@@ -326,6 +326,12 @@ static inline void    mulle_buffer_add_byte( struct mulle_buffer *buffer,
 }
 
 
+static inline void    mulle_buffer_remove_last_byte( struct mulle_buffer *buffer)
+{
+   _mulle_buffer_remove_last_byte( (struct _mulle_buffer *) buffer);
+}
+
+
 static inline void    mulle_buffer_add_char( struct mulle_buffer *buffer,
                                              int c)
 {
@@ -373,14 +379,14 @@ static inline void   mulle_buffer_add_string( struct mulle_buffer *buffer,
 }
 
 
-static inline size_t   mulle_buffer_add_string_with_length( struct mulle_buffer *buffer,
+static inline size_t   mulle_buffer_add_string_with_maxlength( struct mulle_buffer *buffer,
                                                             char *bytes,
                                                             size_t length)
 {
-   return( _mulle_buffer_add_string_with_length( (struct _mulle_buffer *) buffer,
-                                                 bytes,
-                                                 length,
-                                                 buffer->_allocator));
+   return( _mulle_buffer_add_string_with_maxlength( (struct _mulle_buffer *) buffer,
+                                                     bytes,
+                                                     length,
+                                                     buffer->_allocator));
 }
 
 
