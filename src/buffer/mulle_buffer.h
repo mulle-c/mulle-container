@@ -111,6 +111,10 @@ static inline void    mulle_buffer_set_allocator( struct mulle_buffer *buffer,
 }
 
 
+/* a growing buffer, that starts with a memory region, allocated by the user.
+   Useful if you already malloced something and dont't need it anymore.
+   The storage is overwritten from the start.
+*/
 static inline void    mulle_buffer_init_with_allocated_bytes( struct mulle_buffer *buffer,
                                                               void *storage,
                                                               size_t length,
@@ -121,6 +125,11 @@ static inline void    mulle_buffer_init_with_allocated_bytes( struct mulle_buffe
 }
 
 
+/* a growing buffer, that starts with a non freeable memory region, allocated 
+   by the user. Useful if you want to supply some stack memory for mulle_buffer
+   so that it need not necessarily malloc, if the contents remain small enough.
+   The storage is overwritten from the start.
+ */
 static inline void    mulle_buffer_init_with_static_bytes( struct mulle_buffer *buffer,
                                                            void *storage,
                                                            size_t length,
@@ -148,11 +157,17 @@ static inline void    mulle_buffer_init_with_capacity( struct mulle_buffer *buff
 }
 
 
+/* this buffer does not grow. storage is supplied. This is useful for 
+   guaranteeing that a buffer can not be overrun. 
+   The storage is overwritten from the start.
+ */
 static inline void    mulle_buffer_init_inflexable_with_static_bytes( struct mulle_buffer *buffer,
                                                                       void *storage,
                                                                       size_t length)
 {
    _mulle_buffer_init_inflexable_with_static_bytes( (struct _mulle_buffer *) buffer, storage, length);
+
+   buffer->_allocator = NULL; // don't allocate
 }
 
 
@@ -173,6 +188,10 @@ static inline void   mulle_buffer_size_to_fit( struct mulle_buffer *buffer)
 }
 
 
+/* the given storage replaces the previous contents.
+   the buffer is not flexable anymore. 
+   The insertion point is moved to &storage[length]
+ */
 static inline void   mulle_buffer_make_inflexable( struct mulle_buffer *buffer,
                                                    void *storage,
                                                    size_t length)
@@ -268,13 +287,13 @@ static inline void   *mulle_buffer_advance( struct mulle_buffer *buffer,
 #pragma mark -
 #pragma mark query
 
-static inline int     mulle_buffer_is_inflexable( struct mulle_buffer *buffer)
+static inline int   mulle_buffer_is_inflexable( struct mulle_buffer *buffer)
 {
    return( _mulle_buffer_is_inflexable( (struct _mulle_buffer *) buffer));
 }
 
 
-static inline int     mulle_buffer_is_flushable( struct mulle_buffer *buffer)
+static inline int   mulle_buffer_is_flushable( struct mulle_buffer *buffer)
 {
    return( _mulle_buffer_is_flushable( (struct _mulle_buffer *) buffer));
 }
@@ -450,5 +469,23 @@ static inline int   mulle_buffer_next_char( struct mulle_buffer *buffer)
 {
    return( _mulle_buffer_next_char( (struct _mulle_buffer *) buffer));
 }
+
+
+#pragma mark -
+#pragma mark hexdump fixed to 16 bytes per line
+
+// dumps only for n >= 1 && n <= 16
+void  mulle_buffer_dump_hex_16( struct mulle_buffer *buffer,
+                                uint8_t *bytes,
+                                unsigned int n,
+                                size_t counter,
+                                unsigned int options);
+
+// dumps all, does not append a \0
+void  mulle_buffer_dump_hex( struct mulle_buffer *buffer,
+                             uint8_t *bytes,
+                             size_t length,
+                             size_t counter,
+                             unsigned int options);
 
 #endif /* mulle_buffer_h */

@@ -1,3 +1,8 @@
+# 0.5
+
+* don't malloc a block on extract, if there is nothing in the buffer
+* moved the hexdumper here, because I want to reuse it
+
 # 0.4
 
 * upgrade mulle_allocator 

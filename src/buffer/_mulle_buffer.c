@@ -88,7 +88,7 @@ void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer, struct mulle_
    void     *block;
    
    block = buffer->_storage;
-   if( buffer->_storage == buffer->_initial_storage)
+   if( block && buffer->_storage == buffer->_initial_storage)
    {
       size  = _mulle_buffer_get_length( buffer);
       block = _mulle_allocator_malloc( allocator, size);

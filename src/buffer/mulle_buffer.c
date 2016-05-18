@@ -36,6 +36,8 @@
 
 #include <mulle_allocator/mulle_allocator.h>
 
+#include <ctype.h>
+
 
 struct mulle_buffer   *mulle_buffer_create( struct mulle_allocator *allocator)
 {
@@ -49,3 +51,138 @@ struct mulle_buffer   *mulle_buffer_create( struct mulle_allocator *allocator)
       mulle_buffer_init( buffer, allocator);
    return( buffer);
 }
+
+
+static inline unsigned int   hex( unsigned int c)
+{
+   assert( c >= 0 && c <= 0xf);
+   return( c >= 0xa ? c + 'a' - 0xa : c + '0');
+}
+
+
+void  mulle_buffer_dump_hex_16( struct mulle_buffer *buffer,
+                                uint8_t *bytes,
+                                unsigned int n,
+                                size_t counter,
+                                unsigned int options)
+{
+   uint8_t        *memo;
+   uint8_t        *s;
+   unsigned int   i;
+   unsigned int   value;
+   
+   memo = bytes;
+   
+   s = mulle_buffer_advance( buffer, 10);
+   
+   if( ! (options & 0x1))
+   {
+      *s++ = (uint8_t) hex( counter >> 28 & 0xF);
+      *s++ = (uint8_t) hex( counter >> 24 & 0xF);
+      *s++ = (uint8_t) hex( counter >> 20 & 0xF);
+      *s++ = (uint8_t) hex( counter >> 16 & 0xF);
+      
+      *s++ = (uint8_t) hex( counter >> 12 & 0xF);
+      *s++ = (uint8_t) hex( counter >> 8 & 0xF);
+      *s++ = (uint8_t) hex( counter >> 4 & 0xF);
+      *s++ = (uint8_t) hex( counter >> 0 & 0xF);
+      
+      *s++ = ' ';
+      *s++ = ' ';
+   }
+   
+   if( ! (options & 0x2))
+   {
+      s = mulle_buffer_advance( buffer, 3 * 8);
+      for( i = 0; i < 8; i++)
+      {
+         if( i < n)
+         {
+            value = *bytes++;
+            *s++ = (uint8_t) hex( value >> 4);
+            *s++ = (uint8_t) hex( value & 0xF);
+         }
+         else
+         {
+            *s++ = ' ';
+            *s++ = ' ';
+         }
+         *s++ = ' ';
+      }
+      
+      mulle_buffer_add_byte( buffer, ' ');
+      
+      s = mulle_buffer_advance( buffer, 3 * 8);
+      for( ; i < 16; i++)
+      {
+         if( i < n)
+         {
+            value = *bytes++;
+            
+            *s++ = (uint8_t) hex( value >> 4);
+            *s++ = (uint8_t) hex( value & 0xF);
+         }
+         else
+         {
+            *s++ = ' ';
+            *s++ = ' ';
+         }
+         *s++ = ' ';
+      }
+   }
+   
+   if( ! (options & 0x4))
+   {
+      mulle_buffer_add_byte( buffer, ' ');
+      mulle_buffer_add_byte( buffer, '|');
+      
+      bytes = memo;
+      
+      for( i = 0; i < 16; i++)
+      {
+         if( i < n)
+         {
+            value = *bytes++;
+            if( ! isprint( value))
+               value = '.';
+            mulle_buffer_add_byte( buffer, (uint8_t) value);
+         }
+         else
+            mulle_buffer_add_byte( buffer, ' ');
+      }
+      
+      mulle_buffer_add_byte( buffer, '|');
+   }
+}
+
+
+void  mulle_buffer_dump_hex( struct mulle_buffer *buffer,
+                             uint8_t *bytes,
+                             size_t   length,
+                             size_t counter,
+                             unsigned int options)
+{
+   size_t   lines;
+   size_t   full_lines;
+   size_t   remainder;
+   size_t   i;
+   
+   lines      = (length + 15) / 16;
+   full_lines = length / 16;
+   
+   for( i = 0; i < full_lines; i++)
+   {
+      mulle_buffer_dump_hex_16( buffer, bytes, 16, counter, options);
+      mulle_buffer_add_byte( buffer, '\n');
+      counter += 16;
+      bytes   += 16;
+   }
+   
+   if( i < lines)
+   {
+      remainder = length - full_lines * 16;
+      mulle_buffer_dump_hex_16( buffer, bytes, (unsigned int) remainder, counter, options);
+   }
+}
+
+
