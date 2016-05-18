@@ -307,4 +307,28 @@ static inline void  mulle_pointerarray_enumerator_done( struct mulle_pointerarra
 {
 }
 
+
+
+#pragma mark -
+#pragma mark enumerator convenience
+
+static inline int   mulle_pointerarray_contains( struct mulle_pointerarray *array, void *p)
+{
+   struct  mulle_pointerarray_enumerator   rover;
+   void                                    *q;
+   int                                     rval;
+   
+   rval  = 0;
+   rover = mulle_pointerarray_enumerate( array);
+   while( (q = mulle_pointerarray_enumerator_next( &rover)) != rover.notapointer)
+   {
+      rval =  q == p;
+      if( rval)
+         break;
+   }
+   mulle_pointerarray_enumerator_done( &rover);
+
+   return( q ? 1 : 0);
+}
+
 #endif

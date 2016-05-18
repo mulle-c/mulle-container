@@ -173,15 +173,15 @@ static inline void    _mulle_buffer_init_inflexable_with_static_bytes( struct _m
    assert( length != (size_t) -1);
    
    buffer->_initial_storage  =
-   buffer->_storage          = storage;
-   buffer->_curr             =
+   buffer->_storage          =
+   buffer->_curr             = storage;
    buffer->_sentinel         = &buffer->_storage[ length];
    buffer->_size             = (size_t) -1;
 }
 
 
 void   _mulle_buffer_done( struct _mulle_buffer *buffer,
-                          struct mulle_allocator *allocator);
+                           struct mulle_allocator *allocator);
 
 
 // _initial_storage storage will be lost
