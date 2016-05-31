@@ -93,8 +93,11 @@ ${SOURCES}
 add_dependencies( mulle_standalone_container mulle_container)
 
 TARGET_LINK_LIBRARIES( mulle_standalone_container
+${BEGIN_ALL_LOAD}
 mulle_container
-mulle_allocator )
+mulle_allocator
+${END_ALL_LOAD}
+)
 
 INSTALL( TARGETS mulle_container mulle_standalone_container DESTINATION "lib")
 INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
