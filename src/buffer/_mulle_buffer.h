@@ -47,7 +47,7 @@ struct mulle_allocator;
    unsigned char   *_storage;         \
    unsigned char   *_curr;            \
    unsigned char   *_sentinel;        \
-   size_t          _size;
+   size_t          _size
 
 
 //

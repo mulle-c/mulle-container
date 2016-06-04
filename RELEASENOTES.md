@@ -1,3 +1,8 @@
+# 0.6
+
+* ensure it's C99 compatible
+
+
 # 0.5
 
 * don't malloc a block on extract, if there is nothing in the buffer

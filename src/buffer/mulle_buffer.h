@@ -41,11 +41,7 @@
 #include <mulle_allocator/mulle_allocator.h>
 
 
-// MEMO: the split in _mulle_buffer and mulle_buffer is historic, could be
-//       merged into mulle_buffer
-
 // stupidities to fix:
-// allocator -> _allocator to match _MULLE_BUFFER_BASE
 // non "_" prefixed functions should check for NULL buffer
 //
 #define MULLE_BUFFER_BASE              \
@@ -427,14 +423,14 @@ static inline void   mulle_buffer_zero_last_byte( struct mulle_buffer *buffer)
 static inline void    mulle_buffer_add_buffer( struct mulle_buffer *buffer,
                                                struct mulle_buffer *other)
 {
-   return( _mulle_buffer_add_buffer( (struct _mulle_buffer *) buffer, (struct _mulle_buffer *) other, buffer->_allocator));
+   _mulle_buffer_add_buffer( (struct _mulle_buffer *) buffer, (struct _mulle_buffer *) other, buffer->_allocator);
 }
 
 
 // _initial_storage storage will be lost
 static inline void   mulle_buffer_reset( struct mulle_buffer *buffer)
 {
-   return( _mulle_buffer_reset( (struct _mulle_buffer *) buffer, buffer->_allocator));
+   _mulle_buffer_reset( (struct _mulle_buffer *) buffer, buffer->_allocator);
 }
 
 

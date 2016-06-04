@@ -34,7 +34,7 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#define MULLE_CONTAINER_VERSION  ((0 << 20) | (5 << 8) | 0)
+#define MULLE_CONTAINER_VERSION  ((0 << 20) | (6 << 8) | 0)
 
 #include <mulle_allocator/mulle_allocator.h>
 
@@ -68,7 +68,7 @@
 #include "mulle_container_callback.h"
 #include "mulle_container_operation.h"
 
-#if MULLE_ALLOCATOR_VERSION < ((1 << 20) | (3 << 8) | 0)
+#if MULLE_ALLOCATOR_VERSION < ((1 << 20) | (5 << 8) | 0)
 # error "mulle_allocator is too old"
 #endif
 
