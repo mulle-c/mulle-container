@@ -64,13 +64,13 @@ struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *c
 
 static inline void   mulle_array_destroy( struct mulle_array *array)
 {
-   return( _mulle_array_destroy( (struct _mulle_array *) array, array->_callback, array->_allocator));
+   _mulle_array_destroy( (struct _mulle_array *) array, array->_callback, array->_allocator);
 }
 
 
 static inline void   mulle_array_done( struct mulle_array *array)
 {
-   return( _mulle_array_done( (struct _mulle_array *) array, array->_callback, array->_allocator));
+   _mulle_array_done( (struct _mulle_array *) array, array->_callback, array->_allocator);
 }
 
 
@@ -107,13 +107,13 @@ static inline void   mulle_array_zero_in_range( struct mulle_array *array, unsig
 
 static inline void   mulle_array_compact_zeroes( struct mulle_array *array)
 {
-   return( _mulle_array_compact_zeroes( (struct _mulle_array *) array, array->_callback));
+   _mulle_array_compact_zeroes( (struct _mulle_array *) array, array->_callback);
 }
 
 
 static inline void   mulle_array_remove_all( struct mulle_array *array)
 {
-   return( _mulle_array_remove_all( (struct _mulle_array *) array, array->_callback, array->_allocator));
+   _mulle_array_remove_all( (struct _mulle_array *) array, array->_callback, array->_allocator);
 }
 
 

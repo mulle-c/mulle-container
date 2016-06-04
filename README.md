@@ -1,7 +1,9 @@
 # mulle-container
 
-A collection of C containers, with callbacks that are compatible to NSHashtable
-and friends. Used and wrapped in MulleObjCFoundation.
+A collection of C (C99) containers, with callbacks that are compatible to 
+`NSHashtable` and friends. Used and wrapped in MulleObjCFoundation.
+
+
 
 ## What's in here
 
