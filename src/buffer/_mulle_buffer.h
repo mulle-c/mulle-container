@@ -36,7 +36,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-#include <unistd.h> // for off_t
 
 
 struct mulle_allocator;
@@ -71,7 +70,7 @@ typedef size_t   _mulle_flushablebuffer_flusher( void *, size_t len, size_t, voi
 #define _MULLE_FLUSHABLEBUFFER_BASE             \
    _MULLE_BUFFER_BASE;                          \
    _mulle_flushablebuffer_flusher   *_flusher;  \
-   off_t                            _flushed;   \
+   size_t                           _flushed;   \
    void                             *_userinfo
 
 
@@ -284,7 +283,6 @@ static inline int   _mulle_buffer_is_full( struct _mulle_buffer *buffer)
 }
 
 
-
 static inline int   _mulle_buffer_is_big_enough( struct _mulle_buffer *buffer, size_t len)
 {
    assert( len);
@@ -317,9 +315,15 @@ static inline size_t   _mulle_buffer_get_length( struct _mulle_buffer *buffer)
           : buffer->_curr - buffer->_storage);
 }
 
+enum
+{
+   MULLE_BUFFER_SEEK_SET = 0,
+   MULLE_BUFFER_SEEK_CUR = 1,
+   MULLE_BUFFER_SEEK_END = 2
+};
 
-off_t   _mulle_buffer_get_seek( struct _mulle_buffer *buffer);
-int     _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, off_t seek);
+size_t   _mulle_buffer_get_seek( struct _mulle_buffer *buffer);
+int      _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, size_t seek);
 
 
 static inline size_t   _mulle_buffer_get_static_bytes_length( struct _mulle_buffer *buffer)
@@ -581,7 +585,6 @@ static inline int   _mulle_buffer_next_bytes( struct _mulle_buffer *buffer,
    buffer->_curr += len;
    return( 0);
 }
-
 
 
 static inline int   _mulle_buffer_next_char( struct _mulle_buffer *buffer)

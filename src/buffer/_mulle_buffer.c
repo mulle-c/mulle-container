@@ -32,8 +32,6 @@
 
 #include <mulle_allocator/mulle_allocator.h>
 
-#include <unistd.h>  // for SEEK_SET
-
 #if DEBUG
 # define MULLE_BUFFER_MIN_GROW_SIZE    4        // minimum realloc increment
 #else
@@ -41,9 +39,9 @@
 #endif
 
 
-off_t   _mulle_buffer_get_seek( struct _mulle_buffer *buffer)
+size_t  _mulle_buffer_get_seek( struct _mulle_buffer *buffer)
 {
-   static off_t                    len;
+   size_t                          len;
    struct _mulle_flushablebuffer   *flushable;
    
    len = _mulle_buffer_get_length( buffer);
@@ -55,21 +53,21 @@ off_t   _mulle_buffer_get_seek( struct _mulle_buffer *buffer)
 }
 
 
-int   _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, off_t seek)
+int   _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, size_t seek)
 {
    unsigned char   *plan;
-   
+
    switch( mode)
    {
-   case SEEK_SET :
+   case MULLE_BUFFER_SEEK_SET :
       plan = &buffer->_storage[ seek];
       break;
       
-   case SEEK_CUR :
+   case MULLE_BUFFER_SEEK_CUR :
       plan = &buffer->_curr[ seek];
       break;
 
-   case SEEK_END :
+   case MULLE_BUFFER_SEEK_END :
       plan = &buffer->_sentinel[ -seek];
       break;
    }

@@ -347,16 +347,15 @@
 				41817B901CB69D6C00C55990 /* mulle_standalone_container.h */,
 				41709A9C1CB6BF02002A1BDA /* mulle_standalone_container.c */,
 				41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */,
-				417CEB4F1CDF6F460037B7BE /* New Group */,
 				417582A71BE8BEE1005F0CE4 /* mulle_container_operation.h */,
 				414AC1AA1AC2C45800DCA3CC /* mulle_container_callback.h */,
 				414AC1AB1AC2C45800DCA3CC /* mulle_container_callback.c */,
 				41BCA4FE1BE8DBF900504AAD /* array */,
 				416C57F11BEA5D28007F4691 /* buffer */,
 				4198C8971BE7CEAC00EE1FF5 /* hash */,
+				41BCA4FF1BE8E51800504AAD /* map */,
 				41BEC5971CB1319C006531B6 /* queue */,
 				4198C8881BE7AD5600EE1FF5 /* set */,
-				41BCA4FF1BE8E51800504AAD /* map */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -409,13 +408,6 @@
 			path = "mulle-configuration";
 			sourceTree = "<group>";
 		};
-		417CEB4F1CDF6F460037B7BE /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "New Group";
-			sourceTree = "<group>";
-		};
 		4198C8881BE7AD5600EE1FF5 /* set */ = {
 			isa = PBXGroup;
 			children = (
@@ -466,14 +458,14 @@
 			children = (
 				41BCA5001BE8E58300504AAD /* mulle_bigmap.h */,
 				41BCA5011BE8E58300504AAD /* mulle_bigmap.c */,
-				41BCA5021BE8E58300504AAD /* _mulle_map.h */,
-				41BCA5031BE8E58300504AAD /* _mulle_map.c */,
-				412ED7D01CC3B50300E64506 /* mulle_map.h */,
-				412ED7CF1CC3B50300E64506 /* mulle_map.c */,
-				41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */,
 				41BCA5051BE8E58300504AAD /* _mulle_bigmap.h */,
 				41BCA5061BE8E58300504AAD /* _mulle_bigmap.c */,
 				411D23A71CC3B07100D92786 /* _mulle_bigmap_private.h */,
+				412ED7D01CC3B50300E64506 /* mulle_map.h */,
+				412ED7CF1CC3B50300E64506 /* mulle_map.c */,
+				41BCA5021BE8E58300504AAD /* _mulle_map.h */,
+				41BCA5031BE8E58300504AAD /* _mulle_map.c */,
+				41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -837,7 +829,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 417C02651BD8404E005A3751 /* Debug.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 0.5;
+				CURRENT_PROJECT_VERSION = 0.6;
+				GCC_C_LANGUAGE_STANDARD = c99;
 			};
 			name = Debug;
 		};
@@ -845,7 +838,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 417C02681BD8404E005A3751 /* Release.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 0.5;
+				CURRENT_PROJECT_VERSION = 0.6;
+				GCC_C_LANGUAGE_STANDARD = c99;
 			};
 			name = Release;
 		};
