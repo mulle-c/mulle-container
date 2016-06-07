@@ -1,7 +1,8 @@
 # 0.6
 
 * ensure it's C99 compatible
-
+* weaned off `<unistd.h>`, lost `off_t` in the process though, might come to
+  regret this.
 
 # 0.5
 

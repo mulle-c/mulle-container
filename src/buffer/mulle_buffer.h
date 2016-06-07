@@ -253,13 +253,13 @@ static inline size_t   mulle_buffer_get_static_bytes_length( struct mulle_buffer
 }
 
 
-static inline int   mulle_buffer_set_seek( struct mulle_buffer *buffer, int mode, off_t seek)
+static inline int   mulle_buffer_set_seek( struct mulle_buffer *buffer, int mode, size_t seek)
 {
    return( _mulle_buffer_set_seek( (struct _mulle_buffer *) buffer, mode, seek));
 }
 
 
-static inline off_t   mulle_buffer_get_seek( struct mulle_buffer *buffer)
+static inline size_t   mulle_buffer_get_seek( struct mulle_buffer *buffer)
 {
    return( _mulle_buffer_get_seek( (struct _mulle_buffer *) buffer));
 }
