@@ -341,6 +341,8 @@ static inline size_t  find_index( struct mulle_pointerpair *storage,
    struct mulle_pointerpair   *q;
    size_t                       i;
    
+   assert( storage);
+   
    i = _mulle_map_hash_for_modulo( hash, modulo);
    q = &storage[ i];
    if( q->_key == callback->not_a_key_marker)
@@ -373,8 +375,7 @@ void   *_mulle_map_write( struct _mulle_map *map,
    assert( pair->_key != callback->keycallback.not_a_key_marker);
    
    modulo = _mulle_map_mask_for_depth( map->_depth);
-   
-   i = find_index( map->_storage, pair->_key, hash, modulo, &hole_index, &callback->keycallback);
+   i      = find_index( map->_storage, pair->_key, hash, modulo, &hole_index, &callback->keycallback);
    
    if( i != (size_t) mulle_not_found_e)
    {
@@ -766,6 +767,9 @@ char   *_mulle_map_describe( struct _mulle_map *set,
       mulle_allocator_free( allocator, value);
    }
    _mulle_mapenumerator_done( &rover);
+   
+   if( ! result)
+      return( mulle_allocator_strdup( allocator, "*empty*"));
    
    result[ len] = 0;
    return( result);

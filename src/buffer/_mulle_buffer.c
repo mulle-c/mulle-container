@@ -32,6 +32,7 @@
 
 #include <mulle_allocator/mulle_allocator.h>
 
+
 #if DEBUG
 # define MULLE_BUFFER_MIN_GROW_SIZE    4        // minimum realloc increment
 #else
@@ -70,6 +71,9 @@ int   _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, size_t see
    case MULLE_BUFFER_SEEK_END :
       plan = &buffer->_sentinel[ -seek];
       break;
+      
+   default :
+      return( -1);
    }
    
    if( plan > buffer->_sentinel || plan < buffer->_storage)

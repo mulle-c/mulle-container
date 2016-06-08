@@ -90,7 +90,7 @@
 		41BEC59B1CB131C4006531B6 /* _mulle_queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BEC5991CB131C4006531B6 /* _mulle_queue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41BEC59E1CB14A3E006531B6 /* mulle_pointerset.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BEC59C1CB14A3E006531B6 /* mulle_pointerset.c */; };
 		41BEC59F1CB14A3E006531B6 /* mulle_pointerset.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BEC59D1CB14A3E006531B6 /* mulle_pointerset.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41D53B801CB7B990006BFF0E /* indexedkvbucket.c in Sources */ = {isa = PBXBuildFile; fileRef = 41D53B7F1CB7B990006BFF0E /* indexedkvbucket.c */; };
+		41D396BF1D084333006D73B0 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 41D396BE1D084333006D73B0 /* buffer.c */; };
 		41E8C84C1CC57FA40049B8C1 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 41E8C84B1CC57FA40049B8C1 /* main.c */; };
 		41E8C8521CC57FB60049B8C1 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
 		41F14FEB1B68F0AE002189F1 /* mulle_container_callback.c in Sources */ = {isa = PBXBuildFile; fileRef = 414AC1AB1AC2C45800DCA3CC /* mulle_container_callback.c */; };
@@ -240,7 +240,7 @@
 		41BEC59D1CB14A3E006531B6 /* mulle_pointerset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_pointerset.h; sourceTree = "<group>"; };
 		41D04AB81C8DDCF500CC8F11 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		41D04AB91C8DDD1800CC8F11 /* RELEASENOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = RELEASENOTES.md; sourceTree = "<group>"; };
-		41D53B7F1CB7B990006BFF0E /* indexedkvbucket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = indexedkvbucket.c; path = tests/map/indexedkvbucket.c; sourceTree = SOURCE_ROOT; };
+		41D396BE1D084333006D73B0 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffer.c; path = tests/buffer/buffer.c; sourceTree = SOURCE_ROOT; };
 		41E8C8491CC57FA40049B8C1 /* mulle_hash */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mulle_hash; sourceTree = BUILT_PRODUCTS_DIR; };
 		41E8C84B1CC57FA40049B8C1 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		41E9C6781CC5292800ED4145 /* TYPES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TYPES.md; sourceTree = "<group>"; };
@@ -371,7 +371,7 @@
 		415745981CB6C2F50037CF80 /* run-test */ = {
 			isa = PBXGroup;
 			children = (
-				41D53B7F1CB7B990006BFF0E /* indexedkvbucket.c */,
+				41D396BE1D084333006D73B0 /* buffer.c */,
 			);
 			path = "run-test";
 			sourceTree = "<group>";
@@ -721,7 +721,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41D53B801CB7B990006BFF0E /* indexedkvbucket.c in Sources */,
+				41D396BF1D084333006D73B0 /* buffer.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

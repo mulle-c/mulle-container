@@ -21,18 +21,18 @@ struct mulle_container_keyvaluecallback   _CALLBACK;
 
 static void   simple_fill_test()
 {
-   char                          key[ 5];
-   struct _mulle_map   *bucket;
-   unsigned int                  i;
-   struct mulle_pointerpair    pair;
-   
+   char                       key[ 5];
+   struct _mulle_map          *bucket;
+   unsigned int               i;
+   struct mulle_pointerpair   pair;
+
    bucket = _mulle_map_create( 128, 0, CALLBACK, NULL);
-   
+
    printf( "%ld\n", _mulle_map_get_count( bucket));
 
    pair._key   = key;
    pair._value = key;
-   
+
    for( i = 0; i < 100000; i++)
    {
       random_key( key);
@@ -53,11 +53,11 @@ int  main()
 {
    _CALLBACK.keycallback   = mulle_container_keycallback_copied_cstring;
    _CALLBACK.valuecallback = mulle_container_valuecallback_copied_cstring;
-   
+
    mulle_test_allocator_initialize();
    mulle_default_allocator        = mulle_test_allocator;
    mulle_test_allocator_dont_free = 1;
-   
+
    simple_fill_test();
 
    mulle_test_allocator_reset();
