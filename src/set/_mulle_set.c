@@ -632,8 +632,8 @@ struct _mulle_set   *_mulle_set_copy( struct _mulle_set *set,
 
 // use this only for debugging
 char   *_mulle_set_describe( struct _mulle_set *set,
-                            struct mulle_container_keycallback *callback,
-                            struct mulle_allocator *allocator)
+                             struct mulle_container_keycallback *callback,
+                             struct mulle_allocator *allocator)
 {
    char                          *result;
    char                          *s;
@@ -653,7 +653,7 @@ char   *_mulle_set_describe( struct _mulle_set *set,
       s_len  = strlen( s);
 
       separate = result != NULL;
-      result = mulle_allocator_realloc( allocator, result, len + (separate * 2) + s_len + 1);
+      result   = mulle_allocator_realloc( allocator, result, len + (separate * 2) + s_len + 1);
       
       if( separate)
       {
@@ -668,8 +668,10 @@ char   *_mulle_set_describe( struct _mulle_set *set,
    }
    _mulle_setenumerator_done( &rover);
    
-   result[ len] = 0;
+   if( ! result)
+      return( mulle_allocator_strdup( allocator, "*empty*"));
    
+   result[ len] = 0;
    return( result);
 }
 

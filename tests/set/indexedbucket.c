@@ -19,26 +19,26 @@ static void   random_key( char  key[ 5])
 
 static void   simple_fill_test()
 {
-   char                          key[ 5];
-   struct _mulle_indexedbucket   *bucket;
-   unsigned int                  i;
-   
-   bucket = _mulle_indexedbucket_create( 128, 0, CALLBACK, NULL);
-   
-   printf( "%ld\n", _mulle_indexedbucket_get_count( bucket));
+   char                key[ 5];
+   struct _mulle_set   *set;
+   unsigned int        i;
+
+   set = _mulle_set_create( 128, 0, CALLBACK, NULL);
+
+   printf( "%ld\n", _mulle_set_get_count( set));
 
    for( i = 0; i < 100000; i++)
    {
       random_key( key);
-      _mulle_indexedbucket_put( bucket, key, CALLBACK, NULL);
+      _mulle_set_set( set, key, CALLBACK, NULL);
    }
 
-   _mulle_indexedbucket_reset( bucket, CALLBACK, NULL);
+   _mulle_set_reset( set, CALLBACK, NULL);
 
-   printf( "%ld\n", _mulle_indexedbucket_get_count( bucket));
-   _mulle_indexedbucket_put( bucket, key, CALLBACK, NULL);
-   printf( "%ld\n", _mulle_indexedbucket_get_count( bucket));
-   _mulle_indexedbucket_free( bucket, CALLBACK, NULL);
+   printf( "%ld\n", _mulle_set_get_count( set));
+   _mulle_set_set( set, key, CALLBACK, NULL);
+   printf( "%ld\n", _mulle_set_get_count( set));
+   _mulle_set_destroy( set, CALLBACK, NULL);
 }
 
 
