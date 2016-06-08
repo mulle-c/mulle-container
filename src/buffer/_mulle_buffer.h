@@ -477,16 +477,34 @@ static inline void   _mulle_buffer_add_string( struct _mulle_buffer *buffer,
 }
 
 
+// strnlen is not C, it's POSIX according to Linux...
+static inline size_t   _mulle_char_strnlen( char *s, size_t len)
+{
+   char   *start;
+   char   *sentinel;
+   
+   start    = s;
+   s        = &s[ -1];
+   sentinel = &s[ len];
+   
+   while( s < sentinel)
+      if( ! *++s)
+         break;
+
+   return( (size_t) (s - start));
+}
+
+
 static inline size_t   _mulle_buffer_add_string_with_maxlength( struct _mulle_buffer *buffer,
-                                                             char *bytes,
-                                                             size_t maxlength,
-                                                             struct mulle_allocator *allocator)
+                                                                char *bytes,
+                                                                size_t maxlength,
+                                                                struct mulle_allocator *allocator)
 {
    char   c;
    char   *s;
    char   *sentinel;
 
-   assert( ! _mulle_buffer_intersects_bytes( buffer, bytes, strnlen( bytes, maxlength)));
+   assert( ! _mulle_buffer_intersects_bytes( buffer, bytes, _mulle_char_strnlen( bytes, maxlength)));
    
    s        = bytes;
    sentinel = &s[ maxlength];
