@@ -182,6 +182,7 @@ void  mulle_buffer_dump_hex( struct mulle_buffer *buffer,
    {
       remainder = length - full_lines * 16;
       mulle_buffer_dump_hex_16( buffer, bytes, (unsigned int) remainder, counter, options);
+      mulle_buffer_add_byte( buffer, '\n');
    }
 }
 
