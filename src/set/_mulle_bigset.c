@@ -232,8 +232,8 @@ static int   grow_vertically( struct _mulle_bigset *set,
    depth = good_depth_for_depth( depth + 1);
       
    tmpCallBacks         = *callback;
-   tmpCallBacks.retain  = (void *) mulle_container_callback_self;
-   tmpCallBacks.release = (void *) mulle_container_callback_nop;
+   tmpCallBacks.retain  = (void *(*)()) mulle_container_callback_self;
+   tmpCallBacks.release = (void (*)()) mulle_container_callback_nop;
     
    _mulle_bigset_init( &copy, - depth, callback, allocator);  /* mark negative, so we don't grow within growing */
    rval = __mulle_bigset_copy( &copy, set, callback, allocator);

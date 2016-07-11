@@ -290,7 +290,7 @@ void   _mulle_array_remove_all( struct _mulle_array *array,
                                 struct mulle_allocator *allocator)
 {
    assert( ! _mulle_array_has_overflown( array));
-   if( callback->release != (void *) mulle_container_callback_nop)
+   if( callback->release != (void (*)()) mulle_container_callback_nop)
       _mulle_arrayrange_release( _mulle_arrayrange_make( array->_storage, array->_curr), callback, allocator);
 
    array->_curr = array->_storage;
@@ -332,7 +332,7 @@ int   _mulle_array_add_multiple( struct _mulle_array *array,
    if( ! p)
       return( -1);
 
-   if( callback->retain == (void *) mulle_container_callback_self)
+   if( callback->retain == (void *(*)()) mulle_container_callback_self)
    {
       memcpy( p, pointers, length * sizeof( void *));
       return( 0);
@@ -364,7 +364,7 @@ int    _mulle_array_is_equal( struct _mulle_array *array,
    if( n != _mulle_array_get_count( other))
       return( 0);
    
-   if( callback->is_equal == (void *) mulle_container_callback_pointer_is_equal)
+   if( callback->is_equal == mulle_container_keycallback_pointer_is_equal)
       return( ! memcmp( array->_storage, other->_storage, n * sizeof( void *)));
    
    for( i = 0; i < n; i++)

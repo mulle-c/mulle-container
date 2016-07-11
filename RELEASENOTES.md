@@ -1,3 +1,9 @@
+# 0.7
+
+* fix crass bug of misplaced pointer hash function
+* remove some warnings
+
+
 # 0.6
 
 * ensure it's C99 compatible

@@ -360,10 +360,10 @@ static int   grow_vertically( struct _mulle_bigmap *map,
       
    tmpcallback = *callback;
    
-   tmpcallback.keycallback.retain    = (void *) mulle_container_callback_self;
-   tmpcallback.valuecallback.retain  = (void *) mulle_container_callback_self;
-   tmpcallback.keycallback.release   = (void *) mulle_container_callback_nop;
-   tmpcallback.valuecallback.release = (void *) mulle_container_callback_nop;
+   tmpcallback.keycallback.retain    = (void *(*)()) mulle_container_callback_self;
+   tmpcallback.valuecallback.retain  = (void *(*)()) mulle_container_callback_self;
+   tmpcallback.keycallback.release   = (void (*)()) mulle_container_callback_nop;
+   tmpcallback.valuecallback.release = (void (*)()) mulle_container_callback_nop;
     
    _mulle_bigmap_init_with_depth( &copy, - depth, &tmpcallback, allocator);  /* mark negative, so we don't grow within growing */
    _mulle_bigmap_copy_items( &copy, map, &tmpcallback, allocator);

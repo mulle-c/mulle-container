@@ -310,7 +310,7 @@ static size_t  _find_index( struct mulle_pointerpair  *storage,
    void   *param2;
    void   *notAKey;
    
-   f      = (void *) callback->is_equal;
+   f      = (int (*)()) callback->is_equal;
    param1 = callback;
    param2 = key;
    notAKey = callback->not_a_key_marker;
@@ -439,7 +439,7 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
    limit  = modulo + 1;
    no_key = callback->keycallback.not_a_key_marker;
    
-   f = (void *) callback->keycallback.is_equal;
+   f = (int (*)()) callback->keycallback.is_equal;
    while( (q = &map->_storage[ i])->_key != no_key)
    {
       if( p == q->_key)

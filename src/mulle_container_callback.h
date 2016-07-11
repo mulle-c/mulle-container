@@ -122,10 +122,13 @@ extern struct mulle_container_valuecallback   mulle_container_valuecallback_nono
 extern struct mulle_container_valuecallback   mulle_container_valuecallback_owned_pointer;
 
 
+
 void           *mulle_container_callback_self( void *ignore, void *p, struct mulle_allocator *a);
 void            mulle_container_callback_nop( void *ignore, void *p, struct mulle_allocator *a);
 void           *mulle_container_callback_no_value( void *ignore, void *p, struct mulle_allocator *allocator);
-int             mulle_container_callback_pointer_is_equal( void *ignore, void *a, void *b);
+
+uintptr_t       mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
+int             mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
 
 void            mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
 void            mulle_container_valuecallback_pointer_free( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
