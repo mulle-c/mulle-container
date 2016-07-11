@@ -279,7 +279,7 @@ static unsigned long  _find_index( void  **storage,
    void   *param1;
    void   *param2;
    
-   f      = (void *) callback->is_equal;
+   f      = (int (*)()) callback->is_equal;
    param1 = callback;
    param2 = p;
    
@@ -414,7 +414,7 @@ void   *__mulle_set_get( struct _mulle_set *bucket,
    i      = hash_for_modulo( hash, modulo);
    limit  = modulo + 1;
 
-   f = (void *) callback->is_equal;
+   f = (int (*)()) callback->is_equal;
    while( q = bucket->_storage[ i])
    {
       if( p == q)
