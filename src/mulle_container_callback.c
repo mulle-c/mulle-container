@@ -145,25 +145,6 @@ static int   mulle_container_keycallback_cstring_is_equal( struct mulle_containe
    return( ! strcmp( a, b));
 }
 
-#define mulle_container_keycallback_self \
-((void *(*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
-    mulle_container_callback_self)
-
-#define mulle_container_valuecallback_self \
-((void *(*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_self)
-
-
-
-#define mulle_container_keycallback_nop \
-((void (*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_nop)
-
-#define mulle_container_valuecallback_nop \
-((void (*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_nop)
-
-
 
 struct mulle_container_keycallback   mulle_container_keycallback_int =
 {
