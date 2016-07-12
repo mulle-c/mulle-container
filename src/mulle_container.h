@@ -34,7 +34,7 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#define MULLE_CONTAINER_VERSION  ((0 << 20) | (7 << 8) | 0)
+#define MULLE_CONTAINER_VERSION  ((0 << 20) | (8 << 8) | 0)
 
 #include <mulle_allocator/mulle_allocator.h>
 

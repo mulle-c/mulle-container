@@ -134,6 +134,36 @@ void            mulle_container_keycallback_pointer_free( struct mulle_container
 void            mulle_container_valuecallback_pointer_free( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
 
 
+#define mulle_container_keycallback_self \
+((void *(*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
+mulle_container_callback_self)
+
+#define mulle_container_valuecallback_self \
+((void *(*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
+mulle_container_callback_self)
+
+
+
+#define mulle_container_keycallback_nop \
+((void (*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
+mulle_container_callback_nop)
+
+#define mulle_container_valuecallback_nop \
+((void (*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
+mulle_container_callback_nop)
+
+
+
+#define mulle_container_keycallback_no_value \
+((void *(*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
+mulle_container_callback_no_value)
+
+#define mulle_container_valuecallback_no_value \
+((void *(*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
+mulle_container_callback_no_value)
+
+
+
 struct mulle_container_keyvaluecallback
 {
    struct mulle_container_keycallback       keycallback;
