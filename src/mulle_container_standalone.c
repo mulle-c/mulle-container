@@ -12,4 +12,4 @@
 
 
 // food for the linker
-uint32_t mulle_standalone_container_version = MULLE_CONTAINER_VERSION;
+uint32_t   mulle_container_standalone_version = MULLE_CONTAINER_VERSION;

@@ -14,3 +14,6 @@ cityhash/
 tmp/
 *.dSYM/
 *.exe
+/include
+/lib
+/xx
