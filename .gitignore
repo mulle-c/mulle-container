@@ -16,4 +16,5 @@ tmp/
 *.exe
 /include
 /lib
+/xxmulle-tests/
 /xx
