@@ -1,4 +1,4 @@
-#!/bin/sh -m
+#!/usr/bin/env bash
 # (bash really)
 #
 #  run-test.sh
@@ -7,6 +7,8 @@
 #  Created by Nat! on 01.11.13.
 #  Copyright (c) 2013 Mulle kybernetiK. All rights reserved.
 #  (was run-mulle-scion-test)
+
+set -m
 
 SOURCE_EXTENSION=".c"
 
