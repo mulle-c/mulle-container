@@ -277,7 +277,7 @@ static size_t   grow( struct _mulle_map *map,
       
       if( ! complain)
       {
-         fprintf( stderr, "%s: Your hash is so weak, that you reached the end of the rope", __PRETTY_FUNCTION__);
+         fprintf( stderr, "%s: Your hash is so weak, that you reached the end of the rope", __FUNCTION__);
          ++complain;
       }
       return( modulo);
