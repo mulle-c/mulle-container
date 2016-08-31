@@ -35,9 +35,10 @@
 #ifndef mulle_container_attributes__h__
 #define mulle_container_attributes__h__
 
-#if defined( __clang__) || defined( __GNUC__)
 
 #ifndef mulle_nonnull_first
+
+#if defined( __clang__) || defined( __GNUC__)
 # define mulle_nonnull_first                __attribute__((nonnull(1)))
 # define mulle_nonnull_first_second         __attribute__((nonnull(1,2)))
 # define mulle_nonnull_first_second_third   __attribute__((nonnull(1,2,3)))
@@ -67,6 +68,6 @@
 # define mulle_nonnull_third_fourth
 #endif
 
-#end
+#endif
 
 #endif /* mulle_container_attributes_h */

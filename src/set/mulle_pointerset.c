@@ -9,6 +9,7 @@
 #include "mulle_pointerset.h"
 
 #include <stdlib.h>
+#include <stddef.h>
 
 
 static int  _pointer_compare( void *p_a, void *p_b)
@@ -26,13 +27,13 @@ static void   *mulle_pointerset_bsearch( void **buf,
                                          size_t n,
                                          void  *search)
 {
-   ssize_t    first;
-   ssize_t    last;
-   ssize_t    middle;
+   long       first;
+   long       last;
+   long       middle;
    void       *p;
    
    first  = 0;
-   last   = (ssize_t) (n - 1);
+   last   = (long) (n - 1);
    middle = (first + last) / 2;
    
    while( first <= last)

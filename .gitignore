@@ -18,3 +18,8 @@ tmp/
 /lib
 /xxmulle-tests/
 /xx
+.repos/mulle-allocator/mulle-configuration/
+.repos/mulle-thread/mintomic/
+.repos/mulle-thread/mulle-configuration/
+mulle-tests/
+addictions/

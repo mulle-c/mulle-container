@@ -61,8 +61,8 @@ static inline uint64_t   mulle_hash_avalanche64(uint64_t h)
 static inline uintptr_t   mulle_hash_avalanche( uintptr_t h)
 {
    if( sizeof( uintptr_t) == sizeof( uint64_t))
-      return( mulle_hash_avalanche64( h));
-   return( mulle_hash_avalanche32( h));
+      return( (uintptr_t) mulle_hash_avalanche64( h));
+   return( (uintptr_t) mulle_hash_avalanche32( h));
 }
 
 
