@@ -146,7 +146,7 @@ static int   mulle_container_keycallback_cstring_is_equal( struct mulle_containe
 }
 
 
-struct mulle_container_keycallback   mulle_container_keycallback_int =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_int =
 {
    mulle_container_keycallback_pointer_hash,
    mulle_container_keycallback_pointer_is_equal,
@@ -158,7 +158,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_int =
 };
 
 
-struct mulle_container_keycallback   mulle_container_keycallback_intptr =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_intptr =
 {
    mulle_container_keycallback_pointer_hash,
    mulle_container_keycallback_pointer_is_equal,
@@ -170,7 +170,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_intptr =
 };
 
 /***/
-struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer_or_null =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer_or_null =
 {
    mulle_container_keycallback_pointer_hash,
    mulle_container_keycallback_pointer_is_equal,
@@ -182,7 +182,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer_o
 };
 
 
-struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer =
 {
    mulle_container_keycallback_pointer_hash,
    mulle_container_keycallback_pointer_is_equal,
@@ -194,7 +194,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointe
 };
 
 
-struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer =
 {
    mulle_container_keycallback_pointer_hash,
    mulle_container_keycallback_pointer_is_equal,
@@ -208,7 +208,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer =
 
 
 /**/
-struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring =
 {
    mulle_container_keycallback_cstring_hash,
    mulle_container_keycallback_cstring_is_equal,
@@ -220,7 +220,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring 
 };
 
 
-struct mulle_container_keycallback   mulle_container_keycallback_nonowned_cstring =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_cstring =
 {
    mulle_container_keycallback_cstring_hash,
    mulle_container_keycallback_cstring_is_equal,
@@ -232,7 +232,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_nonowned_cstrin
 };
 
 
-struct mulle_container_keycallback   mulle_container_keycallback_owned_cstring =
+MULLE_C_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_cstring =
 {
    mulle_container_keycallback_cstring_hash,
    mulle_container_keycallback_cstring_is_equal,
@@ -245,7 +245,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_owned_cstring =
 
 
 /**/
-struct mulle_container_valuecallback   mulle_container_valuecallback_int =
+MULLE_C_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_int =
 {
    mulle_container_valuecallback_self,
    mulle_container_valuecallback_nop,
@@ -254,7 +254,7 @@ struct mulle_container_valuecallback   mulle_container_valuecallback_int =
 };
 
 
-struct mulle_container_valuecallback   mulle_container_valuecallback_intptr =
+MULLE_C_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_intptr =
 {
    mulle_container_valuecallback_self,
    mulle_container_valuecallback_nop,
@@ -263,7 +263,7 @@ struct mulle_container_valuecallback   mulle_container_valuecallback_intptr =
 };
 
 
-struct mulle_container_valuecallback   mulle_container_valuecallback_owned_pointer =
+MULLE_C_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_owned_pointer =
 {
    mulle_container_valuecallback_self,
    mulle_container_valuecallback_pointer_free,
@@ -272,7 +272,7 @@ struct mulle_container_valuecallback   mulle_container_valuecallback_owned_point
 };
 
 
-struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_pointer =
+MULLE_C_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_pointer =
 {
    mulle_container_valuecallback_self,
    mulle_container_valuecallback_nop,
@@ -281,7 +281,7 @@ struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_po
 };
 
 
-struct mulle_container_valuecallback   mulle_container_valuecallback_copied_cstring =
+MULLE_C_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_copied_cstring =
 {
    (void *(*)()) mulle_container_callback_cstring_copy,
    mulle_container_valuecallback_pointer_free,
@@ -290,7 +290,7 @@ struct mulle_container_valuecallback   mulle_container_valuecallback_copied_cstr
 };
 
 
-struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_cstring =
+MULLE_C_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_cstring =
 {
    mulle_container_valuecallback_self,
    mulle_container_valuecallback_nop,
@@ -299,7 +299,7 @@ struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_cs
 };
 
 
-struct mulle_container_valuecallback   mulle_container_valuecallback_owned_cstring =
+MULLE_C_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_owned_cstring =
 {
    mulle_container_valuecallback_self,
    mulle_container_valuecallback_pointer_free,

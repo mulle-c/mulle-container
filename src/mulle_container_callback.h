@@ -37,7 +37,7 @@
 #include <stddef.h>
 #include <limits.h>
 #include <assert.h>
-
+#include <mulle_c11/mulle_c11.h>
 #include <mulle_allocator/mulle_allocator.h>
 
 #if MULLE_ALLOCATOR_VERSION < ((0 << 20) | (1 << 8) | 0)
@@ -48,7 +48,7 @@
 #pragma mark -
 #pragma mark callback schemes for containers
 
-#define mulle_container_not_an_int_key          ((void *) INT_MIN)
+#define mulle_container_not_an_int_key    ((void *) INT_MIN)
 #define mulle_container_not_an_intptr_key	((void *) INTPTR_MIN)
 #define mulle_container_not_a_pointer_key	((void *) UINTPTR_MAX)
 
@@ -84,15 +84,15 @@ static inline void   assert_mulle_container_keycallback( struct mulle_container_
 //         "owned"    -> don't copy but free
 //         "copied"   -> copy and free
 //
-extern struct mulle_container_keycallback   mulle_container_keycallback_int;
-extern struct mulle_container_keycallback   mulle_container_keycallback_intptr;
-extern struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring;
-extern struct mulle_container_keycallback   mulle_container_keycallback_nonowned_cstring;
-extern struct mulle_container_keycallback   mulle_container_keycallback_owned_cstring;
-extern struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer;
-extern struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer;
-extern struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer_or_null;
-extern struct mulle_container_keycallback   mulle_container_keycallback_pointer_or_null;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_int;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_intptr;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_cstring;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_cstring;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer_or_null;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_pointer_or_null;
 
 
 struct mulle_container_valuecallback
@@ -113,25 +113,25 @@ static inline void   assert_mulle_container_valuecallback( struct mulle_containe
 }
 
 
-extern struct mulle_container_valuecallback   mulle_container_valuecallback_int;
-extern struct mulle_container_valuecallback   mulle_container_valuecallback_intptr;
-extern struct mulle_container_valuecallback   mulle_container_valuecallback_copied_cstring;
-extern struct mulle_container_valuecallback   mulle_container_valuecallback_owned_cstring;
-extern struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_cstring;
-extern struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_pointer;
-extern struct mulle_container_valuecallback   mulle_container_valuecallback_owned_pointer;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_int;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_intptr;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_copied_cstring;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_owned_cstring;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_cstring;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_pointer;
+MULLE_C_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_owned_pointer;
 
 
 
-void           *mulle_container_callback_self( void *ignore, void *p, struct mulle_allocator *a);
-void            mulle_container_callback_nop( void *ignore, void *p, struct mulle_allocator *a);
-void           *mulle_container_callback_no_value( void *ignore, void *p, struct mulle_allocator *allocator);
+void        *mulle_container_callback_self( void *ignore, void *p, struct mulle_allocator *a);
+void        mulle_container_callback_nop( void *ignore, void *p, struct mulle_allocator *a);
+void        *mulle_container_callback_no_value( void *ignore, void *p, struct mulle_allocator *allocator);
 
-uintptr_t       mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
-int             mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
+uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
+int         mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
 
-void            mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
-void            mulle_container_valuecallback_pointer_free( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
+void        mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
+void        mulle_container_valuecallback_pointer_free( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
 
 
 #define mulle_container_keycallback_self \

@@ -82,7 +82,7 @@ src/set/mulle_pointerset.c
 )
 
 if( MSVC)
-	set( DEF_FILE mulle_container_standalone.def)
+	set( DEF_FILE _mulle_container_standalone.def)
 endif()
 
 add_library( mulle_container_standalone SHARED
@@ -95,8 +95,8 @@ ${SOURCES}
 )
 
 set( DEPENDENCY_LIBRARIES
-mulle_allocator
 mulle_test_allocator
+mulle_allocator
 mulle_thread
 )
 
@@ -104,9 +104,13 @@ add_dependencies( mulle_container_standalone mulle_container)
 
 if( MSVC)
 	add_custom_command( OUTPUT ${DEF_FILE}
-                 	    COMMAND "C:/Program Files/Git/usr/bin/sh.exe" mulle-mingw-dumpdef.exe -o "${DEF_FILE}" -n mulle_container_standalone --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
+                 	    COMMAND "C:/Program Files/Git/usr/bin/sh.exe" mulle-mingw-dumpdef.sh -o "${DEF_FILE}" -n mulle_container_standalone --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
                  	    DEPENDS "${SOURCES}"
                    		VERBATIM)
+endif()
+
+if( MSVC)
+  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE} /NODEFAULTLIB")
 endif()
 
 
@@ -116,10 +120,6 @@ mulle_container
 ${DEPENDENCY_LIBRARIES}
 ${END_ALL_LOAD}
 )
-
-if( MSVC)
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:mulle_container_standalone.def /NODEFAULTLIB")
-endif()
 
 
 INSTALL( TARGETS mulle_container mulle_container_standalone DESTINATION "lib")

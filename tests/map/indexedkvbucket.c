@@ -55,8 +55,8 @@ int  main()
    _CALLBACK.valuecallback = mulle_container_valuecallback_copied_cstring;
 
    mulle_test_allocator_initialize();
-   mulle_default_allocator        = mulle_test_allocator;
-   mulle_test_allocator_dont_free = 1;
+   mulle_default_allocator               = mulle_test_allocator;
+   mulle_test_allocator_config.dont_free = 1;
 
    simple_fill_test();
 
