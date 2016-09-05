@@ -34,7 +34,6 @@ cityhash/src
 dependencies/include
 )
 
-
 set( HEADERS
 src/mulle_container.h
 src/mulle_container_callback.h
@@ -82,23 +81,46 @@ src/set/_mulle_set.c
 src/set/mulle_pointerset.c
 )
 
+if( MSVC)
+	set( DEF_FILE mulle_container_standalone.def)
+endif()
+
 add_library( mulle_container_standalone SHARED
 src/mulle_container_standalone.c
+${DEF_FILE}
 )
 
 add_library(mulle_container STATIC
 ${SOURCES}
 )
 
+set( DEPENDENCY_LIBRARIES
+mulle_allocator
+mulle_test_allocator
+mulle_thread
+)
+
 add_dependencies( mulle_container_standalone mulle_container)
+
+if( MSVC)
+	add_custom_command( OUTPUT ${DEF_FILE}
+                 	    COMMAND "C:/Program Files/Git/usr/bin/sh.exe" mulle-mingw-dumpdef.exe -o "${DEF_FILE}" -n mulle_container_standalone --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
+                 	    DEPENDS "${SOURCES}"
+                   		VERBATIM)
+endif()
+
 
 TARGET_LINK_LIBRARIES( mulle_container_standalone
 ${BEGIN_ALL_LOAD}
 mulle_container
-mulle_allocator
-mulle_test_allocator
+${DEPENDENCY_LIBRARIES}
 ${END_ALL_LOAD}
 )
+
+if( MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:mulle_container_standalone.def /NODEFAULTLIB")
+endif()
+
 
 INSTALL( TARGETS mulle_container mulle_container_standalone DESTINATION "lib")
 INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
