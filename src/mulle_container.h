@@ -40,6 +40,7 @@
 
 #include "mulle_container_operation.h"
 #include "mulle_container_callback.h"
+#include "mulle_container_global.h"
 
 #include "mulle_prime.h"
 #include "mulle_hash.h"
