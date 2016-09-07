@@ -3,11 +3,6 @@ cmake_minimum_required (VERSION 3.0)
 project (mulle-container)
 
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMULLE_ABA_TRACE_SWAP")
-
-add_definitions( -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern 
-                 -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
-
 #
 # which mulle-configuration to use ?
 #
@@ -19,6 +14,11 @@ if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 else()
   include( Release)
 endif()
+
+
+add_definitions( -DMULLE_ABA_TRACE_SWAP
+                 -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern 
+                 -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
 
 
 # using include_directories is a little bit shitty
