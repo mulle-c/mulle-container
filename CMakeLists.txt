@@ -40,6 +40,7 @@ dependencies/include
 set( HEADERS
 src/mulle_container.h
 src/mulle_container_callback.h
+src/mulle_container_callback_global.h
 src/mulle_container_operation.h
 src/mulle_container_compiler_attributes.h
 src/array/mulle_array.h
