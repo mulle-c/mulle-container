@@ -3,7 +3,10 @@ cmake_minimum_required (VERSION 3.0)
 project (mulle-container)
 
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG -DMULLE_ABA_TRACE_LIST -DMULLE_ABA_TRACE_SWAP")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMULLE_ABA_TRACE_SWAP")
+
+add_definitions( -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern 
+                 -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
 
 #
 # which mulle-configuration to use ?
@@ -83,6 +86,10 @@ src/set/mulle_pointerset.c
 
 if( MSVC)
 	set( DEF_FILE _mulle_container_standalone.def)
+	set_source_files_properties( ${DEF_FILE} PROPERTIES HEADER_FILE_ONLY TRUE)
+	set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+	set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE}")  
+	# /NODEFAULTLIB:MSVCRT") 
 endif()
 
 add_library( mulle_container_standalone SHARED
@@ -104,13 +111,9 @@ add_dependencies( mulle_container_standalone mulle_container)
 
 if( MSVC)
 	add_custom_command( OUTPUT ${DEF_FILE}
-                 	    COMMAND "C:/Program Files/Git/usr/bin/sh.exe" mulle-mingw-dumpdef.sh -o "${DEF_FILE}" -n mulle_container_standalone --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
-                 	    DEPENDS "${SOURCES}"
+                 	    COMMAND mulle-mingw-dumpdef.bat -o "${DEF_FILE}" -n mulle_container_standalone --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
+                 	    DEPENDS "${SOURCES}" "${HEADERS}"
                    		VERBATIM)
-endif()
-
-if( MSVC)
-  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE} /NODEFAULTLIB")
 endif()
 
 
@@ -120,7 +123,6 @@ mulle_container
 ${DEPENDENCY_LIBRARIES}
 ${END_ALL_LOAD}
 )
-
 
 INSTALL( TARGETS mulle_container mulle_container_standalone DESTINATION "lib")
 INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
