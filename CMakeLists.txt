@@ -3,8 +3,6 @@ cmake_minimum_required (VERSION 3.0)
 project (mulle-container)
 
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG -DMULLE_ABA_TRACE_LIST -DMULLE_ABA_TRACE_SWAP")
-
 #
 # which mulle-configuration to use ?
 #
@@ -16,6 +14,11 @@ if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 else()
   include( Release)
 endif()
+
+
+add_definitions( -DMULLE_ABA_TRACE_SWAP
+                 -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern 
+                 -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
 
 
 # using include_directories is a little bit shitty
@@ -37,6 +40,7 @@ dependencies/include
 set( HEADERS
 src/mulle_container.h
 src/mulle_container_callback.h
+src/mulle_container_callback_global.h
 src/mulle_container_operation.h
 src/mulle_container_compiler_attributes.h
 src/array/mulle_array.h
@@ -83,6 +87,10 @@ src/set/mulle_pointerset.c
 
 if( MSVC)
 	set( DEF_FILE _mulle_container_standalone.def)
+	set_source_files_properties( ${DEF_FILE} PROPERTIES HEADER_FILE_ONLY TRUE)
+	set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+	set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE}")  
+	# /NODEFAULTLIB:MSVCRT") 
 endif()
 
 add_library( mulle_container_standalone SHARED
@@ -117,7 +125,6 @@ mulle_container
 ${DEPENDENCY_LIBRARIES}
 ${END_ALL_LOAD}
 )
-
 
 INSTALL( TARGETS mulle_container mulle_container_standalone DESTINATION "lib")
 INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
