@@ -108,7 +108,6 @@ mulle_allocator
 mulle_thread
 )
 
-add_dependencies( mulle_container_standalone mulle_container)
 
 if( MSVC)
 	add_custom_command( OUTPUT ${DEF_FILE}
@@ -118,6 +117,8 @@ if( MSVC)
   set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE} /NODEFAULTLIB")
 endif()
 
+
+add_dependencies( mulle_container_standalone mulle_container)
 
 TARGET_LINK_LIBRARIES( mulle_container_standalone
 ${BEGIN_ALL_LOAD}
