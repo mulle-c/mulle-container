@@ -104,12 +104,9 @@ add_dependencies( mulle_container_standalone mulle_container)
 
 if( MSVC)
 	add_custom_command( OUTPUT ${DEF_FILE}
-                 	    COMMAND "C:/Program Files/Git/usr/bin/sh.exe" mulle-mingw-dumpdef.sh -o "${DEF_FILE}" -n mulle_container_standalone --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
+                 	    COMMAND mulle-mingw-dumpdef.bat-o "${DEF_FILE}" --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
                  	    DEPENDS "${SOURCES}"
                    		VERBATIM)
-endif()
-
-if( MSVC)
   set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE} /NODEFAULTLIB")
 endif()
 
