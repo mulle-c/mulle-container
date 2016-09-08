@@ -37,6 +37,7 @@
 		41014CC11BE9521400BE18B5 /* _mulle_array.h in Headers */ = {isa = PBXBuildFile; fileRef = 41014CBF1BE9521400BE18B5 /* _mulle_array.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41014CC21BE9521400BE18B5 /* _mulle_array.c in Sources */ = {isa = PBXBuildFile; fileRef = 41014CC01BE9521400BE18B5 /* _mulle_array.c */; };
 		4105ABF11BCB089600D45AA8 /* mulle_container_callback.h in Headers */ = {isa = PBXBuildFile; fileRef = 414AC1AA1AC2C45800DCA3CC /* mulle_container_callback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4111AFD61D80470700DFB901 /* mulle_container_callback_global.h in Headers */ = {isa = PBXBuildFile; fileRef = 4111AFD51D80470700DFB901 /* mulle_container_callback_global.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		411D23A61CC3AC2900D92786 /* mulle_pointerarray.h in Headers */ = {isa = PBXBuildFile; fileRef = 411D23A51CC3AC2900D92786 /* mulle_pointerarray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		411D23AA1CC3B1B200D92786 /* mulle_set.c in Sources */ = {isa = PBXBuildFile; fileRef = 411D23A81CC3B1B200D92786 /* mulle_set.c */; };
 		411D23AB1CC3B1B200D92786 /* mulle_set.h in Headers */ = {isa = PBXBuildFile; fileRef = 411D23A91CC3B1B200D92786 /* mulle_set.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -178,6 +179,7 @@
 /* Begin PBXFileReference section */
 		41014CBF1BE9521400BE18B5 /* _mulle_array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_array.h; sourceTree = "<group>"; };
 		41014CC01BE9521400BE18B5 /* _mulle_array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_array.c; sourceTree = "<group>"; };
+		4111AFD51D80470700DFB901 /* mulle_container_callback_global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_container_callback_global.h; sourceTree = "<group>"; };
 		411A28C11BCD446E00D39FF7 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		411D23A51CC3AC2900D92786 /* mulle_pointerarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_pointerarray.h; sourceTree = "<group>"; };
 		411D23A71CC3B07100D92786 /* _mulle_bigmap_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _mulle_bigmap_private.h; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				41709A9C1CB6BF02002A1BDA /* mulle_container_standalone.c */,
 				41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */,
 				417582A71BE8BEE1005F0CE4 /* mulle_container_operation.h */,
+				4111AFD51D80470700DFB901 /* mulle_container_callback_global.h */,
 				414AC1AA1AC2C45800DCA3CC /* mulle_container_callback.h */,
 				414AC1AB1AC2C45800DCA3CC /* mulle_container_callback.c */,
 				41BCA4FE1BE8DBF900504AAD /* array */,
@@ -503,6 +506,7 @@
 			files = (
 				414945741BEA930000C92587 /* mulle_container.h in Headers */,
 				4105ABF11BCB089600D45AA8 /* mulle_container_callback.h in Headers */,
+				4111AFD61D80470700DFB901 /* mulle_container_callback_global.h in Headers */,
 				414945751BEA932100C92587 /* mulle_container_operation.h in Headers */,
 				4170B27E1BF0C01B002F7143 /* mulle_container_compiler_attributes.h in Headers */,
 				419E7F551BEA1B660000D1A7 /* mulle_array.h in Headers */,
