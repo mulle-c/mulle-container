@@ -89,7 +89,7 @@ if( MSVC)
 	set( DEF_FILE _mulle_container_standalone.def)
 	set_source_files_properties( ${DEF_FILE} PROPERTIES HEADER_FILE_ONLY TRUE)
 	set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
-	set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE}")  
+	set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /DEF:${DEF_FILE}")  
 	# /NODEFAULTLIB:MSVCRT") 
 endif()
 
@@ -111,10 +111,9 @@ mulle_thread
 
 if( MSVC)
 	add_custom_command( OUTPUT ${DEF_FILE}
-                 	    COMMAND mulle-mingw-dumpdef.bat-o "${DEF_FILE}" --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
+                 	    COMMAND mulle-mingw-dumpdef.bat -o "${DEF_FILE}" --directory "${BUILD_RELATIVE_DEPENDENCIES_DIR}/lib" --prefix "mulle" ${DEPENDENCY_LIBRARIES} $<TARGET_FILE:mulle_container>
                  	    DEPENDS "${SOURCES}"
                    		VERBATIM)
-  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE} /NODEFAULTLIB")
 endif()
 
 
