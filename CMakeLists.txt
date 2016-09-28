@@ -90,7 +90,10 @@ if( MSVC)
 	set_source_files_properties( ${DEF_FILE} PROPERTIES HEADER_FILE_ONLY TRUE)
 	set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 	set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /DEF:${DEF_FILE}")  
+<<<<<<< HEAD
   set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEF:${DEF_FILE}")  
+=======
+>>>>>>> 2914a4dd8fb815c5a6fda41cb11114b8d232dc5b
 	# /NODEFAULTLIB:MSVCRT") 
 endif()
 
@@ -129,5 +132,3 @@ ${END_ALL_LOAD}
 
 INSTALL( TARGETS mulle_container mulle_container_standalone DESTINATION "lib")
 INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
-
-
