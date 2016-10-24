@@ -19,7 +19,7 @@
 // a really simple kind of set, that just stores pointers with pointer
 // equality and uses bsearch for lookup. Useful for small sets ( < 100 entries)
 //
-struct  mulle_pointerset
+struct mulle_pointerset
 {
    size_t                   n;
    void                     **storage;
@@ -28,21 +28,21 @@ struct  mulle_pointerset
 };
 
 
-static inline void    mulle_pointerset_init( struct  mulle_pointerset *set,
+static inline void    mulle_pointerset_init( struct mulle_pointerset *set,
                                              struct mulle_allocator *allocator)
 {
-   memset( set, 0, offsetof( struct  mulle_pointerset, sorted));
+   memset( set, 0, offsetof( struct mulle_pointerset, sorted));
    set->allocator = allocator;
 }
 
 
-static inline void    mulle_pointerset_done( struct  mulle_pointerset *set)
+static inline void    mulle_pointerset_done( struct mulle_pointerset *set)
 {
    mulle_allocator_free( set->allocator, set->storage);
 }
 
 
-static inline void    mulle_pointerset_add( struct  mulle_pointerset *set, void *p)
+static inline void    mulle_pointerset_add( struct mulle_pointerset *set, void *p)
 {
    set->storage = mulle_allocator_realloc( set->allocator,
                                            set->storage,
@@ -52,11 +52,11 @@ static inline void    mulle_pointerset_add( struct  mulle_pointerset *set, void 
 }
 
 
-static inline void   *mulle_pointerset_member( struct  mulle_pointerset *set, void *p)
+static inline void   *mulle_pointerset_member( struct mulle_pointerset *set, void *p)
 {
    void   **q;
    void   **sentinel;
-   extern void   *mulle_pointerset_member2( struct  mulle_pointerset *set, void *p);
+   extern void   *mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
 
    if( set->n >= 12)
       return( mulle_pointerset_member2( set, p));

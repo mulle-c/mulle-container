@@ -49,6 +49,7 @@ struct mulle_allocator;
    size_t          _size
 
 
+// NSData/NSMutableData
 //
 // _size will be -1 for a non-growing buffer
 // this is like a possibly growing memory block (->NSData)

@@ -38,6 +38,7 @@
 #include "mulle_pointerpair.h"
 #include <stdarg.h>
 
+// NSMapTable/NSDictionary/NSMutableDictionary
 //
 // this is like your traditional  hash table, its called like this
 // because its a constituent of mulle_bigmap
