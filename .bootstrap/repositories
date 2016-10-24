@@ -1,2 +1,1 @@
-https://www.mulle-kybernetik.com/repositories/mulle-allocator
-https://www.mulle-kybernetik.com/repositories/mulle-thread
+${MULLE_REPOSITORIES}/mulle-allocator;;${MULLE_ALLOCATOR_BRANCH:-release}

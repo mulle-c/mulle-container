@@ -40,9 +40,10 @@
 #include "mulle_pointerpair.h"
 
 //
-// mulle_pointerpairarray, simple growing array of pointers
-// can overwrite pointers too (and keep count)
-// you can also use it as stack
+// mulle_pointerpairarray, simple growing array of pointer pairs
+// (kind of like a associative array)
+// Can overwrite pointers too (and keep count)
+// You can also use it as stack
 //
 struct mulle_pointerpairarray
 {

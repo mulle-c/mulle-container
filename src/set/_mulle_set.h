@@ -40,6 +40,7 @@
    unsigned int     _count;          \
    short            _depth
 
+// NSSet/NSMutableSet/NSHashTable
 
 struct _mulle_set
 {
