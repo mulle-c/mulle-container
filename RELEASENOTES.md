@@ -1,3 +1,7 @@
+# 0.8
+
+* documentation, documentation, documentation
+
 # 0.7
 
 * fix crass bug of misplaced pointer hash function
@@ -25,7 +29,7 @@
 
 # 0.3
 
-* Fix problems with not_a_key_marker being different than 0
+* Fix problems with notakey being different than 0
 * make buffer growth work as intended
 
 

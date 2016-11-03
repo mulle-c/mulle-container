@@ -1,7 +1,9 @@
 //  mulle-container
 //
 //  Created by Nat! on 24.03.15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2015 Codeon GmbH.
+//  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -48,9 +50,9 @@
 #pragma mark -
 #pragma mark callback schemes for containers
 
-#define mulle_container_not_an_int_key    ((void *) INT_MIN)
-#define mulle_container_not_an_intptr_key	((void *) INTPTR_MIN)
-#define mulle_container_not_a_pointer_key	((void *) UINTPTR_MAX)
+#define mulle_container_not_an_int_key      ((void *) INT_MIN)
+#define mulle_container_not_an_intptr_key   ((void *) INTPTR_MIN)
+#define mulle_container_not_a_pointer_key   ((void *) UINTPTR_MAX)
 
 
 //
@@ -64,9 +66,21 @@ struct mulle_container_keycallback
    void        (*release)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
    void        *(*describe)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
 
-   void        *not_a_key_marker;
+   void        *notakey;
    void        *userinfo;
 };
+
+
+static inline void  *mulle_container_keycallback_get_notakey( struct mulle_container_keycallback *callback)
+{
+   return( callback->notakey);
+}
+
+
+static inline void  *mulle_container_keycallback_get_userinfo( struct mulle_container_keycallback *callback)
+{
+   return( callback->userinfo);
+}
 
 
 static inline void   assert_mulle_container_keycallback( struct mulle_container_keycallback *callback)
@@ -117,8 +131,8 @@ void        mulle_container_valuecallback_pointer_free( struct mulle_container_v
 
 struct mulle_container_keyvaluecallback
 {
-   struct mulle_container_keycallback       keycallback;
-   struct mulle_container_valuecallback     valuecallback;
+   struct mulle_container_keycallback     keycallback;
+   struct mulle_container_valuecallback   valuecallback;
 };
 
 

@@ -42,7 +42,7 @@ static inline void    mulle_pointerset_done( struct mulle_pointerset *set)
 }
 
 
-static inline void    mulle_pointerset_add( struct mulle_pointerset *set, void *p)
+static inline void    mulle_pointerset_insert( struct mulle_pointerset *set, void *p)
 {
    set->storage = mulle_allocator_realloc( set->allocator,
                                            set->storage,
@@ -52,7 +52,7 @@ static inline void    mulle_pointerset_add( struct mulle_pointerset *set, void *
 }
 
 
-static inline void   *mulle_pointerset_member( struct mulle_pointerset *set, void *p)
+static inline void   *mulle_pointerset_get( struct mulle_pointerset *set, void *p)
 {
    void   **q;
    void   **sentinel;

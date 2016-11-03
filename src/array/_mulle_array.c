@@ -248,14 +248,14 @@ void   _mulle_array_zero_in_range( struct _mulle_array *array,
    assert( ! _mulle_array_has_overflown( array));
 
    range = _mulle_array_get_arrayrange( array, location, length);
-   if( ! callback->not_a_key_marker)
+   if( ! callback->notakey)
    {
       memset( range.p, 0, length * sizeof( void *));
       return;
    }
 
    while( range.p < range.sentinel)
-      *range.p++= callback->not_a_key_marker;
+      *range.p++= callback->notakey;
 }
 
 
@@ -275,7 +275,7 @@ void   _mulle_array_compact_zeroes( struct _mulle_array *array,
    
    for( ;p < sentinel; p++)
    {
-      if( *p != callback->not_a_key_marker)
+      if( *p != callback->notakey)
          continue;
       *q++ = *p;
    }
@@ -342,7 +342,7 @@ int   _mulle_array_add_multiple( struct _mulle_array *array,
    while( pointers < sentinel)
    {
       *p++ = (*callback->retain)( callback, *pointers++, allocator);
-      assert( p[ -1] != callback->not_a_key_marker);
+      assert( p[ -1] != callback->notakey);
    }
    return( 0);
 }

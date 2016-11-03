@@ -205,14 +205,14 @@ static inline void    _mulle_array_add( struct _mulle_array *array,
                                         struct mulle_container_keycallback *callback,
                                         struct mulle_allocator *allocator)
 {
-   assert( p != callback->not_a_key_marker);
+   assert( p != callback->notakey);
    
    if( _mulle_array_is_full( array))
       if( _mulle_array_grow( array, callback, allocator))
          return;
    
    *array->_curr++ = (*callback->retain)( callback, p, allocator);
-   assert( array->_curr[ -1]  != callback->not_a_key_marker);
+   assert( array->_curr[ -1]  != callback->notakey);
 }
 
 
@@ -313,7 +313,7 @@ static inline struct _mulle_arrayenumerator   _mulle_array_enumerate( struct _mu
 
    rover._sentinel         = array->_curr;
    rover._curr             = array->_storage;
-   rover._notakey = callback->not_a_key_marker;
+   rover._notakey = callback->notakey;
 
    return( rover);
 }

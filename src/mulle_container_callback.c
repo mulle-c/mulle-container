@@ -1,7 +1,9 @@
 //  mulle-container
 //
 //  Created by Nat! on 24.03.15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2015 Codeon GmbH.
+//  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -73,7 +75,7 @@ void   *mulle_container_callback_no_value( void *ignore, void *p, struct mulle_a
 
 void   mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator)
 {
-   if( p != callback->not_a_key_marker)
+   if( p != callback->notakey)
       mulle_allocator_free( allocator, p);
 }
 

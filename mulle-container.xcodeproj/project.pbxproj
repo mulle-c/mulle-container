@@ -80,6 +80,8 @@
 		4198C8A31BE7D27400EE1FF5 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8A21BE7D27400EE1FF5 /* config.h */; };
 		419E7F541BEA1B660000D1A7 /* mulle_array.c in Sources */ = {isa = PBXBuildFile; fileRef = 419E7F521BEA1B660000D1A7 /* mulle_array.c */; };
 		419E7F551BEA1B660000D1A7 /* mulle_array.h in Headers */ = {isa = PBXBuildFile; fileRef = 419E7F531BEA1B660000D1A7 /* mulle_array.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		41ACD5FE1DCB746C00465792 /* mulle_pointerarray.c in Sources */ = {isa = PBXBuildFile; fileRef = 41ACD5FD1DCB746C00465792 /* mulle_pointerarray.c */; };
+		41ACD6001DCB747F00465792 /* mulle_pointerpairarray.c in Sources */ = {isa = PBXBuildFile; fileRef = 41ACD5FF1DCB747F00465792 /* mulle_pointerpairarray.c */; };
 		41BCA5081BE8E58300504AAD /* mulle_bigmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5001BE8E58300504AAD /* mulle_bigmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41BCA5091BE8E58300504AAD /* mulle_bigmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5011BE8E58300504AAD /* mulle_bigmap.c */; };
 		41BCA50A1BE8E58300504AAD /* _mulle_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5021BE8E58300504AAD /* _mulle_map.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -227,6 +229,8 @@
 		4198C8A81BE7DB6C00EE1FF5 /* mulle_container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container.h; sourceTree = "<group>"; };
 		419E7F521BEA1B660000D1A7 /* mulle_array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_array.c; sourceTree = "<group>"; };
 		419E7F531BEA1B660000D1A7 /* mulle_array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_array.h; sourceTree = "<group>"; };
+		41ACD5FD1DCB746C00465792 /* mulle_pointerarray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_pointerarray.c; sourceTree = "<group>"; };
+		41ACD5FF1DCB747F00465792 /* mulle_pointerpairarray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_pointerpairarray.c; sourceTree = "<group>"; };
 		41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_pointerpair.h; sourceTree = "<group>"; };
 		41BCA5001BE8E58300504AAD /* mulle_bigmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_bigmap.h; sourceTree = "<group>"; };
 		41BCA5011BE8E58300504AAD /* mulle_bigmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_bigmap.c; sourceTree = "<group>"; };
@@ -448,7 +452,9 @@
 				41014CBF1BE9521400BE18B5 /* _mulle_array.h */,
 				41014CC01BE9521400BE18B5 /* _mulle_array.c */,
 				411D23A51CC3AC2900D92786 /* mulle_pointerarray.h */,
+				41ACD5FD1DCB746C00465792 /* mulle_pointerarray.c */,
 				417CEB521CDFB1A60037B7BE /* mulle_pointerpairarray.h */,
+				41ACD5FF1DCB747F00465792 /* mulle_pointerpairarray.c */,
 			);
 			path = array;
 			sourceTree = "<group>";
@@ -760,9 +766,11 @@
 				4198C8961BE7AD9500EE1FF5 /* _mulle_set.c in Sources */,
 				4198C8941BE7AD9500EE1FF5 /* _mulle_bigset.c in Sources */,
 				41BCA5091BE8E58300504AAD /* mulle_bigmap.c in Sources */,
+				41ACD6001DCB747F00465792 /* mulle_pointerpairarray.c in Sources */,
 				41BEC59E1CB14A3E006531B6 /* mulle_pointerset.c in Sources */,
 				41BCA50B1BE8E58300504AAD /* _mulle_map.c in Sources */,
 				41BCA50E1BE8E58300504AAD /* _mulle_bigmap.c in Sources */,
+				41ACD5FE1DCB746C00465792 /* mulle_pointerarray.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

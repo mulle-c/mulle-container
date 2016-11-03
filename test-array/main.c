@@ -3,7 +3,9 @@
 //  test-array
 //
 //  Created by Nat! on 04.11.15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2015 Codeon GmbH.
+//  All rights reserved.
 //
 
 #include <stdio.h>
@@ -126,8 +128,8 @@ static void  notakeymarker( void)
    item = mulle_arrayenumerator_next_int( &rover);
    assert( 2 == item);
    item = mulle_arrayenumerator_next_int( &rover);
-   assert( (int) mulle_container_keycallback_int.not_a_key_marker == item);
-   assert( mulle_container_keycallback_int.not_a_key_marker == mulle_container_not_an_int_key);
+   assert( (int) mulle_container_keycallback_int.notakey == item);
+   assert( mulle_container_keycallback_int.notakey == mulle_container_not_an_int_key);
 
    index = mulle_array_find_in_range_identical_int( array, 1, 0, 3);
    assert( index == 1);

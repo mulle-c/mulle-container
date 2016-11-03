@@ -145,7 +145,7 @@ static void   _mulle_bigmap_init_with_depth( struct _mulle_bigmap *map,
       sentinel = &map->_storage[ modulo];
       while( pair < sentinel)
       {
-         pair->_key   = callback->keycallback.not_a_key_marker;
+         pair->_key   = callback->keycallback.notakey;
          pair->_value = NULL;
          pair++;
       }
@@ -270,7 +270,7 @@ retry:
       }
    }  
    
-   assert( pair->_key != rover->_callback->keycallback.not_a_key_marker);
+   assert( pair->_key != rover->_callback->keycallback.notakey);
    
    if( key)
       *key = pair->_key;
@@ -407,7 +407,7 @@ void   *_mulle_bigmap_write( struct _mulle_bigmap *map,
    void                                  *value;
    
    assert( new_pair);
-   assert( new_pair->_key != callback->keycallback.not_a_key_marker);
+   assert( new_pair->_key != callback->keycallback.notakey);
 
    new_pair->_key   = (*callback->keycallback.retain)( &callback->keycallback, new_pair->_key, allocator);
    new_pair->_value = (*callback->valuecallback.retain)( &callback->valuecallback, new_pair->_value, allocator);
@@ -440,7 +440,7 @@ retry:
    }
    
    //
-   // if the key is not the "not_a_key_marker" then this is really a 
+   // if the key is not the "notakey" then this is really a 
    // key/value pair and not a queue
    //
    
@@ -493,7 +493,7 @@ retry:
                                     callback,
                                     allocator);
       
-      pair->_key   = callback->keycallback.not_a_key_marker;
+      pair->_key   = callback->keycallback.notakey;
       pair->_value = bucket;
 
       map->_count++;

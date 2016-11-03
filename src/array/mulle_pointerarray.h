@@ -1,6 +1,6 @@
 //
 //  mulle_pointerarray.h
-//  mulle-aba-test
+//  mulle-container
 //
 //  Created by Nat! on 10.03.15.
 //  Copyright (c) 2015 Mulle kybernetiK. All rights reserved.
@@ -122,35 +122,10 @@ static inline void  *mulle_pointerarray_get_notapointer( struct mulle_pointerarr
 }
 
 
-# pragma mark -
-# pragma mark mechanisms
-
-static int   mulle_pointerarray_grow( struct mulle_pointerarray *array)
-{
-   unsigned int   new_size;
-
-   new_size = array->_size * 2;
-   if( new_size < 2)
-      new_size = 2;
-   
-   array->_pointers = mulle_allocator_realloc( array->_allocator, array->_pointers, sizeof( void *) * new_size);
-   
-   if( ! array->_pointers)
-   {
-      array->_size = 0;
-      assert( 0);
-      return( -1);
-   }
-
-   memset( &array->_pointers[ array->_size], 0, sizeof( void *) * (new_size - array->_size));
-   array->_size = new_size;
-
-   return( 0);
-}
-
 
 # pragma mark -
 # pragma mark operations
+int   mulle_pointerarray_grow( struct mulle_pointerarray *array);
 
 static inline int   mulle_pointerarray_add( struct mulle_pointerarray *array, void  *pointer)
 {
@@ -312,7 +287,7 @@ static inline void  mulle_pointerarray_enumerator_done( struct mulle_pointerarra
 #pragma mark -
 #pragma mark enumerator convenience
 
-static inline int   mulle_pointerarray_contains( struct mulle_pointerarray *array, void *p)
+static inline int   mulle_pointerarray_member( struct mulle_pointerarray *array, void *p)
 {
    struct  mulle_pointerarray_enumerator   rover;
    void                                    *q;

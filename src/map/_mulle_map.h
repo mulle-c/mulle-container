@@ -226,7 +226,7 @@ static inline struct mulle_pointerpair   *_mulle_mapenumerator_next( struct _mul
    for(;;)
    {
       p = rover->_curr++;
-      if( p->_key != rover->_callback->keycallback.not_a_key_marker)
+      if( p->_key != rover->_callback->keycallback.notakey)
          return( p);
    }
 }
