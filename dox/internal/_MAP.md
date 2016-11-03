@@ -1,6 +1,6 @@
 # `_mulle_map`
 
-`_mulle_map` is the basis for the more convenient [`mulle_map`](API_map.md). The difference between both data structures is, that `mulle_map` has the allocator and the callbacks embedded into the struct, whereas `_mulle_map` needs both provided as a parameter in most function calls.
+`_mulle_map` is the basis for the more convenient [`mulle_map`](../API_map.md). The difference between both data structures is, that `mulle_map` has the allocator and the callbacks embedded into the struct, whereas `_mulle_map` needs both provided as a parameter in most function calls.
 
 Example:
 

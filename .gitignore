@@ -42,3 +42,5 @@ tests/set/indexedbucket
 tests/buffer/add
 tests/buffer/buffer
 tests/buffer/intersect
+tests/array/array
+tests/map/map

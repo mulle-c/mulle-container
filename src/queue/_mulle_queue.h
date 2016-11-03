@@ -80,7 +80,7 @@ void   _mulle_queue_grow( struct _mulle_queue *queue, struct mulle_allocator *al
 void   _mulle_queue_shrink( struct _mulle_queue *queue, struct mulle_allocator *allocator);
 void   _mulle_queue_reset( struct _mulle_queue *queue, struct mulle_allocator *allocator);
 
-void   _mulle_queue_removeall( struct _mulle_queue *queue, struct mulle_allocator *allocator);  // keeps spares
+void   _mulle_queue_remove_all( struct _mulle_queue *queue, struct mulle_allocator *allocator);  // keeps spares
 
 
 struct _mulle_queueenumerator
