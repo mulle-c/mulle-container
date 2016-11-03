@@ -113,7 +113,7 @@ static inline struct mulle_bigset   *mulle_bigset_copy( struct mulle_bigset *set
 }
 
 
-static inline struct mulle_allocator   *mulle_bigset_get_alloator( struct mulle_bigset *set)
+static inline struct mulle_allocator   *mulle_bigset_get_allocator( struct mulle_bigset *set)
 {
    return( set->_allocator);
 }

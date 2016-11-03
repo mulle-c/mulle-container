@@ -94,6 +94,11 @@ static inline size_t   mulle_map_get_count( struct mulle_map *map)
 }
 
 
+static inline void   *mulle_map_get_notakey( struct mulle_map *map)
+{
+   return( mulle_container_keycallback_get_notakey( &map->_callback->keycallback));
+}
+
 
 #pragma mark -
 #pragma mark operations

@@ -72,6 +72,8 @@ src/set/mulle_pointerset.h
 set( SOURCES
 src/mulle_container_callback.c
 src/array/mulle_array.c
+src/array/mulle_pointerarray.c
+src/array/mulle_pointerpairarray.c
 src/hash/mulle_hash.c
 src/hash/mulle_prime.c
 cityhash/src/city.c

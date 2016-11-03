@@ -1,6 +1,6 @@
 //
 //  mulle_pointerpairarray.h
-//  mulle-aba-test
+//  mulle-container
 //
 //  Created by Nat! on 8.05.16.
 //  Copyright (c) 2016 Mulle kybernetiK. All rights reserved.
@@ -123,35 +123,13 @@ static inline void  *mulle_pointerpairarray_get_notakeypointer( struct mulle_poi
 }
 
 
-# pragma mark -
-# pragma mark mechanisms
-
-static int   mulle_pointerpairarray_grow( struct mulle_pointerpairarray *array)
-{
-   unsigned int   new_size;
-
-   new_size = array->_size * 2;
-   if( new_size < 2)
-      new_size = 2;
-   
-   array->_pairs = mulle_allocator_realloc( array->_allocator, array->_pairs, sizeof( struct mulle_pointerpair) * new_size);
-   
-   if( ! array->_pairs)
-   {
-      array->_size = 0;
-      assert( 0);
-      return( -1);
-   }
-
-   memset( &array->_pairs[ array->_size], 0, sizeof( struct mulle_pointerpair) * (new_size - array->_size));
-   array->_size = new_size;
-
-   return( 0);
-}
 
 
 # pragma mark -
 # pragma mark operations
+
+// intentionally not static inline
+int   mulle_pointerpairarray_grow( struct mulle_pointerpairarray *array);
 
 static inline int   mulle_pointerpairarray_add( struct mulle_pointerpairarray *array,
                                                 struct mulle_pointerpair pair)

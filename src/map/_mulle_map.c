@@ -106,14 +106,14 @@ static short   depth_for_capacity( size_t capacity)
 
 
 static struct mulle_pointerpair   *allocate_pairs( size_t n,
-                                                     void *not_a_key_marker,
+                                                     void *notakey,
                                                      struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   *buf;
    struct mulle_pointerpair   *p;
    struct mulle_pointerpair   *sentinel;
 
-   if( ! not_a_key_marker)
+   if( ! notakey)
       return( mulle_allocator_calloc( allocator, n, sizeof( struct mulle_pointerpair)));
    
    buf = mulle_allocator_malloc( allocator, n * sizeof( struct mulle_pointerpair));
@@ -123,7 +123,7 @@ static struct mulle_pointerpair   *allocate_pairs( size_t n,
       sentinel = &buf[ n];
       while( p < sentinel)
       {
-         p->_key = not_a_key_marker;
+         p->_key = notakey;
          ++p;
       }
    }
@@ -146,7 +146,7 @@ void   _mulle_map_init( struct _mulle_map *p,
    n           = _mulle_map_size_for_depth( depth);
    p->_count   = 0;
    p->_depth   = depth;
-   p->_storage = allocate_pairs( n, callback->keycallback.not_a_key_marker, allocator);
+   p->_storage = allocate_pairs( n, callback->keycallback.notakey, allocator);
 }
 
 
@@ -218,7 +218,7 @@ static inline void   store_key_value_pair( struct mulle_pointerpair *data,
    size_t     limit;
    
    limit = modulo + 1;
-   while( data[ i]._key != callback->not_a_key_marker)
+   while( data[ i]._key != callback->notakey)
    {
       if( ++i < limit)
          continue;
@@ -248,7 +248,7 @@ static void   copy_maps( struct mulle_pointerpair *dst,
    for( ;n--;)
    {
       p = src++;
-      if( p->_key == callback->not_a_key_marker)
+      if( p->_key == callback->notakey)
          continue;
 
       hash = (callback->hash)( callback, p->_key);
@@ -285,7 +285,7 @@ static size_t   grow( struct _mulle_map *map,
    
    new_modulo = _mulle_map_mask_for_depth( ++depth);
 
-   buf = allocate_pairs( new_modulo + 1, callback->not_a_key_marker, allocator);
+   buf = allocate_pairs( new_modulo + 1, callback->notakey, allocator);
    
    copy_maps( buf, new_modulo, map->_storage, modulo + 1, callback);
    mulle_allocator_free( allocator, map->_storage);
@@ -313,7 +313,7 @@ static size_t  _find_index( struct mulle_pointerpair  *storage,
    f      = (int (*)()) callback->is_equal;
    param1 = callback;
    param2 = key;
-   notAKey = callback->not_a_key_marker;
+   notAKey = callback->notakey;
    do
    {
       if( (*f)( param1, param2, q->_key))
@@ -345,7 +345,7 @@ static inline size_t  find_index( struct mulle_pointerpair *storage,
    
    i = _mulle_map_hash_for_modulo( hash, modulo);
    q = &storage[ i];
-   if( q->_key == callback->not_a_key_marker)
+   if( q->_key == callback->notakey)
    {
       *hole_index = i;
       return( mulle_not_found_e);
@@ -372,7 +372,7 @@ void   *_mulle_map_write( struct _mulle_map *map,
    struct mulle_pointerpair   *q;
    struct mulle_pointerpair   new_pair;
    
-   assert( pair->_key != callback->keycallback.not_a_key_marker);
+   assert( pair->_key != callback->keycallback.notakey);
    
    modulo = _mulle_map_mask_for_depth( map->_depth);
    i      = find_index( map->_storage, pair->_key, hash, modulo, &hole_index, &callback->keycallback);
@@ -437,7 +437,7 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
    modulo = _mulle_map_mask_for_depth( map->_depth);
    i      = _mulle_map_hash_for_modulo( hash, modulo);
    limit  = modulo + 1;
-   no_key = callback->keycallback.not_a_key_marker;
+   no_key = callback->keycallback.notakey;
    
    f = (int (*)()) callback->keycallback.is_equal;
    while( (q = &map->_storage[ i])->_key != no_key)
@@ -540,9 +540,9 @@ int   _mulle_map_remove_with_hash( struct _mulle_map *map,
       i = (i + 1) & modulo;
       
       q = &map->_storage[ i];
-      if( q->_key == callback->keycallback.not_a_key_marker)
+      if( q->_key == callback->keycallback.notakey)
       {
-         map->_storage[ dst_index]._key   = callback->keycallback.not_a_key_marker;
+         map->_storage[ dst_index]._key   = callback->keycallback.notakey;
          map->_storage[ dst_index]._value = NULL;
          break;
       }
@@ -668,7 +668,7 @@ void   _mulle_map_insert_keys_and_valuesv( struct _mulle_map *map,
    
    pair._value = firstvalue;
    pair._key   = firstkey;
-   while( pair._key != callback->keycallback.not_a_key_marker)
+   while( pair._key != callback->keycallback.notakey)
    {
       _mulle_map_insert( map, &pair, callback, allocator);
 

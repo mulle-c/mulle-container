@@ -3,10 +3,21 @@
 Release on [github](//github.com/mulle-nat/mulle-container): [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container)
 
 A collection of C (C99) containers, with callbacks that are compatible to
-[`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
+OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
+
+> This library could benefit from more tests.
 
 
 ## API
+
+The functions of the containers are named uniformly. Each function is a verb,
+that is prefixed with the name of the data structure it handles. So for example
+the `get` function for `mulle_array` is `mulle_array_get`. The first parameter, except for creation functions, is always the container itself.
+
+Please check out [VERBS.md](dox/VERBS.md) to get a list of verbs used in
+functions.
+
+
 
 File                                                         | Description
 ------------------------------------------------------------ | ----------------------------------------

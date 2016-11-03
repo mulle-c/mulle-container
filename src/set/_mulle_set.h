@@ -196,7 +196,7 @@ static inline struct
    
    rover._left             = set->_count;
    rover._curr             = set->_storage;
-   rover._notakey = callback->not_a_key_marker;
+   rover._notakey = callback->notakey;
    return( rover);
 }
 

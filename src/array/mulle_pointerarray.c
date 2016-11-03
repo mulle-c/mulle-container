@@ -1,11 +1,9 @@
 //
-//  mulle_array.c
+//  mulle_pointerarray.c
 //  mulle-container
 //
-//  Created by Nat! on 04/11/15.
-//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2015 Codeon GmbH.
-//  All rights reserved.
+//  Created by Nat! on 03.11.16.
+//  Copyright © 2016 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -34,16 +32,33 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "mulle_array.h"
+#include "mulle_pointerarray.h"
 
-/* nothing here yet */
-struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback,
-                                           struct mulle_allocator *allocator)
+
+# pragma mark -
+# pragma mark mechanisms
+
+// intentionally not static inline
+int   mulle_pointerarray_grow( struct mulle_pointerarray *array)
 {
-   struct mulle_array  *buffer;
+   unsigned int   new_size;
+
+   new_size = array->_size * 2;
+   if( new_size < 2)
+      new_size = 2;
    
-   buffer = mulle_allocator_malloc( allocator, sizeof( struct mulle_array));
-   if( buffer)
-      mulle_array_init( buffer, 0, callback, allocator);
-   return( buffer);
+   array->_pointers = mulle_allocator_realloc( array->_allocator, array->_pointers, sizeof( void *) * new_size);
+   
+   if( ! array->_pointers)
+   {
+      array->_size = 0;
+      assert( 0);
+      return( -1);
+   }
+
+   memset( &array->_pointers[ array->_size], 0, sizeof( void *) * (new_size - array->_size));
+   array->_size = new_size;
+
+   return( 0);
 }
+

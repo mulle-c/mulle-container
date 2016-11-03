@@ -3,7 +3,9 @@
 //  test-map
 //
 //  Created by Nat! on 05.11.15.
-//  Copyright © 2015 Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2015 Codeon GmbH.
+//  All rights reserved.
 //
 #include <stdio.h>
 #include <mulle_container/mulle_container.h>

@@ -1,11 +1,9 @@
 //
-//  mulle_array.c
+//  mulle_pointerpairarray.c
 //  mulle-container
 //
-//  Created by Nat! on 04/11/15.
-//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2015 Codeon GmbH.
-//  All rights reserved.
+//  Created by Nat! on 03.11.16.
+//  Copyright © 2016 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -33,17 +31,31 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
+#include "mulle_pointerpairarray.h"
 
-#include "mulle_array.h"
+# pragma mark -
+# pragma mark mechanisms
 
-/* nothing here yet */
-struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback,
-                                           struct mulle_allocator *allocator)
+
+int   mulle_pointerpairarray_grow( struct mulle_pointerpairarray *array)
 {
-   struct mulle_array  *buffer;
+   unsigned int   new_size;
+
+   new_size = array->_size * 2;
+   if( new_size < 2)
+      new_size = 2;
    
-   buffer = mulle_allocator_malloc( allocator, sizeof( struct mulle_array));
-   if( buffer)
-      mulle_array_init( buffer, 0, callback, allocator);
-   return( buffer);
+   array->_pairs = mulle_allocator_realloc( array->_allocator, array->_pairs, sizeof( struct mulle_pointerpair) * new_size);
+   
+   if( ! array->_pairs)
+   {
+      array->_size = 0;
+      assert( 0);
+      return( -1);
+   }
+
+   memset( &array->_pairs[ array->_size], 0, sizeof( struct mulle_pointerpair) * (new_size - array->_size));
+   array->_size = new_size;
+
+   return( 0);
 }
