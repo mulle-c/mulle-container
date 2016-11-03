@@ -9,6 +9,8 @@ the management of it's elements.
 struct mulle_map
 ```
 
+### Creation / Destruction Verbs
+
 * create
 * destroy
 * init
@@ -16,16 +18,26 @@ struct mulle_map
 * reset
 * copy
 
+### Accessors Verbs
+
 * get_callback
 * get_allocator
 * get_count
 
+### Element Access Read 
+
 * get
-* set
+
+### Element Access Write 
+
 * insert
 * remove
+* set
+
+### Operations 
 
 * copy_items
+
 
 
 ### `mulle_map_create`

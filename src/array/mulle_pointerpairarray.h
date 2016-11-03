@@ -47,12 +47,12 @@
 //
 struct mulle_pointerpairarray
 {
-   unsigned int                _count;  // # pointers that are notapointer
+   unsigned int                _count;  // # pointers that are notakey
    unsigned int                _used;
    unsigned int                _size;
    struct mulle_pointerpair   *_pairs;
    struct mulle_allocator      *_allocator;
-   void                        *_notakeypointer;
+   void                        *_notakey;
 };
 
 
@@ -74,7 +74,7 @@ static inline void   mulle_pointerpairarray_init( struct mulle_pointerpairarray 
    array->_used           = 0;
    array->_count          = 0;
    array->_pairs          = NULL;
-   array->_notakeypointer = notakeypointer;
+   array->_notakey = notakeypointer;
    array->_allocator      = allocator;
    
    if( capacity)
@@ -117,9 +117,9 @@ static inline struct mulle_allocator  *mulle_pointerpairarray_get_allocator( str
 }
 
 
-static inline void  *mulle_pointerpairarray_get_notakeypointer( struct mulle_pointerpairarray *array)
+static inline void  *mulle_pointerpairarray_get_notakey( struct mulle_pointerpairarray *array)
 {
-   return( array->_notakeypointer);
+   return( array->_notakey);
 }
 
 
@@ -134,7 +134,7 @@ int   mulle_pointerpairarray_grow( struct mulle_pointerpairarray *array);
 static inline int   mulle_pointerpairarray_add( struct mulle_pointerpairarray *array,
                                                 struct mulle_pointerpair pair)
 {
-   assert( pair._key != array->_notakeypointer);
+   assert( pair._key != array->_notakey);
    
    if( array->_used == array->_size)
       if( mulle_pointerpairarray_grow( array))
@@ -151,7 +151,7 @@ static inline int   mulle_pointerpairarray_add( struct mulle_pointerpairarray *a
 
 
 //
-// this removes _notakeypointer from the back, until it finds a pointer
+// this removes _notakey from the back, until it finds a pointer
 // then remove this
 //
 static inline struct mulle_pointerpair  mulle_pointerpairarray_remove_last( struct mulle_pointerpairarray *array)
@@ -165,7 +165,7 @@ static inline struct mulle_pointerpair  mulle_pointerpairarray_remove_last( stru
    while( p > sentinel)
    {
       --p;
-      if( p->_key != array->_notakeypointer)
+      if( p->_key != array->_notakey)
       {
          array->_used = (unsigned int) (p - array->_pairs);
          --array->_count;
@@ -173,7 +173,7 @@ static inline struct mulle_pointerpair  mulle_pointerpairarray_remove_last( stru
       }
    }
    
-   return( mulle_pointerpair_create( array->_notakeypointer, NULL));
+   return( mulle_pointerpair_create( array->_notakey, NULL));
 }
 
 
@@ -188,7 +188,7 @@ static inline struct mulle_pointerpair   *mulle_pointerpairarray_find_last( stru
    while( p > sentinel)
    {
       --p;
-      if( p->_key != array->_notakeypointer)
+      if( p->_key != array->_notakey)
          return( p);
    }
    
@@ -232,10 +232,10 @@ static inline void   mulle_pointerpairarray_set( struct mulle_pointerpairarray *
    assert( i < array->_used);
    
    old = &array->_pairs[ i];
-   if( pair._key != array->_notakeypointer)
-      array->_count += (old->_key == array->_notakeypointer);
+   if( pair._key != array->_notakey)
+      array->_count += (old->_key == array->_notakey);
    else
-      array->_count -= (old->_key != array->_notakeypointer);
+      array->_count -= (old->_key != array->_notakey);
    
    array->_pairs[ i] = pair;
 }
@@ -258,7 +258,7 @@ static inline struct  mulle_pointerpairarray_enumerator   mulle_pointerpairarray
    
    rover.curr           = &array->_pairs[ 0];
    rover.sentinel       = &rover.curr[ array->_used];
-   rover.notakeypointer = array->_notakeypointer;
+   rover.notakeypointer = array->_notakey;
    assert( rover.sentinel >= rover.curr);
    
    return( rover);

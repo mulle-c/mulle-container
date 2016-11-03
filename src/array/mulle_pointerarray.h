@@ -34,9 +34,10 @@
 #ifndef mulle_pointerarray_h__
 #define mulle_pointerarray_h__
 
-
-#include <string.h>
 #include <mulle_allocator/mulle_allocator.h>
+#include <assert.h>
+#include <string.h>
+
 
 //
 // mulle_pointerarray, simple growing array of pointers
@@ -47,16 +48,16 @@
 //
 struct mulle_pointerarray
 {
-   unsigned int             _count;  // # pointers that are notapointer
+   unsigned int             _count;  // # pointers that are notakey
    unsigned int             _used;
    unsigned int             _size;
    void                     **_pointers;
    struct mulle_allocator   *_allocator;
-   void                     *_notapointer;
+   void                     *_notakey;
 };
 
 
-static inline struct mulle_pointerarray  *mulle_pointerarray_alloc( void *notapointer, struct mulle_allocator *allocator)
+static inline struct mulle_pointerarray  *mulle_pointerarray_alloc( void *notakey, struct mulle_allocator *allocator)
 {
    struct mulle_pointerarray   *array;
    
@@ -67,14 +68,14 @@ static inline struct mulle_pointerarray  *mulle_pointerarray_alloc( void *notapo
 
 static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
                                               unsigned int  capacity,
-                                              void *notapointer,
+                                              void *notakey,
                                               struct mulle_allocator *allocator)
 {
    array->_size        = 0;
    array->_used        = 0;
    array->_count       = 0;
    array->_pointers    = NULL;
-   array->_notapointer = notapointer;
+   array->_notakey = notakey;
    array->_allocator   = allocator;
    
    if( capacity)
@@ -116,9 +117,9 @@ static inline struct mulle_allocator  *mulle_pointerarray_get_allocator( struct 
 }
 
 
-static inline void  *mulle_pointerarray_get_notapointer( struct mulle_pointerarray *array)
+static inline void  *mulle_pointerarray_get_notakey( struct mulle_pointerarray *array)
 {
-   return( array->_notapointer);
+   return( array->_notakey);
 }
 
 
@@ -129,7 +130,7 @@ int   mulle_pointerarray_grow( struct mulle_pointerarray *array);
 
 static inline int   mulle_pointerarray_add( struct mulle_pointerarray *array, void  *pointer)
 {
-   assert( pointer != array->_notapointer);
+   assert( pointer != array->_notakey);
    
    if( array->_used == array->_size)
       if( mulle_pointerarray_grow( array))
@@ -147,7 +148,7 @@ static inline int   mulle_pointerarray_add( struct mulle_pointerarray *array, vo
 
 
 //
-// this removes _notapointer from the back, until it finds a pointer
+// this removes _notakey from the back, until it finds a pointer
 // then remove this
 //
 static inline void  *mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
@@ -162,7 +163,7 @@ static inline void  *mulle_pointerarray_remove_last( struct mulle_pointerarray *
    while( p > sentinel)
    {
       pointer = *--p;
-      if( pointer != array->_notapointer)
+      if( pointer != array->_notakey)
       {
          array->_used = (unsigned int) (p - array->_pointers);
          --array->_count;
@@ -170,7 +171,7 @@ static inline void  *mulle_pointerarray_remove_last( struct mulle_pointerarray *
       }
    }
    
-   return( NULL);
+   return( array->_notakey);
 }
 
 
@@ -180,14 +181,14 @@ static inline void  *mulle_pointerarray_find_last( struct mulle_pointerarray *ar
    void   **sentinel;
    void   *pointer;
 
-   pointer  = NULL;
+   pointer  = array->_notakey;
    sentinel = array->_pointers;
    p        = &sentinel[ array->_used];
    
    while( p > sentinel)
    {
       pointer = *--p;
-      if( pointer != array->_notapointer)
+      if( pointer != array->_notakey)
          break;
    }
    
@@ -199,11 +200,12 @@ static inline void  *mulle_pointerarray_get( struct mulle_pointerarray *array, u
 {
    assert( array);
    assert( i < array->_used);
+
    return( array->_pointers[ i]);
 }
 
 
-static inline intptr_t   mulle_pointerarray_index( struct mulle_pointerarray *array, void *p)
+static inline intptr_t   mulle_pointerarray_find( struct mulle_pointerarray *array, void *p)
 {
    void   **curr;
    void   **sentinel;
@@ -231,9 +233,9 @@ static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
    
    old = array->_pointers[ i];
    if( p)
-      array->_count += (old == array->_notapointer);
+      array->_count += (old == array->_notakey);
    else
-      array->_count -= (old != array->_notapointer);
+      array->_count -= (old != array->_notakey);
    
    array->_pointers[ i] = p;
 }
@@ -247,7 +249,7 @@ struct mulle_pointerarray_enumerator
 {
    void   **curr;
    void   **sentinel;
-   void   *notapointer;
+   void   *notakey;
 };
 
 
@@ -257,7 +259,7 @@ static inline struct  mulle_pointerarray_enumerator   mulle_pointerarray_enumera
    
    rover.curr        = &array->_pointers[ 0];
    rover.sentinel    = &rover.curr[ array->_used];
-   rover.notapointer = array->_notapointer;
+   rover.notakey = array->_notakey;
    assert( rover.sentinel >= rover.curr);
    
    return( rover);
@@ -271,10 +273,10 @@ static inline void   *mulle_pointerarray_enumerator_next( struct mulle_pointerar
    while( rover->curr < rover->sentinel)
    {
       p = *rover->curr++;
-      if( p != rover->notapointer)
+      if( p != rover->notakey)
          return( p);
    }
-   return( rover->notapointer);
+   return( rover->notakey);
 }
 
 
@@ -294,7 +296,7 @@ static inline int   mulle_pointerarray_member( struct mulle_pointerarray *array,
 
    rover = mulle_pointerarray_enumerate( array);
    {
-      while( (q = mulle_pointerarray_enumerator_next( &rover)) != rover.notapointer)
+      while( (q = mulle_pointerarray_enumerator_next( &rover)) != rover.notakey)
          if( q == p)
             break;
    }
