@@ -53,13 +53,13 @@ struct mulle_pointerpairarray
    unsigned int                _count;  // # pointers that are notakey
    unsigned int                _used;
    unsigned int                _size;
-   struct mulle_pointerpair   *_pairs;
+   struct mulle_pointerpair    *_pairs;
    struct mulle_allocator      *_allocator;
    void                        *_notakey;
 };
 
 
-static inline struct mulle_pointerpairarray  *mulle_pointerpairarray_alloc( void *notakeypointer, struct mulle_allocator *allocator)
+static inline struct mulle_pointerpairarray  *mulle_pointerpairarray_alloc( void *notakey, struct mulle_allocator *allocator)
 {
    struct mulle_pointerpairarray   *array;
    
@@ -70,15 +70,15 @@ static inline struct mulle_pointerpairarray  *mulle_pointerpairarray_alloc( void
 
 static inline void   mulle_pointerpairarray_init( struct mulle_pointerpairarray *array,
                                                   unsigned int  capacity,
-                                                  void *notakeypointer,
+                                                  void *notakey,
                                                   struct mulle_allocator *allocator)
 {
-   array->_size           = 0;
-   array->_used           = 0;
-   array->_count          = 0;
-   array->_pairs          = NULL;
-   array->_notakey = notakeypointer;
-   array->_allocator      = allocator;
+   array->_size      = 0;
+   array->_used      = 0;
+   array->_count     = 0;
+   array->_pairs     = NULL;
+   array->_notakey   = notakey;
+   array->_allocator = allocator;
    
    if( capacity)
    {
@@ -124,8 +124,6 @@ static inline void  *mulle_pointerpairarray_get_notakey( struct mulle_pointerpai
 {
    return( array->_notakey);
 }
-
-
 
 
 # pragma mark -
@@ -195,9 +193,8 @@ static inline struct mulle_pointerpair   *mulle_pointerpairarray_find_last( stru
          return( p);
    }
    
-   return( NULL);
+   return( array->_notakey);
 }
-
 
 
 static inline struct mulle_pointerpair  mulle_pointerpairarray_get( struct mulle_pointerpairarray *array, unsigned int i)
@@ -251,7 +248,7 @@ struct mulle_pointerpairarray_enumerator
 {
    struct mulle_pointerpair   *curr;
    struct mulle_pointerpair   *sentinel;
-   void                        *notakeypointer;
+   void                       *notakey;
 };
 
 
@@ -261,7 +258,7 @@ static inline struct  mulle_pointerpairarray_enumerator   mulle_pointerpairarray
    
    rover.curr           = &array->_pairs[ 0];
    rover.sentinel       = &rover.curr[ array->_used];
-   rover.notakeypointer = array->_notakey;
+   rover.notakey = array->_notakey;
    assert( rover.sentinel >= rover.curr);
    
    return( rover);
@@ -275,7 +272,7 @@ static inline struct mulle_pointerpair   *mulle_pointerpairarray_enumerator_next
    while( rover->curr < rover->sentinel)
    {
       pair = rover->curr++;
-      if( pair->_key != rover->notakeypointer)
+      if( pair->_key != rover->notakey)
          return( pair);
    }
    return( NULL);

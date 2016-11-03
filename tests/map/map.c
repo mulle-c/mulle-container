@@ -22,24 +22,24 @@ static void  simple( void)
    int                           i;
    int                           state;
    struct mulle_container_keyvaluecallback      callback;
-   
+
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
-   
+
    map = mulle_bigmap_create( 0, &callback, NULL);
    mulle_bigmap_set( map, "VfL", "VFL");
    assert( "VFL" != mulle_bigmap_get( map, "VfL")); // must have been copied
-   
+
    mulle_bigmap_set( map, "Bochum", "BOCHUM");
    mulle_bigmap_set( map, "1848", "1848");
-   
+
    assert( mulle_bigmap_get_count( map) == 3);
-   
+
    assert( ! strcmp( "VFL", mulle_bigmap_get( map, "VfL")));
    assert( ! strcmp( "BOCHUM", mulle_bigmap_get( map, "Bochum")));
    assert( ! strcmp( "1848", mulle_bigmap_get( map, "1848")));
    assert( ! mulle_bigmap_get( map, "xxx"));
-   
+
    state = 0;
    rover = mulle_bigmap_enumerate( map);
    for( i = 0; i < 3; i++)
@@ -70,7 +70,7 @@ static void  simple( void)
    rval  = mulle_bigmapenumerator_next( &rover, &key, &value);
    assert( ! rval);
    mulle_bigmapenumerator_done( &rover);
-   
+
    assert( mulle_bigmap_get_count( map) == 3);
    mulle_bigmap_remove( map, "xxx");
    assert( mulle_bigmap_get_count( map) == 3);
@@ -80,7 +80,7 @@ static void  simple( void)
    assert( mulle_bigmap_get_count( map) == 1);
    mulle_bigmap_remove( map, "1848");
    assert( mulle_bigmap_get_count( map) == 0);
-      
+
    mulle_bigmap_destroy( map);
 }
 

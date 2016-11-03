@@ -71,6 +71,7 @@ src/set/mulle_pointerset.h
 
 set( SOURCES
 src/mulle_container_callback.c
+src/array/_mulle_array.c
 src/array/mulle_array.c
 src/array/mulle_pointerarray.c
 src/array/mulle_pointerpairarray.c
