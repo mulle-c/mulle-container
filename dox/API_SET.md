@@ -27,9 +27,12 @@ struct mulle_set
 * `get_count`
 * `get_keycallback`
 
-### Operations Verbs
+### Element Read Verbs
 
 * `get`
+
+### Element Write Verbs
+
 * `insert`
 * `remove`
 * `set`
