@@ -37,6 +37,7 @@
 #include <mulle_allocator/mulle_allocator.h>
 #include <assert.h>
 #include <string.h>
+#include <stdint.h>
 
 
 //

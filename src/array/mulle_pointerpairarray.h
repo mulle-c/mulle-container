@@ -35,9 +35,12 @@
 #define mulle_pointerpairarray_h__
 
 
-#include <string.h>
-#include <mulle_allocator/mulle_allocator.h>
 #include "mulle_pointerpair.h"
+#include <mulle_allocator/mulle_allocator.h>
+#include <assert.h>
+#include <string.h>
+#include <stdint.h>
+
 
 //
 // mulle_pointerpairarray, simple growing array of pointer pairs

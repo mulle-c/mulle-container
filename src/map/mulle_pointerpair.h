@@ -47,7 +47,6 @@ struct mulle_pointerpair
 };
 
 
-
 static inline struct mulle_pointerpair   mulle_pointerpair_create( void *key, void *value)
 {
    struct mulle_pointerpair   result;

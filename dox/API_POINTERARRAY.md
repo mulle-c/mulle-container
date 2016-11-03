@@ -78,11 +78,6 @@ void  *mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
 Removes the last element from `array` and returns it. If **notakey** is returned, then there was no last element.
 
 
-### `mulle_pointerarray_remove_last`
-
-static inline void  *mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
-
-
 ### `mulle_pointerarray_set`
 
 ```
