@@ -232,9 +232,9 @@ static inline void   mulle_array_reset( struct mulle_array *array)
 //
 // you now own the allocated block now
 //
-static inline void   *mulle_array_extract( struct mulle_array *array)
+static inline void   **mulle_array_extract_all( struct mulle_array *array)
 {
-   return( _mulle_array_extract( (struct _mulle_array *) array));
+   return( _mulle_array_extract_all( (struct _mulle_array *) array));
 }
 
 
