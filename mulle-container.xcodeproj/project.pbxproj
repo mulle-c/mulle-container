@@ -19,18 +19,6 @@
 			name = Libraries;
 			productName = Libraries;
 		};
-		41F568211BEBB12A00177E65 /* Tests */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 41F568221BEBB12A00177E65 /* Build configuration list for PBXAggregateTarget "Tests" */;
-			buildPhases = (
-			);
-			dependencies = (
-				41F568261BEBB13600177E65 /* PBXTargetDependency */,
-				41F568281BEBB13600177E65 /* PBXTargetDependency */,
-			);
-			name = Tests;
-			productName = Tests;
-		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -46,9 +34,6 @@
 		414945741BEA930000C92587 /* mulle_container.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8A81BE7DB6C00EE1FF5 /* mulle_container.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		414945751BEA932100C92587 /* mulle_container_operation.h in Headers */ = {isa = PBXBuildFile; fileRef = 417582A71BE8BEE1005F0CE4 /* mulle_container_operation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		414945761BEA935700C92587 /* mulle_pointerpair.h in Headers */ = {isa = PBXBuildFile; fileRef = 41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4149458C1BEAAC3800C92587 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4149458B1BEAAC3800C92587 /* main.c */; };
-		414945921BEAAC5B00C92587 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
-		415745A01CB6C3030037CF80 /* libmulle_standalone_container.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */; };
 		416C57F41BEA5D4A007F4691 /* _mulle_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 416C57F21BEA5D4A007F4691 /* _mulle_buffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		416C57F51BEA5D4A007F4691 /* _mulle_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 416C57F31BEA5D4A007F4691 /* _mulle_buffer.c */; };
 		416C57F81BEA6B3C007F4691 /* mulle_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 416C57F61BEA6B3C007F4691 /* mulle_buffer.c */; };
@@ -59,13 +44,6 @@
 		417582A61BE8BE2B005F0CE4 /* mulle_prime.c in Sources */ = {isa = PBXBuildFile; fileRef = 417582A41BE8BE2B005F0CE4 /* mulle_prime.c */; };
 		417CEB531CDFB1A60037B7BE /* mulle_pointerpairarray.h in Headers */ = {isa = PBXBuildFile; fileRef = 417CEB521CDFB1A60037B7BE /* mulle_pointerpairarray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41817B6A1CB6998E00C55990 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
-		41817B6B1CB699A300C55990 /* libmulle_test_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */; };
-		41817B6C1CB699A300C55990 /* libmulle_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F93511C442755008EC017 /* libmulle_allocator.a */; };
-		41817B6E1CB699A300C55990 /* libmulle_thread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41817B6D1CB699A300C55990 /* libmulle_thread.a */; };
-		418F934F1C4426C3008EC017 /* libmulle_test_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */; };
-		418F93501C4426D1008EC017 /* libmulle_test_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */; };
-		418F93521C442755008EC017 /* libmulle_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F93511C442755008EC017 /* libmulle_allocator.a */; };
-		418F93541C44277C008EC017 /* libmulle_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F93511C442755008EC017 /* libmulle_allocator.a */; };
 		4198C8901BE7AD9500EE1FF5 /* mulle_bigset.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C8891BE7AD9500EE1FF5 /* mulle_bigset.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4198C8911BE7AD9500EE1FF5 /* mulle_bigset.c in Sources */ = {isa = PBXBuildFile; fileRef = 4198C88A1BE7AD9500EE1FF5 /* mulle_bigset.c */; };
 		4198C8931BE7AD9500EE1FF5 /* _mulle_bigset.h in Headers */ = {isa = PBXBuildFile; fileRef = 4198C88C1BE7AD9500EE1FF5 /* _mulle_bigset.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -82,6 +60,9 @@
 		419E7F551BEA1B660000D1A7 /* mulle_array.h in Headers */ = {isa = PBXBuildFile; fileRef = 419E7F531BEA1B660000D1A7 /* mulle_array.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41ACD5FE1DCB746C00465792 /* mulle_pointerarray.c in Sources */ = {isa = PBXBuildFile; fileRef = 41ACD5FD1DCB746C00465792 /* mulle_pointerarray.c */; };
 		41ACD6001DCB747F00465792 /* mulle_pointerpairarray.c in Sources */ = {isa = PBXBuildFile; fileRef = 41ACD5FF1DCB747F00465792 /* mulle_pointerpairarray.c */; };
+		41ACD6031DCBBE6000465792 /* libmulle_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41ACD6011DCBBE6000465792 /* libmulle_allocator.a */; };
+		41ACD6041DCBBE6000465792 /* libmulle_test_allocator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41ACD6021DCBBE6000465792 /* libmulle_test_allocator.a */; };
+		41ACD6061DCBBF7900465792 /* libmulle_thread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41ACD6051DCBBF7900465792 /* libmulle_thread.a */; };
 		41BCA5081BE8E58300504AAD /* mulle_bigmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5001BE8E58300504AAD /* mulle_bigmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41BCA5091BE8E58300504AAD /* mulle_bigmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BCA5011BE8E58300504AAD /* mulle_bigmap.c */; };
 		41BCA50A1BE8E58300504AAD /* _mulle_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BCA5021BE8E58300504AAD /* _mulle_map.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -92,29 +73,12 @@
 		41BEC59B1CB131C4006531B6 /* _mulle_queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BEC5991CB131C4006531B6 /* _mulle_queue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41BEC59E1CB14A3E006531B6 /* mulle_pointerset.c in Sources */ = {isa = PBXBuildFile; fileRef = 41BEC59C1CB14A3E006531B6 /* mulle_pointerset.c */; };
 		41BEC59F1CB14A3E006531B6 /* mulle_pointerset.h in Headers */ = {isa = PBXBuildFile; fileRef = 41BEC59D1CB14A3E006531B6 /* mulle_pointerset.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41D396BF1D084333006D73B0 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 41D396BE1D084333006D73B0 /* buffer.c */; };
 		41E8C84C1CC57FA40049B8C1 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 41E8C84B1CC57FA40049B8C1 /* main.c */; };
 		41E8C8521CC57FB60049B8C1 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
 		41F14FEB1B68F0AE002189F1 /* mulle_container_callback.c in Sources */ = {isa = PBXBuildFile; fileRef = 414AC1AB1AC2C45800DCA3CC /* mulle_container_callback.c */; };
-		41F568171BEBAB5500177E65 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 41F568161BEBAB5500177E65 /* main.c */; };
-		41F5681F1BEBAB7A00177E65 /* libmulle_container.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F14FE61B68F098002189F1 /* libmulle_container.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		414945901BEAAC5800C92587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41F14FE51B68F098002189F1;
-			remoteInfo = mulle_container;
-		};
-		4157459E1CB6C2FE0037CF80 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41817B611CB6997700C55990;
-			remoteInfo = mulle_standalone_container;
-		};
 		41709A9A1CB6BEC4002A1BDA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
@@ -143,27 +107,6 @@
 			remoteGlobalIDString = 41F14FE51B68F098002189F1;
 			remoteInfo = mulle_container;
 		};
-		41F5681B1BEBAB7400177E65 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41F14FE51B68F098002189F1;
-			remoteInfo = mulle_container;
-		};
-		41F568251BEBB13600177E65 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 414945881BEAAC3800C92587;
-			remoteInfo = "test-array";
-		};
-		41F568271BEBB13600177E65 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 414785241ABAF290002DBAE4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41F568131BEBAB5500177E65;
-			remoteInfo = "test-map";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -189,11 +132,8 @@
 		411D23A91CC3B1B200D92786 /* mulle_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_set.h; sourceTree = "<group>"; };
 		412ED7CF1CC3B50300E64506 /* mulle_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_map.c; sourceTree = "<group>"; };
 		412ED7D01CC3B50300E64506 /* mulle_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_map.h; sourceTree = "<group>"; };
-		414945891BEAAC3800C92587 /* test-array */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-array"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4149458B1BEAAC3800C92587 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		414AC1AA1AC2C45800DCA3CC /* mulle_container_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_container_callback.h; sourceTree = "<group>"; };
 		414AC1AB1AC2C45800DCA3CC /* mulle_container_callback.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_container_callback.c; sourceTree = "<group>"; };
-		415745971CB6C2F50037CF80 /* run-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "run-test"; sourceTree = BUILT_PRODUCTS_DIR; };
 		416C57EF1BEA545B007F4691 /* VERBS.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = VERBS.md; path = dox/VERBS.md; sourceTree = "<group>"; };
 		416C57F21BEA5D4A007F4691 /* _mulle_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_buffer.h; sourceTree = "<group>"; };
 		416C57F31BEA5D4A007F4691 /* _mulle_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = _mulle_buffer.c; sourceTree = "<group>"; };
@@ -211,9 +151,6 @@
 		417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ToolOSX.xcconfig; sourceTree = "<group>"; };
 		417CEB521CDFB1A60037B7BE /* mulle_pointerpairarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_pointerpairarray.h; sourceTree = "<group>"; };
 		41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libmulle_standalone_container.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		41817B6D1CB699A300C55990 /* libmulle_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_thread.a; path = dependencies/lib/Debug/libmulle_thread.a; sourceTree = "<group>"; };
-		418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_test_allocator.a; path = ../dependencies/lib/Debug/libmulle_test_allocator.a; sourceTree = "<group>"; };
-		418F93511C442755008EC017 /* libmulle_allocator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_allocator.a; path = ../dependencies/lib/Debug/libmulle_allocator.a; sourceTree = "<group>"; };
 		4198C8891BE7AD9500EE1FF5 /* mulle_bigset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_bigset.h; sourceTree = "<group>"; };
 		4198C88A1BE7AD9500EE1FF5 /* mulle_bigset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_bigset.c; sourceTree = "<group>"; };
 		4198C88C1BE7AD9500EE1FF5 /* _mulle_bigset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _mulle_bigset.h; sourceTree = "<group>"; };
@@ -231,6 +168,9 @@
 		419E7F531BEA1B660000D1A7 /* mulle_array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_array.h; sourceTree = "<group>"; };
 		41ACD5FD1DCB746C00465792 /* mulle_pointerarray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_pointerarray.c; sourceTree = "<group>"; };
 		41ACD5FF1DCB747F00465792 /* mulle_pointerpairarray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_pointerpairarray.c; sourceTree = "<group>"; };
+		41ACD6011DCBBE6000465792 /* libmulle_allocator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_allocator.a; path = dependencies/lib/libmulle_allocator.a; sourceTree = "<group>"; };
+		41ACD6021DCBBE6000465792 /* libmulle_test_allocator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_test_allocator.a; path = dependencies/lib/libmulle_test_allocator.a; sourceTree = "<group>"; };
+		41ACD6051DCBBF7900465792 /* libmulle_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmulle_thread.a; path = dependencies/lib/libmulle_thread.a; sourceTree = "<group>"; };
 		41B440AF1BE8EC94004E7B2D /* mulle_pointerpair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_pointerpair.h; sourceTree = "<group>"; };
 		41BCA5001BE8E58300504AAD /* mulle_bigmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_bigmap.h; sourceTree = "<group>"; };
 		41BCA5011BE8E58300504AAD /* mulle_bigmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mulle_bigmap.c; sourceTree = "<group>"; };
@@ -244,42 +184,20 @@
 		41BEC59D1CB14A3E006531B6 /* mulle_pointerset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mulle_pointerset.h; sourceTree = "<group>"; };
 		41D04AB81C8DDCF500CC8F11 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		41D04AB91C8DDD1800CC8F11 /* RELEASENOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = RELEASENOTES.md; sourceTree = "<group>"; };
-		41D396BE1D084333006D73B0 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffer.c; path = tests/buffer/buffer.c; sourceTree = SOURCE_ROOT; };
-		41E8C8491CC57FA40049B8C1 /* mulle_hash */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mulle_hash; sourceTree = BUILT_PRODUCTS_DIR; };
+		41E8C8491CC57FA40049B8C1 /* mulle-hash */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "mulle-hash"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41E8C84B1CC57FA40049B8C1 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		41E9C6781CC5292800ED4145 /* TYPES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TYPES.md; sourceTree = "<group>"; };
 		41F14FE61B68F098002189F1 /* libmulle_container.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmulle_container.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		41F5680F1BEB81C200177E65 /* mulle_container_compiler_attributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mulle_container_compiler_attributes.h; sourceTree = "<group>"; };
-		41F568141BEBAB5500177E65 /* test-map */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-map"; sourceTree = BUILT_PRODUCTS_DIR; };
-		41F568161BEBAB5500177E65 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		414945861BEAAC3800C92587 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				414945921BEAAC5B00C92587 /* libmulle_container.a in Frameworks */,
-				418F93541C44277C008EC017 /* libmulle_allocator.a in Frameworks */,
-				418F93501C4426D1008EC017 /* libmulle_test_allocator.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		415745941CB6C2F50037CF80 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				415745A01CB6C3030037CF80 /* libmulle_standalone_container.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		41817B5F1CB6997700C55990 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41817B6E1CB699A300C55990 /* libmulle_thread.a in Frameworks */,
-				41817B6B1CB699A300C55990 /* libmulle_test_allocator.a in Frameworks */,
-				41817B6C1CB699A300C55990 /* libmulle_allocator.a in Frameworks */,
+				41ACD6061DCBBF7900465792 /* libmulle_thread.a in Frameworks */,
+				41ACD6031DCBBE6000465792 /* libmulle_allocator.a in Frameworks */,
+				41ACD6041DCBBE6000465792 /* libmulle_test_allocator.a in Frameworks */,
 				41817B6A1CB6998E00C55990 /* libmulle_container.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -299,16 +217,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		41F568111BEBAB5500177E65 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41F5681F1BEBAB7A00177E65 /* libmulle_container.a in Frameworks */,
-				418F93521C442755008EC017 /* libmulle_allocator.a in Frameworks */,
-				418F934F1C4426C3008EC017 /* libmulle_test_allocator.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -319,13 +227,9 @@
 				41D04AB81C8DDCF500CC8F11 /* README.md */,
 				41D04AB91C8DDD1800CC8F11 /* RELEASENOTES.md */,
 				416C57EF1BEA545B007F4691 /* VERBS.md */,
-				41E9C6781CC5292800ED4145 /* TYPES.md */,
 				417C02631BD8404E005A3751 /* mulle-configuration */,
 				4147852E1ABAF290002DBAE4 /* src */,
-				4149458A1BEAAC3800C92587 /* test-array */,
-				41F568151BEBAB5500177E65 /* test-map */,
 				41709A991CB6BEB7002A1BDA /* Libraries */,
-				415745981CB6C2F50037CF80 /* run-test */,
 				41E8C84A1CC57FA40049B8C1 /* mulle_hash */,
 				4147852D1ABAF290002DBAE4 /* Products */,
 			);
@@ -335,11 +239,8 @@
 			isa = PBXGroup;
 			children = (
 				41F14FE61B68F098002189F1 /* libmulle_container.a */,
-				414945891BEAAC3800C92587 /* test-array */,
-				41F568141BEBAB5500177E65 /* test-map */,
 				41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */,
-				415745971CB6C2F50037CF80 /* run-test */,
-				41E8C8491CC57FA40049B8C1 /* mulle_hash */,
+				41E8C8491CC57FA40049B8C1 /* mulle-hash */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -364,22 +265,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		4149458A1BEAAC3800C92587 /* test-array */ = {
-			isa = PBXGroup;
-			children = (
-				4149458B1BEAAC3800C92587 /* main.c */,
-			);
-			path = "test-array";
-			sourceTree = "<group>";
-		};
-		415745981CB6C2F50037CF80 /* run-test */ = {
-			isa = PBXGroup;
-			children = (
-				41D396BE1D084333006D73B0 /* buffer.c */,
-			);
-			path = "run-test";
-			sourceTree = "<group>";
-		};
 		416C57F11BEA5D28007F4691 /* buffer */ = {
 			isa = PBXGroup;
 			children = (
@@ -394,7 +279,9 @@
 		41709A991CB6BEB7002A1BDA /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				41817B6D1CB699A300C55990 /* libmulle_thread.a */,
+				41ACD6011DCBBE6000465792 /* libmulle_allocator.a */,
+				41ACD6021DCBBE6000465792 /* libmulle_test_allocator.a */,
+				41ACD6051DCBBF7900465792 /* libmulle_thread.a */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -493,16 +380,6 @@
 			path = mulle_hash;
 			sourceTree = "<group>";
 		};
-		41F568151BEBAB5500177E65 /* test-map */ = {
-			isa = PBXGroup;
-			children = (
-				41F568161BEBAB5500177E65 /* main.c */,
-				418F93511C442755008EC017 /* libmulle_allocator.a */,
-				418F934E1C4426C3008EC017 /* libmulle_test_allocator.a */,
-			);
-			path = "test-map";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -550,40 +427,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		414945881BEAAC3800C92587 /* test-array */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4149458D1BEAAC3800C92587 /* Build configuration list for PBXNativeTarget "test-array" */;
-			buildPhases = (
-				414945851BEAAC3800C92587 /* Sources */,
-				414945861BEAAC3800C92587 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				414945911BEAAC5800C92587 /* PBXTargetDependency */,
-			);
-			name = "test-array";
-			productName = "test-array";
-			productReference = 414945891BEAAC3800C92587 /* test-array */;
-			productType = "com.apple.product-type.tool";
-		};
-		415745961CB6C2F50037CF80 /* run-test */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4157459D1CB6C2F50037CF80 /* Build configuration list for PBXNativeTarget "run-test" */;
-			buildPhases = (
-				415745931CB6C2F50037CF80 /* Sources */,
-				415745941CB6C2F50037CF80 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4157459F1CB6C2FE0037CF80 /* PBXTargetDependency */,
-			);
-			name = "run-test";
-			productName = "run-test";
-			productReference = 415745971CB6C2F50037CF80 /* run-test */;
-			productType = "com.apple.product-type.tool";
-		};
 		41817B611CB6997700C55990 /* mulle_standalone_container */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 41817B631CB6997700C55990 /* Build configuration list for PBXNativeTarget "mulle_standalone_container" */;
@@ -602,9 +445,9 @@
 			productReference = 41817B621CB6997700C55990 /* libmulle_standalone_container.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		41E8C8481CC57FA40049B8C1 /* mulle_hash */ = {
+		41E8C8481CC57FA40049B8C1 /* mulle-hash */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 41E8C84F1CC57FA40049B8C1 /* Build configuration list for PBXNativeTarget "mulle_hash" */;
+			buildConfigurationList = 41E8C84F1CC57FA40049B8C1 /* Build configuration list for PBXNativeTarget "mulle-hash" */;
 			buildPhases = (
 				41E8C8451CC57FA40049B8C1 /* Sources */,
 				41E8C8461CC57FA40049B8C1 /* Frameworks */,
@@ -615,9 +458,9 @@
 			dependencies = (
 				41E8C8511CC57FB10049B8C1 /* PBXTargetDependency */,
 			);
-			name = mulle_hash;
+			name = "mulle-hash";
 			productName = mulle_hash;
-			productReference = 41E8C8491CC57FA40049B8C1 /* mulle_hash */;
+			productReference = 41E8C8491CC57FA40049B8C1 /* mulle-hash */;
 			productType = "com.apple.product-type.tool";
 		};
 		41F14FE51B68F098002189F1 /* mulle_container */ = {
@@ -637,23 +480,6 @@
 			productReference = 41F14FE61B68F098002189F1 /* libmulle_container.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		41F568131BEBAB5500177E65 /* test-map */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 41F568181BEBAB5500177E65 /* Build configuration list for PBXNativeTarget "test-map" */;
-			buildPhases = (
-				41F568101BEBAB5500177E65 /* Sources */,
-				41F568111BEBAB5500177E65 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				41F5681C1BEBAB7400177E65 /* PBXTargetDependency */,
-			);
-			name = "test-map";
-			productName = "test-map";
-			productReference = 41F568141BEBAB5500177E65 /* test-map */;
-			productType = "com.apple.product-type.tool";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -663,12 +489,6 @@
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Mulle kybernetiK";
 				TargetAttributes = {
-					414945881BEAAC3800C92587 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					415745961CB6C2F50037CF80 = {
-						CreatedOnToolsVersion = 7.2.1;
-					};
 					41817B581CB6995800C55990 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
@@ -680,12 +500,6 @@
 					};
 					41F14FE51B68F098002189F1 = {
 						CreatedOnToolsVersion = 6.2;
-					};
-					41F568131BEBAB5500177E65 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					41F568211BEBB12A00177E65 = {
-						CreatedOnToolsVersion = 7.1;
 					};
 				};
 			};
@@ -705,32 +519,12 @@
 				41817B581CB6995800C55990 /* Libraries */,
 				41817B611CB6997700C55990 /* mulle_standalone_container */,
 				41F14FE51B68F098002189F1 /* mulle_container */,
-				41F568211BEBB12A00177E65 /* Tests */,
-				414945881BEAAC3800C92587 /* test-array */,
-				41F568131BEBAB5500177E65 /* test-map */,
-				415745961CB6C2F50037CF80 /* run-test */,
-				41E8C8481CC57FA40049B8C1 /* mulle_hash */,
+				41E8C8481CC57FA40049B8C1 /* mulle-hash */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		414945851BEAAC3800C92587 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4149458C1BEAAC3800C92587 /* main.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		415745931CB6C2F50037CF80 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41D396BF1D084333006D73B0 /* buffer.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		41817B5E1CB6997700C55990 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -774,27 +568,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		41F568101BEBAB5500177E65 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41F568171BEBAB5500177E65 /* main.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		414945911BEAAC5800C92587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41F14FE51B68F098002189F1 /* mulle_container */;
-			targetProxy = 414945901BEAAC5800C92587 /* PBXContainerItemProxy */;
-		};
-		4157459F1CB6C2FE0037CF80 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41817B611CB6997700C55990 /* mulle_standalone_container */;
-			targetProxy = 4157459E1CB6C2FE0037CF80 /* PBXContainerItemProxy */;
-		};
 		41709A9B1CB6BEC4002A1BDA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 41817B611CB6997700C55990 /* mulle_standalone_container */;
@@ -814,21 +590,6 @@
 			isa = PBXTargetDependency;
 			target = 41F14FE51B68F098002189F1 /* mulle_container */;
 			targetProxy = 41E8C8501CC57FB10049B8C1 /* PBXContainerItemProxy */;
-		};
-		41F5681C1BEBAB7400177E65 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41F14FE51B68F098002189F1 /* mulle_container */;
-			targetProxy = 41F5681B1BEBAB7400177E65 /* PBXContainerItemProxy */;
-		};
-		41F568261BEBB13600177E65 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 414945881BEAAC3800C92587 /* test-array */;
-			targetProxy = 41F568251BEBB13600177E65 /* PBXContainerItemProxy */;
-		};
-		41F568281BEBB13600177E65 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41F568131BEBAB5500177E65 /* test-map */;
-			targetProxy = 41F568271BEBB13600177E65 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -851,34 +612,6 @@
 			};
 			name = Release;
 		};
-		4149458E1BEAAC3800C92587 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
-		4149458F1BEAAC3800C92587 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
-		4157459B1CB6C2F50037CF80 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
-		4157459C1CB6C2F50037CF80 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
 		41817B591CB6995900C55990 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -897,6 +630,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41709A9E1CB6BF62002A1BDA /* DynamicLibraryOSX.xcconfig */;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/dependencies/lib",
+				);
 			};
 			name = Debug;
 		};
@@ -904,6 +641,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41709A9E1CB6BF62002A1BDA /* DynamicLibraryOSX.xcconfig */;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/dependencies/lib",
+				);
 			};
 			name = Release;
 		};
@@ -947,7 +688,6 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -984,7 +724,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -1002,32 +741,6 @@
 			};
 			name = Release;
 		};
-		41F568191BEBAB5500177E65 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
-		41F5681A1BEBAB5500177E65 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 417C026C1BD8404E005A3751 /* ToolOSX.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
-		41F568231BEBB12A00177E65 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = Debug;
-		};
-		41F568241BEBB12A00177E65 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1036,24 +749,6 @@
 			buildConfigurations = (
 				414785311ABAF290002DBAE4 /* Debug */,
 				414785321ABAF290002DBAE4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4149458D1BEAAC3800C92587 /* Build configuration list for PBXNativeTarget "test-array" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4149458E1BEAAC3800C92587 /* Debug */,
-				4149458F1BEAAC3800C92587 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4157459D1CB6C2F50037CF80 /* Build configuration list for PBXNativeTarget "run-test" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4157459B1CB6C2F50037CF80 /* Debug */,
-				4157459C1CB6C2F50037CF80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1076,7 +771,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		41E8C84F1CC57FA40049B8C1 /* Build configuration list for PBXNativeTarget "mulle_hash" */ = {
+		41E8C84F1CC57FA40049B8C1 /* Build configuration list for PBXNativeTarget "mulle-hash" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				41E8C84D1CC57FA40049B8C1 /* Debug */,
@@ -1090,24 +785,6 @@
 			buildConfigurations = (
 				41F14FE81B68F098002189F1 /* Debug */,
 				41F14FE91B68F098002189F1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		41F568181BEBAB5500177E65 /* Build configuration list for PBXNativeTarget "test-map" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				41F568191BEBAB5500177E65 /* Debug */,
-				41F5681A1BEBAB5500177E65 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		41F568221BEBB12A00177E65 /* Build configuration list for PBXAggregateTarget "Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				41F568231BEBB12A00177E65 /* Debug */,
-				41F568241BEBB12A00177E65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

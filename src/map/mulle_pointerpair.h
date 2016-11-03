@@ -81,17 +81,31 @@ static inline void   *mulle_pointerpair_get_value( struct mulle_pointerpair *pai
 }
 
 
-static inline void   mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
+static inline void   _mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
 {
    assert( pair);
    pair->_key = key;
 }
 
 
-static inline void   mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void * value)
+static inline void   _mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void * value)
 {
    assert( pair);
    pair->_value = value;
+}
+
+
+static inline void   mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
+{
+   if( pair)
+      pair->_key = key;
+}
+
+
+static inline void   mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void * value)
+{
+   if( pair)
+      pair->_value = value;
 }
 
 #endif

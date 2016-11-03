@@ -66,7 +66,7 @@ void  *mulle_pointerarray_find_last( struct mulle_pointerarray *array)
 ```
 
 Return the last element from `array`, if **notakey** is returned,
-then thre is no last element.
+then there is no last element.
 
 
 ### `mulle_pointerarray_remove_last`
@@ -87,6 +87,3 @@ void   mulle_pointerarray_set( struct mulle_pointerarray *array,
 ```
 
 Overwrite element at index `i`  with `p`. You may overwrite with **notakey**. That is in marked difference to **add** that does not allow adding **notakey**.
-
-
-
