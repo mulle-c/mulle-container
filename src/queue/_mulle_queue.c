@@ -97,7 +97,7 @@ void   _mulle_queue_done( struct _mulle_queue *queue, struct mulle_allocator *al
 }
 
 
-void   _mulle_queue_removeall( struct _mulle_queue *queue,
+void   _mulle_queue_remove_all( struct _mulle_queue *queue,
                                struct mulle_allocator *allocator)
 {
    struct _mulle_queuebucket  *p;
@@ -119,9 +119,9 @@ void   _mulle_queue_removeall( struct _mulle_queue *queue,
 
    free_chained_buckets( queue->_read, allocator);
    
-   queue->_read       = 
-   queue->_write      = NULL;
-   queue->_read_index = 
+   queue->_read        =
+   queue->_write       = NULL;
+   queue->_read_index  =
    queue->_write_index = queue->_bucket_size;
    
    queue->_count      = 0;
