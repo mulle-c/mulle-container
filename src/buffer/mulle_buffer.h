@@ -62,39 +62,18 @@ struct mulle_buffer
 
 
 
-#define MULLE_FLUSHABLEBUFFER_BASE              \
-   _MULLE_FLUSHABLEBUFFER_BASE;                 \
-   struct mulle_allocator  *_allocator
-
-struct mulle_flushablebuffer
-{
-   MULLE_FLUSHABLEBUFFER_BASE;
-};
-
-
 struct mulle_buffer   *mulle_buffer_create( struct mulle_allocator *allocator);
 
 
 static inline void   mulle_buffer_destroy( struct mulle_buffer *buffer)
 {
-   _mulle_buffer_destroy( (struct _mulle_buffer *) buffer, buffer->_allocator);
+   if( buffer)
+      _mulle_buffer_destroy( (struct _mulle_buffer *) buffer, buffer->_allocator);
 }
 
 static inline void   mulle_buffer_done( struct mulle_buffer *buffer)
 {
    _mulle_buffer_done( (struct _mulle_buffer *) buffer, buffer->_allocator);
-}
-
-
-typedef _mulle_flushablebuffer_flusher   mulle_flushablebuffer_flusher;
-
-static inline void    mulle_flushablebuffer_init( struct mulle_flushablebuffer *buffer,
-                                                  void *storage,
-                                                  size_t length,
-                                                  mulle_flushablebuffer_flusher *flusher,
-                                                  void *userinfo)
-{
-   _mulle_flushablebuffer_init( (struct _mulle_flushablebuffer *) buffer, storage, length, flusher, userinfo);
 }
 
 
@@ -215,9 +194,9 @@ static inline size_t   mulle_buffer_set_length( struct mulle_buffer *buffer,
 //
 // you only do this once!, because you now own the malloc block
 //
-static inline void   *mulle_buffer_extract_bytes( struct mulle_buffer *buffer)
+static inline void   *mulle_buffer_extract_all( struct mulle_buffer *buffer)
 {
-   return( _mulle_buffer_extract_bytes( (struct _mulle_buffer *) buffer, buffer->_allocator));
+   return( _mulle_buffer_extract_all( (struct _mulle_buffer *) buffer, buffer->_allocator));
 }
 
 
@@ -485,5 +464,28 @@ void  mulle_buffer_dump_hex( struct mulle_buffer *buffer,
                              size_t length,
                              size_t counter,
                              unsigned int options);
+
+
+
+
+#define MULLE_FLUSHABLEBUFFER_BASE    \
+_MULLE_FLUSHABLEBUFFER_BASE;          \
+struct mulle_allocator  *_allocator
+
+struct mulle_flushablebuffer
+{
+   MULLE_FLUSHABLEBUFFER_BASE;
+};
+
+typedef _mulle_flushablebuffer_flusher   mulle_flushablebuffer_flusher;
+
+static inline void    mulle_flushablebuffer_init( struct mulle_flushablebuffer *buffer,
+                                                 void *storage,
+                                                 size_t length,
+                                                 mulle_flushablebuffer_flusher *flusher,
+                                                 void *userinfo)
+{
+   _mulle_flushablebuffer_init( (struct _mulle_flushablebuffer *) buffer, storage, length, flusher, userinfo);
+}
 
 #endif /* mulle_buffer_h */

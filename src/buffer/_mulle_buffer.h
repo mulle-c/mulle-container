@@ -86,7 +86,7 @@ struct _mulle_flushablebuffer
 
 struct _mulle_buffer     *_mulle_buffer_create( struct mulle_allocator *allocator);
 void                     _mulle_buffer_destroy( struct _mulle_buffer *buffer,
-                                             struct mulle_allocator *allocator);
+                                                struct mulle_allocator *allocator);
 
 #pragma mark -
 #pragma mark initialization
@@ -224,9 +224,9 @@ size_t   _mulle_buffer_set_length( struct _mulle_buffer *buffer,
 
 
 
-static inline int _mulle_buffer_guarantee( struct _mulle_buffer *buffer,
-                                               size_t length,
-                                               struct mulle_allocator *allocator)
+static inline int   _mulle_buffer_guarantee( struct _mulle_buffer *buffer,
+                                             size_t length,
+                                             struct mulle_allocator *allocator)
 {
    ptrdiff_t   missing;
    
@@ -340,7 +340,7 @@ static inline size_t   _mulle_buffer_get_static_bytes_length( struct _mulle_buff
 //
 // you only do this once!, because you now own the malloc block
 //
-void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer,
+void   *_mulle_buffer_extract_all( struct _mulle_buffer *buffer,
                                      struct mulle_allocator *allocator);
 
 

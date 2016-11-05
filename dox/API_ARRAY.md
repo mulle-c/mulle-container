@@ -1,7 +1,7 @@
 # `mulle_array`
 
 `mulle_array` is a container that uses `mulle_container_keycallback` for
-the management of it's elements. It's 
+the management of it's elements. Internally it uses a C array of void * pointers, that is grown with `realloc`.
 
 ## Types
 

@@ -2,22 +2,69 @@
 
 Release on [github](//github.com/mulle-nat/mulle-container): [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container)
 
-A collection of C (C99) containers, with callbacks that are compatible to
-OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
+A collection of C (C99) data structures, with callbacks that are compatible to
+OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. 
 
-> This library could benefit from more tests.
+Data structures can live (temporarily) on the stack, or permanently in the heap. None of them are thread-safe. [mulle-allocator](//github.com/mulle-nat/mulle-allocator) is used pervasively for memory management.
+
+> This library could benefit from more tests. Do not assume, that it 
+> is completely bug free.
+
+The API of the containers is fairly uniform, here is an example using `mulle_bigmap` to associate c-strings with each other. All the necessary memory management (copying of keys and values) is performed by `mulle_bigmap` using callbacks:
+
+
+```
+#include <mulle_container/mulle_container.h>
+
+static struct mulle_container_keyvaluecallback   callback;
+
+static void  test( void)
+{
+   struct mulle_bigmap              *map;
+   struct mulle_bigmapenumerator    rover;
+   void                             *key;
+   void                             *value;
+
+
+   map = mulle_bigmap_create( 0, &callback, NULL);
+   
+   mulle_bigmap_set( map, "VfL", "VFL");
+   mulle_bigmap_set( map, "Bochum", "BOCHUM");
+   mulle_bigmap_set( map, "1848", "1848");
+
+   if( ! mulle_bigmap_get( map, "1849"))
+   {
+	   rover = mulle_bigmap_enumerate( map);
+	   while( mulle_bigmapenumerator_next( &rover, &key, &value))
+   		   printf( "%s : %s\n", key, value);
+	   mulle_bigmapenumerator_done( &rover);
+	}
+   mulle_bigmap_remove( map, "1848");
+
+   mulle_bigmap_destroy( map);
+}
+
+int main( void)
+{
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+   
+   test();
+}
+```
+
 
 ## API
 
-The functions of the containers are named uniformly. Each function is a verb,
+The name of the functions is consistent. Each function is a **verb**
 that is prefixed with the name of the data structure it handles. So for example
 the `get` function for `mulle_array` is `mulle_array_get`. The first parameter, 
 except for creation functions, is always the container itself.
 
-Check out [VERBS.md](dox/VERBS.md) to get a list of common verbs used.
+Check out [VERBS.md](dox/VERBS.md) for a list of common verbs used.
 
-The various functions `assert` their parameters, but when compiled for release
-there are no runtime checks. 
+The various functions `assert` their parameters, but when compiled for release there are no runtime checks. For development it is wise to use
+a debug version of the library.
 
 
 File                                                         | Description
