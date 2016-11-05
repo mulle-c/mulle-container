@@ -187,5 +187,3 @@ void  mulle_buffer_dump_hex( struct mulle_buffer *buffer,
       mulle_buffer_add_byte( buffer, '\n');
    }
 }
-
-

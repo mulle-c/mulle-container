@@ -65,6 +65,8 @@ int   _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, size_t see
       break;
       
    case MULLE_BUFFER_SEEK_CUR :
+      if( _mulle_buffer_has_overflown( buffer))
+         seek -= 1;
       plan = &buffer->_curr[ seek];
       break;
 
@@ -84,7 +86,7 @@ int   _mulle_buffer_set_seek( struct _mulle_buffer *buffer, int mode, size_t see
 }
 
 
-void   *_mulle_buffer_extract_bytes( struct _mulle_buffer *buffer, struct mulle_allocator *allocator)
+void   *_mulle_buffer_extract_all( struct _mulle_buffer *buffer, struct mulle_allocator *allocator)
 {
    size_t   size;
    void     *block;
@@ -267,16 +269,19 @@ void   _mulle_buffer_destroy( struct _mulle_buffer *buffer,
 
 
 size_t   _mulle_buffer_set_length( struct _mulle_buffer *buffer,
-                                  size_t length,
-                                  struct mulle_allocator *allocator)
+                                   size_t length,
+                                   struct mulle_allocator *allocator)
 {
    long   diff;
    
    diff = (long) length - (long) _mulle_buffer_get_length( buffer);
    if( diff <= 0)
    {
-      buffer->_curr = &buffer->_curr[ diff];
-      _mulle_buffer_size_to_fit( buffer, allocator);
+      if( ! _mulle_buffer_has_overflown( buffer))
+      {
+         buffer->_curr = &buffer->_curr[ diff];
+         _mulle_buffer_size_to_fit( buffer, allocator);
+      }
       return( 0);
    }
    
