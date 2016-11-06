@@ -85,8 +85,7 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
          capacity = 2;
    
       array->_pointers = mulle_allocator_calloc( array->_allocator, capacity, sizeof( void *));
-      if( array->_pointers)
-         array->_size = capacity;
+      array->_size     = capacity;
    }
 }
 

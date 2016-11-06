@@ -95,13 +95,10 @@ static void  _mulle_bigset_init_with_depth( struct _mulle_bigset *set,
    if( ! depth)
       return;
    
-   modulo        = mulle_prime_for_depth( depth);
-   set->_storage = mulle_allocator_calloc( allocator, modulo, (sizeof( void *) + sizeof( char)));
-   if( set->_storage)
-   {
-      set->_storageTypes = (char *) &set->_storage[ modulo];
-      set->_depth        = (short) depth;
-   }
+   modulo             = mulle_prime_for_depth( depth);
+   set->_storage      = mulle_allocator_calloc( allocator, modulo, (sizeof( void *) + sizeof( char)));
+   set->_storageTypes = (char *) &set->_storage[ modulo];
+   set->_depth        = (short) depth;
 }
 
 
@@ -122,8 +119,7 @@ struct _mulle_bigset   *_mulle_bigset_create( size_t capacity,
    struct _mulle_bigset *set;
    
    set  = mulle_allocator_malloc( allocator, sizeof( struct _mulle_bigset));
-   if( set)
-      _mulle_bigset_init( set, capacity, callback, allocator);
+   _mulle_bigset_init( set, capacity, callback, allocator);
    return( set);
 }
 

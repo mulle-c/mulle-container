@@ -3,7 +3,78 @@
 The containers in this library use callback schemes to identify and handle the keys and
 values given to them.
 
-This has the advantage, that memory management can be handled by the container. 
+This has the advantage, that memory management can be handled by the container.
+
+## Overview of callbacks with no memory management
+
+Callback                            | Description
+------------------------------------|-------------------------------- 
+`mulle_container_keycallback_int` `mulle_container_valuecallback_int`  | store any **`int`** except `mulle_container_not_an_int_key` (`INT_MIN`)
+`mulle_container_keycallback_intptr ` `mulle_container_valuecallback_intptr`  | store any **`intptr_t`** except `mulle_container_not_an_intptr_key` (`INTPTR_MIN`)
+`mulle_container_keycallback_nonowned_pointer` `mulle_container_valuecallback_nonowned_pointer`  | store any **`void *`** except NULL.
+`mulle_container_keycallback_nonowned_cstring` `mulle_container_valuecallback_nonowned_cstring`  | store any **`char *`** except NULL.
+`mulle_container_keycallback_nonowned_pointer_or_null` | store any **`void *`** except `mulle_container_not_an_intptr_key` (`(void *) INTPTR_MIN`)
+
+Keys are `void *`. All values are possible except `mulle_container_not_a_pointer_key`.
+
+
+## Overview of callbacks that free
+
+Callback                            | Description
+------------------------------------|-------------------------------- 
+`mulle_container_keycallback_owned_pointer` `mulle_container_valuecallback_owned_pointer`  | store any **`void *`** except NULL. Items will be freed when removed.
+`mulle_container_keycallback_owned_cstring` `mulle_container_valuecallback_owned_cstring`  | store any **`char *`** except NULL. Items will be freed when removed.
+
+
+
+## Overview of callbacks that copy and free
+
+
+Callback                            | Description
+------------------------------------|-------------------------------- 
+`mulle_container_keycallback_copied_cstring` `mulle_container_valuecallback_copied_cstring`  | Store a copy **`char *`** except NULL. Items will be freed when removed.
+ 
+## Callbacks  
+
+### `mulle_container_keycallback_intp`
+
+Keys are **int**. All values are possible except `mulle_container_not_an_int_key`.
+
+### `mulle_container_keycallback_intptr`
+
+Keys are **intptr_t**. All values are possible except `mulle_container_not_an_intptr_key`.
+
+### `mulle_container_keycallback_copied_cstring`
+
+Keys are **`char *`**. All values are possible except NULL. The key is copied by the container and will be freed eventually.
+
+### `mulle_container_keycallback_nonowned_cstring`
+
+Keys are **`char *`**. All values are possible except NULL. The key is NOT copied by the container. The caller needs to make sure, that the c-string sticks around.
+
+### `mulle_container_keycallback_owned_cstring`
+
+Keys are **`char *`**. All values are possible except NULL. The key is then owned by the container and will be freed eventually.
+
+### `mulle_container_keycallback_nonowned_pointer`
+
+Keys are **`void *`**. All values are possible except NULL.
+
+### `mulle_container_keycallback_owned_pointer`
+
+Keys are **`void *`**. All values are possible except NULL. The key is then owned by the container and will be freed eventually. 
+
+> The difference to `mulle_container_keycallback_owned_cstring` is in `.hash` and `.describe`.
+
+
+### `mulle_container_keycallback_nonowned_pointer_or_null `
+
+Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`.
+
+### `mulle_container_keycallback_pointer_or_null `
+
+Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`. The key is then owned by the container and will be freed by the container, when it is not used anymore.
+
 
 
 ## Types
@@ -31,9 +102,9 @@ Field                     | Description
 --------------------------|------------------
 `.hash` | is used to derive a **uintptr_t** hash from `p`.
 `.is_equal` | is used to test two keys `p` and `q` for equality (1: equals).
-`.retain` | is an operation to transfer ownership of `p` to the container using `allocator`. 
-`.release` | is an operation to yield ownership of `p` from the container using `allocator`. 
-`.describe` | is debugging operation that returns a UTF8 string created with `allocator`. 
+`.retain` | is an operation to transfer ownership of `p` to the container using `allocator`.
+`.release` | is an operation to yield ownership of `p` from the container using `allocator`.
+`.describe` | is debugging operation that returns a UTF8 string created with `allocator`.
 `.not_a_key_marker` | if the container desires to store 0/nil, this value will be used as a marke for an empty slot instead.
 `.userinfo | a place to store something for the user
 
@@ -56,9 +127,9 @@ This is basically a reduced version of `mulle_container_keycallback` for values.
 
 Field                     | Description
 --------------------------|------------------
-`.retain` | is an operation to transfer ownership of `p` to the container using `allocator`. 
-`.release` | is an operation to yield ownership of `p` from the container using `allocator`. 
-`.describe` | is debugging operation that returns a UTF8 string created with `allocator`. 
+`.retain` | is an operation to transfer ownership of `p` to the container using `allocator`.
+`.release` | is an operation to yield ownership of `p` from the container using `allocator`.
+`.describe` | is debugging operation that returns a UTF8 string created with `allocator`.
 `.userinfo | a place to store something for the user
 
 
@@ -79,11 +150,11 @@ A combination of both structs.
 
 #### `mulle_container_not_an_int_key`
 
-This macro is defined as `INT_MIN` (currently). 
+This macro is defined as `INT_MIN` (currently).
 
 #### `mulle_container_not_an_intptr_key`
 
-This macro is defined as `INTPTR_MIN` (currently). 
+This macro is defined as `INTPTR_MIN` (currently).
 
 #### `mulle_container_not_a_pointer_key`
 
@@ -211,20 +282,20 @@ Keys are **`char *`**. All values are possible except NULL. The key is then owne
 
 ### `mulle_container_keycallback_nonowned_pointer`
 
-Keys are **`void *`**. All values are possible except NULL. 
+Keys are **`void *`**. All values are possible except NULL.
 
 ### `mulle_container_keycallback_owned_pointer`
 
-Keys are **`void *`**. All values are possible except NULL. The key is then owned by the container and will be freed eventually. 
+Keys are **`void *`**. All values are possible except NULL. The key is then owned by the container and will be freed eventually.
 
 
 ### `mulle_container_keycallback_nonowned_pointer_or_null `
 
-Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`. 
+Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`.
 
 ### `mulle_container_keycallback_pointer_or_null `
 
-Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`. The key is then owned by the container and will be freed by the container, when it is not used anymore. 
+Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`. The key is then owned by the container and will be freed by the container, when it is not used anymore.
 
 ---
 
@@ -234,11 +305,11 @@ All the following globals are of type *`struct mulle_container_valuecallback`*.
 
 ### `mulle_container_valuecallback_int`
 
-Values are **int**. 
+Values are **int**.
 
 ### `mulle_container_valuecallback_intptr`
 
-Values are **intptr_t**. 
+Values are **intptr_t**.
 
 ### `mulle_container_valuecallback_copied_cstring`
 
@@ -250,11 +321,11 @@ Values are **`char *`**. The value is not copied by the container, but will be f
 
 ### `mulle_container_valuecallback_nonowned_cstring `
 
-Values are **`char *`**. 
+Values are **`char *`**.
 
 ### `mulle_container_valuecallback_nonowned_pointer `
 
-Values are **`void *`**. 
+Values are **`void *`**.
 
 ### `mulle_container_valuecallback_owned_pointer `
 

@@ -48,14 +48,6 @@ int   mulle_pointerarray_grow( struct mulle_pointerarray *array)
       new_size = 2;
    
    array->_pointers = mulle_allocator_realloc( array->_allocator, array->_pointers, sizeof( void *) * new_size);
-   
-   if( ! array->_pointers)
-   {
-      array->_size = 0;
-      assert( 0);
-      return( -1);
-   }
-
    memset( &array->_pointers[ array->_size], 0, sizeof( void *) * (new_size - array->_size));
    array->_size = new_size;
 

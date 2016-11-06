@@ -86,8 +86,7 @@ static inline void   mulle_pointerpairarray_init( struct mulle_pointerpairarray 
          capacity = 2;
    
       array->_pairs = mulle_allocator_calloc( array->_allocator, capacity, sizeof( struct mulle_pointerpair));
-      if( array->_pairs)
-         array->_size = capacity;
+      array->_size = capacity;
    }
 }
 

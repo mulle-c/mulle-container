@@ -47,9 +47,6 @@
 #include "mulle_prime.h"
 #include "mulle_hash.h"
 
-#include "_mulle_buffer.h"
-#include "mulle_buffer.h"
-
 #include "_mulle_array.h"
 #include "mulle_array.h"
 
@@ -71,7 +68,7 @@
 #include "mulle_container_callback.h"
 #include "mulle_container_operation.h"
 
-#if MULLE_ALLOCATOR_VERSION < ((1 << 20) | (5 << 8) | 0)
+#if MULLE_ALLOCATOR_VERSION < ((2 << 20) | (0 << 8) | 0)
 # error "mulle_allocator is too old"
 #endif
 

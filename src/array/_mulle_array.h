@@ -130,7 +130,7 @@ static inline void    _mulle_array_init( struct _mulle_array *array,
 
 static inline int   _mulle_array_has_overflown( struct _mulle_array *buffer)
 {
-   return( buffer->_sentinel == mulle_container_not_a_pointer_key);
+   return( buffer->_sentinel == (void *) INTPTR_MIN);
 }
 
 

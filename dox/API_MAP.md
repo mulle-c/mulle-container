@@ -1,7 +1,7 @@
 # `mulle_map`
 
 `mulle_map` is a container that uses `mulle_container_keyvaluecallback`
-the management of it's elements.
+the management of it's elements. 
 
 ## Types
 
@@ -48,6 +48,10 @@ struct mulle_map   *mulle_map_create( size_t capacity,
                                       struct mulle_allocator *allocator)
 ```
 
+This allocates a `mulle_map` and initializes it with `callback`. As it using a `mulle_allocator` this function will not return NULL.
+
+
+
 ### `mulle_map_init`
 
 ```
@@ -74,6 +78,11 @@ c_string_int_callback.valuecallback  = mulle_container_valuecallback_int;
 
 mulle_map_init( &map, 0, &c_string_int_callback, NULL);
 ```
+
+Check [Callbacks](API_CONTAINER_CALLBACK.md) for predefined callbacks to use.
+
+
+
 
 ### `mulle_map_get_notakey`
 

@@ -46,14 +46,6 @@ int   mulle_pointerpairarray_grow( struct mulle_pointerpairarray *array)
       new_size = 2;
    
    array->_pairs = mulle_allocator_realloc( array->_allocator, array->_pairs, sizeof( struct mulle_pointerpair) * new_size);
-   
-   if( ! array->_pairs)
-   {
-      array->_size = 0;
-      assert( 0);
-      return( -1);
-   }
-
    memset( &array->_pairs[ array->_size], 0, sizeof( struct mulle_pointerpair) * (new_size - array->_size));
    array->_size = new_size;
 

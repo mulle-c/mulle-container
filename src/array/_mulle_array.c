@@ -79,7 +79,6 @@ static inline void   _mulle_arrayrange_release( struct _mulle_arrayrange range,
 #pragma mark -
 #pragma mark grow and shrink
 
-
 //
 // all allocation is done in .c
 //
@@ -89,18 +88,13 @@ static int  _mulle_array_set_size( struct _mulle_array *array,
                                    struct mulle_allocator *allocator)
 {
    unsigned int    count;
+   void            *p;
    
    count = _mulle_array_get_count( array);
    
-   array->_storage = mulle_allocator_realloc( allocator, array->_storage, sizeof( void *) * new_size);
-   if( ! array->_storage)
-   {
-      array->_curr     = NULL;
-      array->_sentinel = mulle_container_not_a_pointer_key;
-      
-      return( -1);
-   }
+   p = mulle_allocator_realloc( allocator, array->_storage, sizeof( void *) * new_size);
 
+   array->_storage  = p;
    array->_curr     = &array->_storage[ count];
    array->_sentinel = &array->_storage[ new_size];
    array->_size     = new_size;
@@ -142,8 +136,7 @@ struct _mulle_array    *_mulle_array_create( struct mulle_allocator *allocator)
    struct _mulle_array  *array;
    
    array = mulle_allocator_malloc( allocator, sizeof( struct _mulle_array));
-   if( array)
-      _mulle_array_init( array, 0);
+   _mulle_array_init( array, 0);
    return( array);
 }
 

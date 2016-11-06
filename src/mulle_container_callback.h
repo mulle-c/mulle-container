@@ -52,7 +52,7 @@
 
 #define mulle_container_not_an_int_key      ((void *) INT_MIN)
 #define mulle_container_not_an_intptr_key   ((void *) INTPTR_MIN)
-#define mulle_container_not_a_pointer_key   ((void *) UINTPTR_MAX)
+#define mulle_container_not_a_pointer_key   ((void *) INTPTR_MIN)
 
 
 //

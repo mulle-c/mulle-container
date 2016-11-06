@@ -117,15 +117,12 @@ static struct mulle_pointerpair   *allocate_pairs( size_t n,
       return( mulle_allocator_calloc( allocator, n, sizeof( struct mulle_pointerpair)));
    
    buf = mulle_allocator_malloc( allocator, n * sizeof( struct mulle_pointerpair));
-   if( buf)
+   p        = &buf[ 0];
+   sentinel = &buf[ n];
+   while( p < sentinel)
    {
-      p        = &buf[ 0];
-      sentinel = &buf[ n];
-      while( p < sentinel)
-      {
-         p->_key = notakey;
-         ++p;
-      }
+      p->_key = notakey;
+      ++p;
    }
    return( buf);
 }
@@ -158,8 +155,7 @@ struct _mulle_map   *_mulle_map_create( size_t capacity,
    struct _mulle_map   *p;
    
    p = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_map) + extra);
-   if( p)
-      _mulle_map_init( p, capacity, callback, allocator);
+   _mulle_map_init( p, capacity, callback, allocator);
    return( p);
 }
 
