@@ -104,13 +104,11 @@ static void   **allocate_pointers( size_t n,
       return( mulle_allocator_calloc( allocator, n, sizeof( void *)));
    
    buf      = mulle_allocator_malloc( allocator, n * sizeof( void *));
-   if( buf)
-   {
-      p        = &buf[ 0];
-      sentinel = &buf[ n];
-      while( p < sentinel)
-         *p++ = notakey;
-   }
+   p        = &buf[ 0];
+   sentinel = &buf[ n];
+   while( p < sentinel)
+      *p++ = notakey;
+
    return( buf);
 }
 
@@ -139,8 +137,7 @@ struct _mulle_set   *_mulle_set_create( unsigned int capacity,
    struct _mulle_set   *p;
    
    p = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_set) + extra);
-   if( p)
-      _mulle_set_init( p, capacity, callback, allocator);
+   _mulle_set_init( p, capacity, callback, allocator);
    return( p);
 }
 

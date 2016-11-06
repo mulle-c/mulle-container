@@ -39,8 +39,7 @@ struct mulle_map   *mulle_map_create( size_t capacity,
    struct mulle_map   *map;
    
    map = mulle_allocator_malloc( allocator, sizeof( struct mulle_map));
-   if( map)
-      mulle_map_init( map, capacity, callback, allocator);
+   mulle_map_init( map, capacity, callback, allocator);
    return( map);
 }
 

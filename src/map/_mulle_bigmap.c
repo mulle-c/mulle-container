@@ -139,16 +139,13 @@ static void   _mulle_bigmap_init_with_depth( struct _mulle_bigmap *map,
                                                 sizeof( struct mulle_pointerpair))
                       : NULL;
 
-   if( map->_storage)
+   pair     = map->_storage;
+   sentinel = &map->_storage[ modulo];
+   while( pair < sentinel)
    {
-      pair     = map->_storage;
-      sentinel = &map->_storage[ modulo];
-      while( pair < sentinel)
-      {
-         pair->_key   = callback->keycallback.notakey;
-         pair->_value = NULL;
-         pair++;
-      }
+      pair->_key   = callback->keycallback.notakey;
+      pair->_value = NULL;
+      pair++;
    }
 }
 
@@ -178,8 +175,7 @@ struct _mulle_bigmap   *_mulle_bigmap_create( size_t capacity,
    struct _mulle_bigmap   *map;
    
    map = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_bigmap));
-   if( map)
-      _mulle_bigmap_init_with_depth( map, depth_for_capacity( capacity), callback, allocator);
+   _mulle_bigmap_init_with_depth( map, depth_for_capacity( capacity), callback, allocator);
    return( map);
 }
 

@@ -28,7 +28,6 @@ add_definitions( -DMULLE_ABA_TRACE_SWAP
 # using include_directories is a little bit shitty
 include_directories( src
 src/array
-src/buffer
 src/hash
 src/map
 src/queue
@@ -51,8 +50,6 @@ src/array/mulle_array.h
 src/array/_mulle_array.h
 src/array/mulle_pointerarray.h
 src/array/mulle_pointerpairarray.h
-src/buffer/mulle_buffer.h
-src/buffer/_mulle_buffer.h
 src/hash/mulle_hash.h
 src/hash/mulle_prime.h
 src/map/mulle_bigmap.h
@@ -78,8 +75,6 @@ src/array/mulle_pointerpairarray.c
 src/hash/mulle_hash.c
 src/hash/mulle_prime.c
 cityhash/src/city.c
-src/buffer/_mulle_buffer.c
-src/buffer/mulle_buffer.c
 src/map/_mulle_bigmap.c
 src/map/mulle_bigmap.c
 src/map/mulle_map.c

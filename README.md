@@ -2,15 +2,19 @@
 
 Release on [github](//github.com/mulle-nat/mulle-container): [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container)
 
-A collection of C (C99) data structures, with callbacks that are compatible to
-OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. 
+A collection of C (C99) data structures dealing exclusively with void pointers.
+They utilize callbacks that are compatible to OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. Data structures can live (temporarily)
+on the stack, or permanently in the heap.
+[mulle-allocator](//github.com/mulle-nat/mulle-allocator) is used pervasively
+to simplify memory management. None of them are thread-safe.
 
-Data structures can live (temporarily) on the stack, or permanently in the heap. None of them are thread-safe. [mulle-allocator](//github.com/mulle-nat/mulle-allocator) is used pervasively for memory management.
-
-> This library could benefit from more tests. Do not assume, that it 
+> This library could benefit from more tests. Do not assume, that it
 > is completely bug free.
 
-The API of the containers is fairly uniform, here is an example using `mulle_bigmap` to associate c-strings with each other. All the necessary memory management (copying of keys and values) is performed by `mulle_bigmap` using callbacks:
+The API of the containers is fairly uniform, here is an example using
+`mulle_bigmap` to associate c-strings with each other. All the necessary memory
+management (copying of keys and values) is performed by `mulle_bigmap` using
+callbacks:
 
 
 ```
@@ -27,7 +31,7 @@ static void  test( void)
 
 
    map = mulle_bigmap_create( 0, &callback, NULL);
-   
+
    mulle_bigmap_set( map, "VfL", "VFL");
    mulle_bigmap_set( map, "Bochum", "BOCHUM");
    mulle_bigmap_set( map, "1848", "1848");
@@ -48,7 +52,7 @@ int main( void)
 {
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
-   
+
    test();
 }
 ```
@@ -58,13 +62,14 @@ int main( void)
 
 The name of the functions is consistent. Each function is a **verb**
 that is prefixed with the name of the data structure it handles. So for example
-the `get` function for `mulle_array` is `mulle_array_get`. The first parameter, 
+the `get` function for `mulle_array` is `mulle_array_get`. The first parameter,
 except for creation functions, is always the container itself.
 
 Check out [VERBS.md](dox/VERBS.md) for a list of common verbs used.
 
-The various functions `assert` their parameters, but when compiled for release there are no runtime checks. For development it is wise to use
-a debug version of the library.
+The various functions `assert` their parameters, but when compiled for release
+there are no runtime checks. For development it is wise to use a debug version
+of the library.
 
 
 File                                                         | Description
@@ -74,8 +79,6 @@ File                                                         | Description
 [`mulle_array`](dox/API_ARRAY.md)                            | A growing mutable array of void pointers (-> objects) with enumeration. (NSMutableArray)
 [`mulle_pointerarray`](dox/API_POINTERARRAY.md)              | A growing mutable array of void pointers w/o callbacks.
 [`mulle_pointerpairarray`](dox/API_POINTERPAIRARRAY.md)      | A growing mutable array of pairs of void pointers w/o callbacks.
-                                                             |
-[`mulle_buffer`](dox/API_BUFFER.md)                          | A multi purpose byte container/stream. Usually used as a growing buffer of bytes. (NSMutableData)
                                                              |
 [`mulle_hash`](dox/API_HASH.md)                              | The default hash. Currently it's a wrapper for the [CityHash](https://en.wikipedia.org/wiki/CityHash). The choice of CityHash is pretty close to arbitrary, it might change in the future.
 [`mulle_prime`](dox/API_PRIME.md)                            | A simple scheme to get prime values for bit depths (up to 32 bit)

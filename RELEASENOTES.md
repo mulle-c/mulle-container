@@ -1,6 +1,8 @@
 # 0.8
 
 * documentation, documentation, documentation
+* move mulle-buffer into own library, because it really is quite different
+* adapt to mulle-alloctor 2.0
 
 # 0.7
 

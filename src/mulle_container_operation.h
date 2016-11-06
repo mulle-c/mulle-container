@@ -44,7 +44,7 @@ enum mulle_container_write_mode
    mulle_container_overwrite_e
 };
 
-// can't have LONG in enums..
-#define mulle_not_found_e   LONG_MAX
+// Convenient to be different to "notakey"
+#define mulle_not_found_e   INTPTR_MAX
 
 #endif /* mulle_container_operation_h */

@@ -33,7 +33,6 @@ struct mulle_set   *mulle_set_create( unsigned int capacity,
       allocator = &mulle_default_allocator;
    
    set = mulle_allocator_malloc( allocator, sizeof( struct mulle_set));
-   if( set)
-      mulle_set_init( set, capacity, callback, allocator);
+   mulle_set_init( set, capacity, callback, allocator);
    return( set);
 }
