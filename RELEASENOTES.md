@@ -1,3 +1,7 @@
+# 0.8.2
+
+* fixes for community version
+
 # 0.8
 
 * documentation, documentation, documentation
@@ -23,8 +27,8 @@
 
 # 0.4
 
-* upgrade mulle_allocator 
-* rename `_mulle_buffer_add_string_with_length` to 
+* upgrade mulle_allocator
+* rename `_mulle_buffer_add_string_with_length` to
   `_mulle_buffer_add_string_with_maxlength` and fix the assert
 * added mulle_pointerpairarray
 * renamed keyvaluepair to pointerpair

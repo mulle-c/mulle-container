@@ -2,14 +2,18 @@
 
 PROJECT="MulleContainer" # requires camel-case
 DESC="Sets, hashtables, byte buffers and more, written in C"
-DEPENDENCIES="mulle-allocator
-"                        # names not camel case
-ORIGIN=public            # git repo to push
+DEPENDENCIES='${REMOTEROOTDIR}/software/mulle-c11
+${REMOTEROOTDIR}/software/mulle-allocator'  # no camel case, will be evaled later!
 LANGUAGE=c               # c,cpp, objc
 
+#
+# Ideally you don't hafta change anything below this line
+#
 # source mulle-homebrew.sh (clumsily)
 
-. ./bin/mulle-homebrew/mulle-homebrew.sh
+. ./bin/repository-info.sh || exit 1
+. ./bin/mulle-homebrew/mulle-homebrew.sh || exit 1
+
 
 # parse options
 homebrew_parse_options "$@"
@@ -39,8 +43,7 @@ VERSION="`get_header_version "${HEADER}" "${VERSIONNAME}"`"
 # --- HOMEBREW FORMULA ---
 # Information needed to construct a proper brew formula
 #
-HOMEPAGE="https://www.mulle-kybernetik.com/software/git/${NAME}"
-ARCHIVEURL='https://www.mulle-kybernetik.com/software/git/${NAME}/tarball/${VERSION}'  # ARCHIVEURL will be evaled later! keep it in single quotes
+HOMEPAGE="${REMOTEURL}/${NAME}"
 
 
 # --- HOMEBREW TAP ---
