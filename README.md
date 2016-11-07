@@ -1,6 +1,6 @@
 # mulle-container
 
-[![Build Status](https://travis-ci.org/mulle-clang/mulle-container.svg)](https://travis-ci.org/mulle-clang/mulle-container)
+[![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg)](https://travis-ci.org/mulle-objc/mulle-container)
 
 
 A collection of C (C99) data structures dealing exclusively with void pointers.
