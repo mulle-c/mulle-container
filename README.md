@@ -1,6 +1,7 @@
 # mulle-container
 
-Release on [github](//github.com/mulle-nat/mulle-container): [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container)
+[![Build Status](https://travis-ci.org/mulle-clang/mulle-container.svg)](https://travis-ci.org/mulle-clang/mulle-container)
+
 
 A collection of C (C99) data structures dealing exclusively with void pointers.
 They utilize callbacks that are compatible to OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. Data structures can live (temporarily)
