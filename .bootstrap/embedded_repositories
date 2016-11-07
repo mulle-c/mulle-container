@@ -5,4 +5,4 @@
 ${MULLE_REPOSITORIES}/mulle-tests;tests/mulle-tests;${MULLE_TESTS_BRANCH:-release}
 ${MULLE_REPOSITORIES}/mulle-homebrew;bin/mulle-homebrew;${MULLE_HOMEBREW_BRANCH:-release}
 ${MULLE_REPOSITORIES}/mulle-configuration;;${MULLE_CONFIGURATION_BRANCH:-release}
-${MULLE_GITHUB_ONLY_REPOSITORIES}/cityhash.git
+${MULLE_NAT_REPOSITORIES}/cityhash.git
