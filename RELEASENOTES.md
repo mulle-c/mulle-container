@@ -1,3 +1,7 @@
+# 0.8.6
+
+* fix CMakeList.txt
+
 # 0.8.4
 
 * improve README
