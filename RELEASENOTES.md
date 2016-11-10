@@ -1,3 +1,11 @@
+# 0.8.4
+
+* improve README
+
+# 0.8.3
+
+* merge in community version changes
+
 # 0.8.2
 
 * fixes for community version
