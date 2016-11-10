@@ -9,11 +9,11 @@ to simplify memory management. None of them are thread-safe.
 > This library could benefit from more tests. Do not assume, that it
 > is completely bug free.
 
-Fork         | Branch  | Version | Build Status 
--------------|-------- |---------|----------------
-[Mulle kybernetiK](//github.com/mulle-nat/mulle-container)  | release | ![GitHub version](https://badge.fury.io/gh/mulle-nat%2Fmulle-container.svg) | [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container)
-[Community](https://github.com/mulle-objc/mulle-container/tree/release)      | release | ![GitHub version](https://badge.fury.io/gh/mulle-objc%2Fmulle-container.svg) |  [![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-objc/mulle-container)
-[Community](//github.com/mulle-objc/mulle-container)    | master | current |  [![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg?branch=master)](https://travis-ci.org/mulle-objc/mulle-container)
+Fork      |  Build Status | Release Version
+----------|---------------|-----------------------------------
+[Mulle kybernetiK](//github.com/mulle-nat/mulle-container) | [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-nat/mulle-container.svg) [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container)
+[Community](https://github.com/mulle-objc/mulle-container/tree/release) | [![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg)](https://travis-ci.org/mulle-objc/mulle-container) | ![Community tag](https://img.shields.io/github/tag/mulle-objc/mulle-container.svg) [![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-objc/mulle-container)
+
 
 ## Example
 
