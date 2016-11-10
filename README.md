@@ -112,7 +112,7 @@ On other platforms you can use **mulle-install** from
 [mulle-build](//www.mulle-kybernetik.com/software/git/mulle-build) to install the library:
 
 ```
-mulle-install --prefix /usr/local --branch release https://www.mulle-kybernetik.com/repositories/mulle-container
+mulle-install --prefix /usr/local --branch release https://github.com/mulle-objc/mulle-container
 ```
 
 Otherwise read:
