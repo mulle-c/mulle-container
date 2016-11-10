@@ -1,8 +1,5 @@
 # mulle-container
 
-[![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg)](https://travis-ci.org/mulle-objc/mulle-container)
-
-
 A collection of C (C99) data structures dealing exclusively with void pointers.
 They utilize callbacks that are compatible to OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. Data structures can live (temporarily)
 on the stack, or permanently in the heap.
@@ -11,6 +8,14 @@ to simplify memory management. None of them are thread-safe.
 
 > This library could benefit from more tests. Do not assume, that it
 > is completely bug free.
+
+Fork         | Branch  | Version | Build Status 
+-------------|-------- |---------|----------------
+[Mulle kybernetiK](//github.com/mulle-nat/mulle-container)  | release | [![GitHub version](https://badge.fury.io/gh/mulle-nat%2Fmulle-container.svg)](https://badge.fury.io/gh/mulle-nat%2Fmulle-container) | [![Build Status](https://travis-ci.org/mulle-nat/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-nat/mulle-container)
+[Community](https://github.com/mulle-objc/mulle-container/tree/release)      | release | [![GitHub version](https://badge.fury.io/gh/mulle-objc%2Fmulle-container.svg)](https://badge.fury.io/gh/mulle-objc%2Fmulle-container) |  [![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-objc/mulle-container)
+[Community](//github.com/mulle-objc/mulle-container)    | master | current |  [![Build Status](https://travis-ci.org/mulle-objc/mulle-container.svg?branch=master)](https://travis-ci.org/mulle-objc/mulle-container)
+
+## Example
 
 The API of the containers is fairly uniform, here is an example using
 `mulle_bigmap` to associate c-strings with each other. All the necessary memory
@@ -118,7 +123,7 @@ Otherwise read:
 ### Platforms and Compilers
 
 All platforms and compilers supported by
-[mulle-c11](//www.mulle-kybernetik.com/software/git/mulle-c11/)
+[mulle-container](//www.mulle-kybernetik.com/software/git/mulle-container/)
 
 
 ## Author
