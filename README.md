@@ -104,8 +104,7 @@ On OS X and Linux you can use [homebrew](//brew.sh), respectively
 [linuxbrew](//linuxbrew.sh) to install the library:
 
 ```
-brew tap mulle-kybernetik/software
-brew install mulle-container
+brew install mulle-objc/software/mulle-container
 ```
 
 On other platforms you can use **mulle-install** from
