@@ -1,3 +1,15 @@
+# 0.8.7
+
+* merge in community version
+
+# 0.8.6
+
+* fix CMakeList.txt
+
+# 0.8.4
+
+* improve README
+
 # 0.8.3
 
 * merge in community version changes

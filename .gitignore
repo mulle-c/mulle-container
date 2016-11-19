@@ -14,14 +14,14 @@ tmp/
 /lib
 /.bootstrap.auto/
 /.bootstrap.local/
+/.repos/
 /dependencies/
 /addictions/
-/.repos/
-/mulle-configuration/
-/mulle-tests/
+
+/mulle-configuration
 /cityhash/
-/tests/mulle-tests/
-/bin/mulle-homebrew/
+/tests/mulle-tests
+/bin/mulle-homebrew
 
 tests/include/
 tests/lib/
