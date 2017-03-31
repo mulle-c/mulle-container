@@ -31,8 +31,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #ifndef _MULLE_MAP_H___
-#define _MULLE_MAP_H___     
- 
+#define _MULLE_MAP_H___
+
 
 #include "mulle_container_callback.h"
 #include "mulle_pointerpair.h"
@@ -42,7 +42,7 @@
 //
 // this is like your traditional  hash table, its called like this
 // because its a constituent of mulle_bigmap
-// 
+//
 #define _MULLE_MAP_BASE                  \
    struct mulle_pointerpair   *_storage; \
    size_t                     _count;    \
@@ -112,7 +112,7 @@ static inline size_t   _mulle_map_size_for_depth( int depth)
 static inline size_t   _mulle_map_is_full( struct _mulle_map *map)
 {
    size_t    size;
-   
+
    size = _mulle_map_size_for_depth( map->_depth);
    size = (size - (size >> 1));  // full when only 25% free
    return( _mulle_map_is_fuller_than( map, size));
@@ -206,11 +206,11 @@ static inline struct _mulle_mapenumerator
                          struct mulle_container_keyvaluecallback *callback)
 {
    struct _mulle_mapenumerator   rover;
-   
+
    rover._left     = map->_count;
    rover._curr     = map->_storage;
    rover._callback = callback;
-   
+
    return( rover);
 }
 
@@ -218,10 +218,10 @@ static inline struct _mulle_mapenumerator
 static inline struct mulle_pointerpair   *_mulle_mapenumerator_next( struct _mulle_mapenumerator *rover)
 {
    struct mulle_pointerpair   *p;
-   
+
    if( ! rover->_left)
       return( 0);
-      
+
    rover->_left--;
    for(;;)
    {
@@ -234,6 +234,6 @@ static inline struct mulle_pointerpair   *_mulle_mapenumerator_next( struct _mul
 
 static inline void   _mulle_mapenumerator_done( struct _mulle_mapenumerator *rover)
 {
-}                                    
+}
 
 #endif

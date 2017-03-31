@@ -68,7 +68,7 @@ static void   _mulle_bigmap_sanity_check( struct _mulle_bigmap *map,
 {
    struct _mulle_bigmapenumerator   rover;
    size_t                        count;
-   
+
    count = 0;
    rover = _mulle_bigmap_enumerate( map, callback);
    while( _mulle_bigmapenumerator_next( &rover, NULL, NULL))
@@ -81,20 +81,20 @@ static void   _mulle_bigmap_sanity_check( struct _mulle_bigmap *map,
 //static unsigned int   suggest_bucket_depth( unsigned int capacity)
 //{
 //   unsigned int  i;
-//      
+//
 //   capacity >>= 1;
 //   for( i = 0; i <= MULLE_INDEXED_BUCKETS_MAX_INITIAL_DEPTH; i++)
 //      if( capacity < __NSIndexedBucketPrimes[ i])
-//         return( i); 
+//         return( i);
 //   return( MULLE_INDEXED_BUCKETS_MAX_INITIAL_DEPTH);
 //}
 
 
 #define MULLE_MAP_MAX_DEPTH              30
 
-#define MULLE_MAP_MIN_INITIAL_DEPTH      0  
+#define MULLE_MAP_MIN_INITIAL_DEPTH      0
 #define MULLE_MAP_INITIAL_DEPTH          3
-#define MULLE_MAP_MAX_INITIAL_DEPTH      16  
+#define MULLE_MAP_MAX_INITIAL_DEPTH      16
 #define MULLE_MAP_STOP_SINGLE_DIMENSION_GROWTH 5
 
 
@@ -108,10 +108,10 @@ static short   good_depth_for_depth( int depth)
 static short   depth_for_capacity( size_t capacity)
 {
    int  i;
-   
+
    if( ! capacity)
       return( MULLE_MAP_MIN_INITIAL_DEPTH);
-      
+
    capacity >>= 2;
    for( i = MULLE_MAP_MIN_INITIAL_DEPTH; i <= MULLE_MAP_MAX_INITIAL_DEPTH; i++)
       if( capacity <= mulle_prime_for_depth( i))
@@ -125,10 +125,10 @@ static void   _mulle_bigmap_init_with_depth( struct _mulle_bigmap *map,
                                           struct mulle_container_keyvaluecallback *callback,
                                           struct mulle_allocator *allocator)
 {
-   size_t                        modulo;
+   size_t                     modulo;
    struct mulle_pointerpair   *pair;
    struct mulle_pointerpair   *sentinel;
-   
+
    map->_storage = NULL;
    map->_count   = 0;
    map->_depth   = (short) depth;
@@ -173,7 +173,7 @@ struct _mulle_bigmap   *_mulle_bigmap_create( size_t capacity,
                                         struct mulle_allocator *allocator)
 {
    struct _mulle_bigmap   *map;
-   
+
    map = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_bigmap));
    _mulle_bigmap_init_with_depth( map, depth_for_capacity( capacity), callback, allocator);
    return( map);
@@ -188,7 +188,7 @@ void   _mulle_bigmap_copy_items( struct _mulle_bigmap *dst,
    struct _mulle_bigmapenumerator   rover;
    void                             *key;
    void                             *value;
-   
+
    rover = _mulle_bigmap_enumerate( src, callback);
    while( _mulle_bigmapenumerator_next( &rover, &key, &value))
       _mulle_bigmap_insert( dst, key, value, callback, allocator);
@@ -215,10 +215,10 @@ void   _mulle_bigmap_done( struct _mulle_bigmap *map,
 {
    struct mulle_pointerpair   *pair;
    struct mulle_pointerpair   *sentinel;
-   
+
    if( ! map->_depth)
       return;
-      
+
    sentinel = &map->_storage[ mulle_prime_for_depth( map->_depth)];
    for( pair = map->_storage; pair < sentinel; pair++)
    {
@@ -240,12 +240,12 @@ int   _mulle_bigmapenumerator_next( struct _mulle_bigmapenumerator *rover, void 
 {
    struct mulle_pointerpair   *pair;
    struct mulle_pointerpair   *storage;
-   
+
    if( ! rover->_left)
       return( 0);
 
    --rover->_left;
-retry:   
+retry:
    pair = _mulle_mapenumerator_next( &rover->_bucketsRover);
    if( ! pair)
    {
@@ -253,7 +253,7 @@ retry:
       for(;;)
       {
          assert( rover->_index < mulle_prime_for_depth( rover->_map->_depth));
-         
+
          pair = &storage[ rover->_index++];
          if( ! _mulle_pointerpair_is_empty( pair, rover->_callback))
             break;
@@ -264,10 +264,10 @@ retry:
          rover->_bucketsRover = _mulle_map_enumerate( pair->_value, rover->_callback);
          goto retry;
       }
-   }  
-   
+   }
+
    assert( pair->_key != rover->_callback->keycallback.notakey);
-   
+
    if( key)
       *key = pair->_key;
    if( value)
@@ -283,15 +283,15 @@ void   *_mulle_bigmap_get( struct _mulle_bigmap *map, void *key, struct mulle_co
    size_t           modulo;
    size_t           i;
    struct mulle_pointerpair   *pair;
-   
-#ifndef NDEBUG      
+
+#ifndef NDEBUG
    _mulle_bigmap_sanity_check( map, callback);
-#endif    
-   
-   modulo  = mulle_prime_for_depth( map->_depth);
+#endif
+
+   modulo = mulle_prime_for_depth( map->_depth);
    if( ! modulo)
       return( NULL);
-      
+
    pair = map->_storage;
    // for small maps try quick check
    switch( modulo)
@@ -311,14 +311,14 @@ void   *_mulle_bigmap_get( struct _mulle_bigmap *map, void *key, struct mulle_co
    case 1 : if( pair->_key == key)
                return( pair->_value);
    }
-   
+
    hash = (*callback->keycallback.hash)( &callback->keycallback, key);
    i    = mulle_prime_hash_for_depth( hash, map->_depth);
    pair = &map->_storage[ i];
-   
+
    if( _mulle_pointerpair_is_empty( pair, callback))
       return( NULL);
-   
+
    if( _mulle_pointerpair_is_storage( pair, callback))
    {
       if( pair->_key == key)
@@ -347,20 +347,20 @@ static int   grow_vertically( struct _mulle_bigmap *map,
    struct _mulle_bigmap                         copy;
    struct mulle_container_keyvaluecallback   tmpcallback;
    short                                     depth;
-   
+
    depth = map->_depth;
    if( depth < 0)
       return( 0);
 
    depth = good_depth_for_depth( depth + 1);
-      
+
    tmpcallback = *callback;
-   
+
    tmpcallback.keycallback.retain    = (void *(*)()) mulle_container_callback_self;
    tmpcallback.valuecallback.retain  = (void *(*)()) mulle_container_callback_self;
    tmpcallback.keycallback.release   = (void (*)()) mulle_container_callback_nop;
    tmpcallback.valuecallback.release = (void (*)()) mulle_container_callback_nop;
-    
+
    _mulle_bigmap_init_with_depth( &copy, - depth, &tmpcallback, allocator);  /* mark negative, so we don't grow within growing */
    _mulle_bigmap_copy_items( &copy, map, &tmpcallback, allocator);
    _mulle_bigmap_done( map, &tmpcallback, allocator);
@@ -378,101 +378,99 @@ static int   grow_vertically( struct _mulle_bigmap *map,
 //  2.) after that we prefer rectangular growth
 //       if an array becomes four times as large as the vertical plane
 //  3.) we quadruple the vertical plane, but then we have to reorg completely
-//      so, 
-//  4.) we do this until the vertical plane hits 509 * 1036 = 1 mio objects... 
+//      so,
+//  4.) we do this until the vertical plane hits 509 * 1036 = 1 mio objects...
 //      not too shabby. After that we don't want to reorg so much anymore
-//      we only reorg twice at 127 and 509 thefore 
+//      we only reorg twice at 127 and 509 thefore
 //  5.) this can be completely avoided by specifing a capacity, so that enough
 //      vertical space is preallocated
-//      
+//
 void   *_mulle_bigmap_write( struct _mulle_bigmap *map,
                              struct mulle_pointerpair *new_pair,
                              enum mulle_container_write_mode mode,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
+   int                        same_key;
+   size_t                     i;
+   size_t                     modulo;
+   size_t                     other_hash;
+   size_t                     size;
+   struct _mulle_map          *bucket;
+   struct mulle_pointerpair   *pair;
+   uintptr_t                  hash;
+   void                       *value;
 
-   int                                   same_key;
-   size_t                                i;
-   size_t                                modulo;
-   size_t                                other_hash;
-   size_t                                size;
-   struct _mulle_map   *bucket;
-   struct mulle_pointerpair            *pair;
-   uintptr_t                             hash;
-   void                                  *value;
-   
    assert( new_pair);
    assert( new_pair->_key != callback->keycallback.notakey);
 
    new_pair->_key   = (*callback->keycallback.retain)( &callback->keycallback, new_pair->_key, allocator);
    new_pair->_value = (*callback->valuecallback.retain)( &callback->valuecallback, new_pair->_value, allocator);
    hash             = (*callback->keycallback.hash)( &callback->keycallback, new_pair->_key);
-   
-retry:
-#ifndef NDEBUG      
-   _mulle_bigmap_sanity_check( map, callback);
-#endif 
 
-   modulo = mulle_prime_for_depth( map->_depth);
-   if( ! modulo)
+retry:
+#ifndef NDEBUG
+   _mulle_bigmap_sanity_check( map, callback);
+#endif
+
+   if( ! map->_depth)
    {
       grow_vertically( map, callback, allocator);
       goto retry;
    }
-      
+
    assert( map->_storage);
 
-   i    = hash % modulo;
+   i    = mulle_prime_hash_for_depth( hash, map->_depth);
    pair = &map->_storage[ i];
    if( _mulle_pointerpair_is_empty( pair, callback))
    {
       map->_count++;
       *pair = *new_pair;
-#ifndef NDEBUG      
+#ifndef NDEBUG
       _mulle_bigmap_sanity_check( map, callback);
-#endif      
+#endif
       return( NULL);
    }
-   
+
    //
-   // if the key is not the "notakey" then this is really a 
+   // if the key is not the "notakey" then this is really a
    // key/value pair and not a queue
    //
-   
+
    if( _mulle_pointerpair_is_storage( pair, callback))
    {
       same_key = new_pair->_key == pair->_key;
       if( same_key)
          goto match;
-         
+
       other_hash = (*callback->keycallback.hash)( &callback->keycallback, pair->_key);
       if( hash == other_hash && (*callback->keycallback.is_equal)( &callback->keycallback, new_pair->_key, pair->_key))
       {
-      match:      
+      match:
          switch( mode)
          {
          case mulle_container_overwrite_e :
             if( new_pair->_value == pair->_value && same_key)
                return( pair->_value);
-               
+
             (*callback->keycallback.release)( &callback->keycallback, pair->_key, allocator);
             (*callback->valuecallback.release)( &callback->valuecallback, pair->_value, allocator);
             *pair = *new_pair;
             return( pair->_value);
-            
+
          case mulle_container_insert_e :
             return( pair->_value);
          }
       }
-      
+
       //
       // a) grow vertically or start a _mulle_map chain
       //
       if( map->_depth < MULLE_MAP_STOP_SINGLE_DIMENSION_GROWTH)
          if( grow_vertically( map, callback, allocator))
             goto retry;
-      
+
       // b) create a new bucket chain (quadruple size, of current vertical)
       // start small
       bucket = _mulle_map_create( 4, 0, callback, allocator);
@@ -488,29 +486,30 @@ retry:
                                     mulle_container_insert_e,
                                     callback,
                                     allocator);
-      
+
       pair->_key   = callback->keycallback.notakey;
       pair->_value = bucket;
 
       map->_count++;
-#ifndef NDEBUG      
+#ifndef NDEBUG
       _mulle_bigmap_sanity_check( map, callback);
-#endif      
+#endif
       return( NULL);
    }
-   
+
    // now make sure, the bucket don't grow to large
    // with respect to vertical size
    bucket = (struct _mulle_map *) pair->_value;
    if( _mulle_map_is_full( bucket))
    {
-      size = _mulle_map_get_storagesize( bucket);
+      size   = _mulle_map_get_storagesize( bucket);
+      modulo = mulle_prime_for_depth( map->_depth);
       if( size * 2 > modulo * 4)
          if( grow_vertically( map, callback, allocator))
             goto retry;
    }
-   
-   value  = _mulle_map_write( bucket, 
+
+   value  = _mulle_map_write( bucket,
                                                             new_pair,
                                                             hash,
                                                             mode,
@@ -519,9 +518,9 @@ retry:
    if( ! value)
    {
       map->_count ++;
-#ifndef NDEBUG      
+#ifndef NDEBUG
       _mulle_bigmap_sanity_check( map, callback);
-#endif      
+#endif
    }
    return( value);
 }
@@ -538,46 +537,45 @@ void   _mulle_bigmap_remove( struct _mulle_bigmap *map,
    size_t                                other_hash;
    struct _mulle_map   *bucket;
    struct mulle_pointerpair            *pair;
-   
-   modulo = mulle_prime_for_depth( map->_depth);
-   if( ! modulo)
+
+   if( ! map->_depth)
       return;
-      
+
    hash = (*callback->keycallback.hash)( &callback->keycallback, key);
-   i    = hash % modulo; 
+   i    = mulle_prime_hash_for_depth( hash, map->_depth);
 
    pair = &map->_storage[ i];
    if( _mulle_pointerpair_is_empty( pair, callback))
       return;
-   
+
    if( _mulle_pointerpair_is_storage( pair, callback))
    {
       if( key == pair->_key)
          goto match;
-         
+
       other_hash = (*callback->keycallback.hash)( &callback->keycallback, pair->_key);
       if( hash == other_hash && (*callback->keycallback.is_equal)( &callback->keycallback, key, pair->_key))
       {
-match:      
+match:
          (*callback->keycallback.release)( &callback->keycallback, pair->_key, allocator);
          (*callback->valuecallback.release)( &callback->valuecallback, pair->_value, allocator);
          pair->_key   = NULL;
          pair->_value = NULL;
          map->_count--;
-#ifndef NDEBUG      
+#ifndef NDEBUG
       _mulle_bigmap_sanity_check( map, callback);
-#endif    
+#endif
       }
       return;
    }
-   
+
    bucket = (struct _mulle_map *) pair->_value;
    if( _mulle_map_remove_with_hash( bucket, key, hash, callback, allocator))
    {
       map->_count--;  // could check that bucket are empty, and throw them away
-#ifndef NDEBUG      
+#ifndef NDEBUG
       _mulle_bigmap_sanity_check( map, callback);
-#endif    
+#endif
    }
 }
 
@@ -591,7 +589,7 @@ void   _mulle_bigmap_insert_keys_and_valuesv( struct _mulle_bigmap *map,
 {
    void  *value;
    void  *key;
-   
+
    value = firstvalue;
    key   = firstkey;
    while( value)

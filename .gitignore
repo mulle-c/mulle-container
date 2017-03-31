@@ -35,3 +35,5 @@ tests/map/map
 tests/buffer/example
 tests/buffer/setlength
 mulle_hash/
+/.bootstrap.repos
+/stashes

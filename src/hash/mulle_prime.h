@@ -30,12 +30,14 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <assert.h>
 
 
 static inline uintptr_t  mulle_prime_for_depth( int depth)
 {
    extern uintptr_t   __mulle_primes[];
-   
+
+   assert( depth >= -32 && depth <= 32);
    return( __mulle_primes[ 32 + depth]);
 }
 
@@ -56,7 +58,7 @@ static inline uintptr_t  mulle_prime_hash_for_depth( uintptr_t value, int depth)
    case  27 : return( value % 67108879);
    case  26 : return( value % 33554467);
    case  25 : return( value % 16777259);
-   case  24 : return( value % 8388617); 
+   case  24 : return( value % 8388617);
    case  23 : return( value % 4194319);
    case  22 : return( value % 2097169);
    case  21 : return( value % 1048583);
@@ -81,9 +83,9 @@ static inline uintptr_t  mulle_prime_hash_for_depth( uintptr_t value, int depth)
    case   3 : return( value % 5);
    case   2 : return( value % 2);
    case   1 : return( value % 1);
-   
+
    case   0 : return( 0);
-   
+
    case  -1 : return( value % 1);
    case  -2 : return( value % 2);
    case  -3 : return( value % 5);
@@ -100,7 +102,7 @@ static inline uintptr_t  mulle_prime_hash_for_depth( uintptr_t value, int depth)
    case -14 : return( value % 8209);
    case -15 : return( value % 16411);
    case -16 : return( value % 32771);
-   
+
    case -17 : return( value % 65537);
    case -18 : return( value % 131101);
    case -19 : return( value % 262147);
@@ -108,7 +110,7 @@ static inline uintptr_t  mulle_prime_hash_for_depth( uintptr_t value, int depth)
    case -21 : return( value % 1048583);
    case -22 : return( value % 2097169);
    case -23 : return( value % 4194319);
-   case -24 : return( value % 8388617); 
+   case -24 : return( value % 8388617);
    case -25 : return( value % 16777259);
    case -26 : return( value % 33554467);
    case -27 : return( value % 67108879);
@@ -118,6 +120,6 @@ static inline uintptr_t  mulle_prime_hash_for_depth( uintptr_t value, int depth)
    case -31 : return( value % 1073741827U);
    case -32 : return( value % 2147483659U);
    }
-   
+
    abort();
 }

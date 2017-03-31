@@ -41,7 +41,7 @@ struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *c
                                            struct mulle_allocator *allocator)
 {
    struct mulle_array  *buffer;
-   
+
    buffer = mulle_allocator_malloc( allocator, sizeof( struct mulle_array));
    mulle_array_init( buffer, 0, callback, allocator);
    return( buffer);

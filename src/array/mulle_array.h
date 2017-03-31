@@ -126,7 +126,7 @@ static inline void    mulle_array_init( struct mulle_array *array,
 {
    if( ! allocator)
       allocator = &mulle_default_allocator;
-      
+
    _mulle_array_init( (struct _mulle_array *) array, length);
 
    array->_callback  = callback;
@@ -266,7 +266,7 @@ static inline unsigned long  mulle_array_find_in_range( struct mulle_array *arra
 static inline struct mulle_arrayenumerator   mulle_array_enumerate( struct mulle_array *array)
 {
    struct _mulle_arrayenumerator   rover;
-   
+
    rover = _mulle_array_enumerate( (struct _mulle_array *) array, array->_callback);
    return( *(struct mulle_arrayenumerator *) &rover);  // should be harmless
 }
@@ -283,7 +283,7 @@ static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *r
    _mulle_arrayenumerator_done( (struct _mulle_arrayenumerator *) rover);
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark integer convenience
 
 static inline void    mulle_array_add_intptr( struct mulle_array *array,

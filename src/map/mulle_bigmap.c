@@ -46,9 +46,9 @@ void   mulle_bigmap_init( struct mulle_bigmap *map,
 {
    if( ! allocator)
       allocator = &mulle_default_allocator;
-   
+
    _mulle_bigmap_init( (struct _mulle_bigmap *) map, capacity, callback, allocator);
-   
+
    map->_callback  = callback;
    map->_allocator = allocator;
 }
@@ -60,7 +60,7 @@ struct mulle_bigmap   *mulle_bigmap_create( size_t capacity,
                                       struct mulle_allocator *allocator)
 {
    struct mulle_bigmap   *map;
-   
+
    map = mulle_allocator_malloc( allocator, sizeof( struct mulle_bigmap));
    mulle_bigmap_init( map, capacity, callback, allocator);
    return( map);
