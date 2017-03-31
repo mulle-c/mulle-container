@@ -93,9 +93,9 @@ struct _mulle_bigsetenumerator   _mulle_bigset_enumerate( struct _mulle_bigset *
                                                          struct mulle_container_keycallback *callback)
 {
    struct _mulle_bigsetenumerator   rover;
-   
+
    rover._bucket_rover._left = 0;
-   
+
    rover._index    = 0;
    rover._left     = set->_count;
    rover._table    = set;

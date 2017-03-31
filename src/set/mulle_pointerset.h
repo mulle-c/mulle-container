@@ -67,8 +67,8 @@ static inline void   *mulle_pointerset_get( struct mulle_pointerset *set, void *
    while( q < sentinel)
       if( *q++ == p)
          return( p);
-   
+
    return( NULL);
 }
 
-#endif 
+#endif

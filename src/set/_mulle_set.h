@@ -29,7 +29,7 @@
 //
 #ifndef _mulle_set__h__
 #define _mulle_set__h__
- 
+
 #include "mulle_container_callback.h"
 #include "mulle_container_operation.h"
 
@@ -73,12 +73,12 @@ void    _mulle_set_destroy( struct _mulle_set *set,
                             struct mulle_allocator *allocator);
 
 
-void    _mulle_set_init( struct _mulle_set *set, 
+void    _mulle_set_init( struct _mulle_set *set,
                          unsigned int capacity,
                          struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator);
 
-void    _mulle_set_done( struct _mulle_set *set, 
+void    _mulle_set_done( struct _mulle_set *set,
                          struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator);
 
@@ -112,7 +112,7 @@ char   *_mulle_set_describe( struct _mulle_set *set,
 
 static inline unsigned int   _mulle_set_is_fuller_than( struct _mulle_set *set, unsigned int size)
 {
-   return( set->_count >= (size - (size >> 1)));  // full when only 25% free 
+   return( set->_count >= (size - (size >> 1)));  // full when only 25% free
 }
 
 
@@ -162,7 +162,7 @@ int  _mulle_set_remove( struct _mulle_set *set,
                         void *p,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator);
-          
+
 #pragma mark -
 #pragma mark interface for mulle_bigset
 
@@ -193,7 +193,7 @@ static inline struct
                                                 struct mulle_container_keycallback *callback)
 {
    struct _mulle_setenumerator   rover;
-   
+
    rover._left             = set->_count;
    rover._curr             = set->_storage;
    rover._notakey = callback->notakey;
@@ -204,10 +204,10 @@ static inline struct
 static inline void   *_mulle_setenumerator_next( struct _mulle_setenumerator *rover)
 {
    void   *p;
-   
+
    if( ! rover->_left)
       return( rover->_notakey);
-      
+
    for(;;)
    {
       p = *rover->_curr++;
@@ -222,6 +222,6 @@ static inline void   *_mulle_setenumerator_next( struct _mulle_setenumerator *ro
 
 static inline void   _mulle_setenumerator_done( struct _mulle_setenumerator *rover)
 {
-}                                    
+}
 
 #endif

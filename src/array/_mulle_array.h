@@ -53,7 +53,7 @@
    void      **_storage;    \
    void      **_curr;       \
    void      **_sentinel;   \
-   unsigned int   _size            
+   unsigned int   _size
 
 
 struct _mulle_array
@@ -120,9 +120,9 @@ static inline void    _mulle_array_init( struct _mulle_array *array,
 {
    assert( array);
    assert( length != (unsigned int) -1);
-   
+
    array->_curr     =
-   array->_storage  = 
+   array->_storage  =
    array->_sentinel = NULL;
    array->_size     = length >> 1;
 }
@@ -160,7 +160,7 @@ static inline void   **_mulle_array_advance( struct _mulle_array *array,
                                              struct mulle_allocator *allocator)
 {
    void   *old;
-   
+
    while( &array->_curr[ length] > array->_sentinel)
       if( _mulle_array_grow( array, callback, allocator))
          return( NULL);
@@ -206,11 +206,11 @@ static inline void    _mulle_array_add( struct _mulle_array *array,
                                         struct mulle_allocator *allocator)
 {
    assert( p != callback->notakey);
-   
+
    if( _mulle_array_is_full( array))
       if( _mulle_array_grow( array, callback, allocator))
          return;
-   
+
    *array->_curr++ = (*callback->retain)( callback, p, allocator);
    assert( array->_curr[ -1]  != callback->notakey);
 }
@@ -286,15 +286,15 @@ static inline void   _mulle_array_reset( struct _mulle_array *array,
 static inline void   **_mulle_array_extract_all( struct _mulle_array *array)
 {
    void   **block;
-   
+
    assert( ! _mulle_array_has_overflown( array));
 
    block = array->_storage;
-   
+
    array->_storage  =
    array->_curr     =
    array->_sentinel = NULL;
-   
+
    return( block);
 }
 
@@ -308,7 +308,7 @@ static inline struct _mulle_arrayenumerator   _mulle_array_enumerate( struct _mu
                                                                       struct mulle_container_keycallback *callback)
 {
    struct _mulle_arrayenumerator   rover;
-   
+
    assert( ! _mulle_array_has_overflown( array));
 
    rover._sentinel         = array->_curr;
@@ -323,7 +323,7 @@ static inline void   *_mulle_arrayenumerator_next( struct _mulle_arrayenumerator
 static inline void   *_mulle_arrayenumerator_next( struct _mulle_arrayenumerator *rover)
 {
    void  *p;
-   
+
    while( rover->_curr < rover->_sentinel)
    {
       p = *rover->_curr++;

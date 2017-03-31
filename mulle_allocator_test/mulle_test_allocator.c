@@ -26,14 +26,14 @@ static void  *test_realloc( void *q, size_t size)
 {
    void           *p;
    unsigned int   i;
-   
+
    p = realloc( q, size);
    if( ! p)
       return( p);
 
    if( mulle_thread_mutex_lock( &alloc_lock))
       abort();
-   
+
    if( q)
    {
       if( p != q)
@@ -56,14 +56,14 @@ static void  *test_realloc( void *q, size_t size)
 static void  *test_calloc( size_t n, size_t size)
 {
    void   *p;
-   
+
    p = calloc( n, size);
    if( ! p)
       return( p);
-   
+
    if( mulle_thread_mutex_lock( &alloc_lock))
       abort();
-   
+
    _pointer_array_add( &allocations, p, realloc);
    mulle_thread_mutex_unlock( &alloc_lock);
 
@@ -76,19 +76,19 @@ static void  *test_calloc( size_t n, size_t size)
 static void  test_free( void *p)
 {
    unsigned int   i;
-   
+
    if( ! p)
       return;
-   
+
    if( mulle_thread_mutex_lock( &alloc_lock))
       abort();
-   
+
    i = _pointer_array_index( &allocations, p);
    assert( i != (unsigned int) -1);  // if assert, this is a double free or not a malloc block
    _pointer_array_set( &allocations, i, NULL);
-   
+
    mulle_thread_mutex_unlock( &alloc_lock);
-   
+
    free( p);
 }
 
@@ -135,6 +135,6 @@ static void  __load()
 
    rval = mulle_thread_mutex_init( &alloc_lock);
    assert( ! rval);
-   
+
    mulle_default_allocator = mulle_test_allocator;  // put test in place
 }
