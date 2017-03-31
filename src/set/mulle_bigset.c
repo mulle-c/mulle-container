@@ -48,10 +48,10 @@ struct mulle_bigset   *mulle_bigset_create( size_t capacity,
                                       struct mulle_allocator *allocator)
 {
    struct mulle_bigset *set;
-   
+
    if( ! allocator)
       allocator = &mulle_default_allocator;
-   
+
    set = mulle_allocator_malloc( allocator, sizeof( struct mulle_bigset));
    mulle_bigset_init( set, capacity, callback, allocator);
    return( set);

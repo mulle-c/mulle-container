@@ -121,7 +121,7 @@ static void   *mulle_container_callback_cstring_copy( void *ignore, void *s, str
 {
    size_t   len;
    char     *copy;
-   
+
    len = strlen( s) + 1;
    copy = mulle_allocator_malloc( allocator, len);
    memcpy( copy,  s, len);

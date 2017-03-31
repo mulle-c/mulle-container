@@ -132,7 +132,7 @@ static inline struct mulle_container_keycallback   *mulle_bigset_get_keycallback
 static inline struct mulle_bigsetenumerator   mulle_bigset_enumerate( struct mulle_bigset *set)
 {
    struct _mulle_bigsetenumerator  rover;
-   
+
    rover = _mulle_bigset_enumerate( (struct _mulle_bigset *) set, set->_callback);
    return( *(struct mulle_bigsetenumerator *) &rover);
 }

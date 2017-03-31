@@ -55,16 +55,16 @@ static inline void  _mulle_queue_init( struct _mulle_queue *queue,
                                        unsigned short bucket_size,
                                        unsigned short spare_allowance)
 {
-   queue->_spares      = 
-   queue->_read        = 
+   queue->_spares      =
+   queue->_read        =
    queue->_write       = 0;
-   
+
    queue->_count       = 0;
 
    queue->_bucket_size =
-   queue->_read_index  = 
+   queue->_read_index  =
    queue->_write_index = bucket_size >= 4 ? bucket_size : 4;
-   
+
    queue->_spare_allowance = spare_allowance;
 }
 
@@ -84,7 +84,7 @@ void   _mulle_queue_remove_all( struct _mulle_queue *queue, struct mulle_allocat
 
 
 struct _mulle_queueenumerator
-{  
+{
    struct _mulle_queuebucket  *_curr;
    unsigned short             _index;
 };
@@ -93,7 +93,7 @@ struct _mulle_queueenumerator
 static inline struct _mulle_queueenumerator   _mulle_queue_enumerate( struct _mulle_queue *queue)
 {
    struct _mulle_queueenumerator   rover;
-   
+
    rover._curr  = queue->_read;
    rover._index = queue->_read_index;
 
@@ -111,12 +111,12 @@ static inline void   *_mulle_queueenumerator_next( struct _mulle_queue *queue, s
    extern void   *__mulle_queueenumerator_next( struct _mulle_queue *,
                                                struct _mulle_queueenumerator *);
    unsigned short   limit;
-   
+
    // if rover._curr == NULL, set rover->_index to queue->_bucket_size
    limit = rover->_curr != queue->_write ? queue->_bucket_size : queue->_write_index;
    if( rover->_index < limit)
       return( rover->_curr->_storage[ rover->_index++]);
-      
+
    return( __mulle_queueenumerator_next( queue, rover));
 }
 
@@ -127,7 +127,7 @@ static inline void  _mulle_queue_push( struct _mulle_queue *queue,
                                       struct mulle_allocator *allocator)
 {
    assert( obj);
-   
+
    if( queue->_write_index >= queue->_bucket_size)
       _mulle_queue_grow( queue, allocator);
 

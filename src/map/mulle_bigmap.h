@@ -35,7 +35,7 @@
 //
 #ifndef mulle_bigmap__h__
 #define mulle_bigmap__h__
- 
+
 #include "_mulle_bigmap.h"
 
 //
@@ -52,7 +52,7 @@ struct mulle_bigmap
 {
    MULLE_BIGMAP_BASE;
 };
-   
+
 #define MULLE_BIGMAPENUMERATOR_BASE    _MULLE_BIGMAPENUMERATOR_BASE
 
 
@@ -125,7 +125,7 @@ static inline void   mulle_bigmap_insert_keys_and_values_v( struct mulle_bigmap 
 static inline void   mulle_bigmap_insert_keys_and_values( struct mulle_bigmap *map, void *firstkey, void *firstvalue, ...)
 {
    va_list   args;
-   
+
    va_start( args, firstvalue);
    _mulle_bigmap_insert_keys_and_valuesv( (struct _mulle_bigmap *) map, firstkey, firstvalue, args, map->_callback, map->_allocator);
    va_end( args);
@@ -148,7 +148,7 @@ static inline struct mulle_bigmap   *mulle_bigmap_copy( struct mulle_bigmap *map
 {
    struct mulle_bigmap   *other;
    extern void   _mulle_bigmap_copy_items( struct _mulle_bigmap *, struct _mulle_bigmap *, struct mulle_container_keyvaluecallback *, struct mulle_allocator *);
-   
+
    // can't allow creation to be done by struct _mulle_bigmap
    other = mulle_bigmap_create( mulle_bigmap_get_count( map), map->_callback, map->_allocator);
    _mulle_bigmap_copy_items( (struct _mulle_bigmap *) other, (struct _mulle_bigmap *) map, map->_callback, map->_allocator);
@@ -158,9 +158,9 @@ static inline struct mulle_bigmap   *mulle_bigmap_copy( struct mulle_bigmap *map
 
 
 static inline struct mulle_bigmapenumerator   mulle_bigmap_enumerate( struct mulle_bigmap *map)
-{  
+{
    struct _mulle_bigmapenumerator   rover;
-   
+
    rover = _mulle_bigmap_enumerate( (struct _mulle_bigmap *) map, map->_callback);
    return( *(struct mulle_bigmapenumerator *) &rover);
 }
