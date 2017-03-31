@@ -55,18 +55,18 @@
 # define mulle_nonnull_second_third         __attribute__((nonnull(2,3)))
 # define mulle_nonnull_third_fourth         __attribute__((nonnull(3,4)))
 #else
-# define mulle_nonnull_first                
-# define mulle_nonnull_first_second         
-# define mulle_nonnull_first_second_third   
-# define mulle_nonnull_first_second_fourth  
-# define mulle_nonnull_first_second_fifth   
+# define mulle_nonnull_first
+# define mulle_nonnull_first_second
+# define mulle_nonnull_first_second_third
+# define mulle_nonnull_first_second_fourth
+# define mulle_nonnull_first_second_fifth
 # define mulle_nonnull_first_second_fourth_fifth
-# define mulle_nonnull_first_third          
-# define mulle_nonnull_first_third_fourth   
-# define mulle_nonnull_first_fourth         
-# define mulle_nonnull_first_fifth          
-# define mulle_nonnull_second               
-# define mulle_nonnull_second_third         
+# define mulle_nonnull_first_third
+# define mulle_nonnull_first_third_fourth
+# define mulle_nonnull_first_fourth
+# define mulle_nonnull_first_fifth
+# define mulle_nonnull_second
+# define mulle_nonnull_second_third
 # define mulle_nonnull_third_fourth
 #endif
 

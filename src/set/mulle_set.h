@@ -184,7 +184,7 @@ static inline void   *mulle_set_describe( struct mulle_set *set,
 static inline struct mulle_setenumerator   mulle_set_enumerate( struct mulle_set *set)
 {
    struct _mulle_setenumerator  rover;
-   
+
    rover = _mulle_set_enumerate( (struct _mulle_set *) set, set->_callback);
    return( *(struct mulle_setenumerator *) &rover);
 }

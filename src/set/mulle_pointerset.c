@@ -31,11 +31,11 @@ static void   *mulle_pointerset_bsearch( void **buf,
    long       last;
    long       middle;
    void       *p;
-   
+
    first  = 0;
    last   = (long) (n - 1);
    middle = (first + last) / 2;
-   
+
    while( first <= last)
    {
       p = buf[ middle];
@@ -43,15 +43,15 @@ static void   *mulle_pointerset_bsearch( void **buf,
       {
          if( (uintptr_t) p == (uintptr_t) search)
             return( p);
-         
+
          first = middle + 1;
       }
       else
          last = middle - 1;
- 
+
       middle = (first + last) / 2;
    }
-   
+
    return( NULL);
 }
 
@@ -60,10 +60,10 @@ void   *mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
 void   *mulle_pointerset_member2( struct mulle_pointerset *set, void *p)
 {
    void  **result;
-   
+
    if( ! set->n)
       return( NULL);
-   
+
    if( ! set->sorted)
    {
       qsort( set->storage, set->n, sizeof( void *), (void *) _pointer_compare);

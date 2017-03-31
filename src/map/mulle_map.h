@@ -8,7 +8,7 @@
 
 #ifndef mulle_map__h__
 #define mulle_map__h__
- 
+
 #include "_mulle_map.h"
 
 #include <stdarg.h>
@@ -28,8 +28,8 @@ struct mulle_map
 {
    MULLE_MAP_BASE;
 };
-   
-#define MULLE_MAPENUMERATOR_BASE    _MULLE_MAPENUMERATOR_BASE 
+
+#define MULLE_MAPENUMERATOR_BASE    _MULLE_MAPENUMERATOR_BASE
 
 
 struct mulle_mapenumerator
@@ -125,7 +125,7 @@ static inline void   mulle_map_insert_keys_and_values_v( struct mulle_map *map, 
 static inline void   mulle_map_insert_keys_and_values( struct mulle_map *map, void *firstkey, void *firstvalue, ...)
 {
    va_list   args;
-   
+
    va_start( args, firstvalue);
    _mulle_map_insert_keys_and_valuesv( (struct _mulle_map *) map, firstkey, firstvalue, args, map->_callback, map->_allocator);
    va_end( args);
@@ -135,7 +135,7 @@ static inline void   mulle_map_insert_keys_and_values( struct mulle_map *map, vo
 static inline void   mulle_map_set( struct mulle_map *map, void *key, void *value)
 {
    struct mulle_pointerpair   pair;
-   
+
    pair._key   = key;
    pair._value = value;
    _mulle_map_set( (struct _mulle_map *) map, &pair, map->_callback, map->_allocator);
@@ -145,7 +145,7 @@ static inline void   mulle_map_set( struct mulle_map *map, void *key, void *valu
 static inline void   *mulle_map_insert( struct mulle_map *map, void *key, void *value)
 {
    struct mulle_pointerpair   pair;
-   
+
    pair._key   = key;
    pair._value = value;
    return( _mulle_map_insert( (struct _mulle_map *) map, &pair, map->_callback, map->_allocator));
@@ -165,7 +165,7 @@ static inline int   mulle_map_copy_items( struct mulle_map *dst, struct mulle_ma
 static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
 {
    struct mulle_map   *other;
-   
+
    // can't allow creation to be done by struct _mulle_map
    other = mulle_map_create( mulle_map_get_count( map), map->_callback, map->_allocator);
    _mulle_map_copy_items( (struct _mulle_map *) other, (struct _mulle_map *) map, map->_callback, map->_allocator);
@@ -188,9 +188,9 @@ static inline void   *mulle_map_describe( struct mulle_map *map,
 #pragma mark enumeration
 
 static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map *map)
-{  
+{
    struct _mulle_mapenumerator   rover;
-   
+
    rover = _mulle_map_enumerate( (struct _mulle_map *) map, map->_callback);
    return( *(struct mulle_mapenumerator *) &rover);
 }
@@ -199,7 +199,7 @@ static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map
 static inline int    mulle_mapenumerator_next( struct mulle_mapenumerator *rover, void **key, void **value)
 {
    struct mulle_pointerpair  *pair;
-   
+
    pair = _mulle_mapenumerator_next( (struct _mulle_mapenumerator *) rover);
    if( ! pair)
       return( 0);

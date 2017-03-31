@@ -32,7 +32,7 @@
 //
 #ifndef _mulle_bigmap__h__
 #define _mulle_bigmap__h__
- 
+
 #include "_mulle_map.h"
 #include "mulle_container_compiler_attributes.h"
 #include "mulle_container_operation.h"
@@ -53,7 +53,7 @@ struct _mulle_bigmap
 {
    _MULLE_BIGMAP_BASE;
 };
-   
+
 
 #define _MULLE_BIGMAPENUMERATOR_BASE               \
    struct _mulle_mapenumerator   _bucketsRover;    \
@@ -61,10 +61,10 @@ struct _mulle_bigmap
    size_t              _left;                      \
    struct _mulle_bigmap   *_map;                   \
    struct mulle_container_keyvaluecallback   *_callback
-   
+
 
 struct  _mulle_bigmapenumerator
-{  
+{
    _MULLE_BIGMAPENUMERATOR_BASE;
 };
 
@@ -74,7 +74,7 @@ void  _mulle_bigmap_init( struct _mulle_bigmap *map,
                           struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
                           mulle_nonnull_first_third_fourth;
-                       
+
 
 void   _mulle_bigmap_done( struct _mulle_bigmap *map,
                            struct mulle_container_keyvaluecallback *callback,
@@ -122,7 +122,7 @@ static inline void  _mulle_bigmap_insert_keys_and_values( struct _mulle_bigmap *
                                                        ...)
 {
    va_list   args;
-   
+
    va_start( args, firstvalue);
    _mulle_bigmap_insert_keys_and_valuesv( map, firstkey, firstvalue, args, callback, allocator);
    va_end( args);
@@ -149,7 +149,7 @@ static inline void   _mulle_bigmap_set( struct _mulle_bigmap *map,
                                         struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   pair;
-   
+
    pair._key   = key;
    pair._value = value;
 
@@ -164,7 +164,7 @@ static inline void   *_mulle_bigmap_insert( struct _mulle_bigmap *map,
                                          struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   pair;
-   
+
    pair._key   = key;
    pair._value = value;
 
@@ -173,7 +173,7 @@ static inline void   *_mulle_bigmap_insert( struct _mulle_bigmap *map,
 
 
 
-struct _mulle_bigmap   *_mulle_bigmap_clone( struct _mulle_bigmap *map, 
+struct _mulle_bigmap   *_mulle_bigmap_clone( struct _mulle_bigmap *map,
                                              struct mulle_container_keyvaluecallback *callback,
                                               struct mulle_allocator *allocator)
                                          mulle_nonnull_first_second;
@@ -183,14 +183,14 @@ static inline struct _mulle_bigmapenumerator   _mulle_bigmap_enumerate( struct _
                                                                   struct mulle_container_keyvaluecallback *callback)
 {
    struct _mulle_bigmapenumerator   rover;
-   
+
    rover._bucketsRover._left = 0;
-   
+
    rover._index    = 0;
    rover._left     = map->_count;
    rover._map      = map;
    rover._callback = callback;
-   
+
    return( rover);
 }
 
