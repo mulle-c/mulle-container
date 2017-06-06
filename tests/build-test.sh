@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#! /usr/bin/env bash
 
 PROJECTDIR="`dirname "$PWD"`"
 PROJECTNAME="`basename "${PROJECTDIR}"`"
