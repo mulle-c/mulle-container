@@ -1,3 +1,7 @@
+# 0.8.10
+
+* community version
+
 # 0.8.7
 
 * merge in community version
