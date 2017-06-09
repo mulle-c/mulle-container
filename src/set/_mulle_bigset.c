@@ -363,11 +363,10 @@ void   _mulle_bigset_remove( struct _mulle_bigset *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
-   size_t   hash;
-   size_t   i;
-   size_t   modulo;
-   struct _mulle_set  *bucket;
-   void         *q;
+   size_t              hash;
+   size_t              i;
+   struct _mulle_set   *bucket;
+   void                *q;
 
    if( ! set->_depth)
       return;

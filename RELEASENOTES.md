@@ -1,3 +1,8 @@
+## 0.9.1
+
+* drastic API change  _keys_and_values functions have been replaced by
+values_for_keys functions that reflect the parameter order. sorry
+
 # 0.8.10
 
 * community version

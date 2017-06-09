@@ -116,18 +116,18 @@ static inline void   mulle_map_remove( struct mulle_map *map, void *key)
 }
 
 
-static inline void   mulle_map_insert_keys_and_values_v( struct mulle_map *map, void *firstkey, void *firstvalue, va_list args)
+static inline void   mulle_map_insert_values_for_keysv( struct mulle_map *map, void *firstvalue, void *firstkey, va_list args)
 {
-   _mulle_map_insert_keys_and_valuesv( (struct _mulle_map *) map, firstkey,  firstvalue, args, map->_callback, map->_allocator);
+   _mulle_map_insert_values_for_keysv( (struct _mulle_map *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
 }
 
 
-static inline void   mulle_map_insert_keys_and_values( struct mulle_map *map, void *firstkey, void *firstvalue, ...)
+static inline void   mulle_map_insert_values_for_keys( struct mulle_map *map, void *firstvalue, void *firstkey, ...)
 {
    va_list   args;
 
-   va_start( args, firstvalue);
-   _mulle_map_insert_keys_and_valuesv( (struct _mulle_map *) map, firstkey, firstvalue, args, map->_callback, map->_allocator);
+   va_start( args, firstkey);
+   _mulle_map_insert_values_for_keysv( (struct _mulle_map *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
    va_end( args);
 }
 

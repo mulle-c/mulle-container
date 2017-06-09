@@ -116,18 +116,18 @@ static inline size_t   mulle_bigmap_get_count( struct mulle_bigmap *map)
 }
 
 
-static inline void   mulle_bigmap_insert_keys_and_values_v( struct mulle_bigmap *map, void *firstkey, void *firstvalue, va_list args)
+static inline void   mulle_bigmap_insert_values_for_keys_v( struct mulle_bigmap *map, void *firstvalue, void *firstkey, va_list args)
 {
-   _mulle_bigmap_insert_keys_and_valuesv( (struct _mulle_bigmap *) map, firstkey,  firstvalue, args, map->_callback, map->_allocator);
+   _mulle_bigmap_insert_values_for_keysv( (struct _mulle_bigmap *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
 }
 
 
-static inline void   mulle_bigmap_insert_keys_and_values( struct mulle_bigmap *map, void *firstkey, void *firstvalue, ...)
+static inline void   mulle_bigmap_insert_values_for_keys( struct mulle_bigmap *map, void *firstvalue, void *firstkey, ...)
 {
    va_list   args;
 
-   va_start( args, firstvalue);
-   _mulle_bigmap_insert_keys_and_valuesv( (struct _mulle_bigmap *) map, firstkey, firstvalue, args, map->_callback, map->_allocator);
+   va_start( args, firstkey);
+   _mulle_bigmap_insert_values_for_keysv( (struct _mulle_bigmap *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
    va_end( args);
 }
 
