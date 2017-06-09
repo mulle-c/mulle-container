@@ -654,7 +654,7 @@ int   _mulle_map_remove( struct _mulle_map *map,
 }
 
 
-void   _mulle_map_insert_keys_and_valuesv( struct _mulle_map *map,
+void   _mulle_map_insert_values_for_keysv( struct _mulle_map *map,
                                            void *firstvalue,
                                            void *firstkey,
                                            va_list args,

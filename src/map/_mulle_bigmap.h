@@ -105,26 +105,26 @@ void   _mulle_bigmap_remove( struct _mulle_bigmap *map,
                           struct mulle_allocator *allocator)
                              mulle_nonnull_first_third;
 
-void _mulle_bigmap_insert_keys_and_valuesv( struct _mulle_bigmap *map,
-                                         void *firstkey,
-                                         void *firstvalue,
-                                         va_list arg,
-                                         struct mulle_container_keyvaluecallback *callback,
-                                         struct mulle_allocator *allocator)
+void _mulle_bigmap_insert_values_for_keysv( struct _mulle_bigmap *map,
+                                            void *firstvalue,
+                                            void *firstkey,
+                                            va_list arg,
+                                            struct mulle_container_keyvaluecallback *callback,
+                                            struct mulle_allocator *allocator)
                                             mulle_nonnull_first_fifth;
 
 
-static inline void  _mulle_bigmap_insert_keys_and_values( struct _mulle_bigmap *map,
-                                                       struct mulle_container_keyvaluecallback *callback,
-                                                       struct mulle_allocator *allocator,
-                                                       void *firstkey,
-                                                       void *firstvalue,
-                                                       ...)
+static inline void  _mulle_bigmap_insert_values_for_keys( struct _mulle_bigmap *map,
+                                                          struct mulle_container_keyvaluecallback *callback,
+                                                          struct mulle_allocator *allocator,
+                                                          void *firstvalue,
+                                                          void *firstkey,
+                                                          ...)
 {
    va_list   args;
 
-   va_start( args, firstvalue);
-   _mulle_bigmap_insert_keys_and_valuesv( map, firstkey, firstvalue, args, callback, allocator);
+   va_start( args, firstkey);
+   _mulle_bigmap_insert_values_for_keysv( map, firstvalue, firstkey, args, callback, allocator);
    va_end( args);
 }
 

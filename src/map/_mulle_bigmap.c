@@ -531,12 +531,11 @@ void   _mulle_bigmap_remove( struct _mulle_bigmap *map,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
-   size_t                                hash;
-   size_t                                i;
-   size_t                                modulo;
-   size_t                                other_hash;
-   struct _mulle_map   *bucket;
-   struct mulle_pointerpair            *pair;
+   size_t                     hash;
+   size_t                     i;
+   size_t                     other_hash;
+   struct _mulle_map          *bucket;
+   struct mulle_pointerpair   *pair;
 
    if( ! map->_depth)
       return;
@@ -580,12 +579,12 @@ match:
 }
 
 
-void   _mulle_bigmap_insert_keys_and_valuesv( struct _mulle_bigmap *map,
-                                           void *firstvalue,
-                                           void *firstkey,
-                                           va_list args,
-                                           struct mulle_container_keyvaluecallback *callback,
-                                           struct mulle_allocator *allocator)
+void   _mulle_bigmap_insert_values_for_keysv( struct _mulle_bigmap *map,
+                                              void *firstvalue,
+                                              void *firstkey,
+                                              va_list args,
+                                              struct mulle_container_keyvaluecallback *callback,
+                                              struct mulle_allocator *allocator)
 {
    void  *value;
    void  *key;

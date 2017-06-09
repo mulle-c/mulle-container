@@ -9,6 +9,7 @@ tmp/
 *.exe
 *.exe.debug
 *.debug
+*.old
 
 /include
 /lib
@@ -17,7 +18,7 @@ tmp/
 /.repos/
 /dependencies/
 /addictions/
-
+src/table
 /mulle-configuration
 /cityhash/
 /tests/mulle-tests

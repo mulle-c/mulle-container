@@ -40,8 +40,7 @@
 
 // NSMapTable/NSDictionary/NSMutableDictionary
 //
-// this is like your traditional  hash table, its called like this
-// because its a constituent of mulle_bigmap
+// this is your traditional key value table
 //
 #define _MULLE_MAP_BASE                  \
    struct mulle_pointerpair   *_storage; \
@@ -170,7 +169,7 @@ void   *_mulle_map_get( struct _mulle_map *map,
                         void *p,
                         struct mulle_container_keyvaluecallback *callback);
 
-void   _mulle_map_insert_keys_and_valuesv( struct _mulle_map *map,
+void   _mulle_map_insert_values_for_keysv( struct _mulle_map *map,
                                            void *firstvalue,
                                            void *firstkey,
                                            va_list args,
