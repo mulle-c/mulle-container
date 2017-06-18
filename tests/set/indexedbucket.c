@@ -51,5 +51,7 @@ int  main()
    simple_fill_test();
 
    mulle_test_allocator_reset();
+
+   return( 0);
 }
 
