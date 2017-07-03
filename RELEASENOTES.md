@@ -1,3 +1,7 @@
+## 0.9.3
+
+* make it a cmake "C" project
+
 ## 0.9.1
 
 * drastic API change  _keys_and_values functions have been replaced by
