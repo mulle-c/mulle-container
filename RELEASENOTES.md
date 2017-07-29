@@ -1,3 +1,8 @@
+## 0.10.1
+
+* adapt to mulle-configuration 2.0
+
+
 ## 0.9.3
 
 * make it a cmake "C" project
