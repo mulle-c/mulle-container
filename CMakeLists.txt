@@ -20,10 +20,10 @@ else()
 endif()
 
 
-add_definitions( -DMULLE_ABA_TRACE_SWAP
-                 -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern
-                 -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
-
+if( MSVC)
+   add_definitions( -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern)
+   add_definitions( -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
+endif()
 
 # using include_directories is a little bit shitty
 include_directories( src
