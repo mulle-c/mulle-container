@@ -16,6 +16,12 @@ endif()
 
 include( CMakeSourcesAndHeaders.txt)
 
+if( MSVC)
+   add_definitions( -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern)
+   add_definitions( -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
+endif()
+
+
 find_library( MULLE_ALLOCATOR_LIBRARY      NAMES mulle_allocator)
 message( STATUS "MULLE_ALLOCATOR_LIBRARY is ${MULLE_ALLOCATOR_LIBRARY}")
 find_library( MULLE_TEST_ALLOCATOR_LIBRARY NAMES mulle_test_allocator)
