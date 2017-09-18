@@ -39,7 +39,7 @@
 //
 // community version is always even
 //
-#define MULLE_CONTAINER_VERSION  ((0 << 20) | (10 << 8) | 3)
+#define MULLE_CONTAINER_VERSION  ((0 << 20) | (10 << 8) | 5)
 
 #include <mulle_allocator/mulle_allocator.h>
 
