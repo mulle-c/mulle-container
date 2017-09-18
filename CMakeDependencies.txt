@@ -1,0 +1,22 @@
+if( NOT __MULLE_CONTAINER_CMAKE_DEPENDENCIES_TXT__)
+   set( __MULLE_CONTAINER_CMAKE_DEPENDENCIES_TXT__ ON)
+
+   message( STATUS "# Include mulle-container CMakeDependencies.txt")
+
+   include( ${DEPENDENCIES_DIR}/include/mulle_allocator/CMakeDependencies.txt)
+
+   if( NOT MULLE_CONTAINER_LIBRARY)
+      find_library( MULLE_CONTAINER_LIBRARY NAMES mulle_container)
+      message(STATUS "MULLE_CONTAINER_LIBRARY is ${MULLE_CONTAINER_LIBRARY}")
+      set( C_DEPENDENCY_LIBRARIES
+         ${MULLE_CONTAINER_LIBRARY}
+         ${C_DEPENDENCY_LIBRARIES}
+         CACHE INTERNAL "need to cache this"
+      )
+   endif()
+
+   if( MSVC)
+      set( MULLE_CONTAINER_DEFINITIONS ${MULLE_ALLOCATOR_DEFINITIONS})
+   endif()
+
+endif()

@@ -14,26 +14,15 @@ else()
   include( Release)
 endif()
 
+
+set( MULLE_CONTAINER_LIBRARY ON)
 include( CMakeSourcesAndHeaders.txt)
-
-if( MSVC)
-   add_definitions( -DMULLE_ALLOCATOR_EXTERN_GLOBAL=extern)
-   add_definitions( -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
-endif()
+include( CMakeDependencies.txt)
 
 
-find_library( MULLE_ALLOCATOR_LIBRARY      NAMES mulle_allocator)
-message( STATUS "MULLE_ALLOCATOR_LIBRARY is ${MULLE_ALLOCATOR_LIBRARY}")
-find_library( MULLE_TEST_ALLOCATOR_LIBRARY NAMES mulle_test_allocator)
-message( STATUS "MULLE_TEST_ALLOCATOR_LIBRARY is ${MULLE_TEST_ALLOCATOR_LIBRARY}")
-find_library( MULLE_THREAD_LIBRARY         NAMES mulle_thread)
-message( STATUS "MULLE_THREAD_LIBRARY is ${MULLE_THREAD_LIBRARY}")
-
-
-set( DEPENDENCY_LIBRARIES
-${MULLE_ALLOCATOR_LIBRARY}
-${MULLE_TEST_ALLOCATOR_LIBRARY}
-${MULLE_THREAD_LIBRARY}
+set( PUBLIC_HEADERS
+${HEADERS}
+CMakeDependencies.txt
 )
 
 
@@ -42,15 +31,16 @@ ${SOURCES}
 )
 
 
-set( TARGET_ALL_LOAD_LIBRARIES
-$<TARGET_FILE:mulle_container>
-${DEPENDENCY_LIBRARIES}
-)
-
 set( STANDALONE_BASE_NAME "mulle_container")
 set( STANDALONE_NAME "mulle_container_standalone")
+set( STANDALONE_DEFINITIONS ${MULLE_CONTAINER_DEFINITIONS})
+set( STANDALONE_ALL_LOAD_LIBRARIES
+$<TARGET_FILE:mulle_container>
+${C_DEPENDENCY_LIBRARIES}
+)
 
 include( Standalone)
 
+
 INSTALL( TARGETS mulle_container mulle_container_standalone DESTINATION "lib")
-INSTALL( FILES ${HEADERS} DESTINATION "include/mulle_container")
+INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION "include/mulle_container")
