@@ -31,6 +31,12 @@ ${SOURCES}
 )
 
 
+# PRIVATE is a guess
+target_compile_definitions( mulle_container
+PRIVATE ${MULLE_CONTAINER_DEFINITIONS}
+)
+
+
 set( STANDALONE_BASE_NAME "mulle_container")
 set( STANDALONE_NAME "mulle_container_standalone")
 set( STANDALONE_DEFINITIONS ${MULLE_CONTAINER_DEFINITIONS})
