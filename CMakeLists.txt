@@ -20,6 +20,10 @@ include( CMakeSourcesAndHeaders.txt)
 include( CMakeDependencies.txt)
 
 
+include_directories( ${INCLUDE_DIRS})
+include_directories( SYSTEM ${SYSTEM_INCLUDE_DIRS})
+
+
 set( PUBLIC_HEADERS
 ${HEADERS}
 CMakeDependencies.txt
@@ -39,6 +43,7 @@ PRIVATE ${MULLE_CONTAINER_DEFINITIONS}
 
 set( STANDALONE_BASE_NAME "mulle_container")
 set( STANDALONE_NAME "mulle_container_standalone")
+set( STANDALONE_SOURCES "src/mulle_container_standalone.c")
 set( STANDALONE_DEFINITIONS ${MULLE_CONTAINER_DEFINITIONS})
 set( STANDALONE_ALL_LOAD_LIBRARIES
 $<TARGET_FILE:mulle_container>
