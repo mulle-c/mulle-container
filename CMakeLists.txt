@@ -2,58 +2,66 @@ cmake_minimum_required( VERSION 3.0)
 
 project( mulle-container C)
 
-#
-# which mulle-configuration to use ?
-#
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/mulle-configuration/cmake)
-message(STATUS "CMAKE_MODULE_PATH is ${CMAKE_MODULE_PATH}")
-message(STATUS "CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}")
-if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  include( Debug)
-else()
-  include( Release)
-endif()
 
+### mulle-sde environment
+
+# add cmake module paths to search path
+list( INSERT CMAKE_MODULE_PATH 0 "${PROJECT_SOURCE_DIR}/cmake/share")
+list( INSERT CMAKE_MODULE_PATH 0 "${PROJECT_SOURCE_DIR}/cmake")
+
+include( Environment)
+
+
+### Files
+
+include( PreFiles OPTIONAL)
 
 set( MULLE_CONTAINER_LIBRARY ON)
-include( CMakeSourcesAndHeaders.txt)
-include( CMakeDependencies.txt)
+
+#
+# Include all non underscored .cmake files in ./cmake
+#
+file( GLOB LOCAL_CMAKE_INCLUDES
+   "cmake/[A-Za-z0-9]*.cmake"
+)
+
+foreach( FILE ${LOCAL_CMAKE_INCLUDES} )
+   include( "${FILE}")
+endforeach()
 
 
 include_directories( ${INCLUDE_DIRS})
-include_directories( SYSTEM ${SYSTEM_INCLUDE_DIRS})
 
+include( PostFiles OPTIONAL)
 
-set( PUBLIC_HEADERS
-${HEADERS}
-CMakeDependencies.txt
-)
+### Library
 
+include( PreLibrary OPTIONAL)
 
-add_library( mulle_container STATIC
+add_library( "mulle-container"
 ${SOURCES}
+${PUBLIC_HEADERS}
+${PRIVATE_HEADERS}
+${CMAKE_EDITABLE_FILES}
 )
 
-
-# PRIVATE is a guess
-target_compile_definitions( mulle_container
-PRIVATE ${MULLE_CONTAINER_DEFINITIONS}
+if( BUILD_SHARED_LIBS)
+   target_link_libraries( mulle-container
+${DEPENDENCIES_LIBRARIES}
+${OS_SPECIFIC_LIBRARIES}
 )
+endif()
 
+include( PostLibrary OPTIONAL)
 
-set( STANDALONE_BASE_NAME "mulle_container")
-set( STANDALONE_NAME "mulle_container_standalone")
-set( STANDALONE_SOURCES "src/mulle_container_standalone.c")
-set( STANDALONE_DEFINITIONS ${MULLE_CONTAINER_DEFINITIONS})
-set( STANDALONE_ALL_LOAD_LIBRARIES
-$<TARGET_FILE:mulle_container>
-${C_DEPENDENCY_LIBRARIES}
-)
+### Install
 
-include( Standalone)
+include( PreInstall OPTIONAL)
 
+install( TARGETS "mulle-container" DESTINATION "lib")
+install( FILES ${PUBLIC_HEADERS}  DESTINATION "include/mulle-container")
+install( FILES ${PRIVATE_HEADERS} DESTINATION "include/mulle-container/private")
 
-INSTALL( TARGETS mulle_container mulle_container_standalone DESTINATION "lib")
-INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION "include/mulle_container")
+install( FILES ${CMAKE_INCLUDES}  DESTINATION "include/mulle-container/cmake")
 
-include( MulleTest)
+include( PostInstall OPTIONAL)

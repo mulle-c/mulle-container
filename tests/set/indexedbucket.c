@@ -1,5 +1,6 @@
-#include <mulle_container/mulle_container.h>
-#include <mulle_test_allocator/mulle_test_allocator.h>
+#include <mulle_container/mulle-container.h>
+
+#include "dependencies.h"
 
 #include <stdio.h>
 
