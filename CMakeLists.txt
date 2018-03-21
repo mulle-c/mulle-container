@@ -54,11 +54,27 @@ endif()
 
 include( PostLibrary OPTIONAL)
 
+
+set( STANDALONE_BASE_NAME "mulle-container")
+set( STANDALONE_NAME "mulle-container-standalone")
+set( STANDALONE_DEFINITIONS ${MULLE_CONTAINER_DEFINITIONS})
+set( STANDALONE_DEPENDENCIES
+mulle-container
+)
+
+set( STANDALONE_ALL_LOAD_LIBRARIES
+$<TARGET_FILE:mulle-container>
+${C_DEPENDENCY_LIBRARIES}
+${OS_SPECIFIC_LIBRARIES}
+)
+
+include( Standalone)
+
 ### Install
 
 include( PreInstall OPTIONAL)
 
-install( TARGETS "mulle-container" DESTINATION "lib")
+install( TARGETS "mulle-container" "mulle-container-standalone" DESTINATION "lib")
 install( FILES ${PUBLIC_HEADERS}  DESTINATION "include/mulle-container")
 install( FILES ${PRIVATE_HEADERS} DESTINATION "include/mulle-container/private")
 
