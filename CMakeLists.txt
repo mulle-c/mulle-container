@@ -47,7 +47,7 @@ ${CMAKE_EDITABLE_FILES}
 
 if( BUILD_SHARED_LIBS)
    target_link_libraries( mulle-container
-${DEPENDENCIES_LIBRARIES}
+${DEPENDENCY_LIBRARIES}
 ${OS_SPECIFIC_LIBRARIES}
 )
 endif()
@@ -64,7 +64,11 @@ mulle-container
 
 set( STANDALONE_ALL_LOAD_LIBRARIES
 $<TARGET_FILE:mulle-container>
-${C_DEPENDENCY_LIBRARIES}
+${DEPENDENCY_LIBRARIES}
+${OPTIONAL_DEPENDENCY_LIBRARIES}
+)
+
+set( STANDALONE_NORMAL_LOAD_LIBRARIES
 ${OS_SPECIFIC_LIBRARIES}
 )
 
@@ -79,5 +83,9 @@ install( FILES ${PUBLIC_HEADERS}  DESTINATION "include/mulle-container")
 install( FILES ${PRIVATE_HEADERS} DESTINATION "include/mulle-container/private")
 
 install( FILES ${CMAKE_INCLUDES}  DESTINATION "include/mulle-container/cmake")
+
+if( EXISTS ".mulle-craft" )
+   install( DIRECTORY ".mulle-craft" DESTINATION "share/mulle-craft")
+endif()
 
 include( PostInstall OPTIONAL)

@@ -8,8 +8,8 @@
 //  All rights reserved.
 //
 
-#include <mulle_container/mulle-container.h>
-#include <mulle_test_allocator/mulle_test_allocator.h>
+#include <mulle-container/mulle-container.h>
+#include <mulle-test-allocator/mulle-test-allocator.h>
 
 #include <stdio.h>
 
