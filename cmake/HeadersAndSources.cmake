@@ -17,3 +17,6 @@ set( PUBLIC_HEADERS
 ${PUBLIC_HEADERS}
 )
 
+#
+# You can put more source and resource file definitions here.
+#
