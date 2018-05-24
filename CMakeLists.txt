@@ -55,37 +55,51 @@ endif()
 include( PostLibrary OPTIONAL)
 
 
-set( STANDALONE_BASE_NAME "mulle-container")
-set( STANDALONE_NAME "mulle-container-standalone")
-set( STANDALONE_DEFINITIONS ${MULLE_CONTAINER_DEFINITIONS})
-set( STANDALONE_DEPENDENCIES
-mulle-container
+option( STANDALONE "Create standalone library for debugging" OFF)
+
+set( INSTALL_LIBRARY_TARGETS
+"mulle-container"
 )
 
-set( STANDALONE_ALL_LOAD_LIBRARIES
-$<TARGET_FILE:mulle-container>
-${DEPENDENCY_LIBRARIES}
-${OPTIONAL_DEPENDENCY_LIBRARIES}
-)
+if( STANDALONE)
+   set( STANDALONE_BASE_NAME "mulle-container")
+   set( STANDALONE_NAME "mulle-container-standalone")
+   set( STANDALONE_DEFINITIONS ${MULLE_CONTAINER_DEFINITIONS})
+   set( STANDALONE_DEPENDENCIES
+   mulle-container
+   )
 
-set( STANDALONE_NORMAL_LOAD_LIBRARIES
-${OS_SPECIFIC_LIBRARIES}
-)
+   set( STANDALONE_ALL_LOAD_LIBRARIES
+   $<TARGET_FILE:mulle-container>
+   ${DEPENDENCY_LIBRARIES}
+   ${OPTIONAL_DEPENDENCY_LIBRARIES}
+   )
 
-include( Standalone)
+   set( STANDALONE_NORMAL_LOAD_LIBRARIES
+   ${OS_SPECIFIC_LIBRARIES}
+   )
+
+   include( Standalone)
+
+   set( INSTALL_LIBRARY_TARGETS
+   ${INSTALL_LIBRARY_TARGETS}
+   "mulle-container-standalone"
+   )
+endif()
+
 
 ### Install
 
 include( PreInstall OPTIONAL)
 
-install( TARGETS "mulle-container" "mulle-container-standalone" DESTINATION "lib")
+install( TARGETS ${INSTALL_LIBRARY_TARGETS} DESTINATION "lib")
 install( FILES ${PUBLIC_HEADERS}  DESTINATION "include/mulle-container")
 install( FILES ${PRIVATE_HEADERS} DESTINATION "include/mulle-container/private")
 
+# definitions from cmake/share/Environment.cmake
 install( FILES ${CMAKE_INCLUDES}  DESTINATION "include/mulle-container/cmake")
 
-if( EXISTS ".mulle-craft" )
-   install( DIRECTORY ".mulle-craft" DESTINATION "share/mulle-craft")
-endif()
+# definitions from cmake/share/LinkManifest.cmake
+install( FILES ${LINK_MANIFEST_FILES}  DESTINATION "include/mulle-container/link")
 
 include( PostInstall OPTIONAL)
