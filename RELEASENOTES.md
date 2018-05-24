@@ -1,3 +1,10 @@
+# 1.0.0
+
+* migrated to mulle-sde
+* made headernames hyphenated
+* no longer distributed as a homebrew package
+
+
 ### 0.10.9
 
 * Various small improvements

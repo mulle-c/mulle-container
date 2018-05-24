@@ -36,10 +36,7 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-//
-// community version is always even
-//
-#define MULLE_CONTAINER_VERSION  ((0 << 20) | (10 << 8) | 9)
+#define MULLE_CONTAINER_VERSION  ((1 << 20) | (0 << 8) | 0)
 
 #include "dependencies.h"
 

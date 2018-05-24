@@ -77,6 +77,9 @@ if( STANDALONE)
    $<TARGET_FILE:mulle-container>
    ${DEPENDENCY_LIBRARIES}
    ${OPTIONAL_DEPENDENCY_LIBRARIES}
+   )
+
+   set( STANDALONE_NORMAL_LOAD_LIBRARIES
    ${OS_SPECIFIC_LIBRARIES}
    )
 
@@ -87,6 +90,7 @@ if( STANDALONE)
    "mulle-container-standalone"
    )
 endif()
+
 
 ### Install
 
