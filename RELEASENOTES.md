@@ -1,3 +1,7 @@
+### 1.0.1
+
+* fix travis
+
 # 1.0.0
 
 * migrated to mulle-sde
