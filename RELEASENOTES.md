@@ -1,3 +1,7 @@
+### 1.0.2
+
+* fix travis.yml
+
 ### 1.0.1
 
 * fix travis
