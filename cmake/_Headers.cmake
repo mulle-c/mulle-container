@@ -13,7 +13,7 @@ src/queue
 src/set
 ) 
 
-set( PRIVATE_HEADERS
+      set( PRIVATE_HEADERS
 src/map/_mulle-bigmap-private.h
 )
 
