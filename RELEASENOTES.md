@@ -1,3 +1,7 @@
+### 1.0.5
+
+* fix corrupted environment
+
 ### 1.0.4
 
 * Various small improvements
