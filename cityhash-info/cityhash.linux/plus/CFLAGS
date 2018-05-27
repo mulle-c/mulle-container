@@ -1,1 +1,1 @@
--fPIC
+-fPIC -std=c99

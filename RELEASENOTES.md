@@ -1,3 +1,7 @@
+### 1.0.6
+
+* set -std=c99 for everybody
+
 ### 1.0.5
 
 * fix corrupted environment
