@@ -9,7 +9,7 @@
 #ifndef mulle_pointerset_h__
 #define mulle_pointerset_h__
 
-#include "dependencies.h"
+#include "include.h"
 
 #include <stddef.h>
 #include <stdint.h>

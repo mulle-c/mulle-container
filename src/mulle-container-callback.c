@@ -37,7 +37,7 @@
 
 #include "mulle-hash.h"
 
-#include "dependencies.h"
+#include "include-private.h"
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>

@@ -1,3 +1,7 @@
+### 1.0.7
+
+* modernized mulle-sde
+
 ### 1.0.6
 
 * set -std=c99 for everybody

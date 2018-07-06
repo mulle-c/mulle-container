@@ -13,7 +13,7 @@
  */
 #include "_mulle-queue.h"
 
-#include "dependencies.h"
+#include "include-private.h"
 
 
 void  *__mulle_queueenumerator_next( struct _mulle_queue *queue, struct _mulle_queueenumerator *rover);

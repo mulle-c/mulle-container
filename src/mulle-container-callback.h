@@ -35,7 +35,7 @@
 #ifndef mulle_callback_type_h__
 #define mulle_callback_type_h__
 
-#include "dependencies.h"
+#include "include.h"
 #include <stdint.h>
 #include <stddef.h>
 #include <limits.h>

@@ -30,7 +30,7 @@
 
 #include "_mulle-array.h"
 
-#include "dependencies.h"
+#include "include-private.h"
 
 #include "mulle-container-operation.h"
 #include "mulle-container-callback.h"
