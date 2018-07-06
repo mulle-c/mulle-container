@@ -11,10 +11,15 @@ include( _Sources)
 # === MULLE-SDE END ===
 #
 
-# add ignored header back in
+# add ignored headers back in
 set( PUBLIC_HEADERS
-"src/_mulle-container-dependencies.h"
+"src/_mulle-container-include.h"
 ${PUBLIC_HEADERS}
+)
+
+set( PRIVATE_HEADERS
+"src/_mulle-container-include-private.h"
+${PRIVATE_HEADERS}
 )
 
 #

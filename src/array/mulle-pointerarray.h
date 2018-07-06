@@ -34,7 +34,7 @@
 #ifndef mulle_pointerarray_h__
 #define mulle_pointerarray_h__
 
-#include "dependencies.h"
+#include "include.h"
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>

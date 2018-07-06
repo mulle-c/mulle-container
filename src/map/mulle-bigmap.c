@@ -35,7 +35,7 @@
 
 #include "mulle-container-callback.h"
 
-#include "dependencies.h"
+#include "include-private.h"
 #include <string.h>
 
 

@@ -13,7 +13,8 @@ src/queue
 src/set
 ) 
 
-      set( PRIVATE_HEADERS
+set( PRIVATE_HEADERS
+src/include-private.h
 src/map/_mulle-bigmap-private.h
 )
 
@@ -22,9 +23,9 @@ src/array/_mulle-array.h
 src/array/mulle-array.h
 src/array/mulle-pointerarray.h
 src/array/mulle-pointerpairarray.h
-src/dependencies.h
 src/hash/mulle-hash.h
 src/hash/mulle-prime.h
+src/include.h
 src/map/_mulle-bigmap.h
 src/map/mulle-bigmap.h
 src/map/_mulle-map.h

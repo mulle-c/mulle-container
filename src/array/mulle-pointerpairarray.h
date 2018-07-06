@@ -37,7 +37,7 @@
 
 #include "mulle-pointerpair.h"
 
-#include "dependencies.h"
+#include "include.h"
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>
