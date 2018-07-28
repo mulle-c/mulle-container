@@ -90,8 +90,12 @@ add_library( "mulle-container"
    ${ALL_OBJECT_FILES}
 )
 
+include( Library OPTIONAL)
 
-set( INSTALL_LIBRARY_TARGETS "mulle-container")
+set( INSTALL_LIBRARY_TARGETS
+   "mulle-container"
+   "${INSTALL_LIBRARY_TARGETS}"
+)
 
 include( PostLibrary OPTIONAL)
 
