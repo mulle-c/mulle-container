@@ -7,6 +7,7 @@ endif()
 set( INCLUDE_DIRS
 src
 src/array
+src/farmhash
 src/hash
 src/map
 src/queue
@@ -23,6 +24,8 @@ src/array/_mulle-array.h
 src/array/mulle-array.h
 src/array/mulle-pointerarray.h
 src/array/mulle-pointerpairarray.h
+src/farmhash/farmhash.h
+src/farmhash/largeint.h
 src/hash/mulle-hash.h
 src/hash/mulle-prime.h
 src/include.h
