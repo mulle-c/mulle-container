@@ -29,32 +29,32 @@
 //
 #include "mulle-hash.h"
 
-#include <city.h>
+#include "farmhash.h"
 
 
 // lots of other code snipped
 
 uint32_t   mulle_hash_32( void *buf, size_t len)
 {
-   return( (uint32_t) CityHash32( buf, len));
+   return( (uint32_t) farmhash32( buf, len));
 }
 
 
 uint64_t   mulle_hash_64( void *buf, size_t len)
 {
-   return( (uint64_t) CityHash64( buf, len));
+   return( (uint64_t) farmhash64( buf, len));
 }
 
 
 uint32_t   mulle_chained_hash_32( void *buf, size_t len, uint32_t hash)
 {
-   return( (uint32_t) CityHash64WithSeed( buf, len, hash));
+   return( (uint32_t) farmhash32_with_seed( buf, len, hash));
 }
 
 
 uint64_t   mulle_chained_hash_64( void *buf, size_t len, uint64_t hash)
 {
-   return( (uint64_t) CityHash64WithSeed( buf, len, hash));
+   return( (uint64_t) farmhash64_with_seed( buf, len, hash));
 }
 
 

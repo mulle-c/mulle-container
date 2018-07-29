@@ -57,3 +57,4 @@ tmp.*/
 
 *.sublime-workspace
 mulle-project/publisher-info.sh
+src/farmhash

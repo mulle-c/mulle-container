@@ -1,3 +1,8 @@
+## 1.1.0
+
+* migrated to farmhash and got rid of the painful configure step
+
+
 ### 1.0.8
 
 * fix for mingw, update project
