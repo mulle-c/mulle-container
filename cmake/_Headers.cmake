@@ -15,6 +15,8 @@ src/set
 ) 
 
 set( PRIVATE_HEADERS
+src/farmhash/farmhash.h
+src/farmhash/largeint.h
 src/include-private.h
 src/map/_mulle-bigmap-private.h
 )
@@ -24,8 +26,6 @@ src/array/_mulle-array.h
 src/array/mulle-array.h
 src/array/mulle-pointerarray.h
 src/array/mulle-pointerpairarray.h
-src/farmhash/farmhash.h
-src/farmhash/largeint.h
 src/hash/mulle-hash.h
 src/hash/mulle-prime.h
 src/include.h

@@ -1,3 +1,7 @@
+### 1.1.4
+
+* hide farmhash headers
+
 ### 1.1.3
 
 * use latest instead of mulle-c
