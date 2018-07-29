@@ -1,3 +1,2 @@
-cityhash-info;local;no-delete,no-header,no-link,no-share,no-update;6e0c3e90-59ea-4bb8-b611-00f0cd192f1e;;;;;
 mulle-allocator;tar;no-all-load;5de9814b-c906-41f1-94dc-586547886b67;${MULLE_ALLOCATOR_URL:-https://github.com/mulle-c/mulle-allocator/archive/${MULLE_ALLOCATOR_BRANCH:-latest}.tar.gz};;;;
 src/farmhash;tar;no-all-load,no-build,no-header,no-import,no-link,no-share;b790ec2f-cf07-49b8-9056-3e23c4e186ba;${SRC_FARMHASH_URL:-https://github.com/mulle-c/farmhash-c/archive/${SRC_FARMHASH_BRANCH:-mulle-c}.tar.gz};;;;
