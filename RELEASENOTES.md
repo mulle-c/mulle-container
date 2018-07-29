@@ -1,3 +1,7 @@
+### 1.1.3
+
+* use latest instead of mulle-c
+
 ### 1.1.2
 
 * fix cityhash-info remnant
