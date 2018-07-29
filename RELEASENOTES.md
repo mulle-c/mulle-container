@@ -1,3 +1,7 @@
+### 1.1.2
+
+* fix cityhash-info remnant
+
 ### 1.1.1
 
 * less verbose travis
