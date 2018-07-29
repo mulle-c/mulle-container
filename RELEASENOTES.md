@@ -1,3 +1,7 @@
+### 1.1.1
+
+* less verbose travis
+
 ## 1.1.0
 
 * migrated to farmhash and got rid of the painful configure step
