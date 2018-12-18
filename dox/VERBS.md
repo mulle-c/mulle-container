@@ -1,5 +1,11 @@
 # Verbs
 
+Genreally verbs act on the first paramater of the function call.
+(e.g. mulle_map_get( map)). If that is not the case the verb is
+prefixed with the scope of the get. That could be "threadget" for
+example for accessing threadlocal storage.
+
+
 ## Initialization and Destruction
 
 Verb   | Meaning
@@ -12,15 +18,15 @@ copy   | create + copy_items
 
 Verb    | Decomposition
 --------|---------------
-create  | alloc + init     
-destroy | done + free  
-reset   | done + init   
+create  | alloc + init
+destroy | done + free
+reset   | done + init
 
 Verb   | Opposite
 -------|----------
-alloc  | free     
-create | destroy  
-init   | done     
+alloc  | free
+create | destroy
+init   | done
 copy   | destroy
 
 
@@ -35,7 +41,7 @@ get_callback  | return the callback associated with the struct
 get_notakey   | return the value that is used to indicate that there is no element (usually NULL)
 
 
-## Element Access Read 
+## Element Access Read
 
 Verb      | Meaning
 ----------|---------------
@@ -44,14 +50,16 @@ get       | random access read
 next      | sequential access read
 member    | returns 1 (yes) or 0 (no) depending on presence in container
 
-## Element Access Write 
+## Element Access Write
 
 Verb      | Meaning
 ----------|---------------
 add       | sequential access write, into empty space
 extract   | destructive get, with ownership transfer (caller must free)
-insert    | random access write, not overwriting 
+insert    | random access write, not overwriting
 member    | returns 1 (yes) or 0 (no) depending on presence in container
+register  | a get or set operation, returns the previous value , with ownership transfer (caller must free)
+set       | a destructive insert (may or may not return previous value)
 
 
 ## Operations
@@ -62,3 +70,6 @@ enumerate  | create enumerator
 find       | a search that is linear, returns an index or key
 search     | a search that's not linear, returns the value
 copy_items | copy each element from source to destination struct [ dst, src]
+
+
+

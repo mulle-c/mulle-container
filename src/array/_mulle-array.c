@@ -35,6 +35,8 @@
 #include "mulle-container-operation.h"
 #include "mulle-container-callback.h"
 
+#include <stdio.h>  // debug
+
 
 #pragma mark -
 #pragma mark _mulle_arrayrange internal helper
@@ -165,10 +167,11 @@ void   _mulle_array_destroy( struct _mulle_array *array,
 #pragma mark search
 
 
-static void  assert_index( struct _mulle_array *array, unsigned int i)
+static void  assert_index( struct _mulle_array *array, int i)
 {
    assert( ! _mulle_array_has_overflown( array));
-   assert( i < _mulle_array_get_count( array));
+   fprintf( stderr, "%d %d\n", i, (int) _mulle_array_get_count( array));
+   assert( i < (int) _mulle_array_get_count( array));
 }
 
 
@@ -194,7 +197,8 @@ unsigned long   _mulle_array_find_in_range( struct _mulle_array *array,
       n = 32;
    n += location;
 
-   assert_index( array, n - 1);
+   assert_index( array, (int) n - 1);
+   assert( n >= location);
 
    for( i = location; i < n; i++)
       if( array->_storage[ i] == obj)
@@ -208,6 +212,7 @@ unsigned long   _mulle_array_find_in_range( struct _mulle_array *array,
    return( mulle_not_found_e);
 }
 
+
 unsigned long  _mulle_array_find_in_range_identical( struct _mulle_array *array,
                                                      void *obj,
                                                      unsigned int location,
@@ -217,7 +222,7 @@ unsigned long  _mulle_array_find_in_range_identical( struct _mulle_array *array,
 
    n = length + location;
 
-   assert_index( array, n - 1);
+   assert_index( array, (int) n - 1);
    assert( n >= location);
 
    for( i = location; i < n; i++)

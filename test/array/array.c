@@ -9,7 +9,7 @@
 //
 
 #include <mulle-container/mulle-container.h>
-#include <mulle-test-allocator/mulle-test-allocator.h>
+#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 
@@ -165,21 +165,63 @@ static void  copy( void)
 }
 
 
-// the mulle_test_allocator detects and aborts on leaks
-static void  run_test( void (*f)( void))
+static void  find( void)
 {
-   mulle_test_allocator_reset();
+   struct mulle_array   array;
+   unsigned long        found;
+   char                 *s1;
+   char                 *s2;
+   char                 *s3;
+
+   mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
+
+   found = mulle_array_find_in_range_identical( &array, "xxx", 0, 0);
+   assert( found == mulle_not_found_e);
+
+   mulle_array_add( &array, s1 = "VfL");
+   mulle_array_add( &array, s2 = "Bochum");
+   mulle_array_add( &array, s3 = "1848");
+
+   found = mulle_array_find_in_range( &array, s1, 0, 0);
+   assert( found ==  mulle_not_found_e);
+
+   // can't happen since we use copied cstring!
+   found = mulle_array_find_in_range_identical( &array, s1, 0, 3);
+   assert( found ==  mulle_not_found_e);
+
+   found = mulle_array_find_in_range( &array, s1, 0, 3);
+   assert( found == 0);
+   found = mulle_array_find_in_range( &array, s2, 0, 3);
+   assert( found == 1);
+   found = mulle_array_find_in_range( &array, s3, 0, 3);
+   assert( found == 2);
+
+   found = mulle_array_find_in_range( &array, s3, 2, 1);
+   assert( found == 2);
+
+   found = mulle_array_find_in_range( &array, s1, 1, 0);
+   assert( found == mulle_not_found_e);
+
+   mulle_array_done( &array);
+}
+
+// the mulle_testallocator detects and aborts on leaks
+static void  run_test( void (*f)( void), char *name)
+{
+   mulle_testallocator_reset();
+  // printf( "%s\n", name);
    (f)();
-   mulle_test_allocator_reset();
+   mulle_testallocator_reset();
 }
 
 
 int main(int argc, const char * argv[])
 {
-   run_test( simple);
-   run_test( ephemeral);
-   run_test( grow);
-   run_test( notakeymarker);
-   run_test( copy);
+   run_test( simple, "simple");
+   run_test( ephemeral, "ephemeral");
+   run_test( grow, "grow");
+   run_test( notakeymarker, "notakeymarker");
+   run_test( copy, "copy");
+   run_test( find, "find");
    return( 0);
 }
