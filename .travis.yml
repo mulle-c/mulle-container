@@ -20,4 +20,4 @@ before_install:
 
 script: |
    mulle-sde -v craft
-   [ -d test ] && mulle-sde run mulle-test -v
+   [ -d test ] && mulle-sde -v test

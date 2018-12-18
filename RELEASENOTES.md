@@ -1,3 +1,7 @@
+### 1.1.6
+
+* fix travis
+
 ### 1.1.5
 
 * upgrade to newest mulle-sde
