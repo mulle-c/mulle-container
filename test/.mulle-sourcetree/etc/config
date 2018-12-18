@@ -1,0 +1,2 @@
+mulle-container;tar;no-all-load,no-import,only-standalone;04F4BD72-984C-4108-9AF9-E58963C3212D;${MULLE_CONTAINER_URL:-https://github.com/mulle-c/mulle-container/archive/${MULLE_CONTAINER_BRANCH:-latest}.tar.gz};;;;
+mulle-testallocator;tar;no-all-load,no-import;102367B5-5ED6-4222-9377-535F7FFD33C6;${MULLE_TESTALLOCATOR_URL:-https://github.com/mulle-core/mulle-testallocator/archive/${MULLE_TESTALLOCATOR_BRANCH:-latest}.tar.gz};;;;

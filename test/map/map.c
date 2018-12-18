@@ -9,7 +9,7 @@
 //
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-test-allocator/mulle-test-allocator.h>
+#include <mulle-testallocator/mulle-testallocator.h>
 
 
 static void  simple( void)
@@ -85,12 +85,12 @@ static void  simple( void)
 }
 
 
-// the mulle_test_allocator detects and aborts on leaks
+// the mulle_testallocator detects and aborts on leaks
 static void  run_test( void (*f)( void))
 {
-   mulle_test_allocator_reset();
+   mulle_testallocator_reset();
    (f)();
-   mulle_test_allocator_reset();
+   mulle_testallocator_reset();
 }
 
 

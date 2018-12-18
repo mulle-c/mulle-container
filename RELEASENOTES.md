@@ -1,3 +1,7 @@
+### 1.1.5
+
+* upgrade to newest mulle-sde
+
 ### 1.1.4
 
 * hide farmhash headers
