@@ -344,7 +344,7 @@ static int   grow_vertically( struct _mulle_bigmap *map,
                               struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator)
 {
-   struct _mulle_bigmap                         copy;
+   struct _mulle_bigmap                      copy;
    struct mulle_container_keyvaluecallback   tmpcallback;
    short                                     depth;
 

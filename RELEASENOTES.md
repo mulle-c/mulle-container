@@ -1,3 +1,7 @@
+### 1.1.7
+
+* use memmove in strategic places
+
 ### 1.1.6
 
 * fix travis
