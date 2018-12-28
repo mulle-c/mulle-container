@@ -307,9 +307,9 @@ void   _mulle_array_remove_in_range( struct _mulle_array *array,
    _mulle_arrayrange_release( _mulle_array_get_arrayrange( array, location, length), callback, allocator);
 
    n = _mulle_array_get_count( array) - (location + length - 1);
-   memcpy( &array->_storage[ location],
-           &array->_storage[ location + length],
-           n * sizeof( void *));
+   memmove( &array->_storage[ location],
+            &array->_storage[ location + length],
+            n * sizeof( void *));
 
    array->_curr = array->_storage[ location + n];
 }
@@ -332,7 +332,7 @@ int   _mulle_array_add_multiple( struct _mulle_array *array,
 
    if( callback->retain == (void *(*)()) mulle_container_callback_self)
    {
-      memcpy( p, pointers, length * sizeof( void *));
+      memmove( p, pointers, length * sizeof( void *));
       return( 0);
    }
 

@@ -1,5 +1,7 @@
 # mulle-container
 
+🈁 Sets, hashtables, arrays and more - written in C
+
 A collection of C (C99) data structures dealing exclusively with void pointers.
 They utilize callbacks that are compatible to OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. Data structures can live (temporarily)
 on the stack, or permanently in the heap.
@@ -9,9 +11,9 @@ to simplify memory management. None of them are thread-safe.
 > This library could benefit from more tests. Do not assume, that it
 > is completely bug free.
 
-Fork      |  Build Status | Release Version
-----------|---------------|-----------------------------------
-[Mulle kybernetiK](//github.com/mulle-c/mulle-container) | [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container)
+Build Status | Release Version
+-------------|-----------------------------------
+[![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container)
 
 
 ## Install
