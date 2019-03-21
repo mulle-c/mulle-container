@@ -18,7 +18,7 @@ src/map/mulle-bigmap.c
 src/map/_mulle-map.c
 src/map/mulle-map.c
 src/mulle-container-callback.c
-src/queue/_mulle-queue.c
+src/queue/_mulle-pointerqueue.c
 src/set/_mulle-bigset.c
 src/set/mulle-bigset.c
 src/set/mulle-pointerset.c

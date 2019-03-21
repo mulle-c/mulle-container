@@ -1,6 +1,7 @@
-# `_mulle_queue`
+# `_mulle_pointerqueue`
 
-This is a LIFO array. It can' be used a s stack.
+This is a FIFO array. It can' be used as a stack.
+It only contains void pointers, and doesn't manage memory except its own.
 
 
 ## Types
@@ -8,13 +9,13 @@ This is a LIFO array. It can' be used a s stack.
 
 
 ```
-struct _mulle_queue;
-struct _mulle_queueenumerator
+struct _mulle_pointerqueue;
+struct _mulle_pointerqueueenumerator
 ```
 
 ## Functions
 
-### Verns
+### Verbs
 
 * create
 * init
@@ -28,21 +29,20 @@ struct _mulle_queueenumerator
 * pop
 
 * enumerate
-* remove_all
 
 
-### `_mulle_queue_init`
+### `_mulle_pointerqueue_init`
 
 ```
-void  _mulle_queue_init( struct _mulle_queue *queue,
+void  _mulle_pointerqueue_init( struct _mulle_pointerqueue *queue,
                          unsigned short bucket_size,
                          unsigned short spare_allowance)
 ```
 
-### `_mulle_queue_create`
+### `_mulle_pointerqueue_create`
 
 ```
-struct _mulle_queue   *_mulle_queue_create( unsigned short bucket_size,
+struct _mulle_pointerqueue   *_mulle_pointerqueue_create( unsigned short bucket_size,
                                             unsigned short spare_allowance,
                                             struct mulle_allocator *allocator);
 ```

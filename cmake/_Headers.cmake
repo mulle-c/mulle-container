@@ -20,7 +20,6 @@ src/farmhash/farmhash.h
 src/farmhash/largeint.h
 src/include-private.h
 src/map/_mulle-bigmap-private.h
-src/_mulle-container-include-private.h
 )
 
 set( PUBLIC_HEADERS
@@ -40,9 +39,8 @@ src/mulle-container-callback-global.h
 src/mulle-container-callback.h
 src/mulle-container-compiler-attributes.h
 src/mulle-container.h
-src/_mulle-container-include.h
 src/mulle-container-operation.h
-src/queue/_mulle-queue.h
+src/queue/_mulle-pointerqueue.h
 src/set/_mulle-bigset.h
 src/set/mulle-bigset.h
 src/set/mulle-pointerset.h
