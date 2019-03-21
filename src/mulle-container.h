@@ -60,7 +60,7 @@
 #include "_mulle-bigmap.h"
 #include "mulle-bigmap.h"
 
-#include "_mulle-queue.h"
+#include "_mulle-pointerqueue.h"
 #include "mulle-pointerset.h"
 #include "mulle-pointerarray.h"
 #include "mulle-pointerpairarray.h"
