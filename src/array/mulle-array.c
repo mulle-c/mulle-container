@@ -36,6 +36,8 @@
 
 #include "mulle-array.h"
 
+struct mulle_arrayenumerator   mulle_arrayenumerator_empty;
+
 /* nothing here yet */
 struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback,
                                            struct mulle_allocator *allocator)

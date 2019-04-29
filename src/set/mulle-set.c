@@ -10,6 +10,11 @@
 
 #include "mulle-container-callback.h"
 
+#include <assert.h>
+
+
+struct mulle_setenumerator   mulle_setenumerator_empty;
+
 
 void   mulle_set_init( struct mulle_set *set,
                        unsigned int capacity,
@@ -17,6 +22,8 @@ void   mulle_set_init( struct mulle_set *set,
                        struct mulle_allocator *allocator)
 {
    _mulle_set_init( (struct _mulle_set *) set, capacity, callback, allocator);
+
+   assert( callback);
 
    set->_callback  = callback;
    set->_allocator = allocator;

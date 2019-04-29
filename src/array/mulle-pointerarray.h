@@ -59,11 +59,11 @@ struct mulle_pointerarray
 
 
 static inline struct mulle_pointerarray  *
-	mulle_pointerarray_alloc( void *notakey, struct mulle_allocator *allocator)
+	mulle_pointerarray_alloc( struct mulle_allocator *allocator)
 {
    struct mulle_pointerarray   *array;
 
-   array = mulle_allocator_calloc( allocator, 1, sizeof( struct mulle_pointerarray));
+   array = mulle_allocator_malloc( allocator, sizeof( struct mulle_pointerarray));
    return( array);
 }
 
@@ -77,7 +77,7 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
    array->_used        = 0;
    array->_count       = 0;
    array->_pointers    = NULL;
-   array->_notakey = notakey;
+   array->_notakey     = notakey;
    array->_allocator   = allocator;
 
    if( capacity)
@@ -85,12 +85,18 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
       if( capacity < 2)
          capacity = 2;
 
-      array->_pointers = mulle_allocator_calloc( array->_allocator, 
-      														 capacity, 
+      array->_pointers = mulle_allocator_calloc( array->_allocator,
+      														 capacity,
       														 sizeof( void *));
       array->_size     = capacity;
    }
 }
+
+
+// notakey = NULL
+// capacity = 0
+struct mulle_pointerarray *
+      mulle_pointerarray_create( struct mulle_allocator *allocator);
 
 
 static inline void  mulle_pointerarray_done( struct mulle_pointerarray *array)
@@ -108,7 +114,7 @@ static inline void  mulle_pointerarray_destroy( struct mulle_pointerarray *array
 # pragma mark -
 # pragma mark petty accessors
 
-static inline unsigned int  
+static inline unsigned int
 	mulle_pointerarray_get_count( struct mulle_pointerarray *array)
 {
    return( array->_count);
@@ -134,7 +140,7 @@ static inline void  *
 # pragma mark operations
 int   mulle_pointerarray_grow( struct mulle_pointerarray *array);
 
-static inline int   
+static inline int
 	mulle_pointerarray_add( struct mulle_pointerarray *array, void  *pointer)
 {
    assert( pointer != array->_notakey);
@@ -215,7 +221,7 @@ static inline void  *
 }
 
 
-static inline intptr_t   
+static inline intptr_t
 	mulle_pointerarray_find( struct mulle_pointerarray *array, void *p)
 {
    void   **curr;
@@ -256,36 +262,60 @@ static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
 #pragma mark -
 #pragma mark enumerator
 
-struct mulle_pointerarray_enumerator
+struct mulle_pointerarrayenumerator
 {
    void   **curr;
    void   **sentinel;
    void   *notakey;
+   int    direction;
 };
 
 
-static inline struct  mulle_pointerarray_enumerator   
-	mulle_pointerarray_enumerate( struct mulle_pointerarray *array)
+// still worth inlining especially if you check before! that
+// array is != nil
+
+static inline struct  mulle_pointerarrayenumerator
+   mulle_pointerarray_enumerate( struct mulle_pointerarray *array)
 {
-   struct mulle_pointerarray_enumerator   rover;
+   struct mulle_pointerarrayenumerator   rover;
+
+   // can't deal with array=nil here because we don't know notakey
 
    rover.curr        = &array->_pointers[ 0];
    rover.sentinel    = &rover.curr[ array->_used];
-   rover.notakey = array->_notakey;
+   rover.notakey     = array->_notakey;
+   rover.direction   = +1;
    assert( rover.sentinel >= rover.curr);
 
    return( rover);
 }
 
 
+static inline struct  mulle_pointerarrayenumerator
+   mulle_pointerarray_reverseenumerate( struct mulle_pointerarray *array)
+{
+   struct mulle_pointerarrayenumerator   rover;
+
+   // can't deal with array=nil here because we don't know notakey
+
+   rover.sentinel  = &array->_pointers[ -1];
+   rover.curr      = &rover.sentinel[ array->_used];
+   rover.notakey   = array->_notakey;
+   rover.direction = -1;
+   assert( rover.sentinel <= rover.curr);
+
+   return( rover);
+}
+
 static inline void   *
-	mulle_pointerarray_enumerator_next( struct mulle_pointerarray_enumerator *rover)
+	mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover)
 {
    void   *p;
 
-   while( rover->curr < rover->sentinel)
+   while( rover->curr != rover->sentinel)
    {
-      p = *rover->curr++;
+      p            = *rover->curr;
+      rover->curr += rover->direction;
       if( p != rover->notakey)
          return( p);
    }
@@ -293,8 +323,8 @@ static inline void   *
 }
 
 
-static inline void  
-	mulle_pointerarray_enumerator_done( struct mulle_pointerarray_enumerator *rover)
+static inline void
+	mulle_pointerarrayenumerator_done( struct mulle_pointerarrayenumerator *rover)
 {
 }
 
@@ -305,16 +335,16 @@ static inline void
 
 static inline int   mulle_pointerarray_member( struct mulle_pointerarray *array, void *p)
 {
-   struct  mulle_pointerarray_enumerator   rover;
-   void                                    *q;
+   struct  mulle_pointerarrayenumerator   rover;
+   void                                   *q;
 
    rover = mulle_pointerarray_enumerate( array);
    {
-      while( (q = mulle_pointerarray_enumerator_next( &rover)) != rover.notakey)
+      while( (q = mulle_pointerarrayenumerator_next( &rover)) != rover.notakey)
          if( q == p)
             break;
    }
-   mulle_pointerarray_enumerator_done( &rover);
+   mulle_pointerarrayenumerator_done( &rover);
 
    return( q == p);
 }

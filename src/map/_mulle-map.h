@@ -200,6 +200,11 @@ char   *_mulle_map_describe( struct _mulle_map *set,
 # pragma mark -
 # pragma mark enumeration
 
+
+static inline struct _mulle_mapenumerator
+   _mulle_map_enumerate( struct _mulle_map *map,
+                         struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_second;
+
 static inline struct _mulle_mapenumerator
    _mulle_map_enumerate( struct _mulle_map *map,
                          struct mulle_container_keyvaluecallback *callback)

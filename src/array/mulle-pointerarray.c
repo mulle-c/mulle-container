@@ -35,6 +35,18 @@
 #include "mulle-pointerarray.h"
 
 
+
+struct mulle_pointerarray *
+      mulle_pointerarray_create( struct mulle_allocator *allocator)
+{
+   struct mulle_pointerarray *array;
+
+   array = mulle_pointerarray_alloc( allocator);
+   mulle_pointerarray_init( array, 0, NULL, allocator);
+   return( array);
+}
+
+
 # pragma mark -
 # pragma mark mechanisms
 

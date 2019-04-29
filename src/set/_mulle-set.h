@@ -188,14 +188,19 @@ void   *_mulle_set_write( struct _mulle_set *set,
 #pragma mark -
 #pragma mark enumeration
 
-static inline struct
-   _mulle_setenumerator   _mulle_set_enumerate( struct _mulle_set *set,
-                                                struct mulle_container_keycallback *callback)
+
+static inline struct _mulle_setenumerator
+   _mulle_set_enumerate( struct _mulle_set *set,
+                         struct mulle_container_keycallback *callback);
+
+static inline struct _mulle_setenumerator
+   _mulle_set_enumerate( struct _mulle_set *set,
+                         struct mulle_container_keycallback *callback)
 {
    struct _mulle_setenumerator   rover;
 
-   rover._left             = set->_count;
-   rover._curr             = set->_storage;
+   rover._left    = set->_count;
+   rover._curr    = set->_storage;
    rover._notakey = callback->notakey;
    return( rover);
 }

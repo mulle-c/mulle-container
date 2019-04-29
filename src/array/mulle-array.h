@@ -60,6 +60,9 @@ struct mulle_arrayenumerator
 };
 
 
+extern struct mulle_arrayenumerator   mulle_arrayenumerator_empty;
+
+
 struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback,
                                            struct mulle_allocator *allocator);
 
