@@ -302,25 +302,31 @@ static inline void   **_mulle_array_extract_all( struct _mulle_array *array)
 #pragma mark -
 #pragma mark enumeration
 
-static inline struct _mulle_arrayenumerator   _mulle_array_enumerate( struct _mulle_array *array,
-                                                                      struct mulle_container_keycallback *callback) mulle_nonnull_first_second;
-static inline struct _mulle_arrayenumerator   _mulle_array_enumerate( struct _mulle_array *array,
-                                                                      struct mulle_container_keycallback *callback)
+static inline struct _mulle_arrayenumerator
+   _mulle_array_enumerate( struct _mulle_array *array,
+                           struct mulle_container_keycallback *callback) mulle_nonnull_first_second;
+
+static inline struct _mulle_arrayenumerator
+   _mulle_array_enumerate( struct _mulle_array *array,
+                           struct mulle_container_keycallback *callback)
 {
    struct _mulle_arrayenumerator   rover;
 
    assert( ! _mulle_array_has_overflown( array));
 
-   rover._sentinel         = array->_curr;
-   rover._curr             = array->_storage;
-   rover._notakey = callback->notakey;
+   rover._sentinel = array->_curr;
+   rover._curr     = array->_storage;
+   rover._notakey  = callback->notakey;
 
    return( rover);
 }
 
 
-static inline void   *_mulle_arrayenumerator_next( struct _mulle_arrayenumerator *rover) mulle_nonnull_first;
-static inline void   *_mulle_arrayenumerator_next( struct _mulle_arrayenumerator *rover)
+static inline void   *
+   _mulle_arrayenumerator_next( struct _mulle_arrayenumerator *rover) mulle_nonnull_first;
+
+static inline void   *
+   _mulle_arrayenumerator_next( struct _mulle_arrayenumerator *rover)
 {
    void  *p;
 

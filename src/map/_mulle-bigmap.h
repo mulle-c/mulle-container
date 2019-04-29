@@ -180,16 +180,15 @@ struct _mulle_bigmap   *_mulle_bigmap_clone( struct _mulle_bigmap *map,
 
 
 static inline struct _mulle_bigmapenumerator   _mulle_bigmap_enumerate( struct _mulle_bigmap *map,
-                                                                  struct mulle_container_keyvaluecallback *callback)
+                                                                        struct mulle_container_keyvaluecallback *callback)
 {
    struct _mulle_bigmapenumerator   rover;
 
    rover._bucketsRover._left = 0;
-
-   rover._index    = 0;
-   rover._left     = map->_count;
-   rover._map      = map;
-   rover._callback = callback;
+   rover._index              = 0;
+   rover._left               = map->_count;
+   rover._map                = map;
+   rover._callback           = callback;
 
    return( rover);
 }
@@ -203,8 +202,8 @@ static inline void    _mulle_bigmapenumerator_done( struct _mulle_bigmapenumerat
 }
 
 void    _mulle_bigmap_reset( struct _mulle_bigmap *map,
-                          struct mulle_container_keyvaluecallback *callback,
-                          struct mulle_allocator *allocator)
+                             struct mulle_container_keyvaluecallback *callback,
+                             struct mulle_allocator *allocator)
                              mulle_nonnull_first_second;
 
 #endif

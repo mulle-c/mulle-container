@@ -38,6 +38,9 @@ struct mulle_mapenumerator
 };
 
 
+extern struct mulle_mapenumerator   mulle_mapenumerator_empty;
+
+
 #pragma mark -
 #pragma mark setup and teardown
 

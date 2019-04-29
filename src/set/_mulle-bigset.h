@@ -90,7 +90,7 @@ struct _mulle_bigset   *_mulle_bigset_copy( struct _mulle_bigset *set,
 
 static inline
 struct _mulle_bigsetenumerator   _mulle_bigset_enumerate( struct _mulle_bigset *set,
-                                                         struct mulle_container_keycallback *callback)
+                                                          struct mulle_container_keycallback *callback)
 {
    struct _mulle_bigsetenumerator   rover;
 
