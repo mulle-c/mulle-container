@@ -57,11 +57,11 @@ static void  simple_queue( void)
    _mulle_pointerqueue_push( queue, "3", NULL);
    _mulle_pointerqueue_push( queue, "4", NULL);
    _mulle_pointerqueue_push( queue, "5", NULL);
-   printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
    printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL) ? "???" : "NULL");
 
    _mulle_pointerqueue_destroy( queue, NULL);

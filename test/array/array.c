@@ -129,7 +129,7 @@ static void  notakeymarker( void)
    item = mulle_arrayenumerator_next_int( &rover);
    assert( 2 == item);
    item = mulle_arrayenumerator_next_int( &rover);
-   assert( (int) mulle_container_keycallback_int.notakey == item);
+   assert( mulle_container_keycallback_int.notakey == (void *) (intptr_t) item);
    assert( mulle_container_keycallback_int.notakey == mulle_container_not_an_int_key);
 
    index = mulle_array_find_in_range_identical_int( array, 1, 0, 3);

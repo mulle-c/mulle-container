@@ -1,3 +1,11 @@
+## 1.2.0
+
+* added `mulle_pointerarray_create`
+* renamed `mulle_pointerarray_enumerator`  to `mulle_pointerarrayenumerator`
+* added empty enumerator structs
+* renamed and redid `_mulle_queue` as `_mulle_pointerqueue`
+
+
 ### 1.1.8
 
 * modernized to mulle-sde with .mulle folder
