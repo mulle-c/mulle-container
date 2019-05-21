@@ -25,7 +25,7 @@ static void   simple_fill_test()
 
    set = _mulle_set_create( 128, 0, CALLBACK, NULL);
 
-   printf( "%ld\n", _mulle_set_get_count( set));
+   printf( "%ld\n", (long) _mulle_set_get_count( set));
 
    for( i = 0; i < 100000; i++)
    {
@@ -35,9 +35,9 @@ static void   simple_fill_test()
 
    _mulle_set_reset( set, CALLBACK, NULL);
 
-   printf( "%ld\n", _mulle_set_get_count( set));
+   printf( "%ld\n", (long) _mulle_set_get_count( set));
    _mulle_set_set( set, key, CALLBACK, NULL);
-   printf( "%ld\n", _mulle_set_get_count( set));
+   printf( "%ld\n", (long) _mulle_set_get_count( set));
    _mulle_set_destroy( set, CALLBACK, NULL);
 }
 
