@@ -641,6 +641,7 @@ char   *_mulle_set_describe( struct _mulle_set *set,
    size_t                        len;
    size_t                        s_len;
    struct _mulle_setenumerator   rover;
+   struct mulle_allocator        *value_allocator;
    void                          *item;
 
    result = NULL;
@@ -649,7 +650,9 @@ char   *_mulle_set_describe( struct _mulle_set *set,
    rover = _mulle_set_enumerate( set, callback);
    while( item = _mulle_setenumerator_next( &rover))
    {
-      s      = (*callback->describe)( callback, item, allocator);
+      value_allocator = allocator ? allocator : &mulle_default_allocator;
+
+      s      = (*callback->describe)( callback, item, &value_allocator);
       s_len  = strlen( s);
 
       separate = result != NULL;
@@ -664,7 +667,8 @@ char   *_mulle_set_describe( struct _mulle_set *set,
       memcpy( &result[ len], s, s_len);
       len += s_len;
 
-      mulle_allocator_free( allocator, s);
+      if( value_allocator)
+         mulle_allocator_free( value_allocator, s);
    }
    _mulle_setenumerator_done( &rover);
 

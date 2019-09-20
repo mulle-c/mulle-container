@@ -21,7 +21,7 @@
 #include <stddef.h>
 #include <string.h>
 
-struct mulle_allocator;
+#include <mulle-allocator/mulle-allocator.h>
 
 //
 // a struct _mulle_pointerqueue is FIFO, you can't use it as a stack.
@@ -38,8 +38,8 @@ struct mulle_allocator;
    unsigned int                       _read_index;       \
    unsigned int                       _write_index;      \
                                                          \
-   unsigned short                      _bucket_size;     \
-   unsigned short                      _spare_allowance
+   unsigned short                     _bucket_size;      \
+   unsigned short                     _spare_allowance
 
 
 struct _mulle_pointerqueue
@@ -120,29 +120,10 @@ static inline void  _mulle_pointerqueue_push( struct _mulle_pointerqueue *queue,
    if( queue->_write_index >= queue->_bucket_size)
       _mulle_pointerqueue_grow( queue, allocator);
 
+   assert( queue->_write_index < queue->_bucket_size);
+
    queue->_count++;
    queue->_write->_storage[ queue->_write_index++] = p;
-}
-
-
-static inline void  *
-  _mulle_pointerqueue_pop_noshrink( struct _mulle_pointerqueue *queue)
-{
-   void   *p;
-
-   // if nothing to read, read pointer points at write
-   if( queue->_read == queue->_write)
-      if( queue->_read_index == queue->_write_index)
-         return( NULL);
-
-   queue->_count--;
-   //
-   // now if "release" truely releases, p is pointing to a zombie.
-   // not so, if release is autorelease or nop
-   // check one case with an assert
-   //
-   p = queue->_read->_storage[ queue->_read_index++];
-   return( p);
 }
 
 
@@ -197,6 +178,7 @@ static inline void   _mulle_pointerqueueenumerator_done( struct _mulle_pointerqu
 static inline void   *_mulle_pointerqueueenumerator_next( struct _mulle_pointerqueueenumerator *rover)
 {
    extern void   *__mulle_pointerqueueenumerator_next( struct _mulle_pointerqueueenumerator *);
+
    struct _mulle_pointerqueue  *queue;
    unsigned int                limit;
 

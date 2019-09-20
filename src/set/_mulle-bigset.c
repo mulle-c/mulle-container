@@ -206,10 +206,6 @@ struct _mulle_bigset   *_mulle_bigset_copy( struct _mulle_bigset *set,
 }
 
 
-extern void   *mulle_container_callback_self( void *, void *, struct mulle_allocator *allocator);
-extern void   mulle_container_callback_nop( void *, void *, struct mulle_allocator *allocator);
-
-
 //
 // we "just" create a new hashtable with the new size and then copy
 // the other set into it. The we move the ivars around and delted the
@@ -231,8 +227,8 @@ static int   grow_vertically( struct _mulle_bigset *set,
    depth = good_depth_for_depth( depth + 1);
 
    tmpCallBacks         = *callback;
-   tmpCallBacks.retain  = (void *(*)()) mulle_container_callback_self;
-   tmpCallBacks.release = (void (*)()) mulle_container_callback_nop;
+   tmpCallBacks.retain  = mulle_container_keycallback_self;
+   tmpCallBacks.release = mulle_container_keycallback_nop;
 
    _mulle_bigset_init( &copy, - depth, callback, allocator);  /* mark negative, so we don't grow within growing */
    rval = __mulle_bigset_copy( &copy, set, callback, allocator);

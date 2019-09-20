@@ -199,7 +199,7 @@ static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map
 }
 
 
-static inline int    mulle_mapenumerator_next( struct mulle_mapenumerator *rover, void **key, void **value)
+static inline int   mulle_mapenumerator_next( struct mulle_mapenumerator *rover, void **key, void **value)
 {
    struct mulle_pointerpair  *pair;
 
@@ -215,7 +215,7 @@ static inline int    mulle_mapenumerator_next( struct mulle_mapenumerator *rover
 }
 
 
-static inline void    mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
+static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
 {
    _mulle_mapenumerator_done( (struct _mulle_mapenumerator *) rover);
 }

@@ -14,8 +14,8 @@
 
 static void  simple( void)
 {
-   struct mulle_bigmap              *map;
-   struct mulle_bigmapenumerator    rover;
+   struct mulle_map              *map;
+   struct mulle_mapenumerator    rover;
    void                          *key;
    void                          *value;
    int                           rval;
@@ -26,25 +26,50 @@ static void  simple( void)
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
-   map = mulle_bigmap_create( 0, &callback, NULL);
-   mulle_bigmap_set( map, "VfL", "VFL");
-   assert( "VFL" != mulle_bigmap_get( map, "VfL")); // must have been copied
+   map = mulle_map_create( 0, &callback, NULL);
 
-   mulle_bigmap_set( map, "Bochum", "BOCHUM");
-   mulle_bigmap_set( map, "1848", "1848");
+   assert( mulle_map_get_count( map) == 0);
+   assert( ! mulle_map_get( map, "VfL"));
 
-   assert( mulle_bigmap_get_count( map) == 3);
+   mulle_map_set( map, "VfL", "VFL");
+   assert( ! mulle_map_get( map, "VFL"));
+   assert( ! strcmp( "VFL", mulle_map_get( map, "VfL")));
 
-   assert( ! strcmp( "VFL", mulle_bigmap_get( map, "VfL")));
-   assert( ! strcmp( "BOCHUM", mulle_bigmap_get( map, "Bochum")));
-   assert( ! strcmp( "1848", mulle_bigmap_get( map, "1848")));
-   assert( ! mulle_bigmap_get( map, "xxx"));
+   mulle_map_set( map, "VfL", "BOCHUM");
+   assert( ! strcmp( "BOCHUM", mulle_map_get( map, "VfL")));
+
+   mulle_map_remove( map, "VfL");
+   assert( ! mulle_map_get( map, "VfL"));
+
+   mulle_map_destroy( map);
+}
+
+
+static void  enumerate( void)
+{
+   struct mulle_map              *map;
+   struct mulle_mapenumerator    rover;
+   void                          *key;
+   void                          *value;
+   int                           rval;
+   int                           i;
+   int                           state;
+   struct mulle_container_keyvaluecallback      callback;
+
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+
+   map = mulle_map_create( 0, &callback, NULL);
+
+   mulle_map_set( map, "VfL", "VFL");
+   mulle_map_set( map, "Bochum", "BOCHUM");
+   mulle_map_set( map, "1848", "1848");
 
    state = 0;
-   rover = mulle_bigmap_enumerate( map);
+   rover = mulle_map_enumerate( map);
    for( i = 0; i < 3; i++)
    {
-      rval  = mulle_bigmapenumerator_next( &rover, &key, &value);
+      rval  = mulle_mapenumerator_next( &rover, &key, &value);
       assert( rval == 1);
       if( ! strcmp( "VfL", key))
       {
@@ -67,22 +92,23 @@ static void  simple( void)
    }
    assert( state == 0x7);
 
-   rval  = mulle_bigmapenumerator_next( &rover, &key, &value);
+   rval  = mulle_mapenumerator_next( &rover, &key, &value);
    assert( ! rval);
-   mulle_bigmapenumerator_done( &rover);
+   mulle_mapenumerator_done( &rover);
 
-   assert( mulle_bigmap_get_count( map) == 3);
-   mulle_bigmap_remove( map, "xxx");
-   assert( mulle_bigmap_get_count( map) == 3);
-   mulle_bigmap_remove( map, "VfL");
-   assert( mulle_bigmap_get_count( map) == 2);
-   mulle_bigmap_remove( map, "Bochum");
-   assert( mulle_bigmap_get_count( map) == 1);
-   mulle_bigmap_remove( map, "1848");
-   assert( mulle_bigmap_get_count( map) == 0);
+   assert( mulle_map_get_count( map) == 3);
+   mulle_map_remove( map, "xxx");
+   assert( mulle_map_get_count( map) == 3);
+   mulle_map_remove( map, "VfL");
+   assert( mulle_map_get_count( map) == 2);
+   mulle_map_remove( map, "Bochum");
+   assert( mulle_map_get_count( map) == 1);
+   mulle_map_remove( map, "1848");
+   assert( mulle_map_get_count( map) == 0);
 
-   mulle_bigmap_destroy( map);
+   mulle_map_destroy( map);
 }
+
 
 
 // the mulle_testallocator detects and aborts on leaks
@@ -97,5 +123,6 @@ static void  run_test( void (*f)( void))
 int main(int argc, const char * argv[])
 {
    run_test( simple);
+   run_test( enumerate);
    return( 0);
 }

@@ -162,7 +162,8 @@ static inline int
 
 //
 // this removes _notakey from the back, until it finds a pointer
-// then remove this
+// then remove this. A random remove is not coded. You generally want to 
+// use mulle_pointerarray_set with `notakey` for this.
 //
 static inline void  *
 	mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
@@ -271,13 +272,23 @@ struct mulle_pointerarrayenumerator
 };
 
 
-// still worth inlining especially if you check before! that
-// array is != nil
+static inline void
+   mulle_pointerarrayenumerator_zero( struct mulle_pointerarrayenumerator *rover)
+{
+   memset( rover, 0, sizeof( struct mulle_pointerarrayenumerator));
+}
 
-static inline struct  mulle_pointerarrayenumerator
+//
+// still worth inlining especially if you check before! that
+// array must be != nil
+// should prefix mulle_pointerarray_enumerate with an underscore
+//
+static inline struct mulle_pointerarrayenumerator
    mulle_pointerarray_enumerate( struct mulle_pointerarray *array)
 {
    struct mulle_pointerarrayenumerator   rover;
+
+   assert( array);
 
    // can't deal with array=nil here because we don't know notakey
 
@@ -292,9 +303,26 @@ static inline struct  mulle_pointerarrayenumerator
 
 
 static inline struct  mulle_pointerarrayenumerator
+   mulle_pointerarray_enumerate_nil( struct mulle_pointerarray *array)
+{
+   struct mulle_pointerarrayenumerator   rover;
+
+   if( ! array)
+   {
+      mulle_pointerarrayenumerator_zero( &rover);
+      return( rover);
+   }
+
+   return( mulle_pointerarray_enumerate( array));
+}
+
+
+static inline struct  mulle_pointerarrayenumerator
    mulle_pointerarray_reverseenumerate( struct mulle_pointerarray *array)
 {
    struct mulle_pointerarrayenumerator   rover;
+
+   assert( array);
 
    // can't deal with array=nil here because we don't know notakey
 
@@ -306,6 +334,23 @@ static inline struct  mulle_pointerarrayenumerator
 
    return( rover);
 }
+
+
+// use this if array->not_a_key is known to be null
+static inline struct  mulle_pointerarrayenumerator
+   mulle_pointerarray_reverseenumerate_nil( struct mulle_pointerarray *array)
+{
+   struct mulle_pointerarrayenumerator   rover;
+
+   if( ! array)
+   {
+      mulle_pointerarrayenumerator_zero( &rover);
+      return( rover);
+   }
+   assert( ! array->_notakey);
+   return( mulle_pointerarray_reverseenumerate( array));
+}
+
 
 static inline void   *
 	mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover)

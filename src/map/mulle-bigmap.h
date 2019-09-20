@@ -68,9 +68,9 @@ struct mulle_bigmap   *mulle_bigmap_create( size_t capacity,
 mulle_nonnull_second;
 
 void   mulle_bigmap_init( struct mulle_bigmap *map,
-                         size_t capacity,
-                         struct mulle_container_keyvaluecallback *callback,
-                         struct mulle_allocator *allocator)
+                          size_t capacity,
+                          struct mulle_container_keyvaluecallback *callback,
+                          struct mulle_allocator *allocator)
 mulle_nonnull_first_third;
 
 

@@ -107,8 +107,8 @@ static short   depth_for_capacity( size_t capacity)
 
 
 static struct mulle_pointerpair   *allocate_pairs( size_t n,
-                                                     void *notakey,
-                                                     struct mulle_allocator *allocator)
+                                                   void *notakey,
+                                                   struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   *buf;
    struct mulle_pointerpair   *p;
@@ -117,12 +117,13 @@ static struct mulle_pointerpair   *allocate_pairs( size_t n,
    if( ! notakey)
       return( mulle_allocator_calloc( allocator, n, sizeof( struct mulle_pointerpair)));
 
-   buf = mulle_allocator_malloc( allocator, n * sizeof( struct mulle_pointerpair));
+   buf      = mulle_allocator_malloc( allocator, n * sizeof( struct mulle_pointerpair));
    p        = &buf[ 0];
    sentinel = &buf[ n];
    while( p < sentinel)
    {
-      p->_key = notakey;
+      p->_key   = notakey;
+      p->_value = 0;
       ++p;
    }
    return( buf);
@@ -385,7 +386,7 @@ void   *_mulle_map_write( struct _mulle_map *map,
          if( q->_value == pair->_value && q->_key == pair->_key)
             return( q->_value);
 
-         new_pair._key = (*callback->keycallback.retain)( &callback->keycallback, pair->_key, allocator);
+         new_pair._key   = (*callback->keycallback.retain)( &callback->keycallback, pair->_key, allocator);
          new_pair._value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->_value, allocator);
 
          (callback->keycallback.release)( &callback->keycallback, q->_key, allocator);
@@ -421,16 +422,16 @@ void   *_mulle_map_write( struct _mulle_map *map,
 
 
 void   *_mulle_map_get_with_hash( struct _mulle_map *map,
-                         void *p,
-                         uintptr_t hash,
-                         struct mulle_container_keyvaluecallback *callback)
+                                  void *p,
+                                  uintptr_t hash,
+                                  struct mulle_container_keyvaluecallback *callback)
 {
-   struct mulle_pointerpair *q;
-   int         (*f)( void *, void *, void *);
+   struct mulle_pointerpair   *q;
+   int      (*f)( void *, void *, void *);
    size_t   modulo;
    size_t   limit;
    size_t   i;
-   void         *no_key;
+   void     *no_key;
 
    modulo = _mulle_map_mask_for_depth( map->_depth);
    i      = _mulle_map_hash_for_modulo( hash, modulo);
@@ -730,16 +731,21 @@ char   *_mulle_map_describe( struct _mulle_map *set,
    size_t                        key_len;
    size_t                        value_len;
    struct _mulle_mapenumerator   rover;
-   struct mulle_pointerpair    *item;
+   struct mulle_pointerpair      *item;
+   struct mulle_allocator        *key_allocator;
+   struct mulle_allocator        *value_allocator;
 
    result = NULL;
    len  = 0;
    rover = _mulle_map_enumerate( set, callback);
    while( item = _mulle_mapenumerator_next( &rover))
    {
-      key        = (*callback->keycallback.describe)( &callback->keycallback, item->_key, allocator);
+      key_allocator   = allocator ? allocator : &mulle_default_allocator;
+      value_allocator = key_allocator;
+
+      key        = (*callback->keycallback.describe)( &callback->keycallback, item->_key, &key_allocator);
       key_len    = strlen( key);
-      value      = (*callback->valuecallback.describe)( &callback->valuecallback, item->_value, allocator);
+      value      = (*callback->valuecallback.describe)( &callback->valuecallback, item->_value, &value_allocator);
       value_len  = strlen( value);
 
       separate = result != NULL;
@@ -761,8 +767,10 @@ char   *_mulle_map_describe( struct _mulle_map *set,
       memcpy( &result[ len], value, value_len);
       len += value_len;
 
-      mulle_allocator_free( allocator, key);
-      mulle_allocator_free( allocator, value);
+      if( key_allocator)
+         mulle_allocator_free( key_allocator, key);
+      if( value_allocator)
+         mulle_allocator_free( value_allocator, value);
    }
    _mulle_mapenumerator_done( &rover);
 

@@ -288,7 +288,7 @@ void   _mulle_array_remove_all( struct _mulle_array *array,
                                 struct mulle_allocator *allocator)
 {
    assert( ! _mulle_array_has_overflown( array));
-   if( callback->release != (void (*)()) mulle_container_callback_nop)
+   if( callback->release != mulle_container_keycallback_nop)
       _mulle_arrayrange_release( _mulle_arrayrange_make( array->_storage, array->_curr), callback, allocator);
 
    array->_curr = array->_storage;
@@ -330,7 +330,7 @@ int   _mulle_array_add_multiple( struct _mulle_array *array,
    if( ! p)
       return( -1);
 
-   if( callback->retain == (void *(*)()) mulle_container_callback_self)
+   if( callback->retain == mulle_container_keycallback_self)
    {
       memmove( p, pointers, length * sizeof( void *));
       return( 0);
