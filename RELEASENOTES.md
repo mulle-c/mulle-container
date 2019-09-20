@@ -1,3 +1,9 @@
+### 1.2.1
+
+* Improved the container callback functions with a few typedefs.
+* Fixed bugs in `_mulle-pointerqueue`
+* Added `mulle_pointerarray_enumerate_nil,` for when you know that notakey is nil. It allows passing in a nil array for enumeration
+
 ## 1.2.0
 
 * added `mulle_pointerarray_create`
