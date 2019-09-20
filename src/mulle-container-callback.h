@@ -56,7 +56,8 @@
 
 
 //
-// describe returns a cstring that you must free
+// Describe returns a cstring! This string may be "autoreleased" depending
+// on circumstances. This is indicated by NULLing p_allocator.
 //
 struct mulle_container_keycallback
 {
@@ -64,11 +65,31 @@ struct mulle_container_keycallback
    int         (*is_equal)( struct mulle_container_keycallback *callback, void *p, void *q);
    void        *(*retain)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
    void        (*release)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
-   void        *(*describe)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
+   char        *(*describe)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator **p_allocator);
 
    void        *notakey;
    void        *userinfo;
 };
+
+typedef uintptr_t
+   mulle_container_keycallback_hash_t( struct mulle_container_keycallback *callback,
+                                       void *p);
+typedef int
+   mulle_container_keycallback_is_equal_t( struct mulle_container_keycallback *callback,
+                                           void *p,
+                                           void *q);
+typedef void *
+   mulle_container_keycallback_retain_t( struct mulle_container_keycallback *callback,
+                                         void *p,
+                                         struct mulle_allocator *allocator);
+typedef void
+   mulle_container_keycallback_release_t( struct mulle_container_keycallback *callback,
+                                          void *p,
+                                          struct mulle_allocator *allocator);
+typedef char *
+   mulle_container_keycallback_describe_t( struct mulle_container_keycallback *callback,
+                                           void *p,
+                                           struct mulle_allocator **allocator);
 
 
 static inline void  *mulle_container_keycallback_get_notakey( struct mulle_container_keycallback *callback)
@@ -104,10 +125,24 @@ struct mulle_container_valuecallback
 {
    void   *(*retain)( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
    void   (*release)( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
-   void   *(*describe)( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
+   char   *(*describe)( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator **p_allocator);
 
    void   *userinfo;
 };
+
+typedef void *
+   mulle_container_valuecallback_retain_t( struct mulle_container_keycallback *callback,
+                                           void *p,
+                                           struct mulle_allocator *allocator);
+typedef void
+   mulle_container_valuecallback_release_t( struct mulle_container_keycallback *callback,
+                                            void *p,
+                                            struct mulle_allocator *allocator);
+
+typedef char *
+   mulle_container_valuecallback_describe_t( struct mulle_container_valuecallback *callback,
+                                             void *p,
+                                             struct mulle_allocator **allocator);
 
 
 static inline void   assert_mulle_container_valuecallback( struct mulle_container_valuecallback *callback)
@@ -118,14 +153,24 @@ static inline void   assert_mulle_container_valuecallback( struct mulle_containe
 }
 
 
-void        *mulle_container_callback_self( void *ignore, void *p, struct mulle_allocator *a);
-void        mulle_container_callback_nop( void *ignore, void *p, struct mulle_allocator *a);
-void        *mulle_container_callback_no_value( void *ignore, void *p, struct mulle_allocator *allocator);
+void        *mulle_container_valuecallback_self( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
+void        mulle_container_valuecallback_nop( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
+char        *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator **p_allocator);
+
+#define mulle_container_keycallback_self \
+   ((mulle_container_keycallback_retain_t *) mulle_container_valuecallback_self)
+
+#define mulle_container_keycallback_nop \
+   ((mulle_container_keycallback_release_t *) mulle_container_valuecallback_nop)
+
+#define mulle_container_keycallback_no_description \
+   ((mulle_container_keycallback_describe_t *)  mulle_container_valuecallback_no_description)
+
 
 uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
 int         mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
-
 void        mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
+
 void        mulle_container_valuecallback_pointer_free( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *allocator);
 
 
@@ -142,30 +187,6 @@ static inline void   assert_mulle_container_keyvaluecallback( struct mulle_conta
    assert_mulle_container_valuecallback( &callback->valuecallback);
 }
 
-
-#define mulle_container_keycallback_self \
-((void *(*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_self)
-
-#define mulle_container_valuecallback_self \
-((void *(*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_self)
-
-#define mulle_container_keycallback_nop \
-((void (*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_nop)
-
-#define mulle_container_valuecallback_nop \
-((void (*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_nop)
-
-#define mulle_container_keycallback_no_value \
-((void *(*)(struct mulle_container_keycallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_no_value)
-
-#define mulle_container_valuecallback_no_value \
-((void *(*)(struct mulle_container_valuecallback *, void *, struct mulle_allocator *))  \
-mulle_container_callback_no_value)
 
 #endif
 

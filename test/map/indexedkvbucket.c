@@ -44,6 +44,7 @@ static void   simple_fill_test()
    printf( "%ld\n", _mulle_map_get_count( bucket));
    _mulle_map_set( bucket, &pair, CALLBACK, NULL);
    printf( "%ld\n", _mulle_map_get_count( bucket));
+
    _mulle_map_destroy( bucket, CALLBACK, NULL);
 }
 
@@ -55,8 +56,8 @@ int  main()
    _CALLBACK.valuecallback = mulle_container_valuecallback_copied_cstring;
 
    mulle_testallocator_initialize();
-   mulle_default_allocator               = mulle_testallocator;
-   mulle_testallocator_config.dont_free = 1;
+
+   mulle_default_allocator = mulle_testallocator;
 
    simple_fill_test();
 

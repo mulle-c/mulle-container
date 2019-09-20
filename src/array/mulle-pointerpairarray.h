@@ -257,7 +257,7 @@ static inline void
 #pragma mark -
 #pragma mark enumerator
 
-struct mulle_pointerpairarray_enumerator
+struct mulle_pointerpairarrayenumerator
 {
    struct mulle_pointerpair   *curr;
    struct mulle_pointerpair   *sentinel;
@@ -265,10 +265,18 @@ struct mulle_pointerpairarray_enumerator
 };
 
 
-static inline struct  mulle_pointerpairarray_enumerator
+static inline void
+   mulle_pointerpairarrayenumerator_zero( struct mulle_pointerpairarrayenumerator *rover)
+{
+   memset( rover, 0, sizeof( struct mulle_pointerpairarrayenumerator));
+}
+
+
+
+static inline struct mulle_pointerpairarrayenumerator
 	mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
-   struct mulle_pointerpairarray_enumerator   rover;
+   struct mulle_pointerpairarrayenumerator   rover;
 
    rover.curr     = &array->_pairs[ 0];
    rover.sentinel = &rover.curr[ array->_used];
@@ -279,8 +287,25 @@ static inline struct  mulle_pointerpairarray_enumerator
 }
 
 
+static inline struct  mulle_pointerpairarrayenumerator
+   mulle_pointerpairarray_enumerate_nil( struct mulle_pointerpairarray *array)
+{
+   struct mulle_pointerpairarrayenumerator   rover;
+
+   if( ! array)
+   {
+      mulle_pointerpairarrayenumerator_zero( &rover);
+      return( rover);
+   }
+
+   assert( ! array->_notakey);
+   return( mulle_pointerpairarray_enumerate( array));
+}
+
+
+
 static inline struct mulle_pointerpair
-	mulle_pointerpairarray_enumerator_next( struct mulle_pointerpairarray_enumerator *rover)
+	mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover)
 {
    struct mulle_pointerpair   *pair;
 
@@ -296,7 +321,7 @@ static inline struct mulle_pointerpair
 
 
 static inline void
-	mulle_pointerpairarray_enumerator_done( struct mulle_pointerpairarray_enumerator *rover)
+	mulle_pointerpairarrayenumerator_done( struct mulle_pointerpairarrayenumerator *rover)
 {
 }
 
