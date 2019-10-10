@@ -502,7 +502,7 @@ retry:
    bucket = (struct _mulle_map *) pair->_value;
    if( _mulle_map_is_full( bucket))
    {
-      size   = _mulle_map_get_storagesize( bucket);
+      size   = _mulle_map_get_size( bucket);
       modulo = mulle_prime_for_depth( map->_depth);
       if( size * 2 > modulo * 4)
          if( grow_vertically( map, callback, allocator))
@@ -510,11 +510,11 @@ retry:
    }
 
    value  = _mulle_map_write( bucket,
-                                                            new_pair,
-                                                            hash,
-                                                            mode,
-                                                            callback,
-                                                            allocator);
+                              new_pair,
+                              hash,
+                              mode,
+                              callback,
+                              allocator);
    if( ! value)
    {
       map->_count ++;

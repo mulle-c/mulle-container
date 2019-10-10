@@ -77,8 +77,8 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
    array->_used        = 0;
    array->_count       = 0;
    array->_pointers    = NULL;
-   array->_notakey     = notakey;
    array->_allocator   = allocator;
+   array->_notakey     = notakey;
 
    if( capacity)
    {
