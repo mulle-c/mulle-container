@@ -41,11 +41,15 @@
 // NSMapTable/NSDictionary/NSMutableDictionary
 //
 // this is your traditional key value table
+// for CPU access, it oughta be better to have separate key and value storages,
+// so that the keys are all bunched together.
+// That didn't really show up in benchmarks though, actually it seemed
+// a smidgen slower (for very small dictionaries)
 //
-#define _MULLE_MAP_BASE                  \
-   struct mulle_pointerpair   *_storage; \
-   size_t                     _count;    \
-   short                      _depth;    \
+#define _MULLE_MAP_BASE                   \
+   void                       **_storage; \
+   size_t                     _count;     \
+   short                      _depth;     \
    short                      _inZone
 
 struct _mulle_map
@@ -54,10 +58,12 @@ struct _mulle_map
 };
 
 
-#define _MULLE_MAPENUMERATOR_BASE                      \
-   struct mulle_pointerpair                  *_curr;   \
-   size_t                                    _left;    \
-   struct mulle_container_keyvaluecallback   *_callback
+#define _MULLE_MAPENUMERATOR_BASE        \
+   struct mulle_pointerpair   space;     \
+   void                       **_curr;   \
+   size_t                     _left;     \
+   size_t                     _offset;   \
+   void                       *_notakey
 
 
 struct _mulle_mapenumerator
@@ -124,7 +130,8 @@ static inline size_t   _mulle_map_get_count( struct _mulle_map *map)
 }
 
 
-static inline size_t   _mulle_map_get_storagesize( struct _mulle_map *map)
+// size for key really
+static inline size_t   _mulle_map_get_size( struct _mulle_map *map)
 {
    return( 1UL << map->_depth);
 }
@@ -213,15 +220,18 @@ static inline struct _mulle_mapenumerator
 
    rover._left     = map->_count;
    rover._curr     = map->_storage;
-   rover._callback = callback;
+   rover._offset   = _mulle_map_get_size( map);
+   rover._notakey  = callback->keycallback.notakey;
 
    return( rover);
 }
 
 
-static inline struct mulle_pointerpair   *_mulle_mapenumerator_next( struct _mulle_mapenumerator *rover)
+static inline struct mulle_pointerpair   *
+   _mulle_mapenumerator_next( struct _mulle_mapenumerator *rover)
 {
-   struct mulle_pointerpair   *p;
+   void   **p;
+   void   *key;
 
    if( ! rover->_left)
       return( 0);
@@ -229,14 +239,20 @@ static inline struct mulle_pointerpair   *_mulle_mapenumerator_next( struct _mul
    rover->_left--;
    for(;;)
    {
-      p = rover->_curr++;
-      if( p->_key != rover->_callback->keycallback.notakey)
-         return( p);
+      p   = rover->_curr++;
+      key = *p;
+      if( key != rover->_notakey)
+      {
+         rover->space._key   = key;
+         rover->space._value = p[ rover->_offset];
+         return( &rover->space);
+      }
    }
 }
 
 
-static inline void   _mulle_mapenumerator_done( struct _mulle_mapenumerator *rover)
+static inline void
+   _mulle_mapenumerator_done( struct _mulle_mapenumerator *rover)
 {
 }
 
