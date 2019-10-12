@@ -18,10 +18,10 @@
 // just like struct _mulle_map but has the callback embedded in
 // its structure
 //
-#define MULLE_MAP_BASE                                    \
-   _MULLE_MAP_BASE;                                       \
-   struct mulle_container_keyvaluecallback    *_callback; \
-   struct mulle_allocator                     *_allocator
+#define MULLE_MAP_BASE                                   \
+   _MULLE_MAP_BASE;                                      \
+   struct mulle_container_keyvaluecallback   *_callback; \
+   struct mulle_allocator                    *_allocator
 
 
 struct mulle_map
@@ -39,6 +39,18 @@ struct mulle_mapenumerator
 
 
 extern struct mulle_mapenumerator   mulle_mapenumerator_empty;
+
+
+#define MULLE_MAPTINYENUMERATOR_BASE    _MULLE_MAPTINYENUMERATOR_BASE
+
+
+struct mulle_maptinyenumerator
+{
+   MULLE_MAPTINYENUMERATOR_BASE;
+};
+
+
+extern struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
 
 
 #pragma mark -
@@ -218,6 +230,33 @@ static inline int   mulle_mapenumerator_next( struct mulle_mapenumerator *rover,
 static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
 {
    _mulle_mapenumerator_done( (struct _mulle_mapenumerator *) rover);
+}
+
+
+#pragma mark -
+#pragma mark tiny enumeration
+
+static inline struct mulle_maptinyenumerator   mulle_map_tinyenumerate_nil( struct mulle_map *map)
+{
+   struct _mulle_maptinyenumerator   rover;
+
+   assert( ! map->_callback->keycallback.notakey);
+   rover = _mulle_map_tinyenumerate_nil( (struct _mulle_map *) map);
+   return( *(struct mulle_maptinyenumerator *) &rover);
+}
+
+
+static inline int   mulle_maptinyenumerator_next( struct mulle_maptinyenumerator *rover,
+                                                  void **key,
+                                                  void **value)
+{
+   return( _mulle_maptinyenumerator_next( (struct _mulle_maptinyenumerator *) rover, key, value));
+}
+
+
+static inline void   mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
+{
+   _mulle_maptinyenumerator_done( (struct _mulle_maptinyenumerator *) rover);
 }
 
 

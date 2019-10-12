@@ -34,11 +34,13 @@
 #include "mulle-container-operation.h"
 
 
+// counts are unsigned int, the result multiplied by sizeof is size_t */
+
 /* set is a primitive growing hashtable */
 #define _MULLE_SET_BASE              \
    void             **_storage;      \
    unsigned int     _count;          \
-   short            _depth
+   unsigned int     _size
 
 // NSSet/NSMutableSet/NSHashTable
 
@@ -60,8 +62,7 @@ struct _mulle_setenumerator
 };
 
 
-#pragma mark -
-#pragma mark setup and takedown
+#pragma mark - setup and takedown
 
 struct _mulle_set   *_mulle_set_create( unsigned int capacity,
                                         size_t extra,
@@ -88,8 +89,7 @@ void   _mulle_set_reset( struct _mulle_set *set,
                          struct mulle_allocator *allocator);
 
 
-#pragma mark -
-#pragma mark copying
+#pragma mark - copying
 
 int   _mulle_set_copy_items( struct _mulle_set *dst,
                              struct _mulle_set *src,
@@ -100,37 +100,18 @@ struct _mulle_set   *_mulle_set_copy( struct _mulle_set *set,
                                       struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator);
 
-#pragma mark -
-#pragma mark debugging
+#pragma mark - debugging
 
 char   *_mulle_set_describe( struct _mulle_set *set,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator);
 
-#pragma mark -
-#pragma mark petty accessors
+#pragma mark - petty accessors
 
-static inline unsigned int   _mulle_set_is_fuller_than( struct _mulle_set *set, unsigned int size)
+
+static inline unsigned int   _mulle_set_get_size( struct _mulle_set *set)
 {
-   return( set->_count >= (size - (size >> 1)));  // full when only 25% free
-}
-
-
-static inline unsigned int   _mulle_set_size_for_depth( int depth)
-{
-   return( 1U << depth);
-}
-
-
-static inline unsigned int   _mulle_set_is_full( struct _mulle_set *set)
-{
-   return( _mulle_set_is_fuller_than( set, _mulle_set_size_for_depth( set->_depth)));
-}
-
-
-static inline unsigned int   _mulle_set_get_storagesize( struct _mulle_set *set)
-{
-   return( 1U << set->_depth);
+   return( set->_size);
 }
 
 
@@ -140,8 +121,21 @@ static inline unsigned int   _mulle_set_get_count( struct _mulle_set *set)
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - query
+
+
+static inline int  _mulle_set_is_full( struct _mulle_set *set)
+{
+   unsigned int    size;
+
+   size = set->_size;
+   size = (size - (size >> 2));  // full when 75% occupied
+   return( set->_count >= size);
+}
+
+
+#pragma mark - operations
+
 
 void   _mulle_set_set( struct _mulle_set *set,
                        void *p,
@@ -163,8 +157,7 @@ int  _mulle_set_remove( struct _mulle_set *set,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator);
 
-#pragma mark -
-#pragma mark interface for mulle_bigset
+#pragma mark - interface for mulle_bigset
 
 int   __mulle_set_remove( struct _mulle_set *set,
                           void *p,
@@ -185,8 +178,7 @@ void   *_mulle_set_write( struct _mulle_set *set,
                           struct mulle_allocator *allocator);
 
 
-#pragma mark -
-#pragma mark enumeration
+#pragma mark - enumeration
 
 
 static inline struct _mulle_setenumerator
@@ -206,12 +198,38 @@ static inline struct _mulle_setenumerator
 }
 
 
-static inline void   *_mulle_setenumerator_next( struct _mulle_setenumerator *rover)
+static inline void   *_mulle_setenumerator_next_nil( struct _mulle_setenumerator *rover)
+{
+   void   *p;
+
+   assert( rover->_notakey == NULL);
+
+   if( ! rover->_left)
+      return( NULL);
+
+   for(;;)
+   {
+      p = *rover->_curr++;
+      if( p)
+      {
+         rover->_left--;
+         return( p);
+      }
+   }
+}
+
+
+static inline int   _mulle_setenumerator_next( struct _mulle_setenumerator *rover,
+                                               void **item)
 {
    void   *p;
 
    if( ! rover->_left)
-      return( rover->_notakey);
+   {
+      if( item)
+         *item = rover->_notakey;  // useful for NSHashTableEnumeration
+      return( 0);
+   }
 
    for(;;)
    {
@@ -219,7 +237,9 @@ static inline void   *_mulle_setenumerator_next( struct _mulle_setenumerator *ro
       if( p != rover->_notakey)
       {
          rover->_left--;
-         return( p);
+         if( item)
+            *item = p;
+         return( 1);
       }
    }
 }

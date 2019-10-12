@@ -343,7 +343,7 @@ short_circuit:
    bucket = (struct _mulle_set *) q;
    if( _mulle_set_is_full( bucket))
    {
-      size   = _mulle_set_get_storagesize( bucket);
+      size   = _mulle_set_get_size( bucket);
       modulo = mulle_prime_for_depth( set->_depth);
       if( size * 2 > modulo * 4)
          if( grow_vertically( set, callback, allocator))
@@ -449,8 +449,7 @@ void   *_mulle_bigsetenumerator_next( struct _mulle_bigsetenumerator *rover)
 
    --rover->_left;
 retry:
-   q = _mulle_setenumerator_next( &rover->_bucket_rover);
-   if( q == rover->_bucket_rover._notakey)
+   if( _mulle_setenumerator_next( &rover->_bucket_rover, &q))
    {
       storage = rover->_table->_storage;
       while( ! (q = storage[ rover->_index]))

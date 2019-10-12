@@ -28,7 +28,7 @@ static void   simple_fill_test()
 
    bucket = _mulle_map_create( 128, 0, CALLBACK, NULL);
 
-   printf( "%ld\n", _mulle_map_get_count( bucket));
+   printf( "%ld\n", (long) _mulle_map_get_count( bucket));
 
    pair._key   = key;
    pair._value = key;
@@ -41,9 +41,9 @@ static void   simple_fill_test()
 
    _mulle_map_reset( bucket, CALLBACK, NULL);
 
-   printf( "%ld\n", _mulle_map_get_count( bucket));
+   printf( "%ld\n", (long) _mulle_map_get_count( bucket));
    _mulle_map_set( bucket, &pair, CALLBACK, NULL);
-   printf( "%ld\n", _mulle_map_get_count( bucket));
+   printf( "%ld\n", (long) _mulle_map_get_count( bucket));
 
    _mulle_map_destroy( bucket, CALLBACK, NULL);
 }

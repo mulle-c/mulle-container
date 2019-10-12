@@ -7,6 +7,11 @@
 //  Copyright (c) 2015 Codeon GmbH.
 //  All rights reserved.
 //
+#ifdef NDEBUG
+# undef NDEBUG
+#endif
+#include <assert.h>
+
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
 #include <mulle-testallocator/mulle-testallocator.h>
@@ -22,6 +27,7 @@ static void  simple( void)
    int                           i;
    int                           state;
    struct mulle_container_keyvaluecallback      callback;
+   char                                onstack[] = { 'V', 'f', 'L', 0 };
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
@@ -38,7 +44,7 @@ static void  simple( void)
    mulle_map_set( map, "VfL", "BOCHUM");
    assert( ! strcmp( "BOCHUM", mulle_map_get( map, "VfL")));
 
-   mulle_map_remove( map, "VfL");
+   mulle_map_remove( map, onstack);
    assert( ! mulle_map_get( map, "VfL"));
 
    mulle_map_destroy( map);
