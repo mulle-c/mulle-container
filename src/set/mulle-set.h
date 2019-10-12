@@ -193,9 +193,16 @@ static inline struct mulle_setenumerator   mulle_set_enumerate( struct mulle_set
 }
 
 
-static inline void   *mulle_setenumerator_next( struct mulle_setenumerator *rover)
+static inline void   *mulle_setenumerator_next_nil( struct mulle_setenumerator *rover)
 {
-   return( _mulle_setenumerator_next( (struct _mulle_setenumerator *) rover));
+   return( _mulle_setenumerator_next_nil( (struct _mulle_setenumerator *) rover));
+}
+
+
+static inline int   mulle_setenumerator_next( struct mulle_setenumerator *rover,
+                                              void **value)
+{
+   return( _mulle_setenumerator_next( (struct _mulle_setenumerator *) rover, value));
 }
 
 

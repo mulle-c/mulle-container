@@ -38,6 +38,8 @@
 #include "mulle-pointerpair.h"
 #include <stdarg.h>
 
+// counts are unsigned int, the result multiplied by sizeof is size_t */
+
 // NSMapTable/NSDictionary/NSMutableDictionary
 //
 // this is your traditional key value table
@@ -48,9 +50,8 @@
 //
 #define _MULLE_MAP_BASE                   \
    void                       **_storage; \
-   size_t                     _count;     \
-   short                      _depth;     \
-   short                      _inZone
+   unsigned int               _count;     \
+   unsigned int               _size
 
 struct _mulle_map
 {
@@ -61,8 +62,8 @@ struct _mulle_map
 #define _MULLE_MAPENUMERATOR_BASE        \
    struct mulle_pointerpair   space;     \
    void                       **_curr;   \
-   size_t                     _left;     \
-   size_t                     _offset;   \
+   unsigned int               _left;     \
+   unsigned int               _offset;   \
    void                       *_notakey
 
 
@@ -72,11 +73,24 @@ struct _mulle_mapenumerator
 };
 
 
+
+#define _MULLE_MAPTINYENUMERATOR_BASE    \
+   void                       **_curr;   \
+   unsigned int               _left;     \
+   unsigned int               _offset
+
+
+struct _mulle_maptinyenumerator
+{
+   _MULLE_MAPTINYENUMERATOR_BASE;
+};
+
+
 #pragma mark -
 #pragma mark setup and takedown
 
 
-struct _mulle_map   *_mulle_map_create( size_t capacity,
+struct _mulle_map   *_mulle_map_create( unsigned int capacity,
                                         size_t extra,
                                         struct mulle_container_keyvaluecallback *callback,
                                         struct mulle_allocator *allocator);
@@ -85,7 +99,7 @@ void   _mulle_map_destroy( struct _mulle_map *map,
                            struct mulle_container_keyvaluecallback *callback,
                            struct mulle_allocator *allocator);
 void   _mulle_map_init( struct _mulle_map *map,
-                        size_t capacity,
+                        unsigned int capacity,
                         struct mulle_container_keyvaluecallback *callback,
                         struct mulle_allocator *allocator);
 
@@ -101,39 +115,26 @@ void   _mulle_map_reset( struct _mulle_map *map,
 #pragma mark -
 #pragma mark petty accessors
 
-static inline size_t   _mulle_map_is_fuller_than( struct _mulle_map *map,
-                                                  size_t size)
+static inline int   _mulle_map_is_full( struct _mulle_map *map)
 {
+   unsigned int    size;
+
+   size = map->_size;
+   size = (size - (size >> 2));  // full when 75% occupied
    return( map->_count >= size);
 }
 
 
-static inline size_t   _mulle_map_size_for_depth( int depth)
-{
-   return( 1UL << depth);
-}
-
-
-static inline size_t   _mulle_map_is_full( struct _mulle_map *map)
-{
-   size_t    size;
-
-   size = _mulle_map_size_for_depth( map->_depth);
-   size = (size - (size >> 1));  // full when only 25% free
-   return( _mulle_map_is_fuller_than( map, size));
-}
-
-
-static inline size_t   _mulle_map_get_count( struct _mulle_map *map)
+static inline unsigned int   _mulle_map_get_count( struct _mulle_map *map)
 {
    return( map->_count);
 }
 
 
 // size for key really
-static inline size_t   _mulle_map_get_size( struct _mulle_map *map)
+static inline unsigned int   _mulle_map_get_size( struct _mulle_map *map)
 {
-   return( 1UL << map->_depth);
+   return( map->_size);
 }
 
 
@@ -158,7 +159,7 @@ void   *_mulle_map_insert_known_absent( struct _mulle_map *map,
 
 int   _mulle_map_remove_with_hash( struct _mulle_map *map,
                                    void *key,
-                                   uintptr_t hash,
+                                   unsigned int  hash,
                                    struct mulle_container_keyvaluecallback *callback,
                                    struct mulle_allocator *allocator);
 
@@ -169,7 +170,7 @@ int   _mulle_map_remove( struct _mulle_map *map,
 
 void   *_mulle_map_get_with_hash( struct _mulle_map *map,
                                   void *key,
-                                  uintptr_t hash,
+                                  unsigned int  hash,
                                   struct mulle_container_keyvaluecallback *callback);
 
 void   *_mulle_map_get( struct _mulle_map *map,
@@ -210,7 +211,7 @@ char   *_mulle_map_describe( struct _mulle_map *set,
 
 static inline struct _mulle_mapenumerator
    _mulle_map_enumerate( struct _mulle_map *map,
-                         struct mulle_container_keyvaluecallback *callback) mulle_nonnull_first_second;
+                         struct mulle_container_keyvaluecallback *callback) mulle_nonnull_second;
 
 static inline struct _mulle_mapenumerator
    _mulle_map_enumerate( struct _mulle_map *map,
@@ -218,10 +219,15 @@ static inline struct _mulle_mapenumerator
 {
    struct _mulle_mapenumerator   rover;
 
-   rover._left     = map->_count;
-   rover._curr     = map->_storage;
-   rover._offset   = _mulle_map_get_size( map);
-   rover._notakey  = callback->keycallback.notakey;
+   if( map)
+   {
+      rover._left     = map->_count;
+      rover._curr     = map->_storage;
+      rover._offset   = _mulle_map_get_size( map);
+      rover._notakey  = callback->keycallback.notakey;
+   }
+   else
+      rover._left     = 0;
 
    return( rover);
 }
@@ -251,9 +257,65 @@ static inline struct mulle_pointerpair   *
 }
 
 
+
 static inline void
    _mulle_mapenumerator_done( struct _mulle_mapenumerator *rover)
 {
 }
+
+
+/*
+ * a different and smaller interface, where you have to pass in space
+ * to store the enumeration result each iteration and where notakey
+ * must be NULL
+ */
+static inline struct _mulle_maptinyenumerator
+   _mulle_map_tinyenumerate_nil( struct _mulle_map *map)
+{
+   struct _mulle_maptinyenumerator   rover;
+
+   if( map)
+   {
+      rover._left   = map->_count;
+      rover._curr   = map->_storage;
+      rover._offset = _mulle_map_get_size( map);
+   }
+   else
+      rover._left   = 0;
+
+   return( rover);
+}
+
+
+static inline int
+   _mulle_maptinyenumerator_next( struct _mulle_maptinyenumerator *rover,
+                                  void **key,
+                                  void **value)
+{
+   void   **p;
+
+   if( ! rover->_left)
+      return( 0);
+
+   rover->_left--;
+   for(;;)
+   {
+      p = rover->_curr++;
+      if( *p)
+      {
+         if( key)
+            *key   = *p;
+         if( value)
+            *value = p[ rover->_offset];
+         return( 1);
+      }
+   }
+}
+
+static inline void
+   _mulle_maptinyenumerator_done( struct _mulle_maptinyenumerator *rover)
+{
+}
+
 
 #endif

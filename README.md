@@ -9,7 +9,8 @@ on the stack, or permanently in the heap.
 to simplify memory management. None of them are thread-safe.
 
 > This library could benefit from more tests. Do not assume, that it
-> is completely bug free.
+> is completely bug free, especially the underutilized "big" variants)
+
 
 Build Status | Release Version
 -------------|-----------------------------------
