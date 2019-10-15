@@ -8,9 +8,6 @@ on the stack, or permanently in the heap.
 [mulle-allocator](//github.com/mulle-c/mulle-allocator) is used pervasively
 to simplify memory management. None of them are thread-safe.
 
-> This library could benefit from more tests. Do not assume, that it
-> is completely bug free, especially the underutilized "big" variants)
-
 
 Build Status | Release Version
 -------------|-----------------------------------
@@ -43,48 +40,49 @@ Or let [mulle-sde](//github.com/mulle-sde) do it all for you.
 ## Example
 
 The API of the containers is fairly uniform, here is an example using
-`mulle_bigmap` to associate c-strings with each other. All the necessary memory
-management (copying of keys and values) is performed by `mulle_bigmap` using
+`mulle_map` to associate c-strings with each other. All the necessary memory
+management (copying of keys and values) is performed by `mulle_map` using
 callbacks:
 
 
 ```
-#include <mulle_container/mulle_container.h>
+#include <mulle-container/mulle-container.h>
 
 static struct mulle_container_keyvaluecallback   callback;
 
 static void  test( void)
 {
-   struct mulle_bigmap              *map;
-   struct mulle_bigmapenumerator    rover;
-   void                             *key;
-   void                             *value;
+   struct mulle_map              *map;
+   struct mulle_mapenumerator    rover;
+   void                          *key;
+   void                          *value;
 
+   map = mulle_map_create( 0, &callback, NULL);
 
-   map = mulle_bigmap_create( 0, &callback, NULL);
+   mulle_map( map, "VfL", "VFL");
+   mulle_map( map, "Bochum", "BOCHUM");
+   mulle_map( map, "1848", "1848");
 
-   mulle_bigmap_set( map, "VfL", "VFL");
-   mulle_bigmap_set( map, "Bochum", "BOCHUM");
-   mulle_bigmap_set( map, "1848", "1848");
-
-   if( ! mulle_bigmap_get( map, "1849"))
+   if( ! mulle_map_get( map, "1849"))
    {
-	   rover = mulle_bigmap_enumerate( map);
-	   while( mulle_bigmapenumerator_next( &rover, &key, &value))
-   		   printf( "%s : %s\n", key, value);
-	   mulle_bigmapenumerator_done( &rover);
+	   rover = mulle_map_enumerate( map);
+	   while( mulle_mapenumerator_next( &rover, &key, &value))
+		   printf( "%s : %s\n", key, value);
+	   mulle_mapenumerator_done( &rover);
 	}
-   mulle_bigmap_remove( map, "1848");
+   mulle_map_remove( map, "1848");
 
-   mulle_bigmap_destroy( map);
+   mulle_map_destroy( map);
 }
 
-int main( void)
+
+int   main( void)
 {
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
    test();
+   return( 0);
 }
 ```
 
@@ -114,10 +112,8 @@ File                                                         | Description
 [`mulle_hash`](dox/API_HASH.md)                              | The default hash. Currently it's a wrapper for the [CityHash](https://en.wikipedia.org/wiki/CityHash). The choice of CityHash is pretty close to arbitrary, it might change in the future.
 [`mulle_prime`](dox/API_PRIME.md)                            | A simple scheme to get prime values for bit depths (up to 32 bit)
 &nbsp;                                                       | &nbsp;
-[`mulle_bigmap`](dox/API_BIGMAP.md)                          | A two level growing hashmap (key indexing value map). Deemed useful for really big hash tables.
 [`mulle_map`](dox/API_MAP.md)                                | A single level growing hashmap (key indexing value map). Your standard key/value associating hashtable (NSMutableDictionary)
 &nbsp;                                                       | &nbsp;
-[`mulle_bigset`](dox/API_BIGSET.md)                          | A two level growing hashmap (key indexing value map). Deemed useful for really big hash tables.
 [`mulle_set`](dox/API_SET.md)                                | A single level growing hashed set. (NSMutableSet)
 [`mulle_pointerset`](dox/API_POINTERSET.md)                  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
 
