@@ -36,7 +36,7 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#define MULLE_CONTAINER_VERSION  ((1 << 20) | (2 << 8) | 1)
+#define MULLE_CONTAINER_VERSION  ((2 << 20) | (0 << 8) | 0)
 
 #include "include.h"
 
@@ -52,13 +52,9 @@
 
 #include "_mulle-set.h"
 #include "mulle-set.h"
-#include "_mulle-bigset.h"
-#include "mulle-bigset.h"
 
 #include "_mulle-map.h"
 #include "mulle-map.h"
-#include "_mulle-bigmap.h"
-#include "mulle-bigmap.h"
 
 #include "_mulle-pointerqueue.h"
 #include "mulle-pointerset.h"

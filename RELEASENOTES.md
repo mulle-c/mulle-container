@@ -1,3 +1,14 @@
+# 2.0.0
+
+* removed mulle-bigmap and mulle-bigset, which are currently unused but now buggy due to recent changes in mulle-map and mulle-set
+* rewrote `_mulle_set` and `_mulle_map` for improved performance
+* rewrote `_mulle_map` to internally use a different memory layout, which in theory should be better for the cpu cache
+* small maps get will be preceeded by a quick scan for pointer equality, which can speed up things considerably
+* Improved the container callback functions with a few typedefs.
+* Fixed bugs in `_mulle-pointerqueue`
+* Added `mulle_pointerarray_enumerate_nil,` for when you know that notakey is nil. It allows passing in a nil array for enumeration
+
+
 ### 1.2.1
 
 * Improved the container callback functions with a few typedefs.

@@ -19,7 +19,6 @@ set( PRIVATE_HEADERS
 src/farmhash/farmhash.h
 src/farmhash/largeint.h
 src/include-private.h
-src/map/_mulle-bigmap-private.h
 )
 
 set( PUBLIC_HEADERS
@@ -30,8 +29,6 @@ src/array/mulle-pointerpairarray.h
 src/hash/mulle-hash.h
 src/hash/mulle-prime.h
 src/include.h
-src/map/_mulle-bigmap.h
-src/map/mulle-bigmap.h
 src/map/_mulle-map.h
 src/map/mulle-map.h
 src/map/mulle-pointerpair.h
@@ -41,8 +38,6 @@ src/mulle-container-compiler-attributes.h
 src/mulle-container.h
 src/mulle-container-operation.h
 src/queue/_mulle-pointerqueue.h
-src/set/_mulle-bigset.h
-src/set/mulle-bigset.h
 src/set/mulle-pointerset.h
 src/set/_mulle-set.h
 src/set/mulle-set.h
