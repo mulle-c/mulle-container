@@ -31,6 +31,8 @@
 
 #include "_mulle-set.h"
 
+#include "mulle-container-math.h"
+
 #include <stddef.h>
 #include <assert.h>
 #include <stdio.h>
@@ -40,7 +42,7 @@
 /*
  *
  */
-#define _MULLE_SET_INITIAL_SIZE     4
+#define _MULLE_SET_MIN_GROW_SIZE    8
 
 
 /**
@@ -51,34 +53,9 @@
 //
 // 0 is also a power of two for these purposes
 //
-static inline int   is_power_of_two( unsigned int x)
-{
-   return( (x & (~x + 1)) == x);
-}
-
 
 #pragma clang diagnostic ignored "-Wshift-count-overflow"
 
-
-static inline unsigned int  next_valid_size( unsigned int v)
-{
-   v--;
-   v |= v >> 1;
-   v |= v >> 2;
-   v |= v >> 4;
-   v |= v >> 8;
-   v |= v >> 16;
-   if( sizeof( unsigned int) > sizeof( uint32_t))
-   {
-      v |= v >> 32;
-   }
-   v++;
-
-   if( v < _MULLE_SET_INITIAL_SIZE)
-      v = _MULLE_SET_INITIAL_SIZE;
-
-   return( v);
-}
 
 
 // assume we have
@@ -99,7 +76,6 @@ static inline unsigned int   _mulle_set_hash( struct mulle_container_keycallback
 {
    return( (unsigned int) (*callback->hash)( callback, p));
 }
-
 
 
 static void   **allocate_pointers( unsigned int n,
@@ -134,7 +110,7 @@ void    _mulle_set_init( struct _mulle_set *p,
    assert_mulle_container_keycallback( callback);
 
    p->_count   = 0;
-   p->_size    = capacity ? next_valid_size( capacity) : 0;
+   p->_size    = capacity ? mulle_pow2round( capacity) : 0;
    p->_storage = allocate_pointers( p->_size, callback->notakey, allocator);
 }
 
@@ -251,8 +227,8 @@ static void   grow( struct _mulle_set *set,
    if( new_size < set->_size)
       abort();  // overflow
 
-   if( new_size < _MULLE_SET_INITIAL_SIZE)
-      new_size = _MULLE_SET_INITIAL_SIZE;
+   if( new_size < _MULLE_SET_MIN_GROW_SIZE)
+      new_size = _MULLE_SET_MIN_GROW_SIZE;
 
    buf = allocate_pointers( new_size, callback->notakey, allocator);
 

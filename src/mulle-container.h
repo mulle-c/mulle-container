@@ -41,6 +41,7 @@
 #include "include.h"
 
 #include "mulle-container-operation.h"
+#include "mulle-container-math.h"
 #include "mulle-container-callback.h"
 #include "mulle-container-callback-global.h"
 
@@ -55,6 +56,9 @@
 
 #include "_mulle-map.h"
 #include "mulle-map.h"
+
+#include "mulle-range.h"
+#include "_mulle-rangeset.h"
 
 #include "_mulle-pointerqueue.h"
 #include "mulle-pointerset.h"

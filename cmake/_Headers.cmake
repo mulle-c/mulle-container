@@ -12,6 +12,7 @@ src/farmhash
 src/hash
 src/map
 src/queue
+src/rangeset
 src/set
 )
 
@@ -36,8 +37,11 @@ src/mulle-container-callback-global.h
 src/mulle-container-callback.h
 src/mulle-container-compiler-attributes.h
 src/mulle-container.h
+src/mulle-container-math.h
 src/mulle-container-operation.h
 src/queue/_mulle-pointerqueue.h
+src/rangeset/mulle-range.h
+src/rangeset/_mulle-rangeset.h
 src/set/mulle-pointerset.h
 src/set/_mulle-set.h
 src/set/mulle-set.h

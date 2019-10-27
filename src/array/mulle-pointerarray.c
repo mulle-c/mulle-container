@@ -34,6 +34,8 @@
 
 #include "mulle-pointerarray.h"
 
+#include "mulle-container-math.h"
+
 
 
 struct mulle_pointerarray *
@@ -55,9 +57,9 @@ int   mulle_pointerarray_grow( struct mulle_pointerarray *array)
 {
    unsigned int   new_size;
 
-   new_size = array->_size * 2;
-   if( new_size < 2)
-      new_size = 2;
+   new_size = mulle_pow2round( array->_size * 2);
+   if( new_size < 8)
+      new_size = 8;
 
    array->_pointers = mulle_allocator_realloc( array->_allocator, array->_pointers, sizeof( void *) * new_size);
    memset( &array->_pointers[ array->_size], 0, sizeof( void *) * (new_size - array->_size));

@@ -35,7 +35,9 @@
 #include "_mulle-map.h"
 
 #include "mulle-container-operation.h"
+#include "mulle-container-math.h"
 #include "mulle-prime.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -43,43 +45,8 @@
 
 #define _MULLE_MAP_INITIAL_SIZE  4
 
-/**
-  * Bit twiddling code from
-  * https://www.exploringbinary.com/ten-ways-to-check-if-an-integer-is-a-power-of-two-in-c/
-  * https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
- **/
-//
-// 0 is also a power of two for these purposes
-//
-static inline int   is_power_of_two( unsigned int x)
-{
-   return( (x & (~x + 1)) == x);
-}
-
 
 #pragma clang diagnostic ignored "-Wshift-count-overflow"
-
-
-static inline unsigned int  next_valid_size( unsigned int v)
-{
-   v--;
-   v |= v >> 1;
-   v |= v >> 2;
-   v |= v >> 4;
-   v |= v >> 8;
-   v |= v >> 16;
-   if( sizeof( unsigned int) > sizeof( uint32_t))
-   {
-      v |= v >> 32;
-   }
-   v++;
-
-   if( v < _MULLE_MAP_INITIAL_SIZE)
-      v = _MULLE_MAP_INITIAL_SIZE;
-
-   return( v);
-}
-
 
 
 // assume we have
@@ -130,7 +97,7 @@ static void   **allocate_storage( unsigned int n,
    if( ! n)
       return( NULL);
 
-   assert( is_power_of_two( n));
+   assert( mulle_is_pow2( n));
 
    if( ! notakey)
       return( mulle_allocator_calloc( allocator, n, sizeof( void *) * 2));
@@ -147,7 +114,6 @@ static void   **allocate_storage( unsigned int n,
 }
 
 
-
 void   _mulle_map_init( struct _mulle_map *p,
                         unsigned int capacity,
                         struct mulle_container_keyvaluecallback *callback,
@@ -156,7 +122,7 @@ void   _mulle_map_init( struct _mulle_map *p,
    assert_mulle_container_keyvaluecallback( callback);
 
    p->_count   = 0;
-   p->_size    = capacity ? next_valid_size( capacity) : 0;
+   p->_size    = capacity;
    p->_storage = allocate_storage( p->_size, callback->keycallback.notakey, allocator);
 }
 
@@ -251,8 +217,8 @@ static void   copy_storage( void **dst,
    unsigned int   i;
    unsigned int   hash;
 
-   assert( is_power_of_two( dst_size));
-   assert( is_power_of_two( src_size));
+   assert( mulle_is_pow2( dst_size));
+   assert( mulle_is_pow2( src_size));
    assert( dst_size >= src_size);
 
    sentinel = &src[ src_size];
