@@ -33,6 +33,8 @@
 //
 #include "mulle-pointerpairarray.h"
 
+#include "mulle-container-math.h"
+
 # pragma mark -
 # pragma mark mechanisms
 
@@ -41,9 +43,9 @@ int   mulle_pointerpairarray_grow( struct mulle_pointerpairarray *array)
 {
    unsigned int   new_size;
 
-   new_size = array->_size * 2;
-   if( new_size < 2)
-      new_size = 2;
+   new_size = mulle_pow2round( array->_size * 2);
+   if( new_size < 8)
+      new_size = 8;
 
    array->_pairs = mulle_allocator_realloc( array->_allocator, array->_pairs, sizeof( struct mulle_pointerpair) * new_size);
    memset( &array->_pairs[ array->_size], 0, sizeof( struct mulle_pointerpair) * (new_size - array->_size));

@@ -1,10 +1,9 @@
-//
-//  mulle-container.h
+//  mulle-container-math
 //  mulle-container
 //
-//  Created by Nat! on 02/11/15.
-//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2015 Codeon GmbH.
+//  Created by Nat! on 27.10.19.
+//  Copyright (c) 2019 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2019 Codeon GmbH.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -33,43 +32,44 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
+#ifndef mulle_container_math_h__
+#define mulle_container_math_h__
 
-#define MULLE_CONTAINER_VERSION  ((2 << 20) | (0 << 8) | 0)
 
-#include "include.h"
+#include <stdint.h>
 
-#include "mulle-container-operation.h"
-#include "mulle-container-math.h"
-#include "mulle-container-callback.h"
-#include "mulle-container-callback-global.h"
 
-#include "mulle-prime.h"
-#include "mulle-hash.h"
+/**
+  * Bit twiddling code from
+  * https://www.exploringbinary.com/ten-ways-to-check-if-an-integer-is-a-power-of-two-in-c/
+  * https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+ **/
+//
+// 0 is also a power of two for these purposes
+//
+static inline int   mulle_is_pow2( unsigned int x)
+{
+   return( (x & (~x + 1)) == x);
+}
 
-#include "_mulle-array.h"
-#include "mulle-array.h"
 
-#include "_mulle-set.h"
-#include "mulle-set.h"
+//
+// 0 promotes to 1 here for these purposes
+//
+static inline unsigned int   mulle_pow2round( unsigned int v)
+{
+   v--;
+   v |= v >> 1;
+   v |= v >> 2;
+   v |= v >> 4;
+   v |= v >> 8;
+   v |= v >> 16;
+   if( sizeof( unsigned int) >= sizeof( uint64_t))
+      v |= v >> 32;
+   v++;
 
-#include "_mulle-map.h"
-#include "mulle-map.h"
+   return( v ? v : 1);
+}
 
-#include "mulle-range.h"
-#include "_mulle-rangeset.h"
-
-#include "_mulle-pointerqueue.h"
-#include "mulle-pointerset.h"
-#include "mulle-pointerarray.h"
-#include "mulle-pointerpairarray.h"
-
-#include "mulle-container-callback.h"
-#include "mulle-container-operation.h"
-
-#if MULLE_ALLOCATOR_VERSION < ((2 << 20) | (0 << 8) | 0)
-# error "mulle-allocator is too old"
 #endif
 
-#endif /* mulle_container_h */

@@ -82,9 +82,6 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
 
    if( capacity)
    {
-      if( capacity < 2)
-         capacity = 2;
-
       array->_pointers = mulle_allocator_calloc( array->_allocator,
       														 capacity,
       														 sizeof( void *));
@@ -162,7 +159,7 @@ static inline int
 
 //
 // this removes _notakey from the back, until it finds a pointer
-// then remove this. A random remove is not coded. You generally want to 
+// then remove this. A random remove is not coded. You generally want to
 // use mulle_pointerarray_set with `notakey` for this.
 //
 static inline void  *

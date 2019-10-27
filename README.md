@@ -2,11 +2,13 @@
 
 🈁 Sets, hashtables, arrays and more - written in C
 
-A collection of C (C99) data structures dealing exclusively with void pointers.
+A collection of C (C99) data structures dealing exclusively with void pointers
+and their integer counterpart `intptr_t`.
+
 They utilize callbacks that are compatible to OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. Data structures can live (temporarily)
-on the stack, or permanently in the heap.
+on the stack, or permanently in the heap. None of them are thread-safe.
 [mulle-allocator](//github.com/mulle-c/mulle-allocator) is used pervasively
-to simplify memory management. None of them are thread-safe.
+to simplify memory management.
 
 
 Build Status | Release Version

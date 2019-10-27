@@ -111,9 +111,9 @@ int  _mulle_array_grow( struct _mulle_array *array,
 {
    unsigned int   new_size;
 
-   new_size = array->_size * 2;
-   if( new_size < 16)
-      new_size = 16;
+   new_size = mulle_pow2round( array->_size * 2);
+   if( new_size < 8)
+      new_size = 8;
 
    return( _mulle_array_set_size( array, new_size, callback, allocator));
 }

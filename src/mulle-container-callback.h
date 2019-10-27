@@ -32,8 +32,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef mulle_callback_type_h__
-#define mulle_callback_type_h__
+#ifndef mulle_container_callback_h__
+#define mulle_container_callback_h__
 
 #include "include.h"
 #include <stdint.h>
