@@ -64,8 +64,11 @@ static inline unsigned int   mulle_pow2round( unsigned int v)
    v |= v >> 4;
    v |= v >> 8;
    v |= v >> 16;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshift-count-overflow"
    if( sizeof( unsigned int) >= sizeof( uint64_t))
       v |= v >> 32;
+#pragma clang diagnostic pop
    v++;
 
    return( v ? v : 1);

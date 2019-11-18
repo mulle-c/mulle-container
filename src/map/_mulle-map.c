@@ -122,7 +122,7 @@ void   _mulle_map_init( struct _mulle_map *p,
    assert_mulle_container_keyvaluecallback( callback);
 
    p->_count   = 0;
-   p->_size    = capacity;
+   p->_size    = capacity ? mulle_pow2round( capacity + (capacity >> 2)) : 0;
    p->_storage = allocate_storage( p->_size, callback->keycallback.notakey, allocator);
 }
 
@@ -145,7 +145,7 @@ void   _mulle_map_done( struct _mulle_map *map,
                         struct mulle_allocator *allocator)
 {
    struct _mulle_mapenumerator   rover;
-   struct mulle_pointerpair     *pair;
+   struct mulle_pointerpair      *pair;
 
    rover = _mulle_map_enumerate( map, callback);
    while( pair = _mulle_mapenumerator_next( &rover))
@@ -323,7 +323,7 @@ static inline unsigned long  find_index( void **storage,
 
 void   *_mulle_map_write( struct _mulle_map *map,
                           struct mulle_pointerpair *pair,
-                          unsigned int  hash,
+                          unsigned int hash,
                           enum mulle_container_write_mode mode,
                           struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator)

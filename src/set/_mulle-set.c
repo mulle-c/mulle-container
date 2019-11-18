@@ -110,7 +110,7 @@ void    _mulle_set_init( struct _mulle_set *p,
    assert_mulle_container_keycallback( callback);
 
    p->_count   = 0;
-   p->_size    = capacity ? mulle_pow2round( capacity) : 0;
+   p->_size    = capacity ? mulle_pow2round( capacity + (capacity >> 2)) : 0;
    p->_storage = allocate_pointers( p->_size, callback->notakey, allocator);
 }
 
