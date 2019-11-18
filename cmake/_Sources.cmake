@@ -17,7 +17,7 @@ src/map/_mulle-map.c
 src/map/mulle-map.c
 src/mulle-container-callback.c
 src/queue/_mulle-pointerqueue.c
-src/rangeset/mulle-range.c
+src/range/mulle-range.c
 src/rangeset/_mulle-rangeset.c
 src/set/mulle-pointerset.c
 src/set/_mulle-set.c

@@ -11,6 +11,7 @@
 //
 // the range values are unsigned, but the actual range may be limited to
 // positive signed values (see below)
+// a range with zero length can be valid
 //
 struct mulle_range
 {
@@ -54,7 +55,8 @@ static inline uintptr_t   mulle_range_get_end( struct mulle_range range)
 // will define BOOL in <windows.h>, but when compiling
 // MulleObjC.h it won't be there
 //
-static inline int   mulle_range_contains_location( struct mulle_range range, uintptr_t location)
+static inline int   mulle_range_contains_location( struct mulle_range range,
+                                                   uintptr_t location)
 {
    return( location - range.location < range.length);
 }
@@ -64,20 +66,22 @@ static inline int  mulle_range_is_valid( struct mulle_range range)
 {
    uintptr_t   end;
 
-   // can't contain mulle_not_found_e
-   if( mulle_range_contains_location( range, mulle_not_found_e))
+   if( range.location > mulle_range_max)
       return( 0);
 
+   // zero length is always valid if location is sane
+   if( ! range.length)
+      return( 1);
+
    end = mulle_range_get_end( range);
-   // check for overflow
-   return( end >= range.location || end == 0); //|| (end == range.location && range.length == 0));
+   return( end <= mulle_range_max + 1);
 }
 
 
 static inline int  mulle_range_contains( struct mulle_range big, struct mulle_range small)
 {
    if( ! small.length)
-      return( 0);
+      return( 1);
 
    if( ! mulle_range_contains_location( big, small.location))
       return( 0);

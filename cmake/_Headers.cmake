@@ -12,6 +12,7 @@ src/farmhash
 src/hash
 src/map
 src/queue
+src/range
 src/rangeset
 src/set
 )
@@ -40,7 +41,7 @@ src/mulle-container.h
 src/mulle-container-math.h
 src/mulle-container-operation.h
 src/queue/_mulle-pointerqueue.h
-src/rangeset/mulle-range.h
+src/range/mulle-range.h
 src/rangeset/_mulle-rangeset.h
 src/set/mulle-pointerset.h
 src/set/_mulle-set.h

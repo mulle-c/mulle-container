@@ -34,6 +34,7 @@
 
 #include "mulle-container-operation.h"
 #include "mulle-container-callback.h"
+#include "mulle-container-math.h"
 
 #include <stdio.h>  // debug
 

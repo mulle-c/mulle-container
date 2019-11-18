@@ -105,8 +105,8 @@ void   _mulle_rangeset_reset( struct _mulle_rangeset *p,
 
 
 
-int   _mulle_rangeset_member( struct _mulle_rangeset *p,
-                              struct mulle_range range)
+int   _mulle_rangeset_contains( struct _mulle_rangeset *p,
+                                struct mulle_range range)
 {
    struct mulle_range   *found;
 
@@ -118,6 +118,22 @@ int   _mulle_rangeset_member( struct _mulle_rangeset *p,
    found = mulle_range_contains_bsearch( p->_ranges, p->_length, range);
    return( found ? 1 : 0);
 }
+
+
+int   _mulle_rangeset_intersects( struct _mulle_rangeset *p,
+                                  struct mulle_range range)
+{
+   struct mulle_range   *found;
+
+   if( ! range.length)
+      return( 0);
+   if( ! p->_length)
+      return( 0);
+
+   found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
+   return( found ? 1 : 0);
+}
+
 
 
 
@@ -458,7 +474,6 @@ static void  _mulle_rangeset_deltashift( struct _mulle_rangeset *p,
 }
 
 
-
 int   _mulle_rangeset_shift( struct _mulle_rangeset *p,
                              uintptr_t location,
                              intptr_t delta,
@@ -593,17 +608,20 @@ uintptr_t   _mulle_rangeset_search( struct _mulle_rangeset *p,
 
    switch( op)
    {
-   case  _mulle_rangeset_less_thanOr_equal :
+   case  _mulle_rangeset_less_than_or_equal :
    case  _mulle_rangeset_equal :
    case  _mulle_rangeset_greater_than_or_equal :
       if( mulle_range_contains_location( *curr, location))
          return( location);
+      // fall thru
+   default:
+      break;
    }
 
    switch( op)
    {
    case  _mulle_rangeset_less_than :
-   case  _mulle_rangeset_less_thanOr_equal :
+   case  _mulle_rangeset_less_than_or_equal :
       if( location)
       {
          --location;
@@ -630,7 +648,37 @@ uintptr_t   _mulle_rangeset_search( struct _mulle_rangeset *p,
             return( curr->location);
          }
       }
+      // fall thru
+   default:
       break;
    }
    return( mulle_not_found_e);
+}
+
+
+void   _mulle_rangeset_insert( struct _mulle_rangeset *p,
+                               struct mulle_range range,
+                               struct mulle_allocator *allocator)
+{
+   if( ! range.length)
+      return;
+   // illegal,
+   if( ! mulle_range_is_valid( range))
+      return;
+
+   __mulle_rangeset_insert( p, range, allocator);
+}
+
+
+void   _mulle_rangeset_remove( struct _mulle_rangeset *p,
+                               struct mulle_range range,
+                               struct mulle_allocator *allocator)
+{
+   if( ! range.length)
+      return;
+   // illegal,
+   if( ! mulle_range_is_valid( range))
+      return;
+
+   __mulle_rangeset_remove( p, range, allocator);
 }
