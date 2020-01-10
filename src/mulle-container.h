@@ -61,8 +61,9 @@
 #include "_mulle-rangeset.h"
 
 #include "_mulle-pointerqueue.h"
-#include "mulle-pointerset.h"
 #include "mulle-pointerarray.h"
+#include "mulle-pointermap.h"
+#include "mulle-pointerset.h"
 #include "mulle-pointerpairarray.h"
 
 #include "mulle-container-callback.h"
