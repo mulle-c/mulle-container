@@ -35,6 +35,10 @@
 
 
 // from code.google.com/p/smhasher/wiki/MurmurHash3
+
+//
+// Memo: integer multiplication should be unprolematic
+//
 static inline uint32_t  mulle_hash_avalanche32( uint32_t h)
 {
    h ^= h >> 16;

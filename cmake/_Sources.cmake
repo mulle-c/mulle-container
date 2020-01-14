@@ -15,6 +15,7 @@ src/hash/mulle-hash.c
 src/hash/mulle-prime.c
 src/map/_mulle-map.c
 src/map/mulle-map.c
+src/map/mulle-pointermap.c
 src/mulle-container-callback.c
 src/queue/_mulle-pointerqueue.c
 src/range/mulle-range.c

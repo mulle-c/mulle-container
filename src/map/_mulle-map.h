@@ -38,6 +38,10 @@
 #include "mulle-pointerpair.h"
 #include <stdarg.h>
 
+
+#define _MULLE_MAP_FILL_SHIFT    2
+#define _MULLE_MAP_MIN_SIZE      (1 << _MULLE_MAP_FILL_SHIFT)
+
 // counts are unsigned int, the result multiplied by sizeof is size_t */
 
 // NSMapTable/NSDictionary/NSMutableDictionary
@@ -120,8 +124,18 @@ static inline int   _mulle_map_is_full( struct _mulle_map *map)
    unsigned int    size;
 
    size = map->_size;
-   size = (size - (size >> 2));  // full when 75% occupied
+   size = (size - (size >> _MULLE_MAP_FILL_SHIFT));  // full when 75% occupied
    return( map->_count >= size);
+}
+
+
+static inline int   _mulle_map_is_sparse( struct _mulle_map *map)
+{
+   unsigned int    size;
+
+   size = map->_size / 2;
+   size = (size - (size >> _MULLE_MAP_FILL_SHIFT));  // sparse if 50% of it wouldn't be full
+   return( map->_count < size);
 }
 
 
@@ -168,6 +182,23 @@ int   _mulle_map_remove( struct _mulle_map *map,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator);
 
+
+//
+// call this before enumerations operations to reduce the number of holes
+//
+static inline void  _mulle_map_shrink_if_needed( struct _mulle_map *map,
+                                                 struct mulle_container_keyvaluecallback *callback,
+                                                 struct mulle_allocator *allocator)
+{
+   void  _mulle_map_shrink( struct _mulle_map *map,
+                            struct mulle_container_keyvaluecallback *callback,
+                            struct mulle_allocator *allocator);
+
+   if( _mulle_map_is_sparse( map))
+      _mulle_map_shrink( map, callback, allocator);
+}
+
+
 void   *_mulle_map_get_with_hash( struct _mulle_map *map,
                                   void *key,
                                   unsigned int  hash,
@@ -176,6 +207,16 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
 void   *_mulle_map_get( struct _mulle_map *map,
                         void *p,
                         struct mulle_container_keyvaluecallback *callback);
+
+// Experimental!
+// You need to provide zeroed space on the initial call for the return value.
+// Afterwards you keep it empty.
+// The intended use is for iterating over and deleting contents. This could be
+// fairly efficient, but its untested.
+//
+struct mulle_pointerpair   *_mulle_map_get_any_pair( struct _mulle_map *map,
+                                                     struct mulle_container_keyvaluecallback *callback,
+                                                     struct mulle_pointerpair *space);
 
 void   _mulle_map_insert_values_for_keysv( struct _mulle_map *map,
                                            void *firstvalue,
@@ -233,6 +274,10 @@ static inline struct _mulle_mapenumerator
 }
 
 
+//
+// the map mustn't have too much free space for this to be reasonably
+// efficient, therefore it's important to shrink after lots of removes
+//
 static inline struct mulle_pointerpair   *
    _mulle_mapenumerator_next( struct _mulle_mapenumerator *rover)
 {

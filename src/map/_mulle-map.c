@@ -45,20 +45,27 @@
 
 #define _MULLE_MAP_INITIAL_SIZE  4
 
+// static const void   *dummy_notakey_storage[ _MULLE_MAP_INITIAL_SIZE * 2];
 
 #pragma clang diagnostic ignored "-Wshift-count-overflow"
 
 
-// assume we have
+// assume we have size 4
 // 0 1 2 3  (sentinel 0)
 //
 // we want to hash either
-// to 0 an 2 for better insert perfomance
+// to 0 or 2 (leave odd alone) for better insert perfomance
 //
 // (?)
 static unsigned int   _mulle_map_hash_for_size( unsigned int hash, unsigned int size)
 {
    assert( size >= 2);
+
+   //
+   // so if size is pow2, size-1 is the mask
+   // now sub one again to kill lowest bit (which will be set)
+   // if size is 0, this doesn't work though
+   //
    return( hash & (size - 2)); // kill lowest bit (it will be)
 }
 
@@ -97,6 +104,7 @@ static void   **allocate_storage( unsigned int n,
    if( ! n)
       return( NULL);
 
+   assert( n >= 2);
    assert( mulle_is_pow2( n));
 
    if( ! notakey)
@@ -122,7 +130,15 @@ void   _mulle_map_init( struct _mulle_map *p,
    assert_mulle_container_keyvaluecallback( callback);
 
    p->_count   = 0;
-   p->_size    = capacity ? mulle_pow2round( capacity + (capacity >> 2)) : 0;
+
+   //
+   // our map requires zeroes to find an end so give it ~25% holes
+   // The code (especially get) depends on storage being there. For the case
+   // that notakey is nil,
+   // to be there already, so we can't have p->_size == 0
+   p->_size    = capacity >= _MULLE_MAP_MIN_SIZE
+                     ? mulle_pow2round( capacity + (capacity >> _MULLE_MAP_FILL_SHIFT))
+                     : (callback->keycallback.notakey != 0 ? _MULLE_MAP_MIN_SIZE : 0);
    p->_storage = allocate_storage( p->_size, callback->keycallback.notakey, allocator);
 }
 
@@ -140,6 +156,14 @@ struct _mulle_map   *_mulle_map_create( unsigned int capacity,
 }
 
 
+static inline void _mulle_map_free_storage( struct _mulle_map *map,
+                                            struct mulle_allocator *allocator)
+{
+//   if( map->_storage != (void **) dummy_notakey_storage)
+      mulle_allocator_free( allocator, map->_storage);
+}
+
+
 void   _mulle_map_done( struct _mulle_map *map,
                         struct mulle_container_keyvaluecallback *callback,
                         struct mulle_allocator *allocator)
@@ -147,15 +171,21 @@ void   _mulle_map_done( struct _mulle_map *map,
    struct _mulle_mapenumerator   rover;
    struct mulle_pointerpair      *pair;
 
-   rover = _mulle_map_enumerate( map, callback);
-   while( pair = _mulle_mapenumerator_next( &rover))
+   //
+   // if keycallback and valuecallback are nop, we can just skip this
+   //
+   if( mulle_container_keyvaluecallback_releases( callback))
    {
-      (callback->keycallback.release)( &callback->keycallback, pair->_key, allocator);
-      (callback->valuecallback.release)( &callback->valuecallback, pair->_value, allocator);
+      rover = _mulle_map_enumerate( map, callback);
+      while( pair = _mulle_mapenumerator_next( &rover))
+      {
+         (callback->keycallback.release)( &callback->keycallback, pair->_key, allocator);
+         (callback->valuecallback.release)( &callback->valuecallback, pair->_value, allocator);
+      }
+      _mulle_mapenumerator_done( &rover);
    }
-   _mulle_mapenumerator_done( &rover);
 
-   mulle_allocator_free( allocator, map->_storage);
+   _mulle_map_free_storage( map, allocator);
 }
 
 
@@ -169,14 +199,11 @@ void   _mulle_map_destroy( struct _mulle_map *map,
 
 
 void   _mulle_map_reset( struct _mulle_map *map,
-                        struct mulle_container_keyvaluecallback *callback,
-                        struct mulle_allocator *allocator)
+                         struct mulle_container_keyvaluecallback *callback,
+                         struct mulle_allocator *allocator)
 {
    _mulle_map_done( map, callback, allocator);
-   _mulle_map_init( map,
-                    map->_size,
-                    callback,
-                    allocator);
+   _mulle_map_init( map, 0, callback, allocator);
 }
 
 
@@ -252,11 +279,32 @@ static void   grow( struct _mulle_map *map,
 
    buf = allocate_storage( new_size, callback->notakey, allocator);
    copy_storage( buf, new_size, map->_storage, map->_size, callback);
-   mulle_allocator_free( allocator, map->_storage);
+   _mulle_map_free_storage( map, allocator);
 
    map->_storage = buf;
    map->_size    = new_size;
 }
+
+
+static void   shrink( struct _mulle_map *map,
+                      struct mulle_container_keycallback *callback,
+                      struct mulle_allocator *allocator)
+{
+   void           **buf;
+   unsigned int   new_size;
+
+   new_size = map->_size / 2;
+   if( new_size < _MULLE_MAP_INITIAL_SIZE)
+      return;
+
+   buf = allocate_storage( new_size, callback->notakey, allocator);
+   copy_storage( buf, new_size, map->_storage, map->_size, callback);
+   _mulle_map_free_storage( map, allocator);
+
+   map->_storage = buf;
+   map->_size    = new_size;
+}
+
 
 
 static unsigned long  _find_index( void **storage,
@@ -413,6 +461,11 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
    void           **storage;
    void           *notakey;
 
+   // important to not hit a NULL storage later
+   // size must be > 2 for the hash to work, otherwise we could get
+   if( map->_count == 0)
+      return( NULL);
+
    storage = map->_storage;
    size    = map->_size;
    i       = _mulle_map_hash_for_size( hash, size);
@@ -429,10 +482,49 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
          break;
       if( (*f)( callback, found, key))
          break;
-      i = (i + 1 ) & mask;
+      i = (i + 1) & mask;
    }
 
    return( storage[ i + size]);
+}
+
+
+struct mulle_pointerpair   *_mulle_map_get_any_pair( struct _mulle_map *map,
+                                                     struct mulle_container_keyvaluecallback *callback,
+                                                     struct mulle_pointerpair *space)
+{
+   unsigned int   i;
+   unsigned int   size;
+   unsigned int   mask;
+   unsigned int   hash;
+   void           *found;
+   void           **storage;
+   void           *notakey;
+
+   if( ! map->_count)
+      return( NULL);
+
+   storage = map->_storage;
+   size    = map->_size;
+   notakey = callback->keycallback.notakey;
+   mask    = size - 1;
+
+   //
+   // we use a random starting point, it doesn't matter what space->_key is
+   // if that happens to be the previous key, though this could be
+   // fairly optimal ? when you are deleting contents with this in a loop
+   // or ?
+   //
+   hash  = (unsigned int) (*callback->keycallback.hash)( &callback->keycallback, space->_key);
+   i     = _mulle_map_hash_for_size( hash, size);
+
+   for(;;)
+   {
+      found = storage[ i];
+      if( found != notakey)
+         return( storage[ i + size]);
+      i = (i + 1) & mask;
+   }
 }
 
 
@@ -465,10 +557,6 @@ void   *_mulle_map_get( struct _mulle_map *map,
 {
    unsigned int   hash;
    void           *value;
-
-   // important to not hit a NULL storage later
-   if( map->_count == 0)
-      return( NULL);
 
    assert( map);
    if( map->_size <= 32)  // if the dictionary is small try to easy match
@@ -672,7 +760,17 @@ int   _mulle_map_remove_with_hash( struct _mulle_map *map,
       storage[ dst_index + size] = q[ size];
       dst_index                  = i;
    }
+
    return( 1);
+}
+
+
+void   _mulle_map_shrink( struct _mulle_map *map,
+                          struct mulle_container_keyvaluecallback *callback,
+                          struct mulle_allocator *allocator)
+{
+   assert( _mulle_map_is_sparse( map));
+   shrink( map, &callback->keycallback, allocator);
 }
 
 

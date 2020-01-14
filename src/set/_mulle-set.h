@@ -34,6 +34,9 @@
 #include "mulle-container-operation.h"
 
 
+#define _MULLE_SET_FILL_SHIFT    2
+#define _MULLE_SET_MIN_SIZE      (1 << _MULLE_SET_FILL_SHIFT)
+
 // counts are unsigned int, the result multiplied by sizeof is size_t */
 
 /* set is a primitive growing hashtable */
@@ -129,9 +132,19 @@ static inline int  _mulle_set_is_full( struct _mulle_set *set)
    unsigned int    size;
 
    size = set->_size;
-   size = (size - (size >> 2));  // full when 75% occupied
+   size = (size - (size >> _MULLE_SET_FILL_SHIFT));  // full when 75% occupied
    return( set->_count >= size);
 }
+
+static inline int  _mulle_set_is_sparse( struct _mulle_set *set)
+{
+   unsigned int    size;
+
+   size = set->_size / 2;
+   size = (size - (size >> _MULLE_SET_FILL_SHIFT));  // full when 75% occupied
+   return( set->_count < size);
+}
+
 
 
 #pragma mark - operations
@@ -176,6 +189,19 @@ void   *_mulle_set_write( struct _mulle_set *set,
                           enum mulle_container_write_mode mode,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
+
+
+static inline void  _mulle_set_shrink_if_needed( struct _mulle_set *set,
+                                                 struct mulle_container_keycallback *callback,
+                                                 struct mulle_allocator *allocator)
+{
+   void   _mulle_set_shrink( struct _mulle_set *set,
+                             struct mulle_container_keycallback *callback,
+                             struct mulle_allocator *allocator);
+
+   if( _mulle_set_is_sparse( set))
+      _mulle_set_shrink( set, callback, allocator);
+}
 
 
 #pragma mark - enumeration

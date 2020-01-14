@@ -39,9 +39,9 @@
 
 
 struct mulle_pointerarray *
-      mulle_pointerarray_create( struct mulle_allocator *allocator)
+   mulle_pointerarray_create_nil( struct mulle_allocator *allocator)
 {
-   struct mulle_pointerarray *array;
+   struct mulle_pointerarray   *array;
 
    array = mulle_pointerarray_alloc( allocator);
    mulle_pointerarray_init( array, 0, NULL, allocator);
