@@ -134,7 +134,7 @@ case "${MULLE_SHELL_MODE}" in
          alias monitor="mulle-sde monitor"
          alias patternfile="mulle-sde patternfile"
          alias subproject="mulle-sde subproject"
-         alias update="mulle-sde update"
+         alias reflect="mulle-sde reflect"
       fi
 
       if [ -z "" ]
@@ -146,7 +146,7 @@ case "${MULLE_SHELL_MODE}" in
          alias tt="mulle-sde test craft ; mulle-sde test rerun --serial"
          alias T="mulle-sde test craft ; mulle-sde test"
          alias TT="mulle-sde test clean ; mulle-sde test"
-         alias u="mulle-sde update"
+         alias r="mulle-sde reflect"
          alias l="mulle-sde list"
       fi
    ;;

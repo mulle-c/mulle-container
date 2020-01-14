@@ -21,7 +21,7 @@ static void  simple( void)
    void                                   *item;
    char                                   *s;
 
-   array = mulle_pointerarray_create( NULL);
+   array = mulle_pointerarray_create_nil( NULL);
 
    s     = "VfL";
    mulle_pointerarray_add( array, s);

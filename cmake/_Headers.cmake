@@ -33,6 +33,7 @@ src/hash/mulle-prime.h
 src/include.h
 src/map/_mulle-map.h
 src/map/mulle-map.h
+src/map/mulle-pointermap.h
 src/map/mulle-pointerpair.h
 src/mulle-container-callback-global.h
 src/mulle-container-callback.h

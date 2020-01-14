@@ -42,7 +42,7 @@
 /*
  *
  */
-#define _MULLE_SET_MIN_GROW_SIZE    8
+#define _MULLE_SET_INITIAL_SIZE  4
 
 
 /**
@@ -78,7 +78,7 @@ static inline unsigned int   _mulle_set_hash( struct mulle_container_keycallback
 }
 
 
-static void   **allocate_pointers( unsigned int n,
+static void   **allocate_storage( unsigned int n,
                                    void *notakey,
                                    struct mulle_allocator *allocator)
 {
@@ -88,6 +88,9 @@ static void   **allocate_pointers( unsigned int n,
 
    if( ! n)
       return( NULL);
+
+   assert( n >= 2);
+   assert( mulle_is_pow2( n));
 
    if( ! notakey)
       return( mulle_allocator_calloc( allocator, n, sizeof( void *)));
@@ -110,8 +113,15 @@ void    _mulle_set_init( struct _mulle_set *p,
    assert_mulle_container_keycallback( callback);
 
    p->_count   = 0;
-   p->_size    = capacity ? mulle_pow2round( capacity + (capacity >> 2)) : 0;
-   p->_storage = allocate_pointers( p->_size, callback->notakey, allocator);
+   //
+   // our set requires zeroes to find an end
+   // so give it ~25% holes. For this to work though, we can not be smaller
+   // than 4 items.
+   //
+   p->_size    = capacity >= _MULLE_SET_MIN_SIZE
+                     ? mulle_pow2round( capacity + (capacity >> _MULLE_SET_FILL_SHIFT))
+                     : (callback->notakey != 0 ? _MULLE_SET_MIN_SIZE : 0);
+   p->_storage = allocate_storage( p->_size, callback->notakey, allocator);
 }
 
 
@@ -135,13 +145,15 @@ void   _mulle_set_done( struct _mulle_set *set,
    struct _mulle_setenumerator  rover;
    void   *item;
 
-   rover = _mulle_set_enumerate( set, callback);
-   while(  _mulle_setenumerator_next( &rover, &item))
+   if( mulle_container_keycallback_releases( callback))
    {
-      (*callback->release)( callback, item, allocator);
+      rover = _mulle_set_enumerate( set, callback);
+      while(  _mulle_setenumerator_next( &rover, &item))
+      {
+         (*callback->release)( callback, item, allocator);
+      }
+      _mulle_setenumerator_done( &rover);
    }
-   _mulle_setenumerator_done( &rover);
-
    mulle_allocator_free( allocator, set->_storage);
 }
 
@@ -152,7 +164,7 @@ void   _mulle_set_reset( struct _mulle_set *set,
                          struct mulle_allocator *allocator)
 {
    _mulle_set_done( set, callback, allocator);
-   _mulle_set_init( set, set->_size, callback, allocator);
+   _mulle_set_init( set, 0, callback, allocator);
 }
 
 
@@ -186,7 +198,7 @@ static inline void   store_pointer( void **data,
 }
 
 
-static void   copy_buckets( void **dst,
+static void   copy_storage( void **dst,
                             unsigned int size,
                             void **src,
                             unsigned int n,
@@ -227,19 +239,35 @@ static void   grow( struct _mulle_set *set,
    if( new_size < set->_size)
       abort();  // overflow
 
-   if( new_size < _MULLE_SET_MIN_GROW_SIZE)
-      new_size = _MULLE_SET_MIN_GROW_SIZE;
+   if( new_size < _MULLE_SET_INITIAL_SIZE)
+      new_size = _MULLE_SET_INITIAL_SIZE;
 
-   buf = allocate_pointers( new_size, callback->notakey, allocator);
+   buf = allocate_storage( new_size, callback->notakey, allocator);
+   copy_storage( buf, new_size, set->_storage, set->_size, callback);
+   mulle_allocator_free( allocator, set->_storage);
 
-   if( set->_size)
-   {
-      copy_buckets( buf, new_size, set->_storage, set->_size, callback);
-      mulle_allocator_free( allocator, set->_storage);
-   }
-
-   set->_size    = new_size;
    set->_storage = buf;
+   set->_size    = new_size;
+}
+
+
+static void   shrink( struct _mulle_set *set,
+                      struct mulle_container_keycallback *callback,
+                      struct mulle_allocator *allocator)
+{
+   void           **buf;
+   unsigned int   new_size;
+
+   new_size = set->_size / 2;
+   if( new_size < _MULLE_SET_INITIAL_SIZE)
+      return;
+
+   buf = allocate_storage( new_size, callback->notakey, allocator);
+   copy_storage( buf, new_size, set->_storage, set->_size, callback);
+   mulle_allocator_free( allocator, set);
+
+   set->_storage = buf;
+   set->_size    = new_size;
 }
 
 
@@ -499,6 +527,16 @@ void   *__mulle_set_get( struct _mulle_set *set,
    }
 
    return( q);
+}
+
+
+
+void   _mulle_set_shrink( struct _mulle_set *set,
+                          struct mulle_container_keycallback *callback,
+                          struct mulle_allocator *allocator)
+{
+   assert( _mulle_set_is_sparse( set));
+   shrink( set, callback, allocator);
 }
 
 

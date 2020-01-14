@@ -43,6 +43,8 @@
 
 //
 // This is a stripped down version of _mulle_map without callbacks
+// So you just map unique pointers to each other. You can't map
+// NULL to anything.
 //
 #define MULLE_POINTERMAP_BASE             \
    void                       **_storage; \

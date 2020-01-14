@@ -131,6 +131,12 @@ static inline void   mulle_map_remove( struct mulle_map *map, void *key)
 }
 
 
+static inline void   mulle_map_shrink_if_needed( struct mulle_map *map)
+{
+   _mulle_map_shrink_if_needed( (struct _mulle_map *) map, map->_callback, map->_allocator);
+}
+
+
 static inline void   mulle_map_insert_values_for_keysv( struct mulle_map *map, void *firstvalue, void *firstkey, va_list args)
 {
    _mulle_map_insert_values_for_keysv( (struct _mulle_map *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);

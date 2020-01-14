@@ -93,7 +93,7 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
 // notakey = NULL
 // capacity = 0
 struct mulle_pointerarray *
-      mulle_pointerarray_create( struct mulle_allocator *allocator);
+      mulle_pointerarray_create_nil( struct mulle_allocator *allocator);
 
 
 static inline void  mulle_pointerarray_done( struct mulle_pointerarray *array)

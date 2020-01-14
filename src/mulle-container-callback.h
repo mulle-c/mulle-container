@@ -152,7 +152,6 @@ static inline void   assert_mulle_container_valuecallback( struct mulle_containe
    assert( callback->describe);
 }
 
-
 void        *mulle_container_valuecallback_self( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
 void        mulle_container_valuecallback_nop( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
 char        *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator **p_allocator);
@@ -187,6 +186,24 @@ static inline void   assert_mulle_container_keyvaluecallback( struct mulle_conta
    assert_mulle_container_valuecallback( &callback->valuecallback);
 }
 
+
+static inline int   mulle_container_keycallback_releases( struct mulle_container_keycallback *callback)
+{
+   return( callback->release != mulle_container_keycallback_nop);
+}
+
+
+static inline int   mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback)
+{
+   return( callback->release != mulle_container_valuecallback_nop);
+}
+
+
+static inline int   mulle_container_keyvaluecallback_releases( struct mulle_container_keyvaluecallback *callback)
+{
+   return( mulle_container_keycallback_releases( &callback->keycallback) ||
+           mulle_container_valuecallback_releases( &callback->valuecallback));
+}
 
 #endif
 
