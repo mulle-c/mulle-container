@@ -56,7 +56,7 @@ static inline int   mulle_is_pow2( unsigned int x)
 //
 // 0 promotes to 1 here for these purposes
 //
-static inline unsigned int   mulle_pow2round( unsigned int v)
+static inline uint32_t   mulle_pow2round_32( uint32_t v)
 {
    v--;
    v |= v >> 1;
@@ -64,14 +64,31 @@ static inline unsigned int   mulle_pow2round( unsigned int v)
    v |= v >> 4;
    v |= v >> 8;
    v |= v >> 16;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshift-count-overflow"
-   if( sizeof( unsigned int) >= sizeof( uint64_t))
-      v |= v >> 32;
-#pragma clang diagnostic pop
    v++;
 
    return( v ? v : 1);
+}
+
+static inline uint64_t   mulle_pow2round_64( uint64_t v)
+{
+   v--;
+   v |= v >> 1;
+   v |= v >> 2;
+   v |= v >> 4;
+   v |= v >> 8;
+   v |= v >> 16;
+   v |= v >> 32;
+   v++;
+
+   return( v ? v : 1);
+}
+
+
+static inline unsigned int   mulle_pow2round( unsigned int v)
+{
+   if( sizeof( unsigned int) >= sizeof( uint64_t))
+      return( (unsigned int) mulle_pow2round_64( (uint64_t) v));
+   return( (unsigned int) mulle_pow2round_32( (uint32_t) v));
 }
 
 #endif

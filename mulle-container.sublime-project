@@ -5,7 +5,8 @@
 			"path": ".",
          "folder_exclude_patterns": [
          "build",
-         ".mulle-*",
+         "kitchen",
+         ".mulle/var",
          ".git",
          "addiction",
          "dependency",

@@ -62,7 +62,7 @@
 
 #include "_mulle-pointerqueue.h"
 #include "mulle-pointerarray.h"
-#include "mulle-pointermap.h"
+#include "_mulle-pointermap.h"
 #include "mulle-pointerset.h"
 #include "mulle-pointerpairarray.h"
 

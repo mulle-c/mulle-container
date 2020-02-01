@@ -25,42 +25,42 @@ static void  simple( void)
 
    s     = "VfL";
    mulle_pointerarray_add( array, s);
-   assert( s == mulle_pointerarray_get( array, 0)); // must have been copied
+   assert( s == _mulle_pointerarray_get( array, 0)); // must have been copied
 
    mulle_pointerarray_add( array, "Bochum");
    mulle_pointerarray_add( array, "1848");
 
    assert( mulle_pointerarray_get_count( array) == 3);
 
-   assert( ! strcmp( "VfL", mulle_pointerarray_get( array, 0)));
-   assert( ! strcmp( "Bochum", mulle_pointerarray_get( array, 1)));
-   assert( ! strcmp( "1848", mulle_pointerarray_get( array, 2)));
+   assert( ! strcmp( "VfL", _mulle_pointerarray_get( array, 0)));
+   assert( ! strcmp( "Bochum", _mulle_pointerarray_get( array, 1)));
+   assert( ! strcmp( "1848", _mulle_pointerarray_get( array, 2)));
 
-   rover = mulle_pointerarray_enumerate( array);
-   item = mulle_pointerarrayenumerator_next( &rover);
+   rover = mulle_pointerarray_enumerate_nil( array);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( item);
    assert( ! strcmp( "VfL", item));
-   item = mulle_pointerarrayenumerator_next( &rover);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( item);
    assert( ! strcmp( "Bochum", item));
-   item = mulle_pointerarrayenumerator_next( &rover);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( item);
    assert( ! strcmp( "1848", item));
-   item = mulle_pointerarrayenumerator_next( &rover);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( !item);
    mulle_pointerarrayenumerator_done( &rover);
 
-   rover = mulle_pointerarray_reverseenumerate( array);
-   item = mulle_pointerarrayenumerator_next( &rover);
+   rover = mulle_pointerarray_reverseenumerate_nil( array);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( item);
    assert( ! strcmp( "1848", item));
-   item = mulle_pointerarrayenumerator_next( &rover);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( item);
    assert( ! strcmp( "Bochum", item));
-   item = mulle_pointerarrayenumerator_next( &rover);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( item);
    assert( ! strcmp( "VfL", item));
-   item = mulle_pointerarrayenumerator_next( &rover);
+   item = _mulle_pointerarrayenumerator_next( &rover);
    assert( !item);
    mulle_pointerarrayenumerator_done( &rover);
 
@@ -73,14 +73,14 @@ static void  grow( void)
    struct mulle_pointerarray   array;
    size_t                      i;
 
-   mulle_pointerarray_init( &array, 10, NULL, NULL);
+   _mulle_pointerarray_init( &array, 10, NULL, NULL);
 
    for( i = 0; i < 20; i++)
-      mulle_pointerarray_add( &array, "VfL");
+      _mulle_pointerarray_add( &array, "VfL");
 
    assert( mulle_pointerarray_get_count( &array) == 20);
 
-   mulle_pointerarray_done( &array);
+   _mulle_pointerarray_done( &array);
 }
 
 

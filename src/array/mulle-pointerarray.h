@@ -68,10 +68,10 @@ static inline struct mulle_pointerarray  *
 }
 
 
-static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
-                                              unsigned int  capacity,
-                                              void *notakey,
-                                              struct mulle_allocator *allocator)
+static inline void   _mulle_pointerarray_init( struct mulle_pointerarray *array,
+                                               unsigned int  capacity,
+                                               void *notakey,
+                                               struct mulle_allocator *allocator)
 {
    array->_size        = 0;
    array->_used        = 0;
@@ -96,37 +96,56 @@ struct mulle_pointerarray *
       mulle_pointerarray_create_nil( struct mulle_allocator *allocator);
 
 
-static inline void  mulle_pointerarray_done( struct mulle_pointerarray *array)
+static inline void  _mulle_pointerarray_done( struct mulle_pointerarray *array)
 {
    mulle_allocator_free( array->_allocator, array->_pointers);
 }
 
 
+
+static inline void  mulle_pointerarray_done( struct mulle_pointerarray *array)
+{
+   if( array)
+      _mulle_pointerarray_done( array);
+}
+
+
 static inline void  mulle_pointerarray_destroy( struct mulle_pointerarray *array)
 {
-   mulle_pointerarray_done( array);
-   mulle_allocator_free( array->_allocator, array);
+   if( array)
+   {
+      _mulle_pointerarray_done( array);
+      mulle_allocator_free( array->_allocator, array);
+   }
 }
 
 # pragma mark -
 # pragma mark petty accessors
 
 static inline unsigned int
-	mulle_pointerarray_get_count( struct mulle_pointerarray *array)
+	_mulle_pointerarray_get_count( struct mulle_pointerarray *array)
 {
    return( array->_count);
 }
 
 
+static inline unsigned int
+   mulle_pointerarray_get_count( struct mulle_pointerarray *array)
+{
+   return( array ? array->_count : 0);
+}
+
+
+
 static inline struct mulle_allocator  *
-	mulle_pointerarray_get_allocator( struct mulle_pointerarray *array)
+	_mulle_pointerarray_get_allocator( struct mulle_pointerarray *array)
 {
    return( array->_allocator);
 }
 
 
 static inline void  *
-	mulle_pointerarray_get_notakey( struct mulle_pointerarray *array)
+	_mulle_pointerarray_get_notakey( struct mulle_pointerarray *array)
 {
    return( array->_notakey);
 }
@@ -135,15 +154,15 @@ static inline void  *
 
 # pragma mark -
 # pragma mark operations
-int   mulle_pointerarray_grow( struct mulle_pointerarray *array);
+int   _mulle_pointerarray_grow( struct mulle_pointerarray *array);
 
 static inline int
-	mulle_pointerarray_add( struct mulle_pointerarray *array, void  *pointer)
+	_mulle_pointerarray_add( struct mulle_pointerarray *array, void  *pointer)
 {
    assert( pointer != array->_notakey);
 
    if( array->_used == array->_size)
-      if( mulle_pointerarray_grow( array))
+      if( _mulle_pointerarray_grow( array))
       {
          assert( 0);
          return( -1);
@@ -157,13 +176,21 @@ static inline int
 }
 
 
+static inline int
+   mulle_pointerarray_add( struct mulle_pointerarray *array, void  *pointer)
+{
+   if( ! array || array->_notakey == pointer)
+      return( -1);
+   return( _mulle_pointerarray_add( array, pointer));
+}
+
 //
 // this removes _notakey from the back, until it finds a pointer
 // then remove this. A random remove is not coded. You generally want to
 // use mulle_pointerarray_set with `notakey` for this.
 //
 static inline void  *
-	mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
+	_mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
 {
    void   **p;
    void   **sentinel;
@@ -188,7 +215,7 @@ static inline void  *
 
 
 static inline void  *
-	mulle_pointerarray_find_last( struct mulle_pointerarray *array)
+	_mulle_pointerarray_find_last( struct mulle_pointerarray *array)
 {
    void   **p;
    void   **sentinel;
@@ -210,7 +237,7 @@ static inline void  *
 
 
 static inline void  *
-	mulle_pointerarray_get( struct mulle_pointerarray *array, unsigned int i)
+	_mulle_pointerarray_get( struct mulle_pointerarray *array, unsigned int i)
 {
    assert( array);
    assert( i < array->_used);
@@ -219,8 +246,20 @@ static inline void  *
 }
 
 
+static inline void  *
+   mulle_pointerarray_get( struct mulle_pointerarray *array, unsigned int i)
+{
+   if( ! array)
+      return( NULL);
+   if( i >= array->_used)
+      return( array->_notakey);
+   return( _mulle_pointerarray_get( array, i));
+}
+
+
+
 static inline intptr_t
-	mulle_pointerarray_find( struct mulle_pointerarray *array, void *p)
+	_mulle_pointerarray_find( struct mulle_pointerarray *array, void *p)
 {
    void   **curr;
    void   **sentinel;
@@ -236,10 +275,19 @@ static inline intptr_t
    return( (intptr_t) -1);
 }
 
+static inline intptr_t
+   mulle_pointerarray_find( struct mulle_pointerarray *array, void *p)
+{
+   if( ! array)
+      return( (intptr_t) -1);
+   return( _mulle_pointerarray_find( array, p));
+}
 
-static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
-                                             unsigned int i,
-                                             void *p)
+
+
+static inline void   _mulle_pointerarray_set( struct mulle_pointerarray *array,
+                                              unsigned int i,
+                                              void *p)
 {
    void   *old;
 
@@ -247,7 +295,7 @@ static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
    assert( i < array->_used);
 
    old = array->_pointers[ i];
-   if( p)
+   if( p != array->_notakey)
       array->_count += (old == array->_notakey);
    else
       array->_count -= (old != array->_notakey);
@@ -255,7 +303,14 @@ static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
    array->_pointers[ i] = p;
 }
 
-
+static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
+                                             unsigned int i,
+                                             void *p)
+{
+   if( ! array)
+      return;
+   _mulle_pointerarray_set( array, i, p);
+}
 
 #pragma mark -
 #pragma mark enumerator
@@ -281,7 +336,7 @@ static inline void
 // should prefix mulle_pointerarray_enumerate with an underscore
 //
 static inline struct mulle_pointerarrayenumerator
-   mulle_pointerarray_enumerate( struct mulle_pointerarray *array)
+   _mulle_pointerarray_enumerate( struct mulle_pointerarray *array)
 {
    struct mulle_pointerarrayenumerator   rover;
 
@@ -310,12 +365,12 @@ static inline struct  mulle_pointerarrayenumerator
       return( rover);
    }
 
-   return( mulle_pointerarray_enumerate( array));
+   return( _mulle_pointerarray_enumerate( array));
 }
 
 
 static inline struct  mulle_pointerarrayenumerator
-   mulle_pointerarray_reverseenumerate( struct mulle_pointerarray *array)
+   _mulle_pointerarray_reverseenumerate( struct mulle_pointerarray *array)
 {
    struct mulle_pointerarrayenumerator   rover;
 
@@ -345,12 +400,12 @@ static inline struct  mulle_pointerarrayenumerator
       return( rover);
    }
    assert( ! array->_notakey);
-   return( mulle_pointerarray_reverseenumerate( array));
+   return( _mulle_pointerarray_reverseenumerate( array));
 }
 
 
 static inline void   *
-	mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover)
+	_mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover)
 {
    void   *p;
 
@@ -366,7 +421,13 @@ static inline void   *
 
 
 static inline void
-	mulle_pointerarrayenumerator_done( struct mulle_pointerarrayenumerator *rover)
+	_mulle_pointerarrayenumerator_done( struct mulle_pointerarrayenumerator *rover)
+{
+}
+
+
+static inline void
+   mulle_pointerarrayenumerator_done( struct mulle_pointerarrayenumerator *rover)
 {
 }
 
@@ -380,9 +441,9 @@ static inline int   mulle_pointerarray_member( struct mulle_pointerarray *array,
    struct  mulle_pointerarrayenumerator   rover;
    void                                   *q;
 
-   rover = mulle_pointerarray_enumerate( array);
+   rover = _mulle_pointerarray_enumerate( array);
    {
-      while( (q = mulle_pointerarrayenumerator_next( &rover)) != rover.notakey)
+      while( (q = _mulle_pointerarrayenumerator_next( &rover)) != rover.notakey)
          if( q == p)
             break;
    }
