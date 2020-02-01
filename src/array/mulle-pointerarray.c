@@ -44,7 +44,7 @@ struct mulle_pointerarray *
    struct mulle_pointerarray   *array;
 
    array = mulle_pointerarray_alloc( allocator);
-   mulle_pointerarray_init( array, 0, NULL, allocator);
+   _mulle_pointerarray_init( array, 0, NULL, allocator);
    return( array);
 }
 
@@ -53,7 +53,7 @@ struct mulle_pointerarray *
 # pragma mark mechanisms
 
 // intentionally not static inline
-int   mulle_pointerarray_grow( struct mulle_pointerarray *array)
+int   _mulle_pointerarray_grow( struct mulle_pointerarray *array)
 {
    unsigned int   new_size;
 

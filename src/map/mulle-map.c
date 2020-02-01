@@ -24,6 +24,9 @@ void   mulle_map_init( struct mulle_map *map,
                        struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
 {
+//   if( ! map)
+//      return;
+
    if( ! allocator)
       allocator = &mulle_default_allocator;
 

@@ -32,24 +32,31 @@ struct mulle_pointerset
 static inline void    mulle_pointerset_init( struct mulle_pointerset *set,
                                              struct mulle_allocator *allocator)
 {
-   memset( set, 0, offsetof( struct mulle_pointerset, sorted));
-   set->allocator = allocator;
+   if( set)
+   {
+      memset( set, 0, offsetof( struct mulle_pointerset, sorted));
+      set->allocator = allocator;
+   }
 }
 
 
 static inline void    mulle_pointerset_done( struct mulle_pointerset *set)
 {
-   mulle_allocator_free( set->allocator, set->storage);
+   if( set)
+      mulle_allocator_free( set->allocator, set->storage);
 }
 
 
 static inline void    mulle_pointerset_insert( struct mulle_pointerset *set, void *p)
 {
-   set->storage = mulle_allocator_realloc( set->allocator,
-                                           set->storage,
-                                           sizeof( *set->storage) * (set->n + 1));
-   set->storage[ set->n++] = p;
-   set->sorted = 0;
+   if( set && p)
+   {
+      set->storage = mulle_allocator_realloc( set->allocator,
+                                              set->storage,
+                                              sizeof( *set->storage) * (set->n + 1));
+      set->storage[ set->n++] = p;
+      set->sorted = 0;
+   }
 }
 
 
@@ -57,18 +64,20 @@ static inline void   *mulle_pointerset_get( struct mulle_pointerset *set, void *
 {
    void   **q;
    void   **sentinel;
-   extern void   *mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
+   extern void   *_mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
 
-   if( set->n >= 12)
-      return( mulle_pointerset_member2( set, p));
+   if( set)
+   {
+      if( set->n >= 12)
+         return( _mulle_pointerset_member2( set, p));
 
-   q        = set->storage;
-   sentinel = &q[ set->n];
+      q        = set->storage;
+      sentinel = &q[ set->n];
 
-   while( q < sentinel)
-      if( *q++ == p)
-         return( p);
-
+      while( q < sentinel)
+         if( *q++ == p)
+            return( p);
+   }
    return( NULL);
 }
 

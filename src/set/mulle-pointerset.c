@@ -55,14 +55,11 @@ static void   *mulle_pointerset_bsearch( void **buf,
    return( NULL);
 }
 
-void   *mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
+void   *_mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
 
-void   *mulle_pointerset_member2( struct mulle_pointerset *set, void *p)
+void   *_mulle_pointerset_member2( struct mulle_pointerset *set, void *p)
 {
    void  **result;
-
-   if( ! set->n)
-      return( NULL);
 
    if( ! set->sorted)
    {

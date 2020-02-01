@@ -85,9 +85,16 @@ case "${MULLE_SHELL_MODE}" in
       done
       shopt -u nullglob; IFS="${DEFAULT_IFS}"
 
-      unset FILENAME
       unset DEFAULT_IFS
+      unset FILENAME
 
+      vardir="${MULLE_VIRTUAL_ROOT}/.mulle/var/${MULLE_HOSTNAME}"
+      [ -d "${vardir}" ] || mkdir -p "${vardir}"
+
+      HISTFILE="${vardir}/bash_history"
+      export HISTFILE
+
+      unset vardir
 
       #
       # show motd, if any

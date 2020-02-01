@@ -94,24 +94,24 @@ static inline void    mulle_map_reset( struct mulle_map *map)
 
 static inline struct mulle_container_keyvaluecallback   *mulle_map_get_callback( struct mulle_map *map)
 {
-   return( map->_callback);
+   return( map ? map->_callback : NULL);
 }
 
 static inline struct mulle_allocator   *mulle_map_get_allocator( struct mulle_map *map)
 {
-   return( map->_allocator);
+   return( map ? map->_allocator : NULL);
 }
 
 
 static inline size_t   mulle_map_get_count( struct mulle_map *map)
 {
-   return( _mulle_map_get_count( (struct _mulle_map *) map));
+   return( map ? _mulle_map_get_count( (struct _mulle_map *) map) : 0);
 }
 
 
 static inline void   *mulle_map_get_notakey( struct mulle_map *map)
 {
-   return( mulle_container_keycallback_get_notakey( &map->_callback->keycallback));
+   return( map ? mulle_container_keycallback_get_notakey( &map->_callback->keycallback) : NULL);
 }
 
 
@@ -121,25 +121,30 @@ static inline void   *mulle_map_get_notakey( struct mulle_map *map)
 
 static inline void   *mulle_map_get( struct mulle_map *map, void *key)
 {
+   if( ! map)
+      return( NULL);
    return( _mulle_map_get( (struct _mulle_map *) map, key, map->_callback));
 }
 
 
 static inline void   mulle_map_remove( struct mulle_map *map, void *key)
 {
-   _mulle_map_remove( (struct _mulle_map *) map, key, map->_callback, map->_allocator);
+   if( map)
+      _mulle_map_remove( (struct _mulle_map *) map, key, map->_callback, map->_allocator);
 }
 
 
 static inline void   mulle_map_shrink_if_needed( struct mulle_map *map)
 {
-   _mulle_map_shrink_if_needed( (struct _mulle_map *) map, map->_callback, map->_allocator);
+   if( map)
+      _mulle_map_shrink_if_needed( (struct _mulle_map *) map, map->_callback, map->_allocator);
 }
 
 
 static inline void   mulle_map_insert_values_for_keysv( struct mulle_map *map, void *firstvalue, void *firstkey, va_list args)
 {
-   _mulle_map_insert_values_for_keysv( (struct _mulle_map *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
+   if( map)
+      _mulle_map_insert_values_for_keysv( (struct _mulle_map *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
 }
 
 
@@ -148,28 +153,36 @@ static inline void   mulle_map_insert_values_for_keys( struct mulle_map *map, vo
    va_list   args;
 
    va_start( args, firstkey);
-   _mulle_map_insert_values_for_keysv( (struct _mulle_map *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
+   if( map)
+      _mulle_map_insert_values_for_keysv( (struct _mulle_map *) map, firstvalue, firstkey, args, map->_callback, map->_allocator);
    va_end( args);
 }
 
 
 static inline void   mulle_map_set( struct mulle_map *map, void *key, void *value)
 {
-   struct mulle_pointerpair   pair;
+   if( map)
+   {
+      struct mulle_pointerpair   pair;
 
-   pair._key   = key;
-   pair._value = value;
-   _mulle_map_set( (struct _mulle_map *) map, &pair, map->_callback, map->_allocator);
+      pair._key   = key;
+      pair._value = value;
+      _mulle_map_set( (struct _mulle_map *) map, &pair, map->_callback, map->_allocator);
+   }
 }
 
 
 static inline void   *mulle_map_insert( struct mulle_map *map, void *key, void *value)
 {
-   struct mulle_pointerpair   pair;
+   if( map)
+   {
+      struct mulle_pointerpair   pair;
 
-   pair._key   = key;
-   pair._value = value;
-   return( _mulle_map_insert( (struct _mulle_map *) map, &pair, map->_callback, map->_allocator));
+      pair._key   = key;
+      pair._value = value;
+      return( _mulle_map_insert( (struct _mulle_map *) map, &pair, map->_callback, map->_allocator));
+   }
+   return( NULL);
 }
 
 #pragma mark -
@@ -177,10 +190,12 @@ static inline void   *mulle_map_insert( struct mulle_map *map, void *key, void *
 
 static inline int   mulle_map_copy_items( struct mulle_map *dst, struct mulle_map *src)
 {
-   return( _mulle_map_copy_items( (struct _mulle_map *) dst,
-                                 (struct _mulle_map *) src,
-                                 dst->_callback,
-                                 dst->_allocator));
+   if( dst)
+      return( _mulle_map_copy_items( (struct _mulle_map *) dst,
+                                     (struct _mulle_map *) src,
+                                     dst->_callback,
+                                     dst->_allocator));
+   return( -1);
 }
 
 static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
@@ -189,7 +204,8 @@ static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
 
    // can't allow creation to be done by struct _mulle_map
    other = mulle_map_create( mulle_map_get_count( map), map->_callback, map->_allocator);
-   _mulle_map_copy_items( (struct _mulle_map *) other, (struct _mulle_map *) map, map->_callback, map->_allocator);
+   if( map)
+      _mulle_map_copy_items( (struct _mulle_map *) other, (struct _mulle_map *) map, map->_callback, map->_allocator);
    return( other);
 }
 
@@ -202,6 +218,8 @@ static inline void   *mulle_map_describe( struct mulle_map *map,
                                           struct mulle_container_keyvaluecallback *callback,
                                           struct mulle_allocator *allocator)
 {
+   if( ! map)
+      return( NULL);
    return( _mulle_map_describe( (struct _mulle_map *) map, map->_callback, map->_allocator));
 }
 
@@ -212,6 +230,11 @@ static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map
 {
    struct _mulle_mapenumerator   rover;
 
+   if( ! map)
+   {
+      memset( &rover, 0, sizeof( rover));
+      return( *(struct mulle_mapenumerator *) &rover);
+   }
    rover = _mulle_map_enumerate( (struct _mulle_map *) map, map->_callback);
    return( *(struct mulle_mapenumerator *) &rover);
 }
@@ -220,6 +243,9 @@ static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map
 static inline int   mulle_mapenumerator_next( struct mulle_mapenumerator *rover, void **key, void **value)
 {
    struct mulle_pointerpair  *pair;
+
+   if( ! rover)
+      return( 0);
 
    pair = _mulle_mapenumerator_next( (struct _mulle_mapenumerator *) rover);
    if( ! pair)
@@ -235,7 +261,8 @@ static inline int   mulle_mapenumerator_next( struct mulle_mapenumerator *rover,
 
 static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
 {
-   _mulle_mapenumerator_done( (struct _mulle_mapenumerator *) rover);
+   if( rover)
+      _mulle_mapenumerator_done( (struct _mulle_mapenumerator *) rover);
 }
 
 
@@ -245,6 +272,12 @@ static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover
 static inline struct mulle_maptinyenumerator   mulle_map_tinyenumerate_nil( struct mulle_map *map)
 {
    struct _mulle_maptinyenumerator   rover;
+
+   if( ! map)
+   {
+      memset( &rover, 0, sizeof( rover));
+      return( *(struct mulle_maptinyenumerator *) &rover);
+   }
 
    assert( ! map->_callback->keycallback.notakey);
    rover = _mulle_map_tinyenumerate_nil( (struct _mulle_map *) map);
@@ -256,13 +289,16 @@ static inline int   mulle_maptinyenumerator_next( struct mulle_maptinyenumerator
                                                   void **key,
                                                   void **value)
 {
+   if( ! rover)
+      return( 0);
    return( _mulle_maptinyenumerator_next( (struct _mulle_maptinyenumerator *) rover, key, value));
 }
 
 
 static inline void   mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
 {
-   _mulle_maptinyenumerator_done( (struct _mulle_maptinyenumerator *) rover);
+   if( rover)
+      _mulle_maptinyenumerator_done( (struct _mulle_maptinyenumerator *) rover);
 }
 
 
