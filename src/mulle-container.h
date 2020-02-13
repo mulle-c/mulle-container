@@ -48,21 +48,21 @@
 #include "mulle-prime.h"
 #include "mulle-hash.h"
 
-#include "_mulle-array.h"
+#include "mulle--array.h"
 #include "mulle-array.h"
 
-#include "_mulle-set.h"
+#include "mulle--set.h"
 #include "mulle-set.h"
 
-#include "_mulle-map.h"
+#include "mulle--map.h"
 #include "mulle-map.h"
 
 #include "mulle-range.h"
-#include "_mulle-rangeset.h"
+#include "mulle--rangeset.h"
 
-#include "_mulle-pointerqueue.h"
+#include "mulle--pointerqueue.h"
 #include "mulle-pointerarray.h"
-#include "_mulle-pointermap.h"
+#include "mulle--pointermap.h"
 #include "mulle-pointerset.h"
 #include "mulle-pointerpairarray.h"
 

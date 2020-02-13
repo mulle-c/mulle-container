@@ -179,8 +179,8 @@ values_for_keys functions that reflect the parameter order. sorry
 # 0.4
 
 * upgrade mulle_allocator
-* rename `_mulle_buffer_add_string_with_length` to
-  `_mulle_buffer_add_string_with_maxlength` and fix the assert
+* rename `_mulle__buffer_add_string_with_length` to
+  `_mulle__buffer_add_string_with_maxlength` and fix the assert
 * added mulle_pointerpairarray
 * renamed keyvaluepair to pointerpair
 

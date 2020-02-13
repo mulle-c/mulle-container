@@ -13,47 +13,47 @@
 
 
 
-static void  enumerate( struct _mulle_pointerqueue *queue)
+static void  enumerate( struct mulle__pointerqueue *queue)
 {
-   struct _mulle_pointerqueueenumerator   rover;
+   struct mulle__pointerqueueenumerator   rover;
    char   *s;
 
-   rover = _mulle_pointerqueue_enumerate( queue);
-   while( s = _mulle_pointerqueueenumerator_next( &rover))
+   rover = _mulle__pointerqueue_enumerate( queue);
+   while( s = _mulle__pointerqueueenumerator_next( &rover))
       printf( "%s\n", s);
-   _mulle_pointerqueueenumerator_done(&rover);
+   _mulle__pointerqueueenumerator_done(&rover);
 }
 
 
 static void  simple_queue( void)
 {
-   struct _mulle_pointerqueue   *queue;
+   struct mulle__pointerqueue   *queue;
 
-   queue = _mulle_pointerqueue_create( 0, 0, NULL);
+   queue = _mulle__pointerqueue_create( 0, 0, NULL);
    enumerate( queue);
-   _mulle_pointerqueue_push( queue, "1", NULL);
+   _mulle__pointerqueue_push( queue, "1", NULL);
    enumerate( queue);
-   _mulle_pointerqueue_push( queue, "2", NULL);
+   _mulle__pointerqueue_push( queue, "2", NULL);
    enumerate( queue);
-   _mulle_pointerqueue_push( queue, "3", NULL);
+   _mulle__pointerqueue_push( queue, "3", NULL);
    enumerate( queue);
-   _mulle_pointerqueue_push( queue, "4", NULL);
+   _mulle__pointerqueue_push( queue, "4", NULL);
    enumerate( queue);
-   _mulle_pointerqueue_push( queue, "5", NULL);
+   _mulle__pointerqueue_push( queue, "5", NULL);
    enumerate( queue);
-   _mulle_pointerqueue_pop( queue, NULL);
+   _mulle__pointerqueue_pop( queue, NULL);
    enumerate( queue);
-   _mulle_pointerqueue_pop( queue, NULL);
+   _mulle__pointerqueue_pop( queue, NULL);
    enumerate( queue);
-   _mulle_pointerqueue_pop( queue, NULL);
+   _mulle__pointerqueue_pop( queue, NULL);
    enumerate( queue);
-   _mulle_pointerqueue_pop( queue, NULL);
+   _mulle__pointerqueue_pop( queue, NULL);
    enumerate( queue);
-   _mulle_pointerqueue_pop( queue, NULL);
+   _mulle__pointerqueue_pop( queue, NULL);
    enumerate( queue);
-   _mulle_pointerqueue_pop( queue, NULL);
+   _mulle__pointerqueue_pop( queue, NULL);
    enumerate( queue);
-   _mulle_pointerqueue_destroy( queue, NULL);
+   _mulle__pointerqueue_destroy( queue, NULL);
 }
 
 

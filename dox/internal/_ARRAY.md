@@ -5,7 +5,7 @@
 Example:
 
 ```
-void   _mulle_array_reset( struct _mulle_array *array,
+void   _mulle__array_reset( struct mulle__array *array,
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator);
 ```
@@ -19,7 +19,7 @@ void   mulle_array_reset( struct mulle_array *array)
 ## Types
 
 ```
-struct _mulle_array
+struct mulle__array
 ```
 
 

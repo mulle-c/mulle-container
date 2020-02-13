@@ -14,57 +14,57 @@
 
 static void  no_leak_empty_queue( void)
 {
-   struct _mulle_pointerqueue   *queue;
+   struct mulle__pointerqueue   *queue;
 
-   queue = _mulle_pointerqueue_create( 0, 0, NULL);
-   _mulle_pointerqueue_destroy( queue, NULL);
+   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   _mulle__pointerqueue_destroy( queue, NULL);
 }
 
 
 static void  no_leak_one_queue( void)
 {
-   struct _mulle_pointerqueue   *queue;
+   struct mulle__pointerqueue   *queue;
 
-   queue = _mulle_pointerqueue_create( 0, 0, NULL);
-   _mulle_pointerqueue_push( queue, "1", NULL);
-   _mulle_pointerqueue_destroy( queue, NULL);
+   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   _mulle__pointerqueue_push( queue, "1", NULL);
+   _mulle__pointerqueue_destroy( queue, NULL);
 }
 
 
 
 static void  no_leak_filled_queue( void)
 {
-   struct _mulle_pointerqueue   *queue;
+   struct mulle__pointerqueue   *queue;
 
-   queue = _mulle_pointerqueue_create( 0, 0, NULL);
-   _mulle_pointerqueue_push( queue, "1", NULL);
-   _mulle_pointerqueue_push( queue, "2", NULL);
-   _mulle_pointerqueue_push( queue, "3", NULL);
-   _mulle_pointerqueue_push( queue, "4", NULL);
-   _mulle_pointerqueue_push( queue, "5", NULL);
-   _mulle_pointerqueue_destroy( queue, NULL);
+   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   _mulle__pointerqueue_push( queue, "1", NULL);
+   _mulle__pointerqueue_push( queue, "2", NULL);
+   _mulle__pointerqueue_push( queue, "3", NULL);
+   _mulle__pointerqueue_push( queue, "4", NULL);
+   _mulle__pointerqueue_push( queue, "5", NULL);
+   _mulle__pointerqueue_destroy( queue, NULL);
 }
 
 
 static void  simple_queue( void)
 {
-   struct _mulle_pointerqueue   *queue;
+   struct mulle__pointerqueue   *queue;
 
-   queue = _mulle_pointerqueue_create( 0, 0, NULL);
-   printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL) ? "???" : "NULL");
-   _mulle_pointerqueue_push( queue, "1", NULL);
-   _mulle_pointerqueue_push( queue, "2", NULL);
-   _mulle_pointerqueue_push( queue, "3", NULL);
-   _mulle_pointerqueue_push( queue, "4", NULL);
-   _mulle_pointerqueue_push( queue, "5", NULL);
-   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", (char *) _mulle_pointerqueue_pop( queue, NULL));
-   printf( "%s\n", _mulle_pointerqueue_pop( queue, NULL) ? "???" : "NULL");
+   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   printf( "%s\n", _mulle__pointerqueue_pop( queue, NULL) ? "???" : "NULL");
+   _mulle__pointerqueue_push( queue, "1", NULL);
+   _mulle__pointerqueue_push( queue, "2", NULL);
+   _mulle__pointerqueue_push( queue, "3", NULL);
+   _mulle__pointerqueue_push( queue, "4", NULL);
+   _mulle__pointerqueue_push( queue, "5", NULL);
+   printf( "%s\n", (char *) _mulle__pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle__pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle__pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle__pointerqueue_pop( queue, NULL));
+   printf( "%s\n", (char *) _mulle__pointerqueue_pop( queue, NULL));
+   printf( "%s\n", _mulle__pointerqueue_pop( queue, NULL) ? "???" : "NULL");
 
-   _mulle_pointerqueue_destroy( queue, NULL);
+   _mulle__pointerqueue_destroy( queue, NULL);
 }
 
 

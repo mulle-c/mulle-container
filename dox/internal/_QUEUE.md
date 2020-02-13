@@ -9,8 +9,8 @@ It only contains void pointers, and doesn't manage memory except its own.
 
 
 ```
-struct _mulle_pointerqueue;
-struct _mulle_pointerqueueenumerator
+struct mulle__pointerqueue;
+struct mulle__pointerqueueenumerator
 ```
 
 ## Functions
@@ -31,18 +31,18 @@ struct _mulle_pointerqueueenumerator
 * enumerate
 
 
-### `_mulle_pointerqueue_init`
+### `_mulle__pointerqueue_init`
 
 ```
-void  _mulle_pointerqueue_init( struct _mulle_pointerqueue *queue,
+void  _mulle__pointerqueue_init( struct mulle__pointerqueue *queue,
                          unsigned short bucket_size,
                          unsigned short spare_allowance)
 ```
 
-### `_mulle_pointerqueue_create`
+### `_mulle__pointerqueue_create`
 
 ```
-struct _mulle_pointerqueue   *_mulle_pointerqueue_create( unsigned short bucket_size,
+struct mulle__pointerqueue   *_mulle__pointerqueue_create( unsigned short bucket_size,
                                             unsigned short spare_allowance,
                                             struct mulle_allocator *allocator);
 ```

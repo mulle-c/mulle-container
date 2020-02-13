@@ -14,13 +14,13 @@
 
 static void  stress_queue( int bucketsize, int spares)
 {
-   struct _mulle_pointerqueue   *queue;
+   struct mulle__pointerqueue   *queue;
    unsigned int                 i;
    intptr_t                     read_cnt;
    intptr_t                     write_cnt;
    intptr_t                     popped;
 
-   queue = _mulle_pointerqueue_create( bucketsize, spares, NULL);
+   queue = _mulle__pointerqueue_create( bucketsize, spares, NULL);
 
    read_cnt  = 0;
    write_cnt = 0;
@@ -31,11 +31,11 @@ static void  stress_queue( int bucketsize, int spares)
       switch( rand() % 3)
       {
          default :
-            _mulle_pointerqueue_push( queue, (void *) ++write_cnt, NULL);
+            _mulle__pointerqueue_push( queue, (void *) ++write_cnt, NULL);
             break;
 
          case 2 :
-            popped = (intptr_t) _mulle_pointerqueue_pop( queue, NULL);
+            popped = (intptr_t) _mulle__pointerqueue_pop( queue, NULL);
             assert( read_cnt <= write_cnt || popped == ++read_cnt);
       }
    }
@@ -46,16 +46,16 @@ static void  stress_queue( int bucketsize, int spares)
       switch( rand() % 3)
       {
          case 2 :
-            popped = (intptr_t) _mulle_pointerqueue_pop( queue, NULL);
+            popped = (intptr_t) _mulle__pointerqueue_pop( queue, NULL);
             assert( read_cnt <= write_cnt || popped == ++read_cnt);
             break;
 
          default :
-            _mulle_pointerqueue_push( queue, (void *) ++write_cnt, NULL);
+            _mulle__pointerqueue_push( queue, (void *) ++write_cnt, NULL);
       }
    }
 
-   _mulle_pointerqueue_destroy( queue, NULL);
+   _mulle__pointerqueue_destroy( queue, NULL);
 }
 
 

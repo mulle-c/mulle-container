@@ -30,16 +30,16 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef _MULLE_POINTERMAP_H___
-#define _MULLE_POINTERMAP_H___
+#ifndef mulle__pointermap__h__
+#define mulle__pointermap__h__
 
 
 #include "mulle-pointerpair.h"
 #include <stdarg.h>
 
 
-#define _MULLE_POINTERMAP_FILL_SHIFT    2
-#define _MULLE_POINTERMAP_MIN_SIZE      (1 << _MULLE_POINTERMAP_FILL_SHIFT)
+#define MULLE_POINTERMAP_FILL_SHIFT    2
+#define MULLE_POINTERMAP_MIN_SIZE      (1 << MULLE_POINTERMAP_FILL_SHIFT)
 
 //
 // This is a stripped down version of _mulle_map without callbacks
@@ -47,27 +47,27 @@
 // NULL to anything. It contains no allocator, so is prefixed (somewhat
 // inconveniently) with a '_'
 //
-#define _MULLE_POINTERMAP_BASE            \
+#define MULLE__POINTERMAP_BASE            \
    void                       **_storage; \
    unsigned int               _count;     \
    unsigned int               _size
 
-struct _mulle_pointermap
+struct mulle__pointermap
 {
-   _MULLE_POINTERMAP_BASE;
+   MULLE__POINTERMAP_BASE;
 };
 
 
-#define _MULLE_POINTERMAPENUMERATOR_BASE  \
+#define MULLE__POINTERMAPENUMERATOR_BASE  \
    struct mulle_pointerpair   space;      \
    void                       **_curr;    \
    unsigned int               _left;      \
    unsigned int               _offset
 
 
-struct _mulle_pointermapenumerator
+struct mulle__pointermapenumerator
 {
-   _MULLE_POINTERMAPENUMERATOR_BASE;
+   MULLE__POINTERMAPENUMERATOR_BASE;
 };
 
 
@@ -75,53 +75,53 @@ struct _mulle_pointermapenumerator
 #pragma mark setup and takedown
 
 
-struct _mulle_pointermap   *_mulle_pointermap_create( unsigned int capacity,
+struct mulle__pointermap   *_mulle__pointermap_create( unsigned int capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator);
 
-void   _mulle_pointermap_destroy( struct _mulle_pointermap *map,
+void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
                                   struct mulle_allocator *allocator);
-void   _mulle_pointermap_init( struct _mulle_pointermap *map,
+void   _mulle__pointermap_init( struct mulle__pointermap *map,
                                unsigned int capacity,
                                struct mulle_allocator *allocator);
 
-void   _mulle_pointermap_done( struct _mulle_pointermap *map,
+void   _mulle__pointermap_done( struct mulle__pointermap *map,
                                struct mulle_allocator *allocator);
 
-void   _mulle_pointermap_reset( struct _mulle_pointermap *map,
+void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                 struct mulle_allocator *allocator);
 
 #pragma mark -
 #pragma mark petty accessors
 
-static inline int   _mulle_pointermap_is_full( struct _mulle_pointermap *map)
+static inline int   _mulle__pointermap_is_full( struct mulle__pointermap *map)
 {
    unsigned int    size;
 
    size = map->_size;
-   size = (size - (size >> _MULLE_POINTERMAP_FILL_SHIFT));  // full when 75% occupied
+   size = (size - (size >> MULLE_POINTERMAP_FILL_SHIFT));  // full when 75% occupied
    return( map->_count >= size);
 }
 
 
-static inline int   _mulle_pointermap_is_sparse( struct _mulle_pointermap *map)
+static inline int   _mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 {
    unsigned int    size;
 
    size = map->_size / 2;
-   size = (size - (size >> _MULLE_POINTERMAP_FILL_SHIFT));  // sparse if 50% of it wouldn't be full
+   size = (size - (size >> MULLE_POINTERMAP_FILL_SHIFT));  // sparse if 50% of it wouldn't be full
    return( map->_count < size);
 }
 
 
-static inline unsigned int   _mulle_pointermap_get_count( struct _mulle_pointermap *map)
+static inline unsigned int   _mulle__pointermap_get_count( struct mulle__pointermap *map)
 {
    return( map->_count);
 }
 
 
 // size for key really
-static inline unsigned int   _mulle_pointermap_get_size( struct _mulle_pointermap *map)
+static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointermap *map)
 {
    return( map->_size);
 }
@@ -131,11 +131,11 @@ static inline unsigned int   _mulle_pointermap_get_size( struct _mulle_pointerma
 #pragma mark operations
 
 
-void   _mulle_pointermap_set_pair( struct _mulle_pointermap *map,
+void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
                                    struct mulle_pointerpair *pair,
                                    struct mulle_allocator *allocator);
 
-static inline void   _mulle_pointermap_set( struct _mulle_pointermap *map,
+static inline void   _mulle__pointermap_set( struct mulle__pointermap *map,
                                             void *key,
                                             void *value,
                                             struct mulle_allocator *allocator)
@@ -147,19 +147,19 @@ static inline void   _mulle_pointermap_set( struct _mulle_pointermap *map,
 
    pair._key   = key;
    pair._value = value;
-   _mulle_pointermap_set_pair( map, &pair, allocator);
+   _mulle__pointermap_set_pair( map, &pair, allocator);
 }
 
 
-void    *_mulle_pointermap_insert_pair( struct _mulle_pointermap *map,
+void    *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
                                         struct mulle_pointerpair *pair,
                                         struct mulle_allocator *allocator);
 
-void   *_mulle_pointermap_insert_pair_known_absent( struct _mulle_pointermap *map,
+void   *_mulle__pointermap_insert_pair_known_absent( struct mulle__pointermap *map,
                                                     struct mulle_pointerpair *pair,
                                                     struct mulle_allocator *allocator);
 
-int   _mulle_pointermap_remove( struct _mulle_pointermap *map,
+int   _mulle__pointermap_remove( struct mulle__pointermap *map,
                                 void *key,
                                 struct mulle_allocator *allocator);
 
@@ -167,10 +167,10 @@ int   _mulle_pointermap_remove( struct _mulle_pointermap *map,
 // call this after remove operations, to make enumerations quicker and
 // conserve memory
 //
-void  _mulle_pointermap_shrink_if_needed( struct _mulle_pointermap *map,
+void  _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
                                           struct mulle_allocator *allocator);
 
-void   *_mulle_pointermap_get( struct _mulle_pointermap *map,
+void   *_mulle__pointermap_get( struct mulle__pointermap *map,
                                void *key);
 
 
@@ -181,10 +181,10 @@ void   *_mulle_pointermap_get( struct _mulle_pointermap *map,
 // The intended use is for iterating over and deleting contents. This could be
 // fairly efficient, but its untested.
 //
-struct mulle_pointerpair   *_mulle_pointermap_get_any_pair( struct _mulle_pointermap *map,
+struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__pointermap *map,
                                                             struct mulle_pointerpair *space);
 
-void   _mulle_pointermap_insert_values_for_keysv( struct _mulle_pointermap *map,
+void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map,
                                                   void *firstvalue,
                                                   void *firstkey,
                                                   va_list args,
@@ -194,32 +194,32 @@ void   _mulle_pointermap_insert_values_for_keysv( struct _mulle_pointermap *map,
 # pragma mark -
 # pragma mark copy
 
-int   _mulle_pointermap_copy_items( struct _mulle_pointermap *dst,
-                                    struct _mulle_pointermap *src,
+int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
+                                    struct mulle__pointermap *src,
                                     struct mulle_allocator *allocator);
 
-struct _mulle_pointermap   *_mulle_pointermap_copy( struct _mulle_pointermap *set,
+struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *set,
                                                    struct mulle_allocator *allocator);
 
 
 # pragma mark -
 # pragma mark debugging
 
-char   *_mulle_pointermap_describe( struct _mulle_pointermap *set,
+char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
                                     struct mulle_allocator *allocator);
 
 # pragma mark -
 # pragma mark enumeration
 
 
-static inline struct _mulle_pointermapenumerator
-   _mulle_pointermap_enumerate( struct _mulle_pointermap *map)
+static inline struct mulle__pointermapenumerator
+   _mulle__pointermap_enumerate( struct mulle__pointermap *map)
 {
-   struct _mulle_pointermapenumerator   rover;
+   struct mulle__pointermapenumerator   rover;
 
    rover._left   = map->_count;
    rover._curr   = map->_storage;
-   rover._offset = _mulle_pointermap_get_size( map);
+   rover._offset = _mulle__pointermap_get_size( map);
 
    return( rover);
 }
@@ -230,7 +230,7 @@ static inline struct _mulle_pointermapenumerator
 // efficient, therefore it's important to shrink after lots of removes
 //
 static inline struct mulle_pointerpair   *
-   _mulle_pointermapenumerator_next( struct _mulle_pointermapenumerator *rover)
+   _mulle__pointermapenumerator_next( struct mulle__pointermapenumerator *rover)
 {
    void   **p;
    void   *key;
@@ -253,7 +253,7 @@ static inline struct mulle_pointerpair   *
 
 
 static inline void
-   _mulle_pointermapenumerator_done( struct _mulle_pointermapenumerator *rover)
+   _mulle__pointermapenumerator_done( struct mulle__pointermapenumerator *rover)
 {
 }
 
