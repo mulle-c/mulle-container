@@ -6,7 +6,7 @@ difference between both data structures is, that `mulle_set` has the allocator a
 Example:
 
 ```
-void   _mulle_set_reset( struct _mulle_set *set,
+void   _mulle__set_reset( struct mulle__set *set,
                          struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator);
 ```
@@ -20,7 +20,7 @@ void   mulle_set_reset( struct mulle_set *set)
 ## Types
 
 ```
-struct _mulle_set
+struct mulle__set
 ```
 
 

@@ -29,7 +29,7 @@
 //
 #pragma clang diagnostic ignored "-Wparentheses"
 
-#include "_mulle-set.h"
+#include "mulle--set.h"
 
 #include "mulle-container-math.h"
 
@@ -65,14 +65,14 @@
 // to 0 an 2 for better insert perfomance
 //
 // 0 2
-static unsigned int   _mulle_set_hash_for_size( unsigned int hash, unsigned int size)
+static unsigned int   _mulle__set_hash_for_size( unsigned int hash, unsigned int size)
 {
    assert( size >= 2);
    return( hash & (size - 2));
 }
 
 
-static inline unsigned int   _mulle_set_hash( struct mulle_container_keycallback *callback, void *p)
+static inline unsigned int   _mulle__set_hash( struct mulle_container_keycallback *callback, void *p)
 {
    return( (unsigned int) (*callback->hash)( callback, p));
 }
@@ -105,7 +105,7 @@ static void   **allocate_storage( unsigned int n,
 }
 
 
-void    _mulle_set_init( struct _mulle_set *p,
+void    _mulle__set_init( struct mulle__set *p,
                          unsigned int capacity,
                          struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator)
@@ -118,36 +118,36 @@ void    _mulle_set_init( struct _mulle_set *p,
    // so give it ~25% holes. For this to work though, we can not be smaller
    // than 4 items.
    //
-   p->_size    = capacity >= _MULLE_SET_MIN_SIZE
-                     ? mulle_pow2round( capacity + (capacity >> _MULLE_SET_FILL_SHIFT))
-                     : (callback->notakey != 0 ? _MULLE_SET_MIN_SIZE : 0);
+   p->_size    = capacity >= MULLE_SET_MIN_SIZE
+                     ? mulle_pow2round( capacity + (capacity >> MULLE_SET_FILL_SHIFT))
+                     : (callback->notakey != 0 ? MULLE_SET_MIN_SIZE : 0);
    p->_storage = allocate_storage( p->_size, callback->notakey, allocator);
 }
 
 
-struct _mulle_set   *_mulle_set_create( unsigned int capacity,
+struct mulle__set   *_mulle__set_create( unsigned int capacity,
                                         size_t extra,
                                         struct mulle_container_keycallback *callback,
                                         struct mulle_allocator *allocator)
 {
-   struct _mulle_set   *p;
+   struct mulle__set   *p;
 
-   p = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_set) + extra);
-   _mulle_set_init( p, capacity, callback, allocator);
+   p = mulle_allocator_calloc( allocator, 1, sizeof( struct mulle__set) + extra);
+   _mulle__set_init( p, capacity, callback, allocator);
    return( p);
 }
 
 
-void   _mulle_set_done( struct _mulle_set *set,
+void   _mulle__set_done( struct mulle__set *set,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator)
 {
-   struct _mulle_setenumerator  rover;
+   struct mulle__setenumerator  rover;
    void   *item;
 
    if( mulle_container_keycallback_releases( callback))
    {
-      rover = _mulle_set_enumerate( set, callback);
+      rover = _mulle__set_enumerate( set, callback);
       while(  _mulle_setenumerator_next( &rover, &item))
       {
          (*callback->release)( callback, item, allocator);
@@ -159,21 +159,21 @@ void   _mulle_set_done( struct _mulle_set *set,
 
 
 // don't inline this (!)
-void   _mulle_set_reset( struct _mulle_set *set,
+void   _mulle__set_reset( struct mulle__set *set,
                          struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator)
 {
-   _mulle_set_done( set, callback, allocator);
-   _mulle_set_init( set, 0, callback, allocator);
+   _mulle__set_done( set, callback, allocator);
+   _mulle__set_init( set, 0, callback, allocator);
 }
 
 
 
-void    _mulle_set_destroy( struct _mulle_set *set,
+void    _mulle__set_destroy( struct mulle__set *set,
                             struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator)
 {
-   _mulle_set_done( set, callback, allocator);
+   _mulle__set_done( set, callback, allocator);
    mulle_allocator_free( allocator, set);
 }
 
@@ -218,14 +218,14 @@ static void   copy_storage( void **dst,
       if( p == notakey)
          continue;
 
-      hash = _mulle_set_hash( callback, p);
-      i    = _mulle_set_hash_for_size( hash, size);
+      hash = _mulle__set_hash( callback, p);
+      i    = _mulle__set_hash_for_size( hash, size);
       store_pointer( dst, size, i, p, callback->notakey);
    }
 }
 
 
-static void   grow( struct _mulle_set *set,
+static void   grow( struct mulle__set *set,
                     struct mulle_container_keycallback *callback,
                     struct mulle_allocator *allocator)
 {
@@ -251,7 +251,7 @@ static void   grow( struct _mulle_set *set,
 }
 
 
-static void   shrink( struct _mulle_set *set,
+static void   shrink( struct mulle__set *set,
                       struct mulle_container_keycallback *callback,
                       struct mulle_allocator *allocator)
 {
@@ -318,7 +318,7 @@ static inline unsigned long  find_index( void **storage,
 
    assert( storage);
 
-   i = _mulle_set_hash_for_size( hash, size);
+   i = _mulle__set_hash_for_size( hash, size);
    q = storage[ i];
    if( q == callback->notakey)
    {
@@ -329,7 +329,7 @@ static inline unsigned long  find_index( void **storage,
 }
 
 
-void   *_mulle_set_write( struct _mulle_set *set,
+void   *_mulle__set_write( struct mulle__set *set,
                           void *p,
                           unsigned int hash,
                           enum mulle_container_write_mode mode,
@@ -368,7 +368,7 @@ void   *_mulle_set_write( struct _mulle_set *set,
 
 
       i = hole_index;
-      if( ! _mulle_set_is_full( set))
+      if( ! _mulle__set_is_full( set))
       {
          p = (*callback->retain)( callback, p, allocator);
          set->_storage[ i] = p;
@@ -377,10 +377,10 @@ void   *_mulle_set_write( struct _mulle_set *set,
       }
    }
 
-   if( _mulle_set_is_full( set))
+   if( _mulle__set_is_full( set))
       grow( set, callback, allocator);
 
-   i = _mulle_set_hash_for_size( hash, set->_size);
+   i = _mulle__set_hash_for_size( hash, set->_size);
    p = (*callback->retain)( callback, p, allocator);
    store_pointer( set->_storage, set->_size, i, p, callback->notakey);
    set->_count++;
@@ -389,7 +389,7 @@ void   *_mulle_set_write( struct _mulle_set *set,
 }
 
 
-void    _mulle_set_set( struct _mulle_set *set,
+void    _mulle__set_set( struct mulle__set *set,
                         void *p,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator)
@@ -397,11 +397,11 @@ void    _mulle_set_set( struct _mulle_set *set,
    unsigned int   hash;
 
    hash = (unsigned int) (*callback->hash)( callback, p);
-   _mulle_set_write( set, p, hash, mulle_container_overwrite_e, callback, allocator);
+   _mulle__set_write( set, p, hash, mulle_container_overwrite_e, callback, allocator);
 }
 
 
-void    *_mulle_set_insert( struct _mulle_set *set,
+void    *_mulle__set_insert( struct mulle__set *set,
                             void *p,
                             struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator)
@@ -409,12 +409,12 @@ void    *_mulle_set_insert( struct _mulle_set *set,
    unsigned int   hash;
 
    hash = (unsigned int) (*callback->hash)( callback, p);
-   return( _mulle_set_write( set, p, hash, mulle_container_insert_e, callback, allocator));
+   return( _mulle__set_write( set, p, hash, mulle_container_insert_e, callback, allocator));
 }
 
 
 
-void   *_mulle_set_get_with_hash( struct _mulle_set *set,
+void   *_mulle__set_get_with_hash( struct mulle__set *set,
                                   void *key,
                                   unsigned int hash,
                                   struct mulle_container_keycallback *callback)
@@ -429,7 +429,7 @@ void   *_mulle_set_get_with_hash( struct _mulle_set *set,
 
    storage = set->_storage;
    size    = set->_size;
-   i       = _mulle_set_hash_for_size( hash, size);
+   i       = _mulle__set_hash_for_size( hash, size);
    f       = (int (*)()) callback->is_equal;
    notakey = callback->notakey;
    mask    = size - 1;
@@ -450,7 +450,7 @@ void   *_mulle_set_get_with_hash( struct _mulle_set *set,
 
 
 static void   *
-   _mulle_set_pointerequality_search( struct _mulle_set *set,
+   _mulle__set_pointerequality_search( struct mulle__set *set,
                                       void *key)
 {
    void     **q;
@@ -471,7 +471,7 @@ static void   *
 }
 
 
-void   *_mulle_set_get( struct _mulle_set *set,
+void   *_mulle__set_get( struct mulle__set *set,
                         void *key,
                         struct mulle_container_keycallback *callback)
 {
@@ -485,18 +485,18 @@ void   *_mulle_set_get( struct _mulle_set *set,
    assert( set);
    if( set->_size <= 32)  // if the dictionary is small try to easy match
    {
-      value = _mulle_set_pointerequality_search( set, key);
+      value = _mulle__set_pointerequality_search( set, key);
       if( value)
          return( value);
    }
 
    hash  = (unsigned int) (*callback->hash)( callback, key);
-   value = _mulle_set_get_with_hash( set, key, hash, callback);
+   value = _mulle__set_get_with_hash( set, key, hash, callback);
    return( value);
 }
 
 
-void   *__mulle_set_get( struct _mulle_set *set,
+void   *__mulle__set_get( struct mulle__set *set,
                          void *p,
                          unsigned int hash,
                          struct mulle_container_keycallback *callback)
@@ -509,7 +509,7 @@ void   *__mulle_set_get( struct _mulle_set *set,
    unsigned int   mask;
 
    size    = set->_size;
-   i       = _mulle_set_hash_for_size( hash, size);
+   i       = _mulle__set_hash_for_size( hash, size);
    f       = (int (*)()) callback->is_equal;
    mask    = size - 1;
    notakey = callback->notakey;
@@ -531,16 +531,16 @@ void   *__mulle_set_get( struct _mulle_set *set,
 
 
 
-void   _mulle_set_shrink( struct _mulle_set *set,
+void   _mulle__set_shrink( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
-   assert( _mulle_set_is_sparse( set));
+   assert( _mulle__set_is_sparse( set));
    shrink( set, callback, allocator);
 }
 
 
-int   __mulle_set_remove( struct _mulle_set *set,
+int   __mulle__set_remove( struct mulle__set *set,
                           void *p,
                           unsigned int hash,
                           struct mulle_container_keycallback *callback,
@@ -591,8 +591,8 @@ int   __mulle_set_remove( struct _mulle_set *set,
       // the "hole" in the front we just made
       // but keep going because "wrong" hashes might be behind
       // be sure not to move items that won't be found
-      hash         = _mulle_set_hash( callback, q);
-      search_start = _mulle_set_hash_for_size( hash, size);
+      hash         = _mulle__set_hash( callback, q);
+      search_start = _mulle__set_hash_for_size( hash, size);
 
       // object better off where it is ?
       // CASE:
@@ -683,7 +683,7 @@ int   __mulle_set_remove( struct _mulle_set *set,
 }
 
 
-int  _mulle_set_remove( struct _mulle_set *set,
+int  _mulle__set_remove( struct mulle__set *set,
                         void *p,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator)
@@ -694,24 +694,24 @@ int  _mulle_set_remove( struct _mulle_set *set,
       return( 0);
 
    hash = (unsigned int) (*callback->hash)( callback, p);
-   return( __mulle_set_remove( set, p, hash, callback, allocator));
+   return( __mulle__set_remove( set, p, hash, callback, allocator));
 }
 
 
-int   _mulle_set_copy_items( struct _mulle_set *dst,
-                             struct _mulle_set *src,
+int   _mulle__set_copy_items( struct mulle__set *dst,
+                             struct mulle__set *src,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator)
 {
-   struct _mulle_setenumerator  rover;
+   struct mulle__setenumerator  rover;
    void                         *item;
    int                          rval;
 
    rval  = 0;
-   rover = _mulle_set_enumerate( src, callback);
+   rover = _mulle__set_enumerate( src, callback);
    while( _mulle_setenumerator_next( &rover, &item))
    {
-      if( _mulle_set_insert( dst, item, callback, allocator))
+      if( _mulle__set_insert( dst, item, callback, allocator))
       {
          rval = -1;
          break;
@@ -722,16 +722,16 @@ int   _mulle_set_copy_items( struct _mulle_set *dst,
 }
 
 
-struct _mulle_set   *_mulle_set_copy( struct _mulle_set *set,
+struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
                                       struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator)
 {
-   struct _mulle_set   *other;
+   struct mulle__set   *other;
 
-   other = _mulle_set_create( _mulle_set_get_count( set), 0, callback, allocator);
-   if( _mulle_set_copy_items( other, set, callback, allocator))
+   other = _mulle__set_create( _mulle__set_get_count( set), 0, callback, allocator);
+   if( _mulle__set_copy_items( other, set, callback, allocator))
    {
-      _mulle_set_destroy( other, callback, allocator);
+      _mulle__set_destroy( other, callback, allocator);
       other = NULL;
    }
    return( other);
@@ -739,7 +739,7 @@ struct _mulle_set   *_mulle_set_copy( struct _mulle_set *set,
 
 
 // use this only for debugging
-char   *_mulle_set_describe( struct _mulle_set *set,
+char   *_mulle__set_describe( struct mulle__set *set,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator)
 {
@@ -748,14 +748,14 @@ char   *_mulle_set_describe( struct _mulle_set *set,
    int                           separate;
    size_t                        len;
    size_t                        s_len;
-   struct _mulle_setenumerator   rover;
+   struct mulle__setenumerator   rover;
    struct mulle_allocator        *value_allocator;
    void                          *item;
 
    result = NULL;
    len    = 0;
 
-   rover = _mulle_set_enumerate( set, callback);
+   rover = _mulle__set_enumerate( set, callback);
    while( _mulle_setenumerator_next( &rover, &item))
    {
       value_allocator = allocator ? allocator : &mulle_default_allocator;

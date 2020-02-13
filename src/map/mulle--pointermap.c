@@ -32,7 +32,7 @@
 //
 #pragma clang diagnostic ignored "-Wparentheses"
 
-#include "_mulle-pointermap.h"
+#include "mulle--pointermap.h"
 
 #include "mulle-container-operation.h"
 #include "mulle-container-math.h"
@@ -56,7 +56,7 @@
 // to 0 or 2 (leave odd alone) for better insert perfomance
 //
 // (?)
-static unsigned int   _mulle_pointermap_hash_key_for_size( void *key, unsigned int size)
+static unsigned int   _mulle__pointermap_hash_key_for_size( void *key, unsigned int size)
 {
    unsigned int  hash;
 
@@ -73,7 +73,7 @@ static unsigned int   _mulle_pointermap_hash_key_for_size( void *key, unsigned i
 
 
 
-void   *_mulle_pointermap_write_pair( struct _mulle_pointermap *map,
+void   *_mulle__pointermap_write_pair( struct mulle__pointermap *map,
                                       struct mulle_pointerpair *p,
                                       enum mulle_container_write_mode mode,
                                       struct mulle_allocator *allocator);
@@ -82,7 +82,7 @@ void   *_mulle_pointermap_write_pair( struct _mulle_pointermap *map,
  */
 
 
-static inline int   is_full( struct _mulle_pointermap *map, unsigned int size)
+static inline int   is_full( struct mulle__pointermap *map, unsigned int size)
 {
    return( map->_count >= (size - (size >> 2)));  // full when only 25% free
 }
@@ -109,7 +109,7 @@ static void   **allocate_storage( unsigned int n,
 }
 
 
-void   _mulle_pointermap_init( struct _mulle_pointermap *p,
+void   _mulle__pointermap_init( struct mulle__pointermap *p,
                                unsigned int capacity,
                                struct mulle_allocator *allocator)
 {
@@ -118,52 +118,52 @@ void   _mulle_pointermap_init( struct _mulle_pointermap *p,
    //
    // our map requires zeroes to find an end so give it ~25% holes
    //
-   p->_size    = capacity >= _MULLE_POINTERMAP_MIN_SIZE
-                     ? mulle_pow2round( capacity + (capacity >> _MULLE_POINTERMAP_FILL_SHIFT))
+   p->_size    = capacity >= MULLE_POINTERMAP_MIN_SIZE
+                     ? mulle_pow2round( capacity + (capacity >> MULLE_POINTERMAP_FILL_SHIFT))
                      : 0;
    p->_storage = allocate_storage( p->_size, allocator);
 }
 
 
-struct _mulle_pointermap   *_mulle_pointermap_create( unsigned int capacity,
+struct mulle__pointermap   *_mulle__pointermap_create( unsigned int capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator)
 {
-   struct _mulle_pointermap   *p;
+   struct mulle__pointermap   *p;
 
-   p = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_pointermap) + extra);
-   _mulle_pointermap_init( p, capacity, allocator);
+   p = mulle_allocator_calloc( allocator, 1, sizeof( struct mulle__pointermap) + extra);
+   _mulle__pointermap_init( p, capacity, allocator);
    return( p);
 }
 
 
-static inline void _mulle_pointermap_free_storage( struct _mulle_pointermap *map,
+static inline void _mulle__pointermap_free_storage( struct mulle__pointermap *map,
                                                    struct mulle_allocator *allocator)
 {
    mulle_allocator_free( allocator, map->_storage);
 }
 
 
-void   _mulle_pointermap_done( struct _mulle_pointermap *map,
+void   _mulle__pointermap_done( struct mulle__pointermap *map,
                                struct mulle_allocator *allocator)
 {
-   _mulle_pointermap_free_storage( map, allocator);
+   _mulle__pointermap_free_storage( map, allocator);
 }
 
 
-void   _mulle_pointermap_destroy( struct _mulle_pointermap *map,
+void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
                                   struct mulle_allocator *allocator)
 {
-   _mulle_pointermap_done( map, allocator);
+   _mulle__pointermap_done( map, allocator);
    mulle_allocator_free( allocator, map);
 }
 
 
-void   _mulle_pointermap_reset( struct _mulle_pointermap *map,
+void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                 struct mulle_allocator *allocator)
 {
-   _mulle_pointermap_done( map, allocator);
-   _mulle_pointermap_init( map, 0, allocator);
+   _mulle__pointermap_done( map, allocator);
+   _mulle__pointermap_init( map, 0, allocator);
 }
 
 
@@ -212,7 +212,7 @@ static void   copy_storage( void **dst,
       key = *src;
       if( key)
       {
-         i    = _mulle_pointermap_hash_key_for_size( key, dst_size);
+         i    = _mulle__pointermap_hash_key_for_size( key, dst_size);
          store_key_value( dst, dst_size, i, key, src[ src_size]);
       }
       ++src;
@@ -220,7 +220,7 @@ static void   copy_storage( void **dst,
 }
 
 
-static void   grow( struct _mulle_pointermap *map,
+static void   grow( struct mulle__pointermap *map,
                     struct mulle_allocator *allocator)
 {
    void           **buf;
@@ -235,14 +235,14 @@ static void   grow( struct _mulle_pointermap *map,
 
    buf = allocate_storage( new_size, allocator);
    copy_storage( buf, new_size, map->_storage, map->_size);
-   _mulle_pointermap_free_storage( map, allocator);
+   _mulle__pointermap_free_storage( map, allocator);
 
    map->_storage = buf;
    map->_size    = new_size;
 }
 
 
-static void   shrink( struct _mulle_pointermap *map,
+static void   shrink( struct mulle__pointermap *map,
                       struct mulle_allocator *allocator)
 {
    void           **buf;
@@ -254,7 +254,7 @@ static void   shrink( struct _mulle_pointermap *map,
 
    buf = allocate_storage( new_size, allocator);
    copy_storage( buf, new_size, map->_storage, map->_size);
-   _mulle_pointermap_free_storage( map, allocator);
+   _mulle__pointermap_free_storage( map, allocator);
 
    map->_storage = buf;
    map->_size    = new_size;
@@ -297,7 +297,7 @@ static inline unsigned long  find_index( void **storage,
 
    assert( storage);
 
-   i = _mulle_pointermap_hash_key_for_size( key, size);
+   i = _mulle__pointermap_hash_key_for_size( key, size);
    q = storage[ i];
    if( ! q)
    {
@@ -312,7 +312,7 @@ static inline unsigned long  find_index( void **storage,
 #pragma mark -
 #pragma mark operations
 
-void   *_mulle_pointermap_write_pair( struct _mulle_pointermap *map,
+void   *_mulle__pointermap_write_pair( struct mulle__pointermap *map,
                                       struct mulle_pointerpair *pair,
                                       enum mulle_container_write_mode mode,
                                       struct mulle_allocator *allocator)
@@ -354,7 +354,7 @@ void   *_mulle_pointermap_write_pair( struct _mulle_pointermap *map,
       }
 
       i = hole_index;
-      if( ! _mulle_pointermap_is_full( map))
+      if( ! _mulle__pointermap_is_full( map))
       {
          storage[ i]        = pair->_key;
          storage[ i + size] = pair->_value;
@@ -363,10 +363,10 @@ void   *_mulle_pointermap_write_pair( struct _mulle_pointermap *map,
       }
    }
 
-   if( _mulle_pointermap_is_full( map))
+   if( _mulle__pointermap_is_full( map))
       grow( map, allocator);
 
-   i = _mulle_pointermap_hash_key_for_size( pair->_key, map->_size);
+   i = _mulle__pointermap_hash_key_for_size( pair->_key, map->_size);
    store_key_value( map->_storage, map->_size, i, pair->_key, pair->_value);
    map->_count++;
 
@@ -374,7 +374,7 @@ void   *_mulle_pointermap_write_pair( struct _mulle_pointermap *map,
 }
 
 
-void   *_mulle_pointermap_get( struct _mulle_pointermap *map,
+void   *_mulle__pointermap_get( struct mulle__pointermap *map,
                                void *key)
 {
    int            (*f)( void *, void *, void *);
@@ -391,7 +391,7 @@ void   *_mulle_pointermap_get( struct _mulle_pointermap *map,
 
    storage = map->_storage;
    size    = map->_size;
-   i       = _mulle_pointermap_hash_key_for_size( key, size);
+   i       = _mulle__pointermap_hash_key_for_size( key, size);
    mask    = size - 1;
 
    for(;;)
@@ -408,7 +408,7 @@ void   *_mulle_pointermap_get( struct _mulle_pointermap *map,
 }
 
 
-struct mulle_pointerpair   *_mulle_pointermap_get_any_pair( struct _mulle_pointermap *map,
+struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__pointermap *map,
                                                             struct mulle_pointerpair *space)
 {
    unsigned int   i;
@@ -430,7 +430,7 @@ struct mulle_pointerpair   *_mulle_pointermap_get_any_pair( struct _mulle_pointe
    // fairly optimal ? when you are deleting contents with this in a loop
    // or ?
    //
-   i = _mulle_pointermap_hash_key_for_size( space->_key, size);
+   i = _mulle__pointermap_hash_key_for_size( space->_key, size);
 
    for(;;)
    {
@@ -442,32 +442,32 @@ struct mulle_pointerpair   *_mulle_pointermap_get_any_pair( struct _mulle_pointe
 }
 
 
-void   _mulle_pointermap_set_pair( struct _mulle_pointermap *map,
+void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
                                    struct mulle_pointerpair *pair,
                                    struct mulle_allocator *allocator)
 {
-   _mulle_pointermap_write_pair( map, pair, mulle_container_overwrite_e, allocator);
+   _mulle__pointermap_write_pair( map, pair, mulle_container_overwrite_e, allocator);
 }
 
 
-void    *_mulle_pointermap_insert_pair( struct _mulle_pointermap *map,
+void    *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
                                         struct mulle_pointerpair *pair,
                                         struct mulle_allocator *allocator)
 {
-   return( _mulle_pointermap_write_pair( map, pair, mulle_container_insert_e, allocator));
+   return( _mulle__pointermap_write_pair( map, pair, mulle_container_insert_e, allocator));
 }
 
 
-void   *_mulle_pointermap_insert_pair_known_absent( struct _mulle_pointermap *map,
+void   *_mulle__pointermap_insert_pair_known_absent( struct mulle__pointermap *map,
                                                struct mulle_pointerpair *pair,
                                                struct mulle_allocator *allocator)
 {
-   return( _mulle_pointermap_write_pair( map, pair, mulle_container_insert_e, allocator));
+   return( _mulle__pointermap_write_pair( map, pair, mulle_container_insert_e, allocator));
 }
 
 
 
-int   _mulle_pointermap_remove( struct _mulle_pointermap *map,
+int   _mulle__pointermap_remove( struct mulle__pointermap *map,
                                 void *key,
                                 struct mulle_allocator *allocator)
 {
@@ -521,7 +521,7 @@ int   _mulle_pointermap_remove( struct _mulle_pointermap *map,
       // the "hole" in the front we just made
       // but keep going because "wrong" hashes might be behind
       // be sure not to move items that won't be found
-      search_start = _mulle_pointermap_hash_key_for_size( *q, size);
+      search_start = _mulle__pointermap_hash_key_for_size( *q, size);
 
       // object better off where it is ?
       // CASE:
@@ -614,15 +614,15 @@ int   _mulle_pointermap_remove( struct _mulle_pointermap *map,
 }
 
 
-void   _mulle_pointermap_shrink_if_needed( struct _mulle_pointermap *map,
+void   _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
                                            struct mulle_allocator *allocator)
 {
-   if( _mulle_pointermap_is_sparse( map))
+   if( _mulle__pointermap_is_sparse( map))
       shrink( map, allocator);
 }
 
 
-void   _mulle_pointermap_insert_values_for_keysv( struct _mulle_pointermap *map,
+void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map,
                                                   void *firstvalue,
                                                   void *firstkey,
                                                   va_list args,
@@ -634,7 +634,7 @@ void   _mulle_pointermap_insert_values_for_keysv( struct _mulle_pointermap *map,
    pair._key   = firstkey;
    while( pair._key)
    {
-      _mulle_pointermap_insert_pair( map, &pair, allocator);
+      _mulle__pointermap_insert_pair( map, &pair, allocator);
 
       pair._value = va_arg( args, void *);
       pair._key   = va_arg( args, void *);
@@ -645,36 +645,36 @@ void   _mulle_pointermap_insert_values_for_keysv( struct _mulle_pointermap *map,
 #pragma mark -
 #pragma mark copying
 
-int   _mulle_pointermap_copy_items( struct _mulle_pointermap *dst,
-                                    struct _mulle_pointermap *src,
+int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
+                                    struct mulle__pointermap *src,
                                     struct mulle_allocator *allocator)
 {
-   struct _mulle_pointermapenumerator  rover;
+   struct mulle__pointermapenumerator  rover;
    struct mulle_pointerpair           *item;
    int                                rval;
 
    rval  = 0;
-   rover = _mulle_pointermap_enumerate( src);
-   while( item = _mulle_pointermapenumerator_next( &rover))
-      if( _mulle_pointermap_insert_pair( dst, item, allocator))
+   rover = _mulle__pointermap_enumerate( src);
+   while( item = _mulle__pointermapenumerator_next( &rover))
+      if( _mulle__pointermap_insert_pair( dst, item, allocator))
       {
          rval = -1;
          break;
       }
-   _mulle_pointermapenumerator_done( &rover);
+   _mulle__pointermapenumerator_done( &rover);
    return( rval);
 }
 
 
-struct _mulle_pointermap   *_mulle_pointermap_copy( struct _mulle_pointermap *set,
+struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *set,
                                                     struct mulle_allocator *allocator)
 {
-   struct _mulle_pointermap   *other;
+   struct mulle__pointermap   *other;
 
-   other = _mulle_pointermap_create( _mulle_pointermap_get_count( set), 0, allocator);
-   if( _mulle_pointermap_copy_items( other, set, allocator))
+   other = _mulle__pointermap_create( _mulle__pointermap_get_count( set), 0, allocator);
+   if( _mulle__pointermap_copy_items( other, set, allocator))
    {
-      _mulle_pointermap_destroy( other, allocator);
+      _mulle__pointermap_destroy( other, allocator);
       other = NULL;
    }
    return( other);
@@ -682,7 +682,7 @@ struct _mulle_pointermap   *_mulle_pointermap_copy( struct _mulle_pointermap *se
 
 
 // use this only for debugging
-char   *_mulle_pointermap_describe( struct _mulle_pointermap *set,
+char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
                                     struct mulle_allocator *allocator)
 {
    char                                *result;
@@ -692,15 +692,15 @@ char   *_mulle_pointermap_describe( struct _mulle_pointermap *set,
    size_t                              len;
    size_t                              key_len;
    size_t                              value_len;
-   struct _mulle_pointermapenumerator  rover;
+   struct mulle__pointermapenumerator  rover;
    struct mulle_pointerpair            *item;
    struct mulle_allocator              *key_allocator;
    struct mulle_allocator              *value_allocator;
 
    result = NULL;
    len    = 0;
-   rover  = _mulle_pointermap_enumerate( set);
-   while( item = _mulle_pointermapenumerator_next( &rover))
+   rover  = _mulle__pointermap_enumerate( set);
+   while( item = _mulle__pointermapenumerator_next( &rover))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
       value_allocator = key_allocator;
@@ -734,7 +734,7 @@ char   *_mulle_pointermap_describe( struct _mulle_pointermap *set,
       if( value_allocator)
          mulle_allocator_free( value_allocator, value);
    }
-   _mulle_pointermapenumerator_done( &rover);
+   _mulle__pointermapenumerator_done( &rover);
 
    if( ! result)
       return( mulle_allocator_strdup( allocator, "*empty*"));

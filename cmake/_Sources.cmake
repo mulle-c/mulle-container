@@ -6,21 +6,21 @@ if( MULLE_TRACE_INCLUDE)
 endif()
 
 set( SOURCES
-src/array/_mulle-array.c
+src/array/mulle--array.c
 src/array/mulle-array.c
 src/array/mulle-pointerarray.c
 src/array/mulle-pointerpairarray.c
 src/farmhash/farmhash.c
 src/hash/mulle-hash.c
 src/hash/mulle-prime.c
-src/map/_mulle-map.c
+src/map/mulle--map.c
 src/map/mulle-map.c
-src/map/_mulle-pointermap.c
+src/map/mulle--pointermap.c
 src/mulle-container-callback.c
-src/queue/_mulle-pointerqueue.c
+src/queue/mulle--pointerqueue.c
 src/range/mulle-range.c
-src/rangeset/_mulle-rangeset.c
+src/rangeset/mulle--rangeset.c
 src/set/mulle-pointerset.c
-src/set/_mulle-set.c
+src/set/mulle--set.c
 src/set/mulle-set.c
 )

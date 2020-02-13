@@ -22,13 +22,13 @@ struct mulle_container_keyvaluecallback   _CALLBACK;
 static void   simple_fill_test()
 {
    char                       key[ 5];
-   struct _mulle_map          *bucket;
+   struct mulle__map          *bucket;
    unsigned int               i;
    struct mulle_pointerpair   pair;
 
-   bucket = _mulle_map_create( 128, 0, CALLBACK, NULL);
+   bucket = _mulle__map_create( 128, 0, CALLBACK, NULL);
 
-   printf( "%ld\n", (long) _mulle_map_get_count( bucket));
+   printf( "%ld\n", (long) _mulle__map_get_count( bucket));
 
    pair._key   = key;
    pair._value = key;
@@ -36,16 +36,16 @@ static void   simple_fill_test()
    for( i = 0; i < 100000; i++)
    {
       random_key( key);
-      _mulle_map_set( bucket, &pair, CALLBACK, NULL);
+      _mulle__map_set( bucket, &pair, CALLBACK, NULL);
    }
 
-   _mulle_map_reset( bucket, CALLBACK, NULL);
+   _mulle__map_reset( bucket, CALLBACK, NULL);
 
-   printf( "%ld\n", (long) _mulle_map_get_count( bucket));
-   _mulle_map_set( bucket, &pair, CALLBACK, NULL);
-   printf( "%ld\n", (long) _mulle_map_get_count( bucket));
+   printf( "%ld\n", (long) _mulle__map_get_count( bucket));
+   _mulle__map_set( bucket, &pair, CALLBACK, NULL);
+   printf( "%ld\n", (long) _mulle__map_get_count( bucket));
 
-   _mulle_map_destroy( bucket, CALLBACK, NULL);
+   _mulle__map_destroy( bucket, CALLBACK, NULL);
 }
 
 

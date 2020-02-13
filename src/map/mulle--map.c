@@ -32,7 +32,7 @@
 //
 #pragma clang diagnostic ignored "-Wparentheses"
 
-#include "_mulle-map.h"
+#include "mulle--map.h"
 
 #include "mulle-container-operation.h"
 #include "mulle-container-math.h"
@@ -57,7 +57,7 @@
 // to 0 or 2 (leave odd alone) for better insert perfomance
 //
 // (?)
-static unsigned int   _mulle_map_hash_for_size( unsigned int hash, unsigned int size)
+static unsigned int   _mulle__map_hash_for_size( unsigned int hash, unsigned int size)
 {
    assert( size >= 2);
 
@@ -71,7 +71,7 @@ static unsigned int   _mulle_map_hash_for_size( unsigned int hash, unsigned int 
 
 
 
-void   *_mulle_map_write( struct _mulle_map *map,
+void   *_mulle__map_write( struct mulle__map *map,
                           struct mulle_pointerpair *p,
                           unsigned int  hash,
                           enum mulle_container_write_mode mode,
@@ -82,7 +82,7 @@ void   *_mulle_map_write( struct _mulle_map *map,
  */
 
 
-static inline int   is_full( struct _mulle_map *map, unsigned int size)
+static inline int   is_full( struct mulle__map *map, unsigned int size)
 {
    return( map->_count >= (size - (size >> 2)));  // full when only 25% free
 }
@@ -122,7 +122,7 @@ static void   **allocate_storage( unsigned int n,
 }
 
 
-void   _mulle_map_init( struct _mulle_map *p,
+void   _mulle__map_init( struct mulle__map *p,
                         unsigned int capacity,
                         struct mulle_container_keyvaluecallback *callback,
                         struct mulle_allocator *allocator)
@@ -136,27 +136,27 @@ void   _mulle_map_init( struct _mulle_map *p,
    // The code (especially get) depends on storage being there. For the case
    // that notakey is nil,
    // to be there already, so we can't have p->_size == 0
-   p->_size    = capacity >= _MULLE_MAP_MIN_SIZE
-                     ? mulle_pow2round( capacity + (capacity >> _MULLE_MAP_FILL_SHIFT))
-                     : (callback->keycallback.notakey != 0 ? _MULLE_MAP_MIN_SIZE : 0);
+   p->_size    = capacity >= MULLE_MAP_MIN_SIZE
+                     ? mulle_pow2round( capacity + (capacity >> MULLE_MAP_FILL_SHIFT))
+                     : (callback->keycallback.notakey != 0 ? MULLE_MAP_MIN_SIZE : 0);
    p->_storage = allocate_storage( p->_size, callback->keycallback.notakey, allocator);
 }
 
 
-struct _mulle_map   *_mulle_map_create( unsigned int capacity,
+struct mulle__map   *_mulle__map_create( unsigned int capacity,
                                         size_t extra,
                                         struct mulle_container_keyvaluecallback *callback,
                                         struct mulle_allocator *allocator)
 {
-   struct _mulle_map   *p;
+   struct mulle__map   *p;
 
-   p = mulle_allocator_calloc( allocator, 1, sizeof( struct _mulle_map) + extra);
-   _mulle_map_init( p, capacity, callback, allocator);
+   p = mulle_allocator_calloc( allocator, 1, sizeof( struct mulle__map) + extra);
+   _mulle__map_init( p, capacity, callback, allocator);
    return( p);
 }
 
 
-static inline void _mulle_map_free_storage( struct _mulle_map *map,
+static inline void _mulle__map_free_storage( struct mulle__map *map,
                                             struct mulle_allocator *allocator)
 {
 //   if( map->_storage != (void **) dummy_notakey_storage)
@@ -164,11 +164,11 @@ static inline void _mulle_map_free_storage( struct _mulle_map *map,
 }
 
 
-void   _mulle_map_done( struct _mulle_map *map,
+void   _mulle__map_done( struct mulle__map *map,
                         struct mulle_container_keyvaluecallback *callback,
                         struct mulle_allocator *allocator)
 {
-   struct _mulle_mapenumerator   rover;
+   struct mulle__mapenumerator   rover;
    struct mulle_pointerpair      *pair;
 
    //
@@ -176,34 +176,34 @@ void   _mulle_map_done( struct _mulle_map *map,
    //
    if( mulle_container_keyvaluecallback_releases( callback))
    {
-      rover = _mulle_map_enumerate( map, callback);
-      while( pair = _mulle_mapenumerator_next( &rover))
+      rover = _mulle__map_enumerate( map, callback);
+      while( pair = _mulle__mapenumerator_next( &rover))
       {
          (callback->keycallback.release)( &callback->keycallback, pair->_key, allocator);
          (callback->valuecallback.release)( &callback->valuecallback, pair->_value, allocator);
       }
-      _mulle_mapenumerator_done( &rover);
+      _mulle__mapenumerator_done( &rover);
    }
 
-   _mulle_map_free_storage( map, allocator);
+   _mulle__map_free_storage( map, allocator);
 }
 
 
-void   _mulle_map_destroy( struct _mulle_map *map,
+void   _mulle__map_destroy( struct mulle__map *map,
                            struct mulle_container_keyvaluecallback *callback,
                            struct mulle_allocator *allocator)
 {
-   _mulle_map_done( map, callback, allocator);
+   _mulle__map_done( map, callback, allocator);
    mulle_allocator_free( allocator, map);
 }
 
 
-void   _mulle_map_reset( struct _mulle_map *map,
+void   _mulle__map_reset( struct mulle__map *map,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
 {
-   _mulle_map_done( map, callback, allocator);
-   _mulle_map_init( map, 0, callback, allocator);
+   _mulle__map_done( map, callback, allocator);
+   _mulle__map_init( map, 0, callback, allocator);
 }
 
 
@@ -255,7 +255,7 @@ static void   copy_storage( void **dst,
       if( key != callback->notakey)
       {
          hash = (unsigned int) (callback->hash)( callback, key);
-         i    = _mulle_map_hash_for_size( hash, dst_size);
+         i    = _mulle__map_hash_for_size( hash, dst_size);
          store_key_value( dst, dst_size, i, key, src[ src_size], callback->notakey);
       }
       ++src;
@@ -263,7 +263,7 @@ static void   copy_storage( void **dst,
 }
 
 
-static void   grow( struct _mulle_map *map,
+static void   grow( struct mulle__map *map,
                     struct mulle_container_keycallback *callback,
                     struct mulle_allocator *allocator)
 {
@@ -279,14 +279,14 @@ static void   grow( struct _mulle_map *map,
 
    buf = allocate_storage( new_size, callback->notakey, allocator);
    copy_storage( buf, new_size, map->_storage, map->_size, callback);
-   _mulle_map_free_storage( map, allocator);
+   _mulle__map_free_storage( map, allocator);
 
    map->_storage = buf;
    map->_size    = new_size;
 }
 
 
-static void   shrink( struct _mulle_map *map,
+static void   shrink( struct mulle__map *map,
                       struct mulle_container_keycallback *callback,
                       struct mulle_allocator *allocator)
 {
@@ -299,7 +299,7 @@ static void   shrink( struct _mulle_map *map,
 
    buf = allocate_storage( new_size, callback->notakey, allocator);
    copy_storage( buf, new_size, map->_storage, map->_size, callback);
-   _mulle_map_free_storage( map, allocator);
+   _mulle__map_free_storage( map, allocator);
 
    map->_storage = buf;
    map->_size    = new_size;
@@ -354,7 +354,7 @@ static inline unsigned long  find_index( void **storage,
 
    assert( storage);
 
-   i = _mulle_map_hash_for_size( hash, size);
+   i = _mulle__map_hash_for_size( hash, size);
    q = storage[ i];
    if( q == callback->notakey)
    {
@@ -369,7 +369,7 @@ static inline unsigned long  find_index( void **storage,
 #pragma mark -
 #pragma mark operations
 
-void   *_mulle_map_write( struct _mulle_map *map,
+void   *_mulle__map_write( struct mulle__map *map,
                           struct mulle_pointerpair *pair,
                           unsigned int hash,
                           enum mulle_container_write_mode mode,
@@ -422,7 +422,7 @@ void   *_mulle_map_write( struct _mulle_map *map,
       }
 
       i = hole_index;
-      if( ! _mulle_map_is_full( map))
+      if( ! _mulle__map_is_full( map))
       {
          new_pair._key   = (*callback->keycallback.retain)( &callback->keycallback, pair->_key, allocator);
          new_pair._value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->_value, allocator);
@@ -434,10 +434,10 @@ void   *_mulle_map_write( struct _mulle_map *map,
       }
    }
 
-   if( _mulle_map_is_full( map))
+   if( _mulle__map_is_full( map))
       grow( map, &callback->keycallback, allocator);
 
-   i               = _mulle_map_hash_for_size( hash, map->_size);
+   i               = _mulle__map_hash_for_size( hash, map->_size);
    new_pair._key   = (*callback->keycallback.retain)( &callback->keycallback, pair->_key, allocator);
    new_pair._value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->_value, allocator);
 
@@ -448,7 +448,7 @@ void   *_mulle_map_write( struct _mulle_map *map,
 }
 
 
-void   *_mulle_map_get_with_hash( struct _mulle_map *map,
+void   *_mulle__map_get_with_hash( struct mulle__map *map,
                                   void *key,
                                   unsigned int hash,
                                   struct mulle_container_keyvaluecallback *callback)
@@ -468,7 +468,7 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
 
    storage = map->_storage;
    size    = map->_size;
-   i       = _mulle_map_hash_for_size( hash, size);
+   i       = _mulle__map_hash_for_size( hash, size);
    f       = (int (*)()) callback->keycallback.is_equal;
    notakey = callback->keycallback.notakey;
    mask    = size - 1;
@@ -489,7 +489,7 @@ void   *_mulle_map_get_with_hash( struct _mulle_map *map,
 }
 
 
-struct mulle_pointerpair   *_mulle_map_get_any_pair( struct _mulle_map *map,
+struct mulle_pointerpair   *_mulle__map_get_any_pair( struct mulle__map *map,
                                                      struct mulle_container_keyvaluecallback *callback,
                                                      struct mulle_pointerpair *space)
 {
@@ -516,7 +516,7 @@ struct mulle_pointerpair   *_mulle_map_get_any_pair( struct _mulle_map *map,
    // or ?
    //
    hash  = (unsigned int) (*callback->keycallback.hash)( &callback->keycallback, space->_key);
-   i     = _mulle_map_hash_for_size( hash, size);
+   i     = _mulle__map_hash_for_size( hash, size);
 
    for(;;)
    {
@@ -529,7 +529,7 @@ struct mulle_pointerpair   *_mulle_map_get_any_pair( struct _mulle_map *map,
 
 
 static void   *
-   _mulle_map_pointerequality_search( struct _mulle_map *map,
+   _mulle__map_pointerequality_search( struct mulle__map *map,
                                       void *key)
 {
    void     **q;
@@ -551,7 +551,7 @@ static void   *
 
 
 
-void   *_mulle_map_get( struct _mulle_map *map,
+void   *_mulle__map_get( struct mulle__map *map,
                         void *key,
                         struct mulle_container_keyvaluecallback *callback)
 {
@@ -561,19 +561,19 @@ void   *_mulle_map_get( struct _mulle_map *map,
    assert( map);
    if( map->_size <= 32)  // if the dictionary is small try to easy match
    {
-      value = _mulle_map_pointerequality_search( map, key);
+      value = _mulle__map_pointerequality_search( map, key);
       if( value)
          return( value);
       // else do regular search
    }
 
    hash  = (unsigned int) (*callback->keycallback.hash)( &callback->keycallback, key);
-   value = _mulle_map_get_with_hash( map, key, hash, callback);
+   value = _mulle__map_get_with_hash( map, key, hash, callback);
    return( value);
 }
 
 
-void   _mulle_map_set( struct _mulle_map *map,
+void   _mulle__map_set( struct mulle__map *map,
                        struct mulle_pointerpair *pair,
                        struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
@@ -582,11 +582,11 @@ void   _mulle_map_set( struct _mulle_map *map,
 
    hash = (unsigned int) (*callback->keycallback.hash)( &callback->keycallback, pair->_key);
 
-   _mulle_map_write( map, pair, hash, mulle_container_overwrite_e, callback, allocator);
+   _mulle__map_write( map, pair, hash, mulle_container_overwrite_e, callback, allocator);
 }
 
 
-void    *_mulle_map_insert( struct _mulle_map *map,
+void    *_mulle__map_insert( struct mulle__map *map,
                             struct mulle_pointerpair *pair,
                             struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator)
@@ -595,11 +595,11 @@ void    *_mulle_map_insert( struct _mulle_map *map,
 
    hash = (*callback->keycallback.hash)( &callback->keycallback, pair->_key);
 
-   return( _mulle_map_write( map, pair, hash, mulle_container_insert_e, callback, allocator));
+   return( _mulle__map_write( map, pair, hash, mulle_container_insert_e, callback, allocator));
 }
 
 
-void   *_mulle_map_insert_known_absent( struct _mulle_map *map,
+void   *_mulle__map_insert_known_absent( struct mulle__map *map,
                                         struct mulle_pointerpair *pair,
                                         struct mulle_container_keyvaluecallback *callback,
                                         struct mulle_allocator *allocator)
@@ -608,12 +608,12 @@ void   *_mulle_map_insert_known_absent( struct _mulle_map *map,
 
    hash = (unsigned int ) (*callback->keycallback.hash)( &callback->keycallback, pair->_key);
 
-   return( _mulle_map_write( map, pair, hash, mulle_container_insert_e, callback, allocator));
+   return( _mulle__map_write( map, pair, hash, mulle_container_insert_e, callback, allocator));
 }
 
 
 
-int   _mulle_map_remove_with_hash( struct _mulle_map *map,
+int   _mulle__map_remove_with_hash( struct mulle__map *map,
                                    void *key,
                                    unsigned int  hash,
                                    struct mulle_container_keyvaluecallback *callback,
@@ -672,7 +672,7 @@ int   _mulle_map_remove_with_hash( struct _mulle_map *map,
       // but keep going because "wrong" hashes might be behind
       // be sure not to move items that won't be found
       hash         = (unsigned int ) (*callback->keycallback.hash)( &callback->keycallback, *q);
-      search_start = _mulle_map_hash_for_size( hash, size);
+      search_start = _mulle__map_hash_for_size( hash, size);
 
       // object better off where it is ?
       // CASE:
@@ -765,16 +765,16 @@ int   _mulle_map_remove_with_hash( struct _mulle_map *map,
 }
 
 
-void   _mulle_map_shrink( struct _mulle_map *map,
+void   _mulle__map_shrink( struct mulle__map *map,
                           struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator)
 {
-   assert( _mulle_map_is_sparse( map));
+   assert( _mulle__map_is_sparse( map));
    shrink( map, &callback->keycallback, allocator);
 }
 
 
-int   _mulle_map_remove( struct _mulle_map *map,
+int   _mulle__map_remove( struct mulle__map *map,
                          void *key,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
@@ -782,11 +782,11 @@ int   _mulle_map_remove( struct _mulle_map *map,
    unsigned int   hash;
 
    hash = (unsigned int) (*callback->keycallback.hash)( &callback->keycallback, key);
-   return( _mulle_map_remove_with_hash( map, key, hash, callback, allocator));
+   return( _mulle__map_remove_with_hash( map, key, hash, callback, allocator));
 }
 
 
-void   _mulle_map_insert_values_for_keysv( struct _mulle_map *map,
+void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
                                            void *firstvalue,
                                            void *firstkey,
                                            va_list args,
@@ -799,7 +799,7 @@ void   _mulle_map_insert_values_for_keysv( struct _mulle_map *map,
    pair._key   = firstkey;
    while( pair._key != callback->keycallback.notakey)
    {
-      _mulle_map_insert( map, &pair, callback, allocator);
+      _mulle__map_insert( map, &pair, callback, allocator);
 
       pair._value = va_arg( args, void *);
       pair._key   = va_arg( args, void *);
@@ -810,38 +810,38 @@ void   _mulle_map_insert_values_for_keysv( struct _mulle_map *map,
 #pragma mark -
 #pragma mark copying
 
-int   _mulle_map_copy_items( struct _mulle_map *dst,
-                             struct _mulle_map *src,
+int   _mulle__map_copy_items( struct mulle__map *dst,
+                             struct mulle__map *src,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
-   struct _mulle_mapenumerator  rover;
+   struct mulle__mapenumerator  rover;
    struct mulle_pointerpair     *item;
    int                          rval;
 
    rval  = 0;
-   rover = _mulle_map_enumerate( src, callback);
-   while( item = _mulle_mapenumerator_next( &rover))
-      if( _mulle_map_insert( dst, item, callback, allocator))
+   rover = _mulle__map_enumerate( src, callback);
+   while( item = _mulle__mapenumerator_next( &rover))
+      if( _mulle__map_insert( dst, item, callback, allocator))
       {
          rval = -1;
          break;
       }
-   _mulle_mapenumerator_done( &rover);
+   _mulle__mapenumerator_done( &rover);
    return( rval);
 }
 
 
-struct _mulle_map   *_mulle_map_copy( struct _mulle_map *set,
+struct mulle__map   *_mulle__map_copy( struct mulle__map *set,
                                       struct mulle_container_keyvaluecallback *callback,
                                       struct mulle_allocator *allocator)
 {
-   struct _mulle_map   *other;
+   struct mulle__map   *other;
 
-   other = _mulle_map_create( _mulle_map_get_count( set), 0, callback, allocator);
-   if( _mulle_map_copy_items( other, set, callback, allocator))
+   other = _mulle__map_create( _mulle__map_get_count( set), 0, callback, allocator);
+   if( _mulle__map_copy_items( other, set, callback, allocator))
    {
-      _mulle_map_destroy( other, callback, allocator);
+      _mulle__map_destroy( other, callback, allocator);
       other = NULL;
    }
    return( other);
@@ -849,7 +849,7 @@ struct _mulle_map   *_mulle_map_copy( struct _mulle_map *set,
 
 
 // use this only for debugging
-char   *_mulle_map_describe( struct _mulle_map *set,
+char   *_mulle__map_describe( struct mulle__map *set,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
@@ -860,15 +860,15 @@ char   *_mulle_map_describe( struct _mulle_map *set,
    size_t                        len;
    size_t                        key_len;
    size_t                        value_len;
-   struct _mulle_mapenumerator   rover;
+   struct mulle__mapenumerator   rover;
    struct mulle_pointerpair      *item;
    struct mulle_allocator        *key_allocator;
    struct mulle_allocator        *value_allocator;
 
    result = NULL;
    len    = 0;
-   rover = _mulle_map_enumerate( set, callback);
-   while( item = _mulle_mapenumerator_next( &rover))
+   rover = _mulle__map_enumerate( set, callback);
+   while( item = _mulle__mapenumerator_next( &rover))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
       value_allocator = key_allocator;
@@ -902,7 +902,7 @@ char   *_mulle_map_describe( struct _mulle_map *set,
       if( value_allocator)
          mulle_allocator_free( value_allocator, value);
    }
-   _mulle_mapenumerator_done( &rover);
+   _mulle__mapenumerator_done( &rover);
 
    if( ! result)
       return( mulle_allocator_strdup( allocator, "*empty*"));

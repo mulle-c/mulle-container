@@ -11,11 +11,11 @@ static struct mulle_range   randomRange( void)
 
 int   main( int argc, char *argv[])
 {
-   struct _mulle_rangeset   set;
+   struct mulle__rangeset   set;
    uintptr_t                i;
    struct mulle_range       range;
 
-   _mulle_rangeset_init( &set, 0, NULL);
+   _mulle__rangeset_init( &set, 0, NULL);
 
    for( i = 0; i < 1000000; i++)
    {
@@ -26,16 +26,16 @@ int   main( int argc, char *argv[])
       case 0 :
       case 1 :
       case 2 :
-         _mulle_rangeset_remove( &set, randomRange(),  NULL);
+         _mulle__rangeset_remove( &set, randomRange(),  NULL);
          break;
 
       default :
-         _mulle_rangeset_insert( &set, randomRange(),  NULL);
+         _mulle__rangeset_insert( &set, randomRange(),  NULL);
       }
    }
    fputc( '\n', stderr);
 
-   _mulle_rangeset_done( &set, NULL);
+   _mulle__rangeset_done( &set, NULL);
 
    return( 0);
 }

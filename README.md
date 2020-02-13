@@ -22,7 +22,7 @@ Install the prerequisites first:
 
 | Prerequisites                                           |
 |---------------------------------------------------------|
-| [cityhash](//github.com/mulle-c/cityhash)               |
+| [farmhash](//github.com/mulle-c/farmhash)               |
 | [mulle-allocator](//github.com/mulle-c/mulle-allocator) |
 
 Then build and install
@@ -91,7 +91,7 @@ int   main( void)
 
 ## API
 
-The name of the functions is consistent. Each function is a **verb**
+The names of the functions are consistent. Each function is a **verb**
 that is prefixed with the name of the data structure it handles. So for example
 the `get` function for `mulle_array` is `mulle_array_get`. The first parameter,
 except for creation functions, is always the container itself.
@@ -120,11 +120,15 @@ File                                                         | Description
 [`mulle_pointerset`](dox/API_POINTERSET.md)                  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
 
 
+Datastructure names prefixed with an underscore, e.g. "mulle__set", indicate
+that they are incomplete. You need to provide additional parameters like an
+"allocator" for operations. Otherwise the datastructure is self-contained.
+
+
 ### Platforms and Compilers
 
 All platforms and compilers supported by
-[mulle-c11](//github.com/mulle-c/mulle-c11) and
-[mulle-thread](//github.com/mulle-c/mulle-thread).
+[mulle-c11](//github.com/mulle-c/mulle-c11).
 
 
 ## Author

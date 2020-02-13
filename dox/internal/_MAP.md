@@ -5,7 +5,7 @@
 Example:
 
 ```
-void   _mulle_map_reset( struct _mulle_map *map,
+void   _mulle__map_reset( struct mulle__map *map,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator);
 ```
@@ -19,7 +19,7 @@ void   mulle_map_reset( struct mulle_map *map)
 ## Types
 
 ```
-struct _mulle_map
+struct mulle__map
 ```
 
 
