@@ -37,7 +37,6 @@
 #define mulle_pointerpair_h__
 
 #include "mulle-container-callback.h"
-#include "mulle-container-compiler-attributes.h"
 
 
 struct mulle_pointerpair

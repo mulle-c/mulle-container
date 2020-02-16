@@ -67,26 +67,31 @@ struct mulle__setenumerator
 
 #pragma mark - setup and takedown
 
+MULLE_C_NONNULL_THIRD
 struct mulle__set   *_mulle__set_create( unsigned int capacity,
                                          size_t extra,
                                          struct mulle_container_keycallback *callback,
-                                         struct mulle_allocator *allocator);
+                                         struct mulle_allocator *allocator) ;
 
+MULLE_C_NONNULL_FIRST_SECOND
 void    _mulle__set_destroy( struct mulle__set *set,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator);
 
 
+MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__set_init( struct mulle__set *set,
                           unsigned int capacity,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST_SECOND
 void    _mulle__set_done( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
 
 // don't inline this (!)
+MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__set_reset( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
@@ -94,17 +99,20 @@ void   _mulle__set_reset( struct mulle__set *set,
 
 #pragma mark - copying
 
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
 int   _mulle__set_copy_items( struct mulle__set *dst,
                               struct mulle__set *src,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST_SECOND
 struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
                                        struct mulle_container_keycallback *callback,
                                        struct mulle_allocator *allocator);
 
 #pragma mark - debugging
 
+MULLE_C_NONNULL_FIRST_SECOND
 char   *_mulle__set_describe( struct mulle__set *set,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator);
@@ -112,12 +120,14 @@ char   *_mulle__set_describe( struct mulle__set *set,
 #pragma mark - petty accessors
 
 
+MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__set_get_size( struct mulle__set *set)
 {
    return( set->_size);
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__set_get_count( struct mulle__set *set)
 {
    return( set->_count);
@@ -127,6 +137,7 @@ static inline unsigned int   _mulle__set_get_count( struct mulle__set *set)
 #pragma mark - query
 
 
+MULLE_C_NONNULL_FIRST
 static inline int  _mulle__set_is_full( struct mulle__set *set)
 {
    unsigned int    size;
@@ -136,6 +147,7 @@ static inline int  _mulle__set_is_full( struct mulle__set *set)
    return( set->_count >= size);
 }
 
+MULLE_C_NONNULL_FIRST
 static inline int  _mulle__set_is_sparse( struct mulle__set *set)
 {
    unsigned int    size;
@@ -150,21 +162,25 @@ static inline int  _mulle__set_is_sparse( struct mulle__set *set)
 #pragma mark - operations
 
 
+MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__set_set( struct mulle__set *set,
                         void *p,
                         struct mulle_container_keycallback *callback,
                         struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST_THIRD
 void    *_mulle__set_insert( struct mulle__set *set,
                              void *p,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator);
 
 
+MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__set_get( struct mulle__set *set,
                          void *p,
                          struct mulle_container_keycallback *callback);
 
+MULLE_C_NONNULL_FIRST_THIRD
 int  _mulle__set_remove( struct mulle__set *set,
                          void *p,
                          struct mulle_container_keycallback *callback,
@@ -172,17 +188,20 @@ int  _mulle__set_remove( struct mulle__set *set,
 
 #pragma mark - interface for mulle_bigset
 
+MULLE_C_NONNULL_FIRST_FOURTH
 int   __mulle__set_remove( struct mulle__set *set,
                            void *p,
                            unsigned int hash,
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST_FOURTH
 void   *__mulle__set_get( struct mulle__set *set,
                           void *p,
                           unsigned int hash,
                           struct mulle_container_keycallback *callback);
 
+MULLE_C_NONNULL_FIRST_FIFTH
 void   *_mulle__set_write( struct mulle__set *set,
                            void *p,
                            unsigned int hash,
@@ -191,6 +210,7 @@ void   *_mulle__set_write( struct mulle__set *set,
                            struct mulle_allocator *allocator);
 
 
+MULLE_C_NONNULL_FIRST_SECOND
 static inline void  _mulle__set_shrink_if_needed( struct mulle__set *set,
                                                   struct mulle_container_keycallback *callback,
                                                   struct mulle_allocator *allocator)
@@ -207,10 +227,8 @@ static inline void  _mulle__set_shrink_if_needed( struct mulle__set *set,
 #pragma mark - enumeration
 
 
-static inline struct mulle__setenumerator
-   _mulle__set_enumerate( struct mulle__set *set,
-                          struct mulle_container_keycallback *callback);
 
+MULLE_C_NONNULL_FIRST_SECOND
 static inline struct mulle__setenumerator
    _mulle__set_enumerate( struct mulle__set *set,
                           struct mulle_container_keycallback *callback)
@@ -220,11 +238,32 @@ static inline struct mulle__setenumerator
    rover._left    = set->_count;
    rover._curr    = set->_storage;
    rover._notakey = callback->notakey;
+
    return( rover);
 }
 
 
-static inline void   *_mulle_setenumerator_next_nil( struct mulle__setenumerator *rover)
+static inline struct mulle__setenumerator
+   mulle__set_enumerate_nil( struct mulle__set *set)
+{
+   struct mulle__setenumerator   rover;
+
+   if( set)
+   {
+      rover._left    = set->_count;
+      rover._curr    = set->_storage;
+   }
+   else
+      rover._left   = 0;
+
+   rover._notakey = NULL;
+
+   return( rover);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   *_mulle__setenumerator_next_nil( struct mulle__setenumerator *rover)
 {
    void   *p;
 
@@ -245,8 +284,9 @@ static inline void   *_mulle_setenumerator_next_nil( struct mulle__setenumerator
 }
 
 
-static inline int   _mulle_setenumerator_next( struct mulle__setenumerator *rover,
-                                               void **item)
+MULLE_C_NONNULL_FIRST
+static inline int   _mulle__setenumerator_next( struct mulle__setenumerator *rover,
+                                                void **item)
 {
    void   *p;
 
@@ -271,7 +311,7 @@ static inline int   _mulle_setenumerator_next( struct mulle__setenumerator *rove
 }
 
 
-static inline void   _mulle_setenumerator_done( struct mulle__setenumerator *rover)
+static inline void   mulle__setenumerator_done( struct mulle__setenumerator *rover)
 {
 }
 

@@ -125,7 +125,7 @@ void   _mulle__pointermap_init( struct mulle__pointermap *p,
 }
 
 
-struct mulle__pointermap   *_mulle__pointermap_create( unsigned int capacity,
+struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator)
 {
@@ -145,7 +145,7 @@ static inline void _mulle__pointermap_free_storage( struct mulle__pointermap *ma
 
 
 void   _mulle__pointermap_done( struct mulle__pointermap *map,
-                               struct mulle_allocator *allocator)
+                                struct mulle_allocator *allocator)
 {
    _mulle__pointermap_free_storage( map, allocator);
 }
@@ -442,7 +442,7 @@ struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__point
 }
 
 
-void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
+void   mulle__pointermap_set_pair( struct mulle__pointermap *map,
                                    struct mulle_pointerpair *pair,
                                    struct mulle_allocator *allocator)
 {
@@ -654,14 +654,14 @@ int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
    int                                rval;
 
    rval  = 0;
-   rover = _mulle__pointermap_enumerate( src);
+   rover = mulle__pointermap_enumerate( src);
    while( item = _mulle__pointermapenumerator_next( &rover))
       if( _mulle__pointermap_insert_pair( dst, item, allocator))
       {
          rval = -1;
          break;
       }
-   _mulle__pointermapenumerator_done( &rover);
+   mulle__pointermapenumerator_done( &rover);
    return( rval);
 }
 
@@ -671,7 +671,7 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 {
    struct mulle__pointermap   *other;
 
-   other = _mulle__pointermap_create( _mulle__pointermap_get_count( set), 0, allocator);
+   other = mulle__pointermap_create( _mulle__pointermap_get_count( set), 0, allocator);
    if( _mulle__pointermap_copy_items( other, set, allocator))
    {
       _mulle__pointermap_destroy( other, allocator);
@@ -699,7 +699,7 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
 
    result = NULL;
    len    = 0;
-   rover  = _mulle__pointermap_enumerate( set);
+   rover  = mulle__pointermap_enumerate( set);
    while( item = _mulle__pointermapenumerator_next( &rover))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
@@ -734,7 +734,7 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
       if( value_allocator)
          mulle_allocator_free( value_allocator, value);
    }
-   _mulle__pointermapenumerator_done( &rover);
+   mulle__pointermapenumerator_done( &rover);
 
    if( ! result)
       return( mulle_allocator_strdup( allocator, "*empty*"));

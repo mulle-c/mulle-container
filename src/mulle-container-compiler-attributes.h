@@ -38,37 +38,8 @@
 #define mulle_container_compiler_attributes__h__
 
 
-#ifndef mulle_nonnull_first
+#ifndef MULLE_C_NONNULL_FIRST
 
-#if defined( __clang__) || defined( __GNUC__)
-# define mulle_nonnull_first                __attribute__((nonnull(1)))
-# define mulle_nonnull_first_second         __attribute__((nonnull(1,2)))
-# define mulle_nonnull_first_second_third   __attribute__((nonnull(1,2,3)))
-# define mulle_nonnull_first_second_fourth  __attribute__((nonnull(1,2,4)))
-# define mulle_nonnull_first_second_fifth   __attribute__((nonnull(1,2,5)))
-# define mulle_nonnull_first_second_fourth_fifth __attribute__((nonnull(1,2,4,5)))
-# define mulle_nonnull_first_third          __attribute__((nonnull(1,3)))
-# define mulle_nonnull_first_third_fourth   __attribute__((nonnull(3,4)))
-# define mulle_nonnull_first_fourth         __attribute__((nonnull(1,4)))
-# define mulle_nonnull_first_fifth          __attribute__((nonnull(1,5)))
-# define mulle_nonnull_second               __attribute__((nonnull(2)))
-# define mulle_nonnull_second_third         __attribute__((nonnull(2,3)))
-# define mulle_nonnull_third_fourth         __attribute__((nonnull(3,4)))
-#else
-# define mulle_nonnull_first
-# define mulle_nonnull_first_second
-# define mulle_nonnull_first_second_third
-# define mulle_nonnull_first_second_fourth
-# define mulle_nonnull_first_second_fifth
-# define mulle_nonnull_first_second_fourth_fifth
-# define mulle_nonnull_first_third
-# define mulle_nonnull_first_third_fourth
-# define mulle_nonnull_first_fourth
-# define mulle_nonnull_first_fifth
-# define mulle_nonnull_second
-# define mulle_nonnull_second_third
-# define mulle_nonnull_third_fourth
-#endif
 
 #endif
 

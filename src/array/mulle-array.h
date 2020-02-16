@@ -362,7 +362,7 @@ static inline void   *mulle_arrayenumerator_next( struct mulle_arrayenumerator *
 static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover)
 {
    if( rover)
-      _mulle__arrayenumerator_done( (struct mulle__arrayenumerator *) rover);
+      mulle__arrayenumerator_done( (struct mulle__arrayenumerator *) rover);
 }
 
 #pragma mark -

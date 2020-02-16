@@ -29,9 +29,10 @@ struct mulle__rangeset
 };
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
-                                           uintptr_t capacity,
-                                           struct mulle_allocator *allocator)
+                                            uintptr_t capacity,
+                                            struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
    if( capacity > 0)
@@ -42,25 +43,29 @@ static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_done( struct mulle__rangeset *p,
-                                           struct mulle_allocator *allocator)
+                                            struct mulle_allocator *allocator)
 {
    mulle_allocator_free( allocator, p->_ranges);
 }
 
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_reset( struct mulle__rangeset *p,
-                              struct mulle_allocator *allocator);
+                               struct mulle_allocator *allocator);
 
 /*
  * primitive access code
  */
+MULLE_C_NONNULL_FIRST
 static inline uintptr_t   _mulle__rangeset_get_first( struct mulle__rangeset *p)
 {
    return( p->_length ? p->_ranges[ 0].location : mulle_not_found_e);
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline uintptr_t   _mulle__rangeset_get_last( struct mulle__rangeset *p)
 {
    return( p->_length ? mulle_range_get_end( p->_ranges[ p->_length - 1 ]) - 1 : mulle_not_found_e);
@@ -70,14 +75,16 @@ static inline uintptr_t   _mulle__rangeset_get_last( struct mulle__rangeset *p)
 /*
  * primitive access code
  */
+MULLE_C_NONNULL_FIRST
 static inline uintptr_t   _mulle__rangeset_get_rangecount( struct mulle__rangeset *p)
 {
    return( p->_length);
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline struct mulle_range  _mulle__rangeset_get_range( struct mulle__rangeset *p,
-                                                             uintptr_t i)
+                                                              uintptr_t i)
 {
    if( i >= p->_length)
       return( mulle_range_create( mulle_not_found_e, 0));
@@ -86,6 +93,7 @@ static inline struct mulle_range  _mulle__rangeset_get_range( struct mulle__rang
 
 
 
+MULLE_C_NONNULL_FIRST
 static inline uintptr_t   _mulle__rangeset_sum_lengths( struct mulle__rangeset *p)
 {
    struct mulle_range   *curr;
@@ -101,10 +109,12 @@ static inline uintptr_t   _mulle__rangeset_sum_lengths( struct mulle__rangeset *
 }
 
 
+MULLE_C_NONNULL_FIRST
 uintptr_t   _mulle__rangeset_sum_lengths_range( struct mulle__rangeset *p,
-                                               struct mulle_range range);
+                                                struct mulle_range range);
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_shrinktofit( struct mulle__rangeset *p,
                                                   struct mulle_allocator *allocator)
 {
@@ -118,61 +128,75 @@ static inline void   _mulle__rangeset_shrinktofit( struct mulle__rangeset *p,
 }
 
 
+MULLE_C_NONNULL_FIRST
 void   __mulle__rangeset_insert( struct mulle__rangeset *p,
                                  struct mulle_range range,
                                  struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   __mulle__rangeset_remove( struct mulle__rangeset *p,
                                  struct mulle_range range,
                                  struct mulle_allocator *allocator);
 
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert( struct mulle__rangeset *p,
                                struct mulle_range range,
                                struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_remove( struct mulle__rangeset *p,
                                struct mulle_range range,
                                struct mulle_allocator *allocator);
 
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_grow( struct mulle__rangeset *p,
                              struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert( struct mulle__rangeset *p,
                                struct mulle_range range,
                                struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 int   _mulle__rangeset_contains( struct mulle__rangeset *p,
                               struct mulle_range range);
 
+MULLE_C_NONNULL_FIRST
 int   _mulle__rangeset_intersects( struct mulle__rangeset *p,
                                   struct mulle_range range);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_remove( struct mulle__rangeset *p,
                                struct mulle_range range,
                                struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_fprint( struct mulle__rangeset *set, FILE *fp);
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_print( struct mulle__rangeset *set)
 {
    _mulle__rangeset_fprint( set, stdout);
 }
 
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert_ranges( struct mulle__rangeset *p,
                                       struct mulle_range *ranges,
                                       uintptr_t n,
                                       struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_remove_ranges( struct mulle__rangeset *p,
                                       struct mulle_range *ranges,
                                       uintptr_t n,
                                       struct mulle_allocator *allocator);
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_insert_rangeset( struct mulle__rangeset *p,
                                                       struct mulle__rangeset *other,
                                                       struct mulle_allocator *allocator)
@@ -181,6 +205,7 @@ static inline void   _mulle__rangeset_insert_rangeset( struct mulle__rangeset *p
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_remove_rangeset( struct mulle__rangeset *p,
                                                       struct mulle__rangeset *other,
                                                       struct mulle_allocator *allocator)
@@ -193,10 +218,11 @@ static inline void   _mulle__rangeset_remove_rangeset( struct mulle__rangeset *p
 // returns 0 on success, -1 for underflow (no changes) and +1 for overflow
 // (no changes)
 //
+MULLE_C_NONNULL_FIRST
 int   _mulle__rangeset_shift( struct mulle__rangeset *p,
-                             uintptr_t location,
-                             intptr_t delta,
-                             struct mulle_allocator *allocator);
+                              uintptr_t location,
+                              intptr_t delta,
+                              struct mulle_allocator *allocator);
 
 enum mulle_rangeset_searchoperation
 {
@@ -208,8 +234,9 @@ enum mulle_rangeset_searchoperation
 };
 
 
+MULLE_C_NONNULL_FIRST
 uintptr_t   _mulle__rangeset_search( struct mulle__rangeset *p,
-                                    uintptr_t location,
-                                    enum mulle_rangeset_searchoperation searchOp);
+                                     uintptr_t location,
+                                     enum mulle_rangeset_searchoperation searchOp);
 
 #endif

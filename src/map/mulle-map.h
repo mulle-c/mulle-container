@@ -59,19 +59,18 @@ extern struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
 struct mulle_map   *mulle_map_create( size_t capacity,
                                       struct mulle_container_keyvaluecallback *callback,
                                       struct mulle_allocator *allocator)
-                                          mulle_nonnull_second;
+                                          MULLE_C_NONNULL_SECOND;
 
 void   mulle_map_init( struct mulle_map *map,
                        size_t capacity,
                        struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
-                           mulle_nonnull_first_third;
+                           MULLE_C_NONNULL_FIRST_THIRD;
 
 
 static inline void    mulle_map_done( struct mulle_map *map)
 {
-   if( map)
-      _mulle__map_done( (struct mulle__map *) map, map->_callback, map->_allocator);
+   _mulle__map_done( (struct mulle__map *) map, map->_callback, map->_allocator);
 }
 
 
@@ -235,7 +234,7 @@ static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map
       memset( &rover, 0, sizeof( rover));
       return( *(struct mulle_mapenumerator *) &rover);
    }
-   rover = _mulle__map_enumerate( (struct mulle__map *) map, map->_callback);
+   rover = mulle__map_enumerate( (struct mulle__map *) map, map->_callback);
    return( *(struct mulle_mapenumerator *) &rover);
 }
 
@@ -261,8 +260,7 @@ static inline int   mulle_mapenumerator_next( struct mulle_mapenumerator *rover,
 
 static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
 {
-   if( rover)
-      _mulle__mapenumerator_done( (struct mulle__mapenumerator *) rover);
+   mulle__mapenumerator_done( (struct mulle__mapenumerator *) rover);
 }
 
 
@@ -271,16 +269,9 @@ static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover
 
 static inline struct mulle_maptinyenumerator   mulle_map_tinyenumerate_nil( struct mulle_map *map)
 {
-   struct mulle__maptinyenumerator   rover;
+   struct mulle__maptinyenumerator  rover;
 
-   if( ! map)
-   {
-      memset( &rover, 0, sizeof( rover));
-      return( *(struct mulle_maptinyenumerator *) &rover);
-   }
-
-   assert( ! map->_callback->keycallback.notakey);
-   rover = _mulle__map_tinyenumerate_nil( (struct mulle__map *) map);
+   rover = mulle__map_tinyenumerate_nil( (struct mulle__map *) map);
    return( *(struct mulle_maptinyenumerator *) &rover);
 }
 
@@ -297,8 +288,7 @@ static inline int   mulle_maptinyenumerator_next( struct mulle_maptinyenumerator
 
 static inline void   mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
 {
-   if( rover)
-      _mulle__maptinyenumerator_done( (struct mulle__maptinyenumerator *) rover);
+   mulle__maptinyenumerator_done( (struct mulle__maptinyenumerator *) rover);
 }
 
 

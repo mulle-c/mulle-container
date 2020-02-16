@@ -176,13 +176,13 @@ void   _mulle__map_done( struct mulle__map *map,
    //
    if( mulle_container_keyvaluecallback_releases( callback))
    {
-      rover = _mulle__map_enumerate( map, callback);
+      rover = mulle__map_enumerate( map, callback);
       while( pair = _mulle__mapenumerator_next( &rover))
       {
          (callback->keycallback.release)( &callback->keycallback, pair->_key, allocator);
          (callback->valuecallback.release)( &callback->valuecallback, pair->_value, allocator);
       }
-      _mulle__mapenumerator_done( &rover);
+      mulle__mapenumerator_done( &rover);
    }
 
    _mulle__map_free_storage( map, allocator);
@@ -820,14 +820,14 @@ int   _mulle__map_copy_items( struct mulle__map *dst,
    int                          rval;
 
    rval  = 0;
-   rover = _mulle__map_enumerate( src, callback);
+   rover = mulle__map_enumerate( src, callback);
    while( item = _mulle__mapenumerator_next( &rover))
       if( _mulle__map_insert( dst, item, callback, allocator))
       {
          rval = -1;
          break;
       }
-   _mulle__mapenumerator_done( &rover);
+   mulle__mapenumerator_done( &rover);
    return( rval);
 }
 
@@ -867,7 +867,7 @@ char   *_mulle__map_describe( struct mulle__map *set,
 
    result = NULL;
    len    = 0;
-   rover = _mulle__map_enumerate( set, callback);
+   rover = mulle__map_enumerate( set, callback);
    while( item = _mulle__mapenumerator_next( &rover))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
@@ -902,7 +902,7 @@ char   *_mulle__map_describe( struct mulle__map *set,
       if( value_allocator)
          mulle_allocator_free( value_allocator, value);
    }
-   _mulle__mapenumerator_done( &rover);
+   mulle__mapenumerator_done( &rover);
 
    if( ! result)
       return( mulle_allocator_strdup( allocator, "*empty*"));

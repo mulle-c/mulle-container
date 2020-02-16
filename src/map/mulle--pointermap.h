@@ -75,25 +75,30 @@ struct mulle__pointermapenumerator
 #pragma mark setup and takedown
 
 
-struct mulle__pointermap   *_mulle__pointermap_create( unsigned int capacity,
+struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
-                                  struct mulle_allocator *allocator);
+                                   struct mulle_allocator *allocator);
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_init( struct mulle__pointermap *map,
-                               unsigned int capacity,
-                               struct mulle_allocator *allocator);
-
-void   _mulle__pointermap_done( struct mulle__pointermap *map,
-                               struct mulle_allocator *allocator);
-
-void   _mulle__pointermap_reset( struct mulle__pointermap *map,
+                                unsigned int capacity,
                                 struct mulle_allocator *allocator);
+
+MULLE_C_NONNULL_FIRST
+void   _mulle__pointermap_done( struct mulle__pointermap *map,
+                                struct mulle_allocator *allocator);
+
+MULLE_C_NONNULL_FIRST
+void   _mulle__pointermap_reset( struct mulle__pointermap *map,
+                                 struct mulle_allocator *allocator);
 
 #pragma mark -
 #pragma mark petty accessors
 
+MULLE_C_NONNULL_FIRST
 static inline int   _mulle__pointermap_is_full( struct mulle__pointermap *map)
 {
    unsigned int    size;
@@ -104,6 +109,7 @@ static inline int   _mulle__pointermap_is_full( struct mulle__pointermap *map)
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline int   _mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 {
    unsigned int    size;
@@ -114,6 +120,7 @@ static inline int   _mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__pointermap_get_count( struct mulle__pointermap *map)
 {
    return( map->_count);
@@ -121,6 +128,7 @@ static inline unsigned int   _mulle__pointermap_get_count( struct mulle__pointer
 
 
 // size for key really
+MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointermap *map)
 {
    return( map->_size);
@@ -131,11 +139,13 @@ static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointerm
 #pragma mark operations
 
 
-void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
+MULLE_C_NONNULL_FIRST_SECOND
+void   mulle__pointermap_set_pair( struct mulle__pointermap *map,
                                    struct mulle_pointerpair *pair,
                                    struct mulle_allocator *allocator);
 
-static inline void   _mulle__pointermap_set( struct mulle__pointermap *map,
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+static inline void   mulle__pointermap_set( struct mulle__pointermap *map,
                                             void *key,
                                             void *value,
                                             struct mulle_allocator *allocator)
@@ -147,18 +157,21 @@ static inline void   _mulle__pointermap_set( struct mulle__pointermap *map,
 
    pair._key   = key;
    pair._value = value;
-   _mulle__pointermap_set_pair( map, &pair, allocator);
+   mulle__pointermap_set_pair( map, &pair, allocator);
 }
 
 
+MULLE_C_NONNULL_FIRST_SECOND
 void    *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
                                         struct mulle_pointerpair *pair,
                                         struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST_SECOND
 void   *_mulle__pointermap_insert_pair_known_absent( struct mulle__pointermap *map,
                                                     struct mulle_pointerpair *pair,
                                                     struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST_SECOND
 int   _mulle__pointermap_remove( struct mulle__pointermap *map,
                                 void *key,
                                 struct mulle_allocator *allocator);
@@ -167,11 +180,13 @@ int   _mulle__pointermap_remove( struct mulle__pointermap *map,
 // call this after remove operations, to make enumerations quicker and
 // conserve memory
 //
+MULLE_C_NONNULL_FIRST
 void  _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
-                                          struct mulle_allocator *allocator);
+                                           struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST_SECOND
 void   *_mulle__pointermap_get( struct mulle__pointermap *map,
-                               void *key);
+                                void *key);
 
 
 
@@ -181,23 +196,27 @@ void   *_mulle__pointermap_get( struct mulle__pointermap *map,
 // The intended use is for iterating over and deleting contents. This could be
 // fairly efficient, but its untested.
 //
+MULLE_C_NONNULL_FIRST_SECOND
 struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__pointermap *map,
-                                                            struct mulle_pointerpair *space);
+                                                             struct mulle_pointerpair *space);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map,
-                                                  void *firstvalue,
-                                                  void *firstkey,
-                                                  va_list args,
-                                                  struct mulle_allocator *allocator);
+                                                   void *firstvalue,
+                                                   void *firstkey,
+                                                   va_list args,
+                                                   struct mulle_allocator *allocator);
 
 
 # pragma mark -
 # pragma mark copy
 
+MULLE_C_NONNULL_FIRST_SECOND
 int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
                                     struct mulle__pointermap *src,
                                     struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *set,
                                                    struct mulle_allocator *allocator);
 
@@ -205,6 +224,7 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 # pragma mark -
 # pragma mark debugging
 
+MULLE_C_NONNULL_FIRST
 char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
                                     struct mulle_allocator *allocator);
 
@@ -213,13 +233,18 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
 
 
 static inline struct mulle__pointermapenumerator
-   _mulle__pointermap_enumerate( struct mulle__pointermap *map)
+   mulle__pointermap_enumerate( struct mulle__pointermap *map)
 {
    struct mulle__pointermapenumerator   rover;
 
-   rover._left   = map->_count;
-   rover._curr   = map->_storage;
-   rover._offset = _mulle__pointermap_get_size( map);
+   if( map)
+   {
+      rover._left   = map->_count;
+      rover._curr   = map->_storage;
+      rover._offset = _mulle__pointermap_get_size( map);
+   }
+   else
+      rover._left = 0;
 
    return( rover);
 }
@@ -229,6 +254,7 @@ static inline struct mulle__pointermapenumerator
 // the map mustn't have too much free space for this to be reasonably
 // efficient, therefore it's important to shrink after lots of removes
 //
+MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair   *
    _mulle__pointermapenumerator_next( struct mulle__pointermapenumerator *rover)
 {
@@ -253,7 +279,7 @@ static inline struct mulle_pointerpair   *
 
 
 static inline void
-   _mulle__pointermapenumerator_done( struct mulle__pointermapenumerator *rover)
+   mulle__pointermapenumerator_done( struct mulle__pointermapenumerator *rover)
 {
 }
 

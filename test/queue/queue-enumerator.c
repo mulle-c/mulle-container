@@ -18,10 +18,10 @@ static void  enumerate( struct mulle__pointerqueue *queue)
    struct mulle__pointerqueueenumerator   rover;
    char   *s;
 
-   rover = _mulle__pointerqueue_enumerate( queue);
+   rover = mulle__pointerqueue_enumerate( queue);
    while( s = _mulle__pointerqueueenumerator_next( &rover))
       printf( "%s\n", s);
-   _mulle__pointerqueueenumerator_done(&rover);
+   mulle__pointerqueueenumerator_done(&rover);
 }
 
 

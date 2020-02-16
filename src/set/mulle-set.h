@@ -214,21 +214,21 @@ static inline struct mulle_setenumerator   mulle_set_enumerate( struct mulle_set
 
 static inline void   *mulle_setenumerator_next_nil( struct mulle_setenumerator *rover)
 {
-   return( rover ? _mulle_setenumerator_next_nil( (struct mulle__setenumerator *) rover) : NULL);
+   return( rover ? _mulle__setenumerator_next_nil( (struct mulle__setenumerator *) rover) : NULL);
 }
 
 
 static inline int   mulle_setenumerator_next( struct mulle_setenumerator *rover,
                                               void **value)
 {
-   return( rover ? _mulle_setenumerator_next( (struct mulle__setenumerator *) rover, value) : 0);
+   return( rover ? _mulle__setenumerator_next( (struct mulle__setenumerator *) rover, value) : 0);
 }
 
 
 static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover)
 {
    if( rover)
-      _mulle_setenumerator_done( (struct mulle__setenumerator *) rover);
+      mulle__setenumerator_done( (struct mulle__setenumerator *) rover);
 }
 
 #endif

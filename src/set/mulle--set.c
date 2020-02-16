@@ -148,11 +148,11 @@ void   _mulle__set_done( struct mulle__set *set,
    if( mulle_container_keycallback_releases( callback))
    {
       rover = _mulle__set_enumerate( set, callback);
-      while(  _mulle_setenumerator_next( &rover, &item))
+      while(  _mulle__setenumerator_next( &rover, &item))
       {
          (*callback->release)( callback, item, allocator);
       }
-      _mulle_setenumerator_done( &rover);
+      mulle__setenumerator_done( &rover);
    }
    mulle_allocator_free( allocator, set->_storage);
 }
@@ -709,7 +709,7 @@ int   _mulle__set_copy_items( struct mulle__set *dst,
 
    rval  = 0;
    rover = _mulle__set_enumerate( src, callback);
-   while( _mulle_setenumerator_next( &rover, &item))
+   while( _mulle__setenumerator_next( &rover, &item))
    {
       if( _mulle__set_insert( dst, item, callback, allocator))
       {
@@ -717,7 +717,7 @@ int   _mulle__set_copy_items( struct mulle__set *dst,
          break;
       }
    }
-   _mulle_setenumerator_done( &rover);
+   mulle__setenumerator_done( &rover);
    return( rval);
 }
 
@@ -756,7 +756,7 @@ char   *_mulle__set_describe( struct mulle__set *set,
    len    = 0;
 
    rover = _mulle__set_enumerate( set, callback);
-   while( _mulle_setenumerator_next( &rover, &item))
+   while( _mulle__setenumerator_next( &rover, &item))
    {
       value_allocator = allocator ? allocator : &mulle_default_allocator;
 
@@ -778,7 +778,7 @@ char   *_mulle__set_describe( struct mulle__set *set,
       if( value_allocator)
          mulle_allocator_free( value_allocator, s);
    }
-   _mulle_setenumerator_done( &rover);
+   mulle__setenumerator_done( &rover);
 
    if( ! result)
       return( mulle_allocator_strdup( allocator, "*empty*"));

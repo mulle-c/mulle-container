@@ -134,7 +134,7 @@ int  _mulle__array_size_to_fit( struct mulle__array *array,
 #pragma mark -
 #pragma mark creation and destruction
 
-struct mulle__array    *_mulle__array_create( struct mulle_allocator *allocator)
+struct mulle__array    *mulle__array_create( struct mulle_allocator *allocator)
 {
    struct mulle__array  *array;
 
