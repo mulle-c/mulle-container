@@ -58,7 +58,7 @@ struct mulle__pointerqueuebucket
 
 
 static inline struct mulle__pointerqueue *
-  _mulle__pointerqueue_alloc( struct mulle_allocator *allocator)
+  mulle__pointerqueue_alloc( struct mulle_allocator *allocator)
 {
    struct mulle__pointerqueue   *queue;
 
@@ -68,13 +68,14 @@ static inline struct mulle__pointerqueue *
 
 
 static inline void
-  _mulle__pointerqueue_free( struct mulle__pointerqueue *queue,
+  mulle__pointerqueue_free( struct mulle__pointerqueue *queue,
                              struct mulle_allocator *allocator)
 {
    mulle_allocator_free( allocator, queue);
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void  _mulle__pointerqueue_init( struct mulle__pointerqueue *queue,
                                                unsigned short bucket_size,
                                                unsigned short spare_allowance)
@@ -94,25 +95,32 @@ static inline void  _mulle__pointerqueue_init( struct mulle__pointerqueue *queue
 
 
 struct mulle__pointerqueue   *_mulle__pointerqueue_create( unsigned short bucket_size,
-                                                          unsigned short spare_allowance,
-                                                          struct mulle_allocator *allocator);
+                                                           unsigned short spare_allowance,
+                                                           struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_destroy( struct mulle__pointerqueue *queue,
                                      struct mulle_allocator *allocator);
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_done( struct mulle__pointerqueue *queue,
                                   struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_grow( struct mulle__pointerqueue *queue,
                                   struct mulle_allocator *allocator);
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_shrink( struct mulle__pointerqueue *queue,
                                     struct mulle_allocator *allocator);
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
                                    struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_removeall( struct mulle__pointerqueue *queue,
                                        struct mulle_allocator *allocator);  // keeps spares
 
 
+MULLE_C_NONNULL_FIRST_SECOND
 static inline void  _mulle__pointerqueue_push( struct mulle__pointerqueue *queue,
                                                void *p,
                                                struct mulle_allocator *allocator)
@@ -129,10 +137,12 @@ static inline void  _mulle__pointerqueue_push( struct mulle__pointerqueue *queue
 }
 
 
+MULLE_C_NONNULL_FIRST
 void  *_mulle__pointerqueue_pop( struct mulle__pointerqueue *queue,
                                  struct mulle_allocator *allocator);
 
 
+MULLE_C_NONNULL_FIRST
 static inline unsigned int
    _mulle__pointerqueue_get_count( struct mulle__pointerqueue *queue)
 {
@@ -140,6 +150,7 @@ static inline unsigned int
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline unsigned short
    _mulle__pointerqueue_get_bucketsize( struct mulle__pointerqueue *queue)
 {
@@ -160,23 +171,23 @@ struct mulle__pointerqueueenumerator
 
 
 static inline struct mulle__pointerqueueenumerator
-   _mulle__pointerqueue_enumerate( struct mulle__pointerqueue *queue)
+   mulle__pointerqueue_enumerate( struct mulle__pointerqueue *queue)
 {
    struct mulle__pointerqueueenumerator   rover;
 
-   rover._queue = queue;
-   rover._curr  = queue->_read;
-   rover._index = queue->_read_index;
-
+   if( queue)
+   {
+      rover._queue = queue;
+      rover._curr  = queue->_read;
+      rover._index = queue->_read_index;
+   }
+   else
+      rover._queue = NULL;
    return( rover);
 }
 
 
-static inline void   _mulle__pointerqueueenumerator_done( struct mulle__pointerqueueenumerator *rover)
-{
-}
-
-
+MULLE_C_NONNULL_FIRST
 static inline void   *_mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover)
 {
    extern void   *__mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *);
@@ -185,12 +196,19 @@ static inline void   *_mulle__pointerqueueenumerator_next( struct mulle__pointer
    unsigned int                limit;
 
    queue = rover->_queue;
+   if( ! queue)
+      return( NULL);
    // if rover._curr == NULL, set rover->_index to queue->_bucket_size
    limit = rover->_curr != queue->_write ? queue->_bucket_size : queue->_write_index;
    if( rover->_index < limit)
       return( rover->_curr->_storage[ rover->_index++]);
 
    return( __mulle__pointerqueueenumerator_next( rover));
+}
+
+
+static inline void   mulle__pointerqueueenumerator_done( struct mulle__pointerqueueenumerator *rover)
+{
 }
 
 
