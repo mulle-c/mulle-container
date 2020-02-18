@@ -188,6 +188,10 @@ static void   __mulle__rangeset_insert_known_absent( struct mulle__rangeset *p,
    uintptr_t            index;
    uintptr_t            n;
 
+   // we don't store empty ranges
+   if( ! range.length)
+      return;
+
    index = mulle_range_hole_bsearch( p->_ranges, p->_length, range.location);
 
    // we know that we don't intersect, but maybe we can combine ?
@@ -241,8 +245,8 @@ static void   __mulle__rangeset_insert_known_absent( struct mulle__rangeset *p,
 
 
 void   __mulle__rangeset_insert( struct mulle__rangeset *p,
-                                struct mulle_range range,
-                                struct mulle_allocator *allocator)
+                                 struct mulle_range range,
+                                 struct mulle_allocator *allocator)
 {
    struct mulle_range   *prev;
    struct mulle_range   *sentinel;
@@ -251,6 +255,10 @@ void   __mulle__rangeset_insert( struct mulle__rangeset *p,
    struct mulle_range   *curr;
    uintptr_t            location;
    uintptr_t            length;
+
+   // we don't store empty ranges
+   if( ! range.length)
+      return;
 
    _mulle__rangeset_assert( p);
 
@@ -329,8 +337,8 @@ loop_3:
 
 
 void   __mulle__rangeset_remove( struct mulle__rangeset *p,
-                                struct mulle_range range,
-                                struct mulle_allocator *allocator)
+                                 struct mulle_range range,
+                                 struct mulle_allocator *allocator)
 {
    struct mulle_range   *prev;
    struct mulle_range   *found;
@@ -338,6 +346,10 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
    uintptr_t            range_end;
    uintptr_t            found_end;
    uintptr_t            n;
+
+   // we don't deal with empty ranges
+   if( ! range.length)
+      return;
 
    _mulle__rangeset_assert( p);
 

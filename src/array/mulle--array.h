@@ -154,7 +154,7 @@ static inline unsigned int   _mulle__array_get_count( struct mulle__array *array
 
 
 // other may be NULL
-MULLE_C_NONNULL_FIRST_SECOND_THIRD
+MULLE_C_NONNULL_FIRST_THIRD
 int    _mulle__array_is_equal( struct mulle__array *array,
                                struct mulle__array *other,
                                struct mulle_container_keycallback *callback)
@@ -272,12 +272,11 @@ static inline void    _mulle__array_add_array( struct mulle__array *array,
                                                struct mulle_allocator *allocator)
 {
    assert( array != other);
-   if( other)
-      _mulle__array_add_multiple( array,
-                                 _mulle__array_get_all( other),
-                                 _mulle__array_get_count( other),
-                                 callback,
-                                 allocator);
+   _mulle__array_add_multiple( array,
+                              _mulle__array_get_all( other),
+                              _mulle__array_get_count( other),
+                              callback,
+                              allocator);
 }
 
 

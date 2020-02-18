@@ -13,11 +13,6 @@ struct mulle_range   mulle_range_intersect( struct mulle_range range,
    uintptr_t            end2;
    struct mulle_range   result;
 
-   if( ! range.length)
-      return( range);
-   if( ! other.length)
-      return( other);
-
    end1 = mulle_range_get_end( range);
    end2 = mulle_range_get_end( other);
    min  = (end1 < end2) ? end1 : end2;

@@ -9,9 +9,12 @@
 
 
 //
-// the range values are unsigned, but the actual range may be limited to
-// positive signed values (see below)
+// the range values are unsigned, but the actual range is limited to
+// positive signed values
+//
 // a range with zero length can be valid
+//
+// a range that extends over mulle_range_max is invalid
 //
 struct mulle_range
 {
@@ -19,9 +22,11 @@ struct mulle_range
    uintptr_t   length;
 };
 
+#define mulle_range_min       (0)
+#define mulle_range_max       (mulle_not_found_e-1)
+
 // the struct and the three defines need to stay compatible with MulleObjC/mulle-objc-type.h
 
-#define mulle_range_min       (0)
 
 //
 // experimentally make max=0xF....E and notfound=0xF...F
@@ -31,9 +36,6 @@ struct mulle_range
 // Why this is moot: if we are storing void *, they will take up 2 or 3 bits
 // worth of address space
 //
-#define mulle_range_max       (mulle_not_found_e-1)
-
-
 static inline struct mulle_range   mulle_range_create( uintptr_t location, uintptr_t length)
 {
     struct mulle_range   range;
@@ -51,10 +53,6 @@ static inline uintptr_t   mulle_range_get_end( struct mulle_range range)
 }
 
 
-// use enum here instead of BOOL, because windows
-// will define BOOL in <windows.h>, but when compiling
-// MulleObjC.h it won't be there
-//
 static inline int   mulle_range_contains_location( struct mulle_range range,
                                                    uintptr_t location)
 {
@@ -74,17 +72,21 @@ static inline int  mulle_range_is_valid( struct mulle_range range)
       return( 1);
 
    end = mulle_range_get_end( range);
-   return( end <= mulle_range_max + 1);
+   return( end > range.location && end <= mulle_range_max + 1);
 }
 
 
+//
+// the problem here is mostly, if a zero length range can contain another
+// zero length range. Does a non-zero length range contain a zero length
+// range. We say yes if the location is in range.
+//
 static inline int  mulle_range_contains( struct mulle_range big, struct mulle_range small)
 {
-   if( ! small.length)
-      return( 1);
-
    if( ! mulle_range_contains_location( big, small.location))
       return( 0);
+   if( ! small.length)
+      return( 1);
    return( mulle_range_contains_location( big, mulle_range_get_end( small) - 1));
 }
 

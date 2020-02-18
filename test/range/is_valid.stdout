@@ -29,8 +29,8 @@
 [mulle_not_found_e,mulle_not_found_e] : NO
 [-1,mulle_not_found_e] : NO
 [0,-1] : NO
-[1,-1] : YES
-[2,-1] : YES
-[mulle_range_max,-1] : YES
+[1,-1] : NO
+[2,-1] : NO
+[mulle_range_max,-1] : NO
 [mulle_not_found_e,-1] : NO
 [-1,-1] : NO

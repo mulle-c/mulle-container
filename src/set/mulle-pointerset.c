@@ -23,6 +23,7 @@ static int  _pointer_compare( void *p_a, void *p_b)
 }
 
 
+MULLE_C_NONNULL_FIRST_THIRD
 static void   *mulle_pointerset_bsearch( void **buf,
                                          size_t n,
                                          void  *search)
@@ -55,8 +56,11 @@ static void   *mulle_pointerset_bsearch( void **buf,
    return( NULL);
 }
 
+
+MULLE_C_NONNULL_FIRST_SECOND
 void   *_mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
 
+MULLE_C_NONNULL_FIRST_SECOND
 void   *_mulle_pointerset_member2( struct mulle_pointerset *set, void *p)
 {
    void  **result;
