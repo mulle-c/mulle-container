@@ -442,7 +442,7 @@ struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__point
 }
 
 
-void   mulle__pointermap_set_pair( struct mulle__pointermap *map,
+void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
                                    struct mulle_pointerpair *pair,
                                    struct mulle_allocator *allocator)
 {

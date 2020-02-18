@@ -10,6 +10,8 @@
 
 
 //
+// Remember: ns-range can just carry 0 to INT_MAX -1 !
+//
 // the strategy of this container is:
 //
 // * to not have overlapping ranges

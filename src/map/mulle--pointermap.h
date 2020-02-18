@@ -140,41 +140,38 @@ static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointerm
 
 
 MULLE_C_NONNULL_FIRST_SECOND
-void   mulle__pointermap_set_pair( struct mulle__pointermap *map,
-                                   struct mulle_pointerpair *pair,
-                                   struct mulle_allocator *allocator);
+void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
+                                    struct mulle_pointerpair *pair,
+                                    struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
-static inline void   mulle__pointermap_set( struct mulle__pointermap *map,
-                                            void *key,
-                                            void *value,
-                                            struct mulle_allocator *allocator)
+static inline void   _mulle__pointermap_set( struct mulle__pointermap *map,
+                                             void *key,
+                                             void *value,
+                                             struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   pair;
 
-   if( ! map)
-      return;
-
    pair._key   = key;
    pair._value = value;
-   mulle__pointermap_set_pair( map, &pair, allocator);
+   _mulle__pointermap_set_pair( map, &pair, allocator);
 }
 
 
 MULLE_C_NONNULL_FIRST_SECOND
 void    *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
-                                        struct mulle_pointerpair *pair,
-                                        struct mulle_allocator *allocator);
+                                         struct mulle_pointerpair *pair,
+                                         struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST_SECOND
 void   *_mulle__pointermap_insert_pair_known_absent( struct mulle__pointermap *map,
-                                                    struct mulle_pointerpair *pair,
-                                                    struct mulle_allocator *allocator);
+                                                     struct mulle_pointerpair *pair,
+                                                     struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST_SECOND
 int   _mulle__pointermap_remove( struct mulle__pointermap *map,
-                                void *key,
-                                struct mulle_allocator *allocator);
+                                 void *key,
+                                 struct mulle_allocator *allocator);
 
 //
 // call this after remove operations, to make enumerations quicker and
@@ -213,12 +210,12 @@ void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map
 
 MULLE_C_NONNULL_FIRST_SECOND
 int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
-                                    struct mulle__pointermap *src,
-                                    struct mulle_allocator *allocator);
+                                     struct mulle__pointermap *src,
+                                     struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST
 struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *set,
-                                                   struct mulle_allocator *allocator);
+                                                     struct mulle_allocator *allocator);
 
 
 # pragma mark -
@@ -226,7 +223,7 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 
 MULLE_C_NONNULL_FIRST
 char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
-                                    struct mulle_allocator *allocator);
+                                     struct mulle_allocator *allocator);
 
 # pragma mark -
 # pragma mark enumeration

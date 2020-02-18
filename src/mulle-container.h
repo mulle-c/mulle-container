@@ -69,8 +69,13 @@
 #include "mulle-container-callback.h"
 #include "mulle-container-operation.h"
 
+#if MULLE_C11_VERSION < ((3 << 20) | (2 << 8) | 0)
+# error "mulle-c11 is too old"
+#endif
+
 #if MULLE_ALLOCATOR_VERSION < ((2 << 20) | (0 << 8) | 0)
 # error "mulle-allocator is too old"
 #endif
+
 
 #endif /* mulle_container_h */

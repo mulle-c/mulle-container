@@ -48,6 +48,12 @@ int   main( int argc, char *argv[])
                range2.location = values[ k];
                range2.length   = values[ l];
 
+
+               if( ! mulle_range_is_valid( range1))
+                  continue;
+               if( ! mulle_range_is_valid( range2))
+                  continue;
+
                printf( "[");
                print_value( range1.location);
                printf( " - ");
