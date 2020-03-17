@@ -9,10 +9,12 @@
 
 
 //
-// the range values are unsigned, but the actual range is limited to
+// The range values are unsigned, but the actual range is limited to
 // positive signed values
 //
 // a range with zero length can be valid
+// the location of a range with zero length is basically undefined, but
+// actually has to be within mulle_range_max
 //
 // a range that extends over mulle_range_max is invalid
 //
