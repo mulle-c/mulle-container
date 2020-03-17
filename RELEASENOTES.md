@@ -1,3 +1,16 @@
+# 3.0.0
+
+* moved nonnull stuff to mulle-c11, fixed up container functions with `MULLE_C_NONNULL` declarations
+* renamed incomplete datastructures from `_mulle_`<name>`` to `mulle__`<name>`.` Functions that are checking for null parameters and those that don't can now be discerned properly.
+* renamed `mulle_pointermap` to `_mulle_pointermap` because it contains no allocator
+* added shrinking to map and set for the benefit of enumeration
+* fixed range so that ranges with 0 length are always contained f.e
+* added mulle-pointermap
+* add `mulle_range` and `_mulle_rangeset` to project
+* move some common code to mulle-container-math.h
+* don't necessarily make the given capacity a power of two to conserve space
+
+
 # 2.0.0
 
 * removed mulle-bigmap and mulle-bigset, which are currently unused but now buggy due to recent changes in mulle-map and mulle-set
