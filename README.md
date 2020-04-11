@@ -15,34 +15,6 @@ Build Status | Release Version
 -------------|-----------------------------------
 [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container)
 
-
-## Install
-
-Install the prerequisites first:
-
-| Prerequisites                                           |
-|---------------------------------------------------------|
-| [farmhash](//github.com/mulle-c/farmhash)               |
-| [mulle-allocator](//github.com/mulle-c/mulle-allocator) |
-
-
-Install into /usr/local:
-
-```
-mkdir build 2> /dev/null
-(
-   cd build ;
-   cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
-         -DCMAKE_PREFIX_PATH=/usr/local \
-         -DCMAKE_BUILD_TYPE=Release .. ;
-   make install
-)
-```
-
-
-Or let [mulle-sde](//github.com/mulle-sde) do it all for you.
-
-
 ## Example
 
 The API of the containers is fairly uniform, here is an example using
@@ -127,6 +99,49 @@ File                                                         | Description
 Datastructure names prefixed with an underscore, e.g. "mulle__set", indicate
 that they are incomplete. You need to provide additional parameters like an
 "allocator" for operations. Otherwise the datastructure is self-contained.
+
+
+## Add 
+
+Use [mulle-sde](//github.com/mulle-sde) to add mulle-buffer to your project:
+
+```
+mulle-sde dependency add --c --github mulle-c mulle-buffer
+```
+
+## Install
+
+### mulle-sde
+
+Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-thread and all dependencies:
+
+```
+mulle-sde install --prefix /usr/local \
+   https://github.com/mulle-c/mulle-buffer/archive/latest.tar.gz
+```
+
+### Manual Installation
+
+
+Install the requirements:
+
+Requirements                                             | Description
+---------------------------------------------------------|-----------------------
+[mulle-allocator](//github.com/mulle-c/mulle-allocator)  | Memory allocation wrapper
+[farmhash](//github.com/mulle-c/farmhash)                | A hash function
+
+Install into `/usr/local`:
+
+```
+mkdir build 2> /dev/null
+(
+   cd build ;
+   cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
+         -DCMAKE_PREFIX_PATH=/usr/local \
+         -DCMAKE_BUILD_TYPE=Release .. ;
+   make install
+)
+```
 
 
 ### Platforms and Compilers
