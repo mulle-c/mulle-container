@@ -103,21 +103,21 @@ that they are incomplete. You need to provide additional parameters like an
 
 ## Add 
 
-Use [mulle-sde](//github.com/mulle-sde) to add mulle-buffer to your project:
+Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
 
 ```
-mulle-sde dependency add --c --github mulle-c mulle-buffer
+mulle-sde dependency add --c --github mulle-c mulle-container
 ```
 
 ## Install
 
 ### mulle-sde
 
-Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-thread and all dependencies:
+Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container and all dependencies:
 
 ```
 mulle-sde install --prefix /usr/local \
-   https://github.com/mulle-c/mulle-buffer/archive/latest.tar.gz
+   https://github.com/mulle-c/mulle-container/archive/latest.tar.gz
 ```
 
 ### Manual Installation
