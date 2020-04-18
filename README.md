@@ -1,6 +1,6 @@
 # mulle-container
 
-🈁 Sets, hashtables, arrays and more - written in C
+🛄 Sets, hashtables, arrays and more - written in C
 
 A collection of C (C99) data structures dealing exclusively with void pointers
 and their integer counterpart `intptr_t`.
@@ -106,7 +106,7 @@ All platforms and compilers supported by
 [mulle-c11](//github.com/mulle-c/mulle-c11).
 
 
-## Add 
+## Add
 
 Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
 

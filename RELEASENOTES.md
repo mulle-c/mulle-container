@@ -1,3 +1,7 @@
+### 3.0.1
+
+* Various small improvements
+
 # 3.0.0
 
 * moved nonnull stuff to mulle-c11, fixed up container functions with `MULLE_C_NONNULL` declarations
