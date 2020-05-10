@@ -65,6 +65,7 @@
 #include "mulle--pointermap.h"
 #include "mulle-pointerset.h"
 #include "mulle-pointerpairarray.h"
+#include "mulle-structarray.h"
 
 #include "mulle-container-callback.h"
 #include "mulle-container-operation.h"
