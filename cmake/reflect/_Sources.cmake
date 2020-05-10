@@ -10,6 +10,7 @@ src/array/mulle--array.c
 src/array/mulle-array.c
 src/array/mulle-pointerarray.c
 src/array/mulle-pointerpairarray.c
+src/array/mulle-structarray.c
 src/farmhash/farmhash.c
 src/hash/mulle-hash.c
 src/hash/mulle-prime.c

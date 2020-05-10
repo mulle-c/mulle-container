@@ -37,6 +37,7 @@ src/array/mulle--array.h
 src/array/mulle-array.h
 src/array/mulle-pointerarray.h
 src/array/mulle-pointerpairarray.h
+src/array/mulle-structarray.h
 src/hash/mulle-hash.h
 src/hash/mulle-prime.h
 src/include.h
