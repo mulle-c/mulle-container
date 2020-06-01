@@ -6,8 +6,8 @@
 
 
 
-// Should also be usable to "shrink to fit"
-void   _mulle_structarray_growto( struct mulle_structarray *array, size_t new_size)
+// Should also be usable for "size to fit"
+void   _mulle_structarray_sizeto( struct mulle_structarray *array, size_t new_size)
 {
    ptrdiff_t   old_size;
    ptrdiff_t   old_index;
@@ -37,6 +37,6 @@ void   _mulle_structarray_grow( struct mulle_structarray *array)
    ptrdiff_t   old_size;
 
    old_size = (char *) array->_sentinel - (char *) array->_structs;
-   new_size = mulle_pow2round( old_size * 2);
-   _mulle_structarray_growto( array, new_size);
+   new_size = (old_size ? old_size : array->_sizeof_struct) * 2;
+   _mulle_structarray_sizeto( array, new_size);
 }

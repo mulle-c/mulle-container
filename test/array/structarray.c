@@ -62,7 +62,7 @@ static void  simple( void)
       a = _mulle_structarray_get( array, i);
 
       assert( a->x == (double) i + 1848);
-      assert( a->y == i & 0x7F);
+      assert( a->y == (i & 0x7F));
    }
 
    i     = 0;
@@ -70,7 +70,7 @@ static void  simple( void)
    while( a = _mulle_structarrayenumerator_next( &rover))
    {
       assert( a->x == (double) i + 1848);
-      assert( a->y == i & 0x7F);
+      assert( a->y == (i & 0x7F));
       ++i;
    }
    assert( i == LOOPS);
@@ -81,7 +81,7 @@ static void  simple( void)
    {
       --i;
       assert( a->x == (double) i + 1848);
-      assert( a->y == i & 0x7F);
+      assert( a->y == (i & 0x7F));
    }
    assert( i == 0);
    mulle_structarrayreverseenumerator_done( &rrover);

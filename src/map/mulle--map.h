@@ -90,8 +90,7 @@ struct mulle__maptinyenumerator
 };
 
 
-#pragma mark -
-#pragma mark setup and takedown
+#pragma mark - setup and takedown
 
 
 MULLE_C_NONNULL_THIRD
@@ -122,8 +121,7 @@ void   _mulle__map_reset( struct mulle__map *map,
                           struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator);
 
-#pragma mark -
-#pragma mark petty accessors
+#pragma mark - petty accessors
 
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__map_is_full( struct mulle__map *map)
@@ -162,8 +160,7 @@ static inline unsigned int   _mulle__map_get_size( struct mulle__map *map)
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
@@ -246,8 +243,7 @@ void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
                                             struct mulle_allocator *allocator);
 
 
-# pragma mark -
-# pragma mark copy
+# pragma mark - copy
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 int   _mulle__map_copy_items( struct mulle__map *dst,
@@ -261,16 +257,20 @@ struct mulle__map   *_mulle__map_copy( struct mulle__map *map,
                                        struct mulle_allocator *allocator);
 
 
-# pragma mark -
-# pragma mark debugging
+# pragma mark - debugging
 
 MULLE_C_NONNULL_FIRST_SECOND
 char   *_mulle__map_describe( struct mulle__map *map,
                               struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator);
 
-# pragma mark -
-# pragma mark enumeration
+//
+// collisions is the amount of additional compares needed for misplaced keys
+//
+size_t   _mulle__map_count_collisions( struct mulle__map *set,
+                                       struct mulle_container_keyvaluecallback *callback,
+                                       size_t *perfects);
+# pragma mark - enumeration
 
 
 MULLE_C_NONNULL_SECOND
