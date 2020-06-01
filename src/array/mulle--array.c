@@ -107,8 +107,8 @@ static int  _mulle__array_set_size( struct mulle__array *array,
 
 
 int  _mulle__array_grow( struct mulle__array *array,
-                        struct mulle_container_keycallback *callback,
-                        struct mulle_allocator *allocator)
+                         struct mulle_container_keycallback *callback,
+                         struct mulle_allocator *allocator)
 {
    unsigned int   new_size;
 
@@ -121,8 +121,8 @@ int  _mulle__array_grow( struct mulle__array *array,
 
 
 int  _mulle__array_size_to_fit( struct mulle__array *array,
-                               struct mulle_container_keycallback *callback,
-                               struct mulle_allocator *allocator)
+                                struct mulle_container_keycallback *callback,
+                                struct mulle_allocator *allocator)
 {
    unsigned int   new_size;
 
@@ -134,7 +134,7 @@ int  _mulle__array_size_to_fit( struct mulle__array *array,
 #pragma mark -
 #pragma mark creation and destruction
 
-struct mulle__array    *mulle__array_create( struct mulle_allocator *allocator)
+struct mulle__array   *mulle__array_create( struct mulle_allocator *allocator)
 {
    struct mulle__array  *array;
 

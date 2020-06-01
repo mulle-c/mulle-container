@@ -41,17 +41,17 @@
 
 // NSArray/NSMutableArray
 //
-// a _mulle_array is a limited mutable array, you
-// can use it as a stack.
-// It uses callback, so that you can store arbitrary kinds of data in it.
+// a _mulle_array is a limited mutable array, you can use it as a stack.
+// It uses callbacks (passed as parameters), so that you can store arbitrary
+// kinds of data in it.
 //
 // You can place it on a stack, if you are careful (the storage will be
 // allocated from the heap though)
 //
-#define MULLE__ARRAY_BASE   \
-   void      **_storage;    \
-   void      **_curr;       \
-   void      **_sentinel;   \
+#define MULLE__ARRAY_BASE        \
+   void           **_storage;    \
+   void           **_curr;       \
+   void           **_sentinel;   \
    unsigned int   _size
 
 
