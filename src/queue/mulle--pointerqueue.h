@@ -24,11 +24,12 @@
 #include <mulle-allocator/mulle-allocator.h>
 
 //
-// a struct mulle__pointerqueue is FIFO, you can't use it as a stack.
-// As a queue has a pop operation, it is not useful to put
-// memory management into the queue, as the queue would need to;
-// release on pop, which would be disastrous if the release does
-// a free (copied C-string for example)
+// A struct mulle__pointerqueue is a FIFO, you can't use it as a stack.
+// As a queue has a pop operation. You can not store NULL into it.
+//
+// MEMO: It is not useful to put memory management into the queue, as the queue
+// would need to release on pop, which would be disastrous if the release does
+// a free (copied C-string for example).
 //
 struct mulle__pointerqueuebucket;
 
@@ -75,6 +76,9 @@ static inline void
 }
 
 
+// large bucket_size is convenient for mostly add
+// spare_allowance can be to cache freed buckets, useful for many edit
+// operations
 MULLE_C_NONNULL_FIRST
 static inline void  _mulle__pointerqueue_init( struct mulle__pointerqueue *queue,
                                                unsigned short bucket_size,

@@ -23,7 +23,7 @@ struct mulle_structarray
    void                     *_structs;
    void                     *_curr;
    void                     *_sentinel;
-   unsigned int             _sizeof_struct;
+   int                       _sizeof_struct;
    struct mulle_allocator   *_allocator;
 };
 
@@ -44,19 +44,19 @@ static inline void   _mulle_structarray_init( struct mulle_structarray *array,
                                               unsigned int capacity,
                                               struct mulle_allocator *allocator)
 {
-   void   _mulle_structarray_growto( struct mulle_structarray *array, size_t new_size);
+   void   _mulle_structarray_sizeto( struct mulle_structarray *array, size_t new_size);
    intptr_t   misalignment;
 
    array->_structs       = NULL;
    array->_curr          = NULL;
    array->_sentinel      = NULL;
+   array->_sizeof_struct = (int) (sizeof_struct + (sizeof_struct % alignof_struct));
    array->_allocator     = allocator;
 
-   array->_sizeof_struct = sizeof_struct + (sizeof_struct % alignof_struct);
    assert( array->_sizeof_struct);
 
    if( capacity)
-      _mulle_structarray_growto( array, capacity * array->_sizeof_struct);
+      _mulle_structarray_sizeto( array, capacity * array->_sizeof_struct);
 }
 
 
@@ -91,7 +91,7 @@ static inline void  mulle_structarray_destroy( struct mulle_structarray *array)
 }
 
 
-static inline void   mulle_structarray_reset( struct mulle_structarray *array)
+static inline void   _mulle_structarray_reset( struct mulle_structarray *array)
 {
    array->_curr = array->_structs;
 }
@@ -106,9 +106,18 @@ static inline unsigned int
 }
 
 
+static inline unsigned int
+   mulle_structarray_get_count( struct mulle_structarray *array)
+{
+   if( ! array)
+      return( 0);
+   return( _mulle_structarray_get_count( array));
+}
+
+
 // cheaper as we don't divide here
 static inline size_t
-   _mulle_structarray_get_usagesize( struct mulle_structarray *array)
+   _mulle_structarray_get_usedsize( struct mulle_structarray *array)
 {
    return( (size_t) ((char *) array->_curr - (char *) array->_structs));
 }
@@ -146,6 +155,13 @@ static inline void *
 }
 
 
+static inline struct mulle_allocator  *
+   _mulle_structarray_get_allocator( struct mulle_structarray *array)
+{
+   return( array->_allocator);
+}
+
+
 static inline void *
    _mulle_structarray_get( struct mulle_structarray *array, unsigned int i)
 {
@@ -162,11 +178,37 @@ static inline void *
 
 
 static inline void *
+   _mulle_structarray_get_last( struct mulle_structarray *array)
+{
+   assert( &((char *) array->_curr)[ - array->_sizeof_struct] >= (char *) array->_structs);
+
+   return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
+}
+
+
+static inline void
+   _mulle_structarray_remove_last( struct mulle_structarray *array)
+{
+   if( array->_curr > array->_structs)
+      array->_curr = _mulle_structarray_get_last( array);
+}
+
+
+static inline void *
    mulle_structarray_get_last( struct mulle_structarray *array)
 {
    if( ! array || array->_curr == array->_structs)
       return( NULL);
-   return(  &((char *) array->_curr)[ - (ssize_t) array->_sizeof_struct]);
+   return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
+}
+
+
+static inline void
+   _mulle_structarray_size_to_fit( struct mulle_structarray *array)
+{
+   void   _mulle_structarray_sizeto( struct mulle_structarray *array, size_t new_size);
+
+   _mulle_structarray_sizeto( array, _mulle_structarray_get_usedsize( array));
 }
 
 
@@ -175,9 +217,9 @@ static inline void *
 
 struct mulle_structarrayenumerator
 {
-   void     *_curr;
-   void     *_sentinel;
-   size_t   _sizeof_struct;
+   void   *_curr;
+   void   *_sentinel;
+   int    _sizeof_struct;
 };
 
 
@@ -230,7 +272,7 @@ struct mulle_structarrayreverseenumerator
 {
    void      *_curr;
    void      *_structs;
-   ssize_t   _sizeof_struct;
+   int        _sizeof_struct;
 };
 
 
@@ -243,7 +285,7 @@ static inline struct mulle_structarrayreverseenumerator
    {
       rover._curr          = array->_curr;
       rover._structs       = array->_structs;
-      rover._sizeof_struct = (ssize_t) array->_sizeof_struct;
+      rover._sizeof_struct = array->_sizeof_struct;
    }
    else
       memset( &rover, 0, sizeof( rover));
@@ -261,7 +303,7 @@ static inline void *
 
    if( rover->_curr > rover->_structs)
    {
-      rover->_curr = &((char *) rover->_curr)[ - (ssize_t) rover->_sizeof_struct];
+      rover->_curr = &((char *) rover->_curr)[ - rover->_sizeof_struct];
       return( rover->_curr);
    }
    return( NULL);

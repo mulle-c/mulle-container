@@ -184,6 +184,7 @@ static inline int
    return( _mulle_pointerarray_add( array, pointer));
 }
 
+
 //
 // this removes _notakey from the back, until it finds a pointer
 // then remove this. A random remove is not coded. You generally want to
@@ -275,6 +276,7 @@ static inline intptr_t
    return( (intptr_t) -1);
 }
 
+
 static inline intptr_t
    mulle_pointerarray_find( struct mulle_pointerarray *array, void *p)
 {
@@ -303,6 +305,7 @@ static inline void   _mulle_pointerarray_set( struct mulle_pointerarray *array,
    array->_pointers[ i] = p;
 }
 
+
 static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
                                              unsigned int i,
                                              void *p)
@@ -312,8 +315,8 @@ static inline void   mulle_pointerarray_set( struct mulle_pointerarray *array,
    _mulle_pointerarray_set( array, i, p);
 }
 
-#pragma mark -
-#pragma mark enumerator
+
+#pragma mark - enumerator
 
 struct mulle_pointerarrayenumerator
 {
@@ -433,8 +436,7 @@ static inline void
 
 
 
-#pragma mark -
-#pragma mark enumerator convenience
+#pragma mark - enumerator convenience
 
 static inline int   mulle_pointerarray_member( struct mulle_pointerarray *array, void *p)
 {

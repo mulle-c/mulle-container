@@ -72,11 +72,11 @@ static unsigned int   _mulle__map_hash_for_size( unsigned int hash, unsigned int
 
 
 void   *_mulle__map_write( struct mulle__map *map,
-                          struct mulle_pointerpair *p,
-                          unsigned int  hash,
-                          enum mulle_container_write_mode mode,
-                          struct mulle_container_keyvaluecallback *callback,
-                          struct mulle_allocator *allocator);
+                           struct mulle_pointerpair *p,
+                           unsigned int  hash,
+                           enum mulle_container_write_mode mode,
+                           struct mulle_container_keyvaluecallback *callback,
+                           struct mulle_allocator *allocator);
 /*
  *
  */
@@ -123,9 +123,9 @@ static void   **allocate_storage( unsigned int n,
 
 
 void   _mulle__map_init( struct mulle__map *p,
-                        unsigned int capacity,
-                        struct mulle_container_keyvaluecallback *callback,
-                        struct mulle_allocator *allocator)
+                         unsigned int capacity,
+                         struct mulle_container_keyvaluecallback *callback,
+                         struct mulle_allocator *allocator)
 {
    assert_mulle_container_keyvaluecallback( callback);
 
@@ -144,9 +144,9 @@ void   _mulle__map_init( struct mulle__map *p,
 
 
 struct mulle__map   *_mulle__map_create( unsigned int capacity,
-                                        size_t extra,
-                                        struct mulle_container_keyvaluecallback *callback,
-                                        struct mulle_allocator *allocator)
+                                         size_t extra,
+                                         struct mulle_container_keyvaluecallback *callback,
+                                         struct mulle_allocator *allocator)
 {
    struct mulle__map   *p;
 
@@ -157,7 +157,7 @@ struct mulle__map   *_mulle__map_create( unsigned int capacity,
 
 
 static inline void _mulle__map_free_storage( struct mulle__map *map,
-                                            struct mulle_allocator *allocator)
+                                             struct mulle_allocator *allocator)
 {
 //   if( map->_storage != (void **) dummy_notakey_storage)
       mulle_allocator_free( allocator, map->_storage);
@@ -165,8 +165,8 @@ static inline void _mulle__map_free_storage( struct mulle__map *map,
 
 
 void   _mulle__map_done( struct mulle__map *map,
-                        struct mulle_container_keyvaluecallback *callback,
-                        struct mulle_allocator *allocator)
+                         struct mulle_container_keyvaluecallback *callback,
+                         struct mulle_allocator *allocator)
 {
    struct mulle__mapenumerator   rover;
    struct mulle_pointerpair      *pair;
@@ -190,8 +190,8 @@ void   _mulle__map_done( struct mulle__map *map,
 
 
 void   _mulle__map_destroy( struct mulle__map *map,
-                           struct mulle_container_keyvaluecallback *callback,
-                           struct mulle_allocator *allocator)
+                            struct mulle_container_keyvaluecallback *callback,
+                            struct mulle_allocator *allocator)
 {
    _mulle__map_done( map, callback, allocator);
    mulle_allocator_free( allocator, map);
@@ -199,8 +199,8 @@ void   _mulle__map_destroy( struct mulle__map *map,
 
 
 void   _mulle__map_reset( struct mulle__map *map,
-                         struct mulle_container_keyvaluecallback *callback,
-                         struct mulle_allocator *allocator)
+                          struct mulle_container_keyvaluecallback *callback,
+                          struct mulle_allocator *allocator)
 {
    _mulle__map_done( map, callback, allocator);
    _mulle__map_init( map, 0, callback, allocator);
@@ -370,11 +370,11 @@ static inline unsigned long  find_index( void **storage,
 #pragma mark operations
 
 void   *_mulle__map_write( struct mulle__map *map,
-                          struct mulle_pointerpair *pair,
-                          unsigned int hash,
-                          enum mulle_container_write_mode mode,
-                          struct mulle_container_keyvaluecallback *callback,
-                          struct mulle_allocator *allocator)
+                           struct mulle_pointerpair *pair,
+                           unsigned int hash,
+                           enum mulle_container_write_mode mode,
+                           struct mulle_container_keyvaluecallback *callback,
+                           struct mulle_allocator *allocator)
 {
    unsigned long              found;
    unsigned int               i;
@@ -449,9 +449,9 @@ void   *_mulle__map_write( struct mulle__map *map,
 
 
 void   *_mulle__map_get_with_hash( struct mulle__map *map,
-                                  void *key,
-                                  unsigned int hash,
-                                  struct mulle_container_keyvaluecallback *callback)
+                                   void *key,
+                                   unsigned int hash,
+                                   struct mulle_container_keyvaluecallback *callback)
 {
    int            (*f)( void *, void *, void *);
    unsigned int   i;
@@ -490,8 +490,8 @@ void   *_mulle__map_get_with_hash( struct mulle__map *map,
 
 
 struct mulle_pointerpair   *_mulle__map_get_any_pair( struct mulle__map *map,
-                                                     struct mulle_container_keyvaluecallback *callback,
-                                                     struct mulle_pointerpair *space)
+                                                      struct mulle_container_keyvaluecallback *callback,
+                                                      struct mulle_pointerpair *space)
 {
    unsigned int   i;
    unsigned int   size;
@@ -530,7 +530,7 @@ struct mulle_pointerpair   *_mulle__map_get_any_pair( struct mulle__map *map,
 
 static void   *
    _mulle__map_pointerequality_search( struct mulle__map *map,
-                                      void *key)
+                                       void *key)
 {
    void     **q;
    void     **sentinel;
@@ -552,8 +552,8 @@ static void   *
 
 
 void   *_mulle__map_get( struct mulle__map *map,
-                        void *key,
-                        struct mulle_container_keyvaluecallback *callback)
+                         void *key,
+                         struct mulle_container_keyvaluecallback *callback)
 {
    unsigned int   hash;
    void           *value;
@@ -574,9 +574,9 @@ void   *_mulle__map_get( struct mulle__map *map,
 
 
 void   _mulle__map_set( struct mulle__map *map,
-                       struct mulle_pointerpair *pair,
-                       struct mulle_container_keyvaluecallback *callback,
-                       struct mulle_allocator *allocator)
+                        struct mulle_pointerpair *pair,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator)
 {
    unsigned int   hash;
 
@@ -587,9 +587,9 @@ void   _mulle__map_set( struct mulle__map *map,
 
 
 void    *_mulle__map_insert( struct mulle__map *map,
-                            struct mulle_pointerpair *pair,
-                            struct mulle_container_keyvaluecallback *callback,
-                            struct mulle_allocator *allocator)
+                             struct mulle_pointerpair *pair,
+                             struct mulle_container_keyvaluecallback *callback,
+                             struct mulle_allocator *allocator)
 {
    uintptr_t   hash;
 
@@ -600,9 +600,9 @@ void    *_mulle__map_insert( struct mulle__map *map,
 
 
 void   *_mulle__map_insert_known_absent( struct mulle__map *map,
-                                        struct mulle_pointerpair *pair,
-                                        struct mulle_container_keyvaluecallback *callback,
-                                        struct mulle_allocator *allocator)
+                                         struct mulle_pointerpair *pair,
+                                         struct mulle_container_keyvaluecallback *callback,
+                                         struct mulle_allocator *allocator)
 {
    unsigned int   hash;
 
@@ -614,10 +614,10 @@ void   *_mulle__map_insert_known_absent( struct mulle__map *map,
 
 
 int   _mulle__map_remove_with_hash( struct mulle__map *map,
-                                   void *key,
-                                   unsigned int  hash,
-                                   struct mulle_container_keyvaluecallback *callback,
-                                   struct mulle_allocator *allocator)
+                                    void *key,
+                                    unsigned int  hash,
+                                    struct mulle_container_keyvaluecallback *callback,
+                                    struct mulle_allocator *allocator)
 {
    unsigned int   hole_index;
    unsigned int   i;
@@ -766,8 +766,8 @@ int   _mulle__map_remove_with_hash( struct mulle__map *map,
 
 
 void   _mulle__map_shrink( struct mulle__map *map,
-                          struct mulle_container_keyvaluecallback *callback,
-                          struct mulle_allocator *allocator)
+                           struct mulle_container_keyvaluecallback *callback,
+                           struct mulle_allocator *allocator)
 {
    assert( _mulle__map_is_sparse( map));
    shrink( map, &callback->keycallback, allocator);
@@ -775,9 +775,9 @@ void   _mulle__map_shrink( struct mulle__map *map,
 
 
 int   _mulle__map_remove( struct mulle__map *map,
-                         void *key,
-                         struct mulle_container_keyvaluecallback *callback,
-                         struct mulle_allocator *allocator)
+                          void *key,
+                          struct mulle_container_keyvaluecallback *callback,
+                          struct mulle_allocator *allocator)
 {
    unsigned int   hash;
 
@@ -787,11 +787,11 @@ int   _mulle__map_remove( struct mulle__map *map,
 
 
 void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
-                                           void *firstvalue,
-                                           void *firstkey,
-                                           va_list args,
-                                           struct mulle_container_keyvaluecallback *callback,
-                                           struct mulle_allocator *allocator)
+                                            void *firstvalue,
+                                            void *firstkey,
+                                            va_list args,
+                                            struct mulle_container_keyvaluecallback *callback,
+                                            struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   pair;
 
@@ -811,9 +811,9 @@ void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
 #pragma mark copying
 
 int   _mulle__map_copy_items( struct mulle__map *dst,
-                             struct mulle__map *src,
-                             struct mulle_container_keyvaluecallback *callback,
-                             struct mulle_allocator *allocator)
+                              struct mulle__map *src,
+                              struct mulle_container_keyvaluecallback *callback,
+                              struct mulle_allocator *allocator)
 {
    struct mulle__mapenumerator  rover;
    struct mulle_pointerpair     *item;
@@ -833,8 +833,8 @@ int   _mulle__map_copy_items( struct mulle__map *dst,
 
 
 struct mulle__map   *_mulle__map_copy( struct mulle__map *set,
-                                      struct mulle_container_keyvaluecallback *callback,
-                                      struct mulle_allocator *allocator)
+                                       struct mulle_container_keyvaluecallback *callback,
+                                       struct mulle_allocator *allocator)
 {
    struct mulle__map   *other;
 
@@ -850,8 +850,8 @@ struct mulle__map   *_mulle__map_copy( struct mulle__map *set,
 
 // use this only for debugging
 char   *_mulle__map_describe( struct mulle__map *set,
-                             struct mulle_container_keyvaluecallback *callback,
-                             struct mulle_allocator *allocator)
+                              struct mulle_container_keyvaluecallback *callback,
+                              struct mulle_allocator *allocator)
 {
    char                          *result;
    char                          *key;
@@ -909,5 +909,50 @@ char   *_mulle__map_describe( struct mulle__map *set,
 
    result[ len] = 0;
    return( result);
+}
+
+
+// use this only for debugging
+size_t   _mulle__map_count_collisions( struct mulle__map *set,
+                                       struct mulle_container_keyvaluecallback *callback,
+                                       size_t *perfects)
+{
+   unsigned int                  i;
+   unsigned int                  search_start;
+   struct mulle__mapenumerator   rover;
+   size_t                        collisions;
+   unsigned int                  hash;
+   void                          **sentinel;
+   void                          *key;
+   unsigned int                  distance;
+   size_t                        dummy;
+
+   rover      = mulle__map_enumerate( set, callback);
+   sentinel   = &rover._curr[ set->_size];
+   collisions = 0;
+   if( ! perfects)
+      perfects = &dummy;
+   *perfects  = 0;
+   for( i = 0 ;rover._curr < sentinel; ++rover._curr, i++)
+   {
+      key = *rover._curr;
+      if( key == rover._notakey)
+         continue;
+
+      hash         = (unsigned int) (*callback->keycallback.hash)( &callback->keycallback, key);
+      search_start = _mulle__map_hash_for_size( hash, set->_size);
+      // search_start is where the table  starts to search and i is where it
+      // will find the current key
+      if( search_start <= i)
+      {
+         distance = i - search_start;
+         if( ! distance)
+            ++*perfects;
+      }
+      else
+         distance = set->_size - search_start + i; // needs to wrap
+      collisions += distance;
+   }
+   return( collisions);
 }
 
