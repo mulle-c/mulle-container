@@ -89,8 +89,7 @@ static inline int   is_full( struct mulle__pointermap *map, unsigned int size)
 
 
 
-#pragma mark -
-#pragma mark setup and teardown
+#pragma mark - setup and teardown
 
 
 static void   **allocate_storage( unsigned int n,
@@ -167,8 +166,7 @@ void   _mulle__pointermap_reset( struct mulle__pointermap *map,
 }
 
 
-#pragma mark -
-#pragma mark mechanisms
+#pragma mark - mechanisms
 
 static inline void   store_key_value( void **storage,
                                       unsigned int size,
@@ -309,8 +307,7 @@ static inline unsigned long  find_index( void **storage,
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 void   *_mulle__pointermap_write_pair( struct mulle__pointermap *map,
                                       struct mulle_pointerpair *pair,
@@ -642,8 +639,7 @@ void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map
 }
 
 
-#pragma mark -
-#pragma mark copying
+#pragma mark - copying
 
 int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
                                     struct mulle__pointermap *src,

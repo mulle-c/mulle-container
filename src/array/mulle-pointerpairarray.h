@@ -254,8 +254,7 @@ static inline void
 }
 
 
-#pragma mark -
-#pragma mark enumerator
+#pragma mark - enumerator
 
 struct mulle_pointerpairarrayenumerator
 {

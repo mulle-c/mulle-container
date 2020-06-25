@@ -291,8 +291,7 @@ static inline void   _mulle__array_reset( struct mulle__array *array,
 
 
 
-#pragma mark -
-#pragma mark grab contents destrutively
+#pragma mark - grab contents destrutively
 //
 // you now own the allocated block now
 //
@@ -327,8 +326,7 @@ unsigned long  _mulle__array_find_in_range( struct mulle__array *array,
                                             struct mulle_container_keycallback *callback);
 
 
-#pragma mark -
-#pragma mark enumeration
+#pragma mark - enumeration
 
 MULLE_C_NONNULL_FIRST_SECOND
 static inline struct mulle__arrayenumerator

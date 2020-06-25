@@ -40,8 +40,10 @@
 
 #include "mulle--set.h"
 #include "mulle-container-callback.h"
+
 #include "include.h"
 
+#include <string.h>
 
 //
 // a mulle_set is a mulle_hashtable, with callbacks added
@@ -102,8 +104,7 @@ static inline void   mulle_set_reset( struct mulle_set *set)
       _mulle__set_reset( (struct mulle__set *) set, set->_callback, set->_allocator);
 }
 
-#pragma mark -
-#pragma mark petty accessors
+#pragma mark - petty accessors
 
 static inline struct mulle_allocator   *mulle_set_get_allocator( struct mulle_set *set)
 {
@@ -123,8 +124,7 @@ static inline unsigned int   mulle_set_get_count( struct mulle_set *set)
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 static inline void   *mulle_set_get( struct mulle_set *set, void *p)
 {
@@ -155,8 +155,7 @@ static inline void   mulle_set_set( struct mulle_set *set, void *p)
 }
 
 
-#pragma mark -
-#pragma mark copy
+#pragma mark - copy
 
 
 static inline int   mulle_set_copy_items( struct mulle_set *dst, struct mulle_set *src)
@@ -179,8 +178,7 @@ static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 
 
 
-#pragma mark -
-#pragma mark debugging
+#pragma mark - debugging
 
 // in C, expect a strdup()ed string, in ObjC an autorelease NSString *
 static inline void   *mulle_set_describe( struct mulle_set *set,
@@ -193,8 +191,7 @@ static inline void   *mulle_set_describe( struct mulle_set *set,
 }
 
 
-#pragma mark -
-#pragma mark enumerator
+#pragma mark - enumerator
 
 
 static inline struct mulle_setenumerator   mulle_set_enumerate( struct mulle_set *set)

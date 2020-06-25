@@ -37,6 +37,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 /*
@@ -178,8 +179,7 @@ void    _mulle__set_destroy( struct mulle__set *set,
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 static inline void   store_pointer( void **data,
                                     unsigned int size,
@@ -365,7 +365,6 @@ void   *_mulle__set_write( struct mulle__set *set,
             return( q);
          }
       }
-
 
       i = hole_index;
       if( ! _mulle__set_is_full( set))

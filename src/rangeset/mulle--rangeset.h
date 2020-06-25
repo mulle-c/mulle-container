@@ -4,6 +4,7 @@
 #include "include.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 #include "mulle-range.h"

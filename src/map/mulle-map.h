@@ -12,7 +12,7 @@
 #include "mulle--map.h"
 
 #include <stdarg.h>
-
+#include <string.h>
 
 //
 // just like struct mulle__map but has the callback embedded in
@@ -53,8 +53,7 @@ struct mulle_maptinyenumerator
 extern struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
 
 
-#pragma mark -
-#pragma mark setup and teardown
+#pragma mark - setup and teardown
 
 struct mulle_map   *mulle_map_create( size_t capacity,
                                       struct mulle_container_keyvaluecallback *callback,
@@ -87,8 +86,7 @@ static inline void    mulle_map_reset( struct mulle_map *map)
    mulle_map_init( map, 0, map->_callback, map->_allocator);
 }
 
-#pragma mark -
-#pragma mark petty accessors
+#pragma mark - petty accessors
 
 
 static inline struct mulle_container_keyvaluecallback   *mulle_map_get_callback( struct mulle_map *map)
@@ -114,8 +112,7 @@ static inline void   *mulle_map_get_notakey( struct mulle_map *map)
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 
 static inline void   *mulle_map_get( struct mulle_map *map, void *key)
@@ -184,8 +181,7 @@ static inline void   *mulle_map_insert( struct mulle_map *map, void *key, void *
    return( NULL);
 }
 
-#pragma mark -
-#pragma mark copy
+#pragma mark - copy
 
 static inline int   mulle_map_copy_items( struct mulle_map *dst, struct mulle_map *src)
 {
@@ -209,8 +205,7 @@ static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
 }
 
 
-#pragma mark -
-#pragma mark debugging
+#pragma mark - debugging
 
 // in C, expect a strdup()ed string, in ObjC an autorelease NSString *
 static inline void   *mulle_map_describe( struct mulle_map *map,
@@ -222,8 +217,7 @@ static inline void   *mulle_map_describe( struct mulle_map *map,
    return( _mulle__map_describe( (struct mulle__map *) map, map->_callback, map->_allocator));
 }
 
-#pragma mark -
-#pragma mark enumeration
+#pragma mark - enumeration
 
 static inline struct mulle_mapenumerator   mulle_map_enumerate( struct mulle_map *map)
 {
@@ -264,8 +258,7 @@ static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover
 }
 
 
-#pragma mark -
-#pragma mark tiny enumeration
+#pragma mark - tiny enumeration
 
 static inline struct mulle_maptinyenumerator   mulle_map_tinyenumerate_nil( struct mulle_map *map)
 {
