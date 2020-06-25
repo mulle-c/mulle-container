@@ -39,8 +39,7 @@
 #include <stdio.h>  // debug
 
 
-#pragma mark -
-#pragma mark _mulle_arrayrange internal helper
+#pragma mark - _mulle_arrayrange internal helper
 
 
 struct mulle__arrayrange
@@ -79,8 +78,7 @@ static inline void   _mulle_arrayrange_release( struct mulle__arrayrange range,
       (*callback->release)( callback, *range.p++, allocator);
 }
 
-#pragma mark -
-#pragma mark grow and shrink
+#pragma mark - grow and shrink
 
 //
 // all allocation is done in .c
@@ -131,8 +129,7 @@ int  _mulle__array_size_to_fit( struct mulle__array *array,
 }
 
 
-#pragma mark -
-#pragma mark creation and destruction
+#pragma mark - creation and destruction
 
 struct mulle__array   *mulle__array_create( struct mulle_allocator *allocator)
 {
@@ -164,8 +161,7 @@ void   _mulle__array_destroy( struct mulle__array *array,
 }
 
 
-#pragma mark -
-#pragma mark search
+#pragma mark - search
 
 
 static void  assert_index( struct mulle__array *array, int i)
@@ -234,8 +230,7 @@ unsigned long  _mulle__array_find_in_range_identical( struct mulle__array *array
 }
 
 
-#pragma mark -
-#pragma mark removal
+#pragma mark - removal
 
 void   _mulle__array_zero_in_range( struct mulle__array *array,
                                    unsigned int location,
