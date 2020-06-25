@@ -288,8 +288,7 @@ static inline void   mulle_array_reset( struct mulle_array *array)
 
 
 
-#pragma mark -
-#pragma mark grab contents destrutively
+#pragma mark - grab contents destrutively
 //
 // you now own the allocated block now
 //
@@ -300,8 +299,7 @@ static inline void   **mulle_array_extract_all( struct mulle_array *array)
 }
 
 
-#pragma mark -
-#pragma mark search
+#pragma mark - search
 
 static inline unsigned long  mulle_array_find_in_range_identical( struct mulle_array *array,
                                                            void *obj,
@@ -333,8 +331,7 @@ static inline unsigned long  mulle_array_find_in_range( struct mulle_array *arra
 
 
 
-#pragma mark -
-#pragma mark enumeration
+#pragma mark - enumeration
 
 static inline struct mulle_arrayenumerator   mulle_array_enumerate( struct mulle_array *array)
 {
@@ -365,8 +362,7 @@ static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *r
       mulle__arrayenumerator_done( (struct mulle__arrayenumerator *) rover);
 }
 
-#pragma mark -
-#pragma mark integer convenience
+#pragma mark - integer convenience
 
 static inline void    mulle_array_add_intptr( struct mulle_array *array,
                                               intptr_t v)

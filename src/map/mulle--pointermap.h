@@ -71,8 +71,7 @@ struct mulle__pointermapenumerator
 };
 
 
-#pragma mark -
-#pragma mark setup and takedown
+#pragma mark - setup and takedown
 
 
 struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
@@ -95,8 +94,7 @@ MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                  struct mulle_allocator *allocator);
 
-#pragma mark -
-#pragma mark petty accessors
+#pragma mark - petty accessors
 
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__pointermap_is_full( struct mulle__pointermap *map)
@@ -135,8 +133,7 @@ static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointerm
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 
 MULLE_C_NONNULL_FIRST_SECOND

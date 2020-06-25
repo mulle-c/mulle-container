@@ -47,8 +47,7 @@
 #endif
 
 
-#pragma mark -
-#pragma mark callback schemes for containers
+#pragma mark - callback schemes for containers
 
 #define mulle_container_not_an_int_key      ((void *) INT_MIN)
 #define mulle_container_not_an_intptr_key   ((void *) INTPTR_MIN)
