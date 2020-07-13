@@ -8,6 +8,7 @@ endif()
 set( SOURCES
 src/array/mulle--array.c
 src/array/mulle-array.c
+src/array/mulle--pointerarray.c
 src/array/mulle-pointerarray.c
 src/array/mulle-pointerpairarray.c
 src/array/mulle-structarray.c
@@ -21,6 +22,7 @@ src/mulle-container-callback.c
 src/queue/mulle--pointerqueue.c
 src/range/mulle-range.c
 src/rangeset/mulle--rangeset.c
+src/set/mulle--pointerset.c
 src/set/mulle-pointerset.c
 src/set/mulle--set.c
 src/set/mulle-set.c

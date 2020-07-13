@@ -60,9 +60,11 @@
 #include "mulle-range.h"
 #include "mulle--rangeset.h"
 
+#include "mulle--pointerarray.h"
 #include "mulle--pointerqueue.h"
-#include "mulle-pointerarray.h"
 #include "mulle--pointermap.h"
+#include "mulle--pointerset.h"
+#include "mulle-pointerarray.h"
 #include "mulle-pointerset.h"
 #include "mulle-pointerpairarray.h"
 #include "mulle-structarray.h"

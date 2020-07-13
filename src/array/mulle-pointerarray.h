@@ -41,20 +41,23 @@
 
 
 //
-// mulle_pointerarray, simple growing array of pointers
-// it's simple, because it doesn't chain linked lists of buckets
-// but just reallocs.
-// You can overwrite pointers too and remove the last item (and keep count)
-// Useful as a stack
+// mulle_pointerarray is a growing array of pointers.
+// It doesn't chain linked lists of buckets but just reallocs.
+// You can overwrite pointers. You can remove the last item (and keep count)
+// so it is useful as a stack.
+// It has a notion of NULL (or notakey) not being a pointer and keeps track
+// of the actual count of non-NULL pointers.
+// It doesn't share code with mulle__pointerarray, which is quite different
+// and more limited in scope.
 //
 struct mulle_pointerarray
 {
-   unsigned int             _count;  // # pointers that are notakey
+   void                     **_pointers;
    unsigned int             _used;
    unsigned int             _size;
-   void                     **_pointers;
-   struct mulle_allocator   *_allocator;
+   unsigned int             _count;  // # pointers that are notakey
    void                     *_notakey;
+   struct mulle_allocator   *_allocator;
 };
 
 
