@@ -1,11 +1,9 @@
 //
-//  mulle-container.h
+//  mulle_pointerarray.c
 //  mulle-container
 //
-//  Created by Nat! on 02/11/15.
-//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2015 Codeon GmbH.
-//  All rights reserved.
+//  Created by Nat! on 03.11.16.
+//  Copyright © 2016 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -33,52 +31,29 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
-
-#define MULLE_CONTAINER_VERSION  ((3 << 20) | (1 << 8) | 0)
-
-#include "include.h"
-
-#include "mulle-container-operation.h"
-#include "mulle-container-math.h"
-#include "mulle-container-callback.h"
-#include "mulle-container-callback-global.h"
-
-#include "mulle-prime.h"
-#include "mulle-hash.h"
-
-#include "mulle--array.h"
-#include "mulle-array.h"
-
-#include "mulle--set.h"
-#include "mulle-set.h"
-
-#include "mulle--map.h"
-#include "mulle-map.h"
-
-#include "mulle-range.h"
-#include "mulle--rangeset.h"
 
 #include "mulle--pointerarray.h"
-#include "mulle--pointerqueue.h"
-#include "mulle--pointermap.h"
-#include "mulle--pointerset.h"
-#include "mulle-pointerarray.h"
-#include "mulle-pointerset.h"
-#include "mulle-pointerpairarray.h"
-#include "mulle-structarray.h"
 
-#include "mulle-container-callback.h"
-#include "mulle-container-operation.h"
-
-#if MULLE_C11_VERSION < ((3 << 20) | (2 << 8) | 0)
-# error "mulle-c11 is too old"
-#endif
-
-#if MULLE_ALLOCATOR_VERSION < ((2 << 20) | (0 << 8) | 0)
-# error "mulle-allocator is too old"
-#endif
+#include "mulle-container-math.h"
 
 
-#endif /* mulle_container_h */
+
+# pragma mark -
+# pragma mark mechanisms
+
+// intentionally not static inline
+int   _mulle_pointerarray_grow( struct mulle__pointerarray *array,
+                                struct mulle_allocator *allocator)
+{
+   unsigned int   new_size;
+
+   new_size = mulle_pow2round( array->_size * 2);
+   if( new_size < 4)
+      new_size = 4;
+
+   array->_pointers = mulle_allocator_realloc( allocator, array->_pointers, sizeof( void *) * new_size);
+   array->_size     = new_size;
+
+   return( 0);
+}
+
