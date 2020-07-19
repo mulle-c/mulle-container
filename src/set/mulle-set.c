@@ -25,8 +25,8 @@ void   mulle_set_init( struct mulle_set *set,
 
    assert( callback);
 
-   set->_callback  = callback;
-   set->_allocator = allocator;
+   set->callback  = callback;
+   set->allocator = allocator;
 }
 
 

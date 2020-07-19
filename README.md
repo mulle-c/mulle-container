@@ -1,15 +1,16 @@
 # mulle-container
 
-🛄 Sets, hashtables, arrays and more - written in C
+#### 🛄 Sets, hashtables, arrays and more - written in C
 
 A collection of C (C99) data structures dealing exclusively with void pointers
 and their integer counterpart `intptr_t`.
 
-They utilize callbacks that are compatible to OS X's [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends. Data structures can live (temporarily)
-on the stack, or permanently in the heap. None of them are thread-safe.
+All data structures can live (temporarily) on the stack, or permanently in the
+heap. None of them are thread-safe.
 [mulle-allocator](//github.com/mulle-c/mulle-allocator) is used pervasively
 to simplify memory management.
-
+Some utilize callbacks that are compatible to OS X's
+[`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
 
 Build Status | Release Version
 -------------|-----------------------------------
@@ -17,10 +18,8 @@ Build Status | Release Version
 
 ## Example
 
-The API of the containers is fairly uniform, here is an example using
-`mulle_map` to associate c-strings with each other. All the necessary memory
-management (copying of keys and values) is performed by `mulle_map` using
-callbacks:
+Here is an example using `mulle_map` to associate c-strings with each other.
+All the necessary memory management (copying of keys and values) is performed by `mulle_map` using callbacks. The on-stack version is commented out:
 
 
 ```
@@ -30,11 +29,13 @@ static struct mulle_container_keyvaluecallback   callback;
 
 static void  test( void)
 {
+//   struct mulle_map              map;
    struct mulle_map              *map;
    struct mulle_mapenumerator    rover;
    void                          *key;
    void                          *value;
 
+//   map = mulle_map_init( 0, &callback, NULL);
    map = mulle_map_create( 0, &callback, NULL);
 
    mulle_map( map, "VfL", "VFL");
@@ -50,6 +51,7 @@ static void  test( void)
 	}
    mulle_map_remove( map, "1848");
 
+//   mulle_map_done( &map);
    mulle_map_destroy( map);
 }
 
@@ -78,6 +80,155 @@ The various functions `assert` their parameters, but when compiled for release
 there are no runtime checks. For development it is wise to use a debug version
 of the library.
 
+### Arrays
+
+All arrays store their elements in a single block of memory.
+
+### Standard Arrays
+
+##### `mulle_array`
+
+This is an array of `void *` that `realloc`s on power of two sizes. The
+elements equality is determined with a callback function and the elements
+can be  copied/freed or reference counted using [`mulle_container_callback`s](dox/API_CONTAINER_CALLBACK.md). Deletions use `memmove`. It could be the basis
+for a `NSMutableArray` implementation (but isn't).
+`mulle_array` is somewhat more efficient on element deletion, as compaction is delayed. For this it
+has a notion of `notakey` (usually NULL) that is used for the holes.
+
+![](pix/mulle-array.svg)
+
+> Filled cells indicate a cell containing a pointer value. White cells have been removed (overwritten with notakey) or have not been used yet.
+> The array was allocated with an initial capacity of 4. The additions of a fifth value forced an expansion to 8 (yellow: old cells, green: new cells)
+> Therefore this array has a capacity (`size`) of 8. It contains 4 values (`count`), but there is only one cell left in the arrays capacity (`size` - `used`).
+
+
+##### `mulle__array`
+
+This is `mulle_array` minus the embedded `mulle_allocator`.
+
+
+##### `mulle_pointerarray`
+
+This is a stripped down version of `mulle_array` to manage
+untyped `void *`. The pointers are simply compared with `==`.
+
+![](pix/mulle-pointerarray.svg)
+
+
+
+
+##### `mulle__pointerarray`
+
+This is a stripped down version of `mulle_pointerarray` minus the embedded
+`mulle_allocator` and `notakey`. As it has no notion of
+`notakey` it is not possible to erase values with random access.  It can be convenient for quickly building up C arrays of `void *`.
+
+![](pix/mulle--pointerarray.svg)
+
+> Filled cells indicate a cell containing a pointer value. All values are possible, so there are no holes.
+> The array was allocated with an initial capacity of 4. The additions of a fifth value forced an expansion to 8 (yellow: old cells, green: new cells)
+> Therefore this array has a capacity (`size`) of 8. It contains 5 values (`used`), and there are 3 cells left in the arrays capacity (`size` - `used`).
+
+##### `mulle__pointerset`
+
+`mulle__pointerset` is based on `mulle__pointerarray`. It keeps its elements of `void *` in an array in sorted order for searching by pointer equality. The sorting is done lazily.
+
+##### `mulle__rangeset`
+
+This is a array of `mulle_range` elements, that are always kept in sorted order. A `mulle_range` is defined as
+
+``` objective-c
+struct mulle_range
+{
+   uintptr_t   location;
+   uintptr_t   length;
+};
+```
+
+which is identical to `NSRange`. Ranges are combined and split as necessary, so that
+`mulle_rangeset` can ensure that
+
+* there are no overlapping ranges (they are coalesced)
+* there are no adjacent ranges (they are coalesced)
+* there are no ranges of size 0 (they are removed)
+
+It could be the basis for an `NSIndexSet`.
+
+
+#### `mulle_structarray`
+
+This is a variant of `mulle_pointerarray`, but instead of using `void *` you can specify
+any C type as the element size. This can be useful for building arrays of `float` for example.
+
+
+#### Associative Array
+
+##### `mulle_pointerpairarray`
+
+This is modified `mulle_pointerarray` that holds key/value pairs of `void *`, `void *` instead of
+just a single `void *`. In comparison to using a map, order of addition is preserved and the
+space requirement is lower. But it is slow in searches.
+
+
+### Queues
+
+#### `mulle__pointerqueue`
+
+This is a FIFO queue for `void *`. It does not `realloc` on addition. Instead
+it chains buckets of `void *` together. This makes large quantities of additions
+pretty much as fast as possible.
+
+![](pix/mulle--pointerqueue.svg)
+
+> Filled cells indicate a cell containing a pointer value. All values are possible, so there are no holes.
+> The cells are clustered in buckets and the buckets form a linked list. The `_read_index` maintains
+> the number of values already read from the current `_read` bucket. Correspondingly the `_write_index`
+> keeps a record of the next available index in  the `_write` bucket. If a bucket is exhausted a new one
+> is allocated, chained into the linked list and the `_write` pointer is set to it, resetting the
+> `_write_index`.
+
+
+It is the basis for the `NSAutoreleasePool` implementation.
+
+
+### Hashtables
+
+A hashtable is
+about twice the size of the number of elements contained within, the rest being
+holes. A hash of the element is used to quickly
+locate the entry in the hashtable.
+
+Hashtable `realloc` and redistribute their
+elements on power of two size boundaries.
+
+#### Maps
+
+Hashtable data structures that provide associative storage (key/value) are called maps.
+
+##### `mulle_map`
+
+
+The elements equality is determined with a callback function and the elements
+can be copied/freed or reference counted using callbacks [`mulle_container_callback`](dox/API_CONTAINER_CALLBACK.md).
+
+
+##### `mulle__map`
+
+This is `mulle_map` minus the embedded `mulle_allocator`. It is the basis for
+the `NSMutableDictionary` implementation.
+
+
+##### `mulle__pointermap`
+
+This is a stripped down version of `mulle__map` minus the callback and the
+allocator. So equality is determined by comparing pointers with `==`.
+
+### Sets
+
+#### `mulle_set`
+#### `mulle__set`
+
+
 
 File                                                         | Description
 ------------------------------------------------------------ | ----------------------------------------
@@ -96,9 +247,9 @@ File                                                         | Description
 [`mulle_pointerset`](dox/API_POINTERSET.md)                  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
 
 
-Datastructure names prefixed with an underscore, e.g. "mulle__set", indicate
+Data structure names prefixed with an underscore, e.g. "mulle__set", indicate
 that they are incomplete. You need to provide additional parameters like an
-"allocator" for operations. Otherwise the datastructure is self-contained.
+"allocator" for operations. Otherwise the data structure is self-contained.
 
 ### Platforms and Compilers
 

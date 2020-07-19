@@ -1,12 +1,12 @@
 //
-//  mulle__pointerset.c
+//  mulle--uniquepointers.c
 //  mulle-container
 //
 //  Created by Nat! on 13.09.20.
 //  Copyright © 2020 Mulle kybernetiK. All rights reserved.
 //
 
-#include "mulle--pointerset.h"
+#include "mulle--uniquepointers.h"
 
 #include <stdlib.h>
 #include <stddef.h>
@@ -24,17 +24,17 @@ static int  _pointer_compare( void *p_a, void *p_b)
 
 
 MULLE_C_NONNULL_FIRST_THIRD
-static void   *mulle__pointerset_bsearch( void **buf,
-                                          size_t n,
-                                          void  *search)
+static void   *mulle__uniquepointers_bsearch( void **buf,
+                                              size_t used,
+                                              void  *search)
 {
-   long       first;
-   long       last;
-   long       middle;
-   void       *p;
+   long   first;
+   long   last;
+   long   middle;
+   void   *p;
 
    first  = 0;
-   last   = (long) (n - 1);
+   last   = (long) (used - 1);
    middle = (first + last) / 2;
 
    while( first <= last)
@@ -58,18 +58,18 @@ static void   *mulle__pointerset_bsearch( void **buf,
 
 
 MULLE_C_NONNULL_FIRST_SECOND
-void   *_mulle__pointerset_member2( struct mulle__pointerset *set, void *p);
+void   *_mulle__uniquepointers_member2( struct mulle__uniquepointers *set, void *p);
 
 MULLE_C_NONNULL_FIRST_SECOND
-void   *_mulle__pointerset_member2( struct mulle__pointerset *set, void *p)
+void   *_mulle__uniquepointers_member2( struct mulle__uniquepointers *set, void *p)
 {
    void  **result;
 
-   if( ! set->sorted)
+   if( ! set->_sorted)
    {
-      qsort( set->storage, set->n, sizeof( void *), (void *) _pointer_compare);
-      set->sorted = 1;
+      qsort( set->storage, set->used, sizeof( void *), (void *) _pointer_compare);
+      set->_sorted = 1;
    }
-   result = mulle__pointerset_bsearch( set->storage, set->n, p);
+   result = mulle__uniquepointers_bsearch( set->storage, set->used, p);
    return( result ? *result : NULL);
 }
