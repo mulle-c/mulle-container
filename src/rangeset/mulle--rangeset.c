@@ -49,12 +49,14 @@ void   _mulle__rangeset_grow( struct mulle__rangeset *p,
 {
    uintptr_t   new_size;
 
-   new_size = p->_size * 2;
+   new_size = p->size * 2;
    new_size = mulle_pow2round( new_size);
+   if( new_size == 0)
+      new_size = 2;
 
    p->_ranges = mulle_allocator_realloc( allocator, p->_ranges, sizeof( struct mulle_range) * new_size);
-//   memset( &p->_ranges[ p->_size], 0, sizeof( struct mulle_range) * (new_size - p->_size));
-   p->_size  = new_size;
+//   memset( &p->_ranges[ p->size], 0, sizeof( struct mulle_range) * (new_size - p->size));
+   p->size  = new_size;
 }
 
 
@@ -64,7 +66,7 @@ void   _mulle__rangeset_reserve( struct mulle__rangeset *p,
 {
    for(;;)
    {
-      if( p->_length + additional <= p->_size)
+      if( p->_length + additional <= p->size)
          return;
 
       _mulle__rangeset_grow( p, allocator);
@@ -78,7 +80,7 @@ void   _mulle__rangeset_shrink( struct mulle__rangeset *p,
    uintptr_t   new_size;
    uintptr_t   size;
 
-   size = p->_size;
+   size = p->size;
    do
    {
       new_size = size;
@@ -86,13 +88,13 @@ void   _mulle__rangeset_shrink( struct mulle__rangeset *p,
    }
    while( size >= p->_length);
 
-   if( new_size >= p->_size)
+   if( new_size >= p->size)
       return;
 
    p->_ranges = mulle_allocator_realloc_strict( allocator,
                                                 p->_ranges,
                                                 sizeof( struct mulle_range) * new_size);
-   p->_size   = new_size;
+   p->size   = new_size;
 }
 
 
@@ -386,7 +388,7 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
          found->length = range.location - found->location;
 
          // end part
-         newRange = mulle_range_create( range_end, found_end - range_end);
+         newRange = mulle_range_make( range_end, found_end - range_end);
          __mulle__rangeset_insert_known_absent( p, newRange, allocator);
          continue;
       }
@@ -457,7 +459,7 @@ static struct mulle_range  *_mulle__rangeset_search_nearest( struct mulle__range
    //
    curr = mulle_range_intersects_bsearch( p->_ranges,
                                        p->_length,
-                                       mulle_range_create( location, 1));
+                                       mulle_range_make( location, 1));
    if( ! curr)
    {
       // get the best fitting hole index then
@@ -517,7 +519,7 @@ int   _mulle__rangeset_shift( struct mulle__rangeset *p,
 
       // if delta is negative, we are clobbering so do this right now
       __mulle__rangeset_remove( p,
-                               mulle_range_create( start + delta, -delta),
+                               mulle_range_make( start + delta, -delta),
                                allocator);
    }
    else
@@ -542,7 +544,7 @@ int   _mulle__rangeset_shift( struct mulle__rangeset *p,
 
       // we need to add delta to this block immediately to avoid
       // coalescing
-      newRange      = mulle_range_create( location + delta, found_end - location);
+      newRange      = mulle_range_make( location + delta, found_end - location);
       __mulle__rangeset_insert( p, newRange, allocator);
       return( 0);
    }

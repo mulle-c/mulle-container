@@ -38,7 +38,7 @@ struct mulle_range
 // Why this is moot: if we are storing void *, they will take up 2 or 3 bits
 // worth of address space
 //
-static inline struct mulle_range   mulle_range_create( uintptr_t location, uintptr_t length)
+static inline struct mulle_range   mulle_range_make( uintptr_t location, uintptr_t length)
 {
     struct mulle_range   range;
 
@@ -77,6 +77,32 @@ static inline int  mulle_range_is_valid( struct mulle_range range)
    return( end > range.location && end <= mulle_range_max + 1);
 }
 
+
+static struct mulle_range
+   mulle_range_validate_against_length( struct mulle_range range,
+                                        uintptr_t length)
+{
+   uintptr_t  end;
+
+   //
+   // specialty, if length == -1, it means "full" range
+   // this speeds up these cases, where you want to specify full range
+   // but need to call -length first to create the range, and then
+   // later call -length again to validate the range...
+   //
+   if( range.length == (uintptr_t) -1)
+      range = mulle_range_make( 0, length);
+
+   //
+   // assume NSUInteger is 8 bit and range is { 3, 255 }, then we need to
+   // check also for a negative length/location value making things difficult
+   //
+   end = mulle_range_get_end( range);
+   if( end > length || end < range.location)
+      return( mulle_range_make( 0, 0));
+
+   return( range);
+}
 
 //
 // the problem here is mostly, if a zero length range can contain another

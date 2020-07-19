@@ -1,12 +1,12 @@
 //
-//  mulle_pointerset.c
+//  mulel-uniquepointers.c
 //  mulle-container
 //
 //  Created by Nat! on 03.04.16.
 //  Copyright © 2016 Mulle kybernetiK. All rights reserved.
 //
 
-#include "mulle-pointerset.h"
+#include "mulle-uniquepointers.h"
 
 #include <stdlib.h>
 #include <stddef.h>
@@ -24,9 +24,9 @@ static int  _pointer_compare( void *p_a, void *p_b)
 
 
 MULLE_C_NONNULL_FIRST_THIRD
-static void   *mulle_pointerset_bsearch( void **buf,
-                                         size_t n,
-                                         void  *search)
+static void   *mulle_uniquepointers_bsearch( void **buf,
+                                             size_t n,
+                                             void  *search)
 {
    long       first;
    long       last;
@@ -58,18 +58,18 @@ static void   *mulle_pointerset_bsearch( void **buf,
 
 
 MULLE_C_NONNULL_FIRST_SECOND
-void   *_mulle_pointerset_member2( struct mulle_pointerset *set, void *p);
+void   *_mulle_uniquepointers_member2( struct mulle_uniquepointers *set, void *p);
 
 MULLE_C_NONNULL_FIRST_SECOND
-void   *_mulle_pointerset_member2( struct mulle_pointerset *set, void *p)
+void   *_mulle_uniquepointers_member2( struct mulle_uniquepointers *set, void *p)
 {
    void  **result;
 
-   if( ! set->sorted)
+   if( ! set->_sorted)
    {
-      qsort( set->storage, set->n, sizeof( void *), (void *) _pointer_compare);
-      set->sorted = 1;
+      qsort( set->storage, set->used, sizeof( void *), (void *) _pointer_compare);
+      set->_sorted = 1;
    }
-   result = mulle_pointerset_bsearch( set->storage, set->n, p);
+   result = mulle_uniquepointers_bsearch( set->storage, set->used, p);
    return( result ? *result : NULL);
 }

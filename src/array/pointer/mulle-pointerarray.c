@@ -1,5 +1,5 @@
 //
-//  mulle_pointerpairarray.c
+//  mulle_pointerarray.c
 //  mulle-container
 //
 //  Created by Nat! on 03.11.16.
@@ -31,25 +31,20 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#include "mulle-pointerpairarray.h"
+
+#include "mulle-pointerarray.h"
 
 #include "mulle-container-math.h"
 
-# pragma mark -
-# pragma mark mechanisms
 
 
-int   mulle_pointerpairarray_grow( struct mulle_pointerpairarray *array)
+struct mulle_pointerarray *
+   mulle_pointerarray_create_nil( struct mulle_allocator *allocator)
 {
-   unsigned int   new_size;
+   struct mulle_pointerarray   *array;
 
-   new_size = mulle_pow2round( array->_size * 2);
-   if( new_size < 8)
-      new_size = 8;
-
-   array->_pairs = mulle_allocator_realloc( array->_allocator, array->_pairs, sizeof( struct mulle_pointerpair) * new_size);
-   memset( &array->_pairs[ array->_size], 0, sizeof( struct mulle_pointerpair) * (new_size - array->_size));
-   array->_size = new_size;
-
-   return( 0);
+   array = mulle_pointerarray_alloc( allocator);
+   _mulle_pointerarray_init( array, 0, NULL, allocator);
+   return( array);
 }
+

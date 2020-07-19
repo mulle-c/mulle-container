@@ -5,7 +5,7 @@
 
 static struct mulle_range   randomRange( void)
 {
-   return( mulle_range_create( rand() % 100000, rand() % 1000));
+   return( mulle_range_make( rand() % 100000, rand() % 1000));
 }
 
 

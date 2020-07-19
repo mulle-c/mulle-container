@@ -36,6 +36,33 @@
 #define mulle_container_operation__h__
 
 #include <limits.h>
+#include <stdint.h>
+
+// https://stackoverflow.com/questions/1464174/size-t-vs-uintptr-t
+//
+// size_t is a type that can hold any array index. So that's what we use
+// in container structures to address elements in contigous memory, allocated
+// my malloc/calloc which are also size_t based.
+//
+// The contents of the cells are void * mostly, to distinguish notakey and
+// not found conditions we use INPTR_MAX and INTPTR_MIN. These are not
+// neccesarily defined in C11 though.
+//
+// mulle_range location/length are uinptr_t to support mulle_not_found_e
+// values.
+//
+
+
+
+// C11 says intptr_t is optional, but we need it. We use it for finding
+// values and returning an error code.
+// size_t is the "indexing" value for an array
+//
+#ifndef INTPTR_MAX
+#error "intprt_t and friends are neede for this platform"
+#endif
+
+
 
 
 enum mulle_container_write_mode
@@ -45,6 +72,10 @@ enum mulle_container_write_mode
 };
 
 // Convenient to be different to "notakey"
-#define mulle_not_found_e   INTPTR_MAX
+#define mulle_not_found_e     INTPTR_MAX
+
+// Use this for "notakey" pointer to differentiate
+
+#define mulle_not_a_pointer   INTPTR_MIN
 
 #endif /* mulle_container_operation_h */

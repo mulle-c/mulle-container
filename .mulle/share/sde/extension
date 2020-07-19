@@ -9,3 +9,5 @@ mulle-sde/c-demo;extra
 mulle-c/c-demo;extra
 mulle-c/travis;extra
 mulle-sde/travis;extra
+mulle-sde/vscode-clang;extra
+mulle-sde/vscode;extra

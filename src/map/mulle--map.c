@@ -84,7 +84,7 @@ void   *_mulle__map_write( struct mulle__map *map,
 
 static inline int   is_full( struct mulle__map *map, unsigned int size)
 {
-   return( map->_count >= (size - (size >> 2)));  // full when only 25% free
+   return( map->count >= (size - (size >> 2)));  // full when only 25% free
 }
 
 
@@ -128,17 +128,17 @@ void   _mulle__map_init( struct mulle__map *p,
 {
    assert_mulle_container_keyvaluecallback( callback);
 
-   p->_count   = 0;
+   p->count   = 0;
 
    //
    // our map requires zeroes to find an end so give it ~25% holes
    // The code (especially get) depends on storage being there. For the case
    // that notakey is nil,
-   // to be there already, so we can't have p->_size == 0
-   p->_size    = capacity >= MULLE_MAP_MIN_SIZE
+   // to be there already, so we can't have p->size == 0
+   p->size    = capacity >= MULLE_MAP_MIN_SIZE
                      ? mulle_pow2round( capacity + (capacity >> MULLE_MAP_FILL_SHIFT))
                      : (callback->keycallback.notakey != 0 ? MULLE_MAP_MIN_SIZE : 0);
-   p->_storage = allocate_storage( p->_size, callback->keycallback.notakey, allocator);
+   p->storage = allocate_storage( p->size, callback->keycallback.notakey, allocator);
 }
 
 
@@ -158,8 +158,8 @@ struct mulle__map   *_mulle__map_create( unsigned int capacity,
 static inline void _mulle__map_free_storage( struct mulle__map *map,
                                              struct mulle_allocator *allocator)
 {
-//   if( map->_storage != (void **) dummy_notakey_storage)
-      mulle_allocator_free( allocator, map->_storage);
+//   if( map->storage != (void **) dummy_notakey_storage)
+      mulle_allocator_free( allocator, map->storage);
 }
 
 
@@ -268,19 +268,21 @@ static void   grow( struct mulle__map *map,
    void           **buf;
    unsigned int   new_size;
 
-   new_size = map->_size * 2;
-   if( new_size < map->_size)
+   new_size = map->size * 2;
+   if( new_size < map->size)
       abort();  // overflow
 
-   if( new_size < _MULLE_MAP_INITIAL_SIZE)
+   assert( _MULLE_MAP_INITIAL_SIZE >= 2);
+
+   if( new_size == 0)
       new_size = _MULLE_MAP_INITIAL_SIZE;
 
    buf = allocate_storage( new_size, callback->notakey, allocator);
-   copy_storage( buf, new_size, map->_storage, map->_size, callback);
+   copy_storage( buf, new_size, map->storage, map->size, callback);
    _mulle__map_free_storage( map, allocator);
 
-   map->_storage = buf;
-   map->_size    = new_size;
+   map->storage = buf;
+   map->size    = new_size;
 }
 
 
@@ -291,16 +293,16 @@ static void   shrink( struct mulle__map *map,
    void           **buf;
    unsigned int   new_size;
 
-   new_size = map->_size / 2;
+   new_size = map->size / 2;
    if( new_size < _MULLE_MAP_INITIAL_SIZE)
       return;
 
    buf = allocate_storage( new_size, callback->notakey, allocator);
-   copy_storage( buf, new_size, map->_storage, map->_size, callback);
+   copy_storage( buf, new_size, map->storage, map->size, callback);
    _mulle__map_free_storage( map, allocator);
 
-   map->_storage = buf;
-   map->_size    = new_size;
+   map->storage = buf;
+   map->size    = new_size;
 }
 
 
@@ -380,14 +382,14 @@ void   *_mulle__map_write( struct mulle__map *map,
 
    assert( pair->_key != callback->keycallback.notakey);
 
-   if( map->_count)
+   if( map->count)
    {
       unsigned int   size;
       void           **storage;  // only valid in this no-grow block
       unsigned int   hole_index;
 
-      storage    = map->_storage;
-      size       = map->_size;
+      storage    = map->storage;
+      size       = map->size;
 
       hole_index = 0xfeedface;  // for the analyzer
       found      = find_index( storage, size, pair->_key, hash, &hole_index, &callback->keycallback);
@@ -426,7 +428,7 @@ void   *_mulle__map_write( struct mulle__map *map,
 
          storage[ i]        = new_pair._key;
          storage[ i + size] = new_pair._value;
-         map->_count++;
+         map->count++;
          return( NULL);
       }
    }
@@ -434,12 +436,12 @@ void   *_mulle__map_write( struct mulle__map *map,
    if( _mulle__map_is_full( map))
       grow( map, &callback->keycallback, allocator);
 
-   i               = _mulle__map_hash_for_size( hash, map->_size);
+   i               = _mulle__map_hash_for_size( hash, map->size);
    new_pair._key   = (*callback->keycallback.retain)( &callback->keycallback, pair->_key, allocator);
    new_pair._value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->_value, allocator);
 
-   store_key_value( map->_storage, map->_size, i, new_pair._key, new_pair._value, callback->keycallback.notakey);
-   map->_count++;
+   store_key_value( map->storage, map->size, i, new_pair._key, new_pair._value, callback->keycallback.notakey);
+   map->count++;
 
    return( NULL);
 }
@@ -460,11 +462,11 @@ void   *_mulle__map_get_with_hash( struct mulle__map *map,
 
    // important to not hit a NULL storage later
    // size must be > 2 for the hash to work, otherwise we could get
-   if( map->_count == 0)
+   if( map->count == 0)
       return( NULL);
 
-   storage = map->_storage;
-   size    = map->_size;
+   storage = map->storage;
+   size    = map->size;
    i       = _mulle__map_hash_for_size( hash, size);
    f       = (int (*)()) callback->keycallback.is_equal;
    notakey = callback->keycallback.notakey;
@@ -498,11 +500,11 @@ struct mulle_pointerpair   *_mulle__map_get_any_pair( struct mulle__map *map,
    void           **storage;
    void           *notakey;
 
-   if( ! map->_count)
+   if( ! map->count)
       return( NULL);
 
-   storage = map->_storage;
-   size    = map->_size;
+   storage = map->storage;
+   size    = map->size;
    notakey = callback->keycallback.notakey;
    mask    = size - 1;
 
@@ -532,8 +534,8 @@ static void   *
    void     **q;
    void     **sentinel;
 
-   q        = map->_storage;
-   sentinel = &q[ map->_size];
+   q        = map->storage;
+   sentinel = &q[ map->size];
 
    //
    // first we search just for pointer equality of the key,
@@ -541,7 +543,7 @@ static void   *
    //
    for( ; q < sentinel; q++)
       if( key == *q)
-         return( q[ map->_size]);
+         return( q[ map->size]);
 
    return( NULL);
 }
@@ -556,7 +558,7 @@ void   *_mulle__map_get( struct mulle__map *map,
    void           *value;
 
    assert( map);
-   if( map->_size <= 32)  // if the dictionary is small try to easy match
+   if( map->size <= 32)  // if the dictionary is small try to easy match
    {
       value = _mulle__map_pointerequality_search( map, key);
       if( value)
@@ -627,11 +629,11 @@ int   _mulle__map_remove_with_hash( struct mulle__map *map,
    unsigned int   mask;
 
    // important to not hit a NULL storage later
-   if( map->_count == 0)
+   if( map->count == 0)
       return( 0);
 
-   storage = map->_storage;
-   size    = map->_size;
+   storage = map->storage;
+   size    = map->size;
 
    found = find_index( storage, size, key, hash, &hole_index, &callback->keycallback);
    if( found == mulle_not_found_e)
@@ -641,7 +643,7 @@ int   _mulle__map_remove_with_hash( struct mulle__map *map,
    q = &storage[ i];
    (callback->keycallback.release)( &callback->keycallback, *q, allocator);  // get rid of it
    (callback->valuecallback.release)( &callback->valuecallback, q[ size], allocator);  // get rid of it
-   map->_count--;
+   map->count--;
 
    // now we may need to do a whole lot of shifting, if
    // the following object isn't in its proper hash index.
@@ -924,7 +926,7 @@ size_t   _mulle__map_count_collisions( struct mulle__map *set,
    size_t                        dummy;
 
    rover      = mulle__map_enumerate( set, callback);
-   sentinel   = &rover._curr[ set->_size];
+   sentinel   = &rover._curr[ set->size];
    collisions = 0;
    if( ! perfects)
       perfects = &dummy;
@@ -932,11 +934,11 @@ size_t   _mulle__map_count_collisions( struct mulle__map *set,
    for( i = 0 ;rover._curr < sentinel; ++rover._curr, i++)
    {
       key = *rover._curr;
-      if( key == rover._notakey)
+      if( key == rover.notakey)
          continue;
 
       hash         = (unsigned int) (*callback->keycallback.hash)( &callback->keycallback, key);
-      search_start = _mulle__map_hash_for_size( hash, set->_size);
+      search_start = _mulle__map_hash_for_size( hash, set->size);
       // search_start is where the table  starts to search and i is where it
       // will find the current key
       if( search_start <= i)
@@ -946,7 +948,7 @@ size_t   _mulle__map_count_collisions( struct mulle__map *set,
             ++*perfects;
       }
       else
-         distance = set->_size - search_start + i; // needs to wrap
+         distance = set->size - search_start + i; // needs to wrap
       collisions += distance;
    }
    return( collisions);

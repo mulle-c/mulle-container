@@ -36,6 +36,9 @@
 #define mulle_container_callback_h__
 
 #include "include.h"
+
+#include "mulle-container-operation.h"
+
 #include <stdint.h>
 #include <stddef.h>
 #include <limits.h>
@@ -50,8 +53,8 @@
 #pragma mark - callback schemes for containers
 
 #define mulle_container_not_an_int_key      ((void *) INT_MIN)
-#define mulle_container_not_an_intptr_key   ((void *) INTPTR_MIN)
-#define mulle_container_not_a_pointer_key   ((void *) INTPTR_MIN)
+#define mulle_container_not_an_intptr_key   ((void *) mulle_not_a_pointer)
+#define mulle_container_not_a_pointer_key   ((void *) mulle_not_a_pointer)
 
 
 //
@@ -66,7 +69,7 @@ struct mulle_container_keycallback
    void        (*release)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
    char        *(*describe)( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator **p_allocator);
 
-   void        *notakey;
+   void        *notakey;   // don't make it INTPTR_MAX as that's mulle_not_found_e
    void        *userinfo;
 };
 
@@ -151,9 +154,9 @@ static inline void   assert_mulle_container_valuecallback( struct mulle_containe
    assert( callback->describe);
 }
 
-void        *mulle_container_valuecallback_self( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
-void        mulle_container_valuecallback_nop( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
-char        *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator **p_allocator);
+void   *mulle_container_valuecallback_self( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
+void   mulle_container_valuecallback_nop( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator *a);
+char   *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator **p_allocator);
 
 #define mulle_container_keycallback_self \
    ((mulle_container_keycallback_retain_t *) mulle_container_valuecallback_self)

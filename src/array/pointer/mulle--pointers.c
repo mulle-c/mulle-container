@@ -1,5 +1,5 @@
 //
-//  mulle_pointerarray.c
+//  mulle_pointers.c
 //  mulle-container
 //
 //  Created by Nat! on 03.11.16.
@@ -32,39 +32,48 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "mulle-pointerarray.h"
+#include "mulle--pointers.h"
 
 #include "mulle-container-math.h"
 
-
-
-struct mulle_pointerarray *
-   mulle_pointerarray_create_nil( struct mulle_allocator *allocator)
-{
-   struct mulle_pointerarray   *array;
-
-   array = mulle_pointerarray_alloc( allocator);
-   _mulle_pointerarray_init( array, 0, NULL, allocator);
-   return( array);
-}
 
 
 # pragma mark -
 # pragma mark mechanisms
 
 // intentionally not static inline
-int   _mulle_pointerarray_grow( struct mulle_pointerarray *array)
+static void   _mulle__pointers_realloc( struct mulle__pointers *pointers,
+                                        size_t new_size,
+                                        struct mulle_allocator *allocator)
 {
-   unsigned int   new_size;
+   new_size = mulle_pow2round( new_size);
+   if( new_size == 0)
+      new_size = 4;
 
-   new_size = mulle_pow2round( array->_size * 2);
-   if( new_size < 8)
-      new_size = 8;
-
-   array->_pointers = mulle_allocator_realloc( array->_allocator, array->_pointers, sizeof( void *) * new_size);
-   memset( &array->_pointers[ array->_size], 0, sizeof( void *) * (new_size - array->_size));
-   array->_size = new_size;
-
-   return( 0);
+   pointers->size     = new_size;
+   pointers->storage = mulle_allocator_realloc( allocator,
+                                                pointers->storage,
+                                                sizeof( void *) * new_size);
 }
+
+
+
+void   _mulle__pointers_grow( struct mulle__pointers *pointers,
+                              struct mulle_allocator *allocator)
+{
+   _mulle__pointers_realloc( pointers, pointers->size * 2, allocator);
+}
+
+
+void   _mulle__pointers_guarantee( struct mulle__pointers *pointers,
+                                   size_t length,
+                                   struct mulle_allocator *allocator)
+{
+   size_t   available;
+
+   available = pointers->size - pointers->used;
+   if( available < length)
+      _mulle__pointers_realloc( pointers, pointers->size + (length - available), allocator);
+}
+
 

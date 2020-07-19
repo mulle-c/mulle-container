@@ -28,7 +28,7 @@ struct mulle__rangeset
 {
    struct mulle_range   *_ranges;
    uintptr_t             _length;
-   uintptr_t             _size;
+   uintptr_t             size;
 };
 
 
@@ -40,8 +40,8 @@ static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
    memset( p, 0, sizeof( *p));
    if( capacity > 0)
    {
-      p->_size   = capacity;
-      p->_ranges = mulle_allocator_malloc( allocator, sizeof( struct mulle_range) * p->_size);
+      p->size   = capacity;
+      p->_ranges = mulle_allocator_malloc( allocator, sizeof( struct mulle_range) * p->size);
    }
 }
 
@@ -90,7 +90,7 @@ static inline struct mulle_range  _mulle__rangeset_get_range( struct mulle__rang
                                                               uintptr_t i)
 {
    if( i >= p->_length)
-      return( mulle_range_create( mulle_not_found_e, 0));
+      return( mulle_range_make( mulle_not_found_e, 0));
    return( p->_ranges[ i]);
 }
 
@@ -121,12 +121,12 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_shrinktofit( struct mulle__rangeset *p,
                                                   struct mulle_allocator *allocator)
 {
-   if( p->_length > p->_size)
+   if( p->_length > p->size)
    {
       p->_ranges = mulle_allocator_realloc_strict( allocator,
                                                    p->_ranges,
                                                    p->_length * sizeof( struct mulle_range));
-      p->_size   = p->_length;
+      p->size   = p->_length;
    }
 }
 

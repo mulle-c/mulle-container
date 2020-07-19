@@ -48,9 +48,9 @@
 // inconveniently) with a '_'
 //
 #define MULLE__POINTERMAP_BASE            \
-   void                       **_storage; \
-   unsigned int               _count;     \
-   unsigned int               _size
+   void                       **storage; \
+   unsigned int               count;     \
+   unsigned int               size
 
 struct mulle__pointermap
 {
@@ -101,9 +101,9 @@ static inline int   _mulle__pointermap_is_full( struct mulle__pointermap *map)
 {
    unsigned int    size;
 
-   size = map->_size;
+   size = map->size;
    size = (size - (size >> MULLE_POINTERMAP_FILL_SHIFT));  // full when 75% occupied
-   return( map->_count >= size);
+   return( map->count >= size);
 }
 
 
@@ -112,16 +112,16 @@ static inline int   _mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 {
    unsigned int    size;
 
-   size = map->_size / 2;
+   size = map->size / 2;
    size = (size - (size >> MULLE_POINTERMAP_FILL_SHIFT));  // sparse if 50% of it wouldn't be full
-   return( map->_count < size);
+   return( map->count < size);
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__pointermap_get_count( struct mulle__pointermap *map)
 {
-   return( map->_count);
+   return( map->count);
 }
 
 
@@ -129,7 +129,7 @@ static inline unsigned int   _mulle__pointermap_get_count( struct mulle__pointer
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointermap *map)
 {
-   return( map->_size);
+   return( map->size);
 }
 
 
@@ -233,8 +233,8 @@ static inline struct mulle__pointermapenumerator
 
    if( map)
    {
-      rover._left   = map->_count;
-      rover._curr   = map->_storage;
+      rover._left   = map->count;
+      rover._curr   = map->storage;
       rover._offset = _mulle__pointermap_get_size( map);
    }
    else
