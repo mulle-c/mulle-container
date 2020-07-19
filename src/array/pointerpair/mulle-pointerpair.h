@@ -46,7 +46,8 @@ struct mulle_pointerpair
 };
 
 
-static inline struct mulle_pointerpair   mulle_pointerpair_create( void *key, void *value)
+static inline struct mulle_pointerpair
+   mulle_pointerpair_make( void *key, void *value)
 {
    struct mulle_pointerpair   result;
 
@@ -56,52 +57,60 @@ static inline struct mulle_pointerpair   mulle_pointerpair_create( void *key, vo
 }
 
 
-static inline void   *_mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
+static inline void   *
+   _mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
 {
    return( pair->_key);
 }
 
 
-static inline void   *mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
+static inline void   *
+   mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
 {
    return( pair ? pair->_key : NULL);
 }
 
 
-static inline void   *_mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
+static inline void *
+   _mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
 {
    return( pair->_value);
 }
 
 
-static inline void   *mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
+static inline void *
+   mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
 {
    return( pair ? pair->_value : NULL);
 }
 
 
-static inline void   _mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
+static inline void
+   _mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
 {
    assert( pair);
    pair->_key = key;
 }
 
 
-static inline void   _mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void * value)
+static inline void
+   _mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void *value)
 {
    assert( pair);
    pair->_value = value;
 }
 
 
-static inline void   mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
+static inline void
+   mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
 {
    if( pair)
       pair->_key = key;
 }
 
 
-static inline void   mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void * value)
+static inline void
+   mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void *value)
 {
    if( pair)
       pair->_value = value;

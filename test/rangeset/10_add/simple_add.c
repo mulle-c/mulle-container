@@ -10,11 +10,11 @@ int   main( int argc, char *argv[])
    _mulle__rangeset_init( &set, 0, NULL);
 
 
-   _mulle__rangeset_insert( &set, mulle_range_create( 0, 2), NULL);
+   _mulle__rangeset_insert( &set, mulle_range_make( 0, 2), NULL);
 
-   _mulle__rangeset_insert( &set, mulle_range_create( 10, 2), NULL);
+   _mulle__rangeset_insert( &set, mulle_range_make( 10, 2), NULL);
 
-   _mulle__rangeset_insert( &set, mulle_range_create( 20, 2), NULL);
+   _mulle__rangeset_insert( &set, mulle_range_make( 20, 2), NULL);
 
 
    _mulle__rangeset_print( &set);

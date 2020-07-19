@@ -105,7 +105,7 @@ void   _mulle__pointerqueue_shrink( struct mulle__pointerqueue *queue,
    {
       assert( queue->_write == queue->_read);
       assert( queue->_write_index == queue->_read_index);
-      assert( queue->_count == 0);
+      assert( queue->count == 0);
 
       // shrink completely to zero
       queue->_read        =
@@ -176,15 +176,15 @@ static inline void  *
       if( queue->_read_index == queue->_write_index)
          return( NULL);
 
-   assert( queue->_count);
-   queue->_count--;
+   assert( queue->count);
+   queue->count--;
    //
    // now if "release" truely releases, p is pointing to a zombie.
    // not so, if release is autorelease or nop
    // check one case with an assert
    //
    assert( queue->_read_index < queue->_bucket_size);
-   p = queue->_read->_storage[ queue->_read_index++];
+   p = queue->_read->storage[ queue->_read_index++];
    return( p);
 }
 
@@ -227,7 +227,7 @@ void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
    queue->_read_index  =
    queue->_write_index = queue->_bucket_size;
 
-   queue->_count       = 0;
+   queue->count       = 0;
 }
 
 

@@ -41,9 +41,9 @@
 
 /* set is a primitive growing hashtable */
 #define MULLE__SET_BASE              \
-   void             **_storage;      \
-   unsigned int     _count;          \
-   unsigned int     _size
+   void             **storage;      \
+   unsigned int     count;          \
+   unsigned int     size
 
 // NSSet/NSMutableSet/NSHashTable
 
@@ -56,7 +56,7 @@ struct mulle__set
 #define MULLE__SETENUMERATOR_BASE   \
    void           **_curr;          \
    unsigned int   _left;            \
-   void           *_notakey
+   void           *notakey
 
 
 struct mulle__setenumerator
@@ -123,14 +123,14 @@ char   *_mulle__set_describe( struct mulle__set *set,
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__set_get_size( struct mulle__set *set)
 {
-   return( set->_size);
+   return( set->size);
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__set_get_count( struct mulle__set *set)
 {
-   return( set->_count);
+   return( set->count);
 }
 
 
@@ -142,9 +142,9 @@ static inline int  _mulle__set_is_full( struct mulle__set *set)
 {
    unsigned int    size;
 
-   size = set->_size;
+   size = set->size;
    size = (size - (size >> MULLE_SET_FILL_SHIFT));  // full when 75% occupied
-   return( set->_count >= size);
+   return( set->count >= size);
 }
 
 MULLE_C_NONNULL_FIRST
@@ -152,9 +152,9 @@ static inline int  _mulle__set_is_sparse( struct mulle__set *set)
 {
    unsigned int    size;
 
-   size = set->_size / 2;
+   size = set->size / 2;
    size = (size - (size >> MULLE_SET_FILL_SHIFT));  // full when 75% occupied
-   return( set->_count < size);
+   return( set->count < size);
 }
 
 
@@ -235,9 +235,9 @@ static inline struct mulle__setenumerator
 {
    struct mulle__setenumerator   rover;
 
-   rover._left    = set->_count;
-   rover._curr    = set->_storage;
-   rover._notakey = callback->notakey;
+   rover._left    = set->count;
+   rover._curr    = set->storage;
+   rover.notakey = callback->notakey;
 
    return( rover);
 }
@@ -250,13 +250,13 @@ static inline struct mulle__setenumerator
 
    if( set)
    {
-      rover._left    = set->_count;
-      rover._curr    = set->_storage;
+      rover._left    = set->count;
+      rover._curr    = set->storage;
    }
    else
       rover._left   = 0;
 
-   rover._notakey = NULL;
+   rover.notakey = NULL;
 
    return( rover);
 }
@@ -267,7 +267,7 @@ static inline void   *_mulle__setenumerator_next_nil( struct mulle__setenumerato
 {
    void   *p;
 
-   assert( rover->_notakey == NULL);
+   assert( rover->notakey == NULL);
 
    if( ! rover->_left)
       return( NULL);
@@ -293,14 +293,14 @@ static inline int   _mulle__setenumerator_next( struct mulle__setenumerator *rov
    if( ! rover->_left)
    {
       if( item)
-         *item = rover->_notakey;  // useful for NSHashTableEnumeration
+         *item = rover->notakey;  // useful for NSHashTableEnumeration
       return( 0);
    }
 
    for(;;)
    {
       p = *rover->_curr++;
-      if( p != rover->_notakey)
+      if( p != rover->notakey)
       {
          rover->_left--;
          if( item)

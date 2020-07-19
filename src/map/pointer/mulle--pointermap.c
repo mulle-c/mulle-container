@@ -84,7 +84,7 @@ void   *_mulle__pointermap_write_pair( struct mulle__pointermap *map,
 
 static inline int   is_full( struct mulle__pointermap *map, unsigned int size)
 {
-   return( map->_count >= (size - (size >> 2)));  // full when only 25% free
+   return( map->count >= (size - (size >> 2)));  // full when only 25% free
 }
 
 
@@ -112,15 +112,15 @@ void   _mulle__pointermap_init( struct mulle__pointermap *p,
                                unsigned int capacity,
                                struct mulle_allocator *allocator)
 {
-   p->_count   = 0;
+   p->count   = 0;
 
    //
    // our map requires zeroes to find an end so give it ~25% holes
    //
-   p->_size    = capacity >= MULLE_POINTERMAP_MIN_SIZE
+   p->size    = capacity >= MULLE_POINTERMAP_MIN_SIZE
                      ? mulle_pow2round( capacity + (capacity >> MULLE_POINTERMAP_FILL_SHIFT))
                      : 0;
-   p->_storage = allocate_storage( p->_size, allocator);
+   p->storage = allocate_storage( p->size, allocator);
 }
 
 
@@ -139,7 +139,7 @@ struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
 static inline void _mulle__pointermap_free_storage( struct mulle__pointermap *map,
                                                    struct mulle_allocator *allocator)
 {
-   mulle_allocator_free( allocator, map->_storage);
+   mulle_allocator_free( allocator, map->storage);
 }
 
 
@@ -224,19 +224,21 @@ static void   grow( struct mulle__pointermap *map,
    void           **buf;
    unsigned int   new_size;
 
-   new_size = map->_size * 2;
-   if( new_size < map->_size)
+   new_size = map->size * 2;
+   if( new_size < map->size)
       abort();  // overflow
 
-   if( new_size < MULLE_POINTERMAP_INITIAL_SIZE)
+   if( new_size == 0)
       new_size = MULLE_POINTERMAP_INITIAL_SIZE;
 
+   assert( MULLE_POINTERMAP_INITIAL_SIZE >= 2);
+
    buf = allocate_storage( new_size, allocator);
-   copy_storage( buf, new_size, map->_storage, map->_size);
+   copy_storage( buf, new_size, map->storage, map->size);
    _mulle__pointermap_free_storage( map, allocator);
 
-   map->_storage = buf;
-   map->_size    = new_size;
+   map->storage = buf;
+   map->size    = new_size;
 }
 
 
@@ -246,18 +248,17 @@ static void   shrink( struct mulle__pointermap *map,
    void           **buf;
    unsigned int   new_size;
 
-   new_size = map->_size / 2;
+   new_size = map->size / 2;
    if( new_size < MULLE_POINTERMAP_INITIAL_SIZE)
       return;
 
    buf = allocate_storage( new_size, allocator);
-   copy_storage( buf, new_size, map->_storage, map->_size);
+   copy_storage( buf, new_size, map->storage, map->size);
    _mulle__pointermap_free_storage( map, allocator);
 
-   map->_storage = buf;
-   map->_size    = new_size;
+   map->storage = buf;
+   map->size    = new_size;
 }
-
 
 
 static unsigned long  _find_index( void **storage,
@@ -321,14 +322,14 @@ void   *_mulle__pointermap_write_pair( struct mulle__pointermap *map,
 
    assert( pair->_key);
 
-   if( map->_count)
+   if( map->count)
    {
       unsigned int   size;
       void           **storage;  // only valid in this no-grow block
       unsigned int   hole_index;
 
-      storage    = map->_storage;
-      size       = map->_size;
+      storage    = map->storage;
+      size       = map->size;
 
       hole_index = 0xfeedface;  // for the analyzer
       found      = find_index( storage, size, pair->_key, &hole_index);
@@ -355,7 +356,7 @@ void   *_mulle__pointermap_write_pair( struct mulle__pointermap *map,
       {
          storage[ i]        = pair->_key;
          storage[ i + size] = pair->_value;
-         map->_count++;
+         map->count++;
          return( NULL);
       }
    }
@@ -363,9 +364,9 @@ void   *_mulle__pointermap_write_pair( struct mulle__pointermap *map,
    if( _mulle__pointermap_is_full( map))
       grow( map, allocator);
 
-   i = _mulle__pointermap_hash_key_for_size( pair->_key, map->_size);
-   store_key_value( map->_storage, map->_size, i, pair->_key, pair->_value);
-   map->_count++;
+   i = _mulle__pointermap_hash_key_for_size( pair->_key, map->size);
+   store_key_value( map->storage, map->size, i, pair->_key, pair->_value);
+   map->count++;
 
    return( NULL);
 }
@@ -383,11 +384,11 @@ void   *_mulle__pointermap_get( struct mulle__pointermap *map,
 
    // important to not hit a NULL storage later
    // size must be > 2 for the hash to work, otherwise we could get
-   if( map->_count == 0)
+   if( map->count == 0)
       return( NULL);
 
-   storage = map->_storage;
-   size    = map->_size;
+   storage = map->storage;
+   size    = map->size;
    i       = _mulle__pointermap_hash_key_for_size( key, size);
    mask    = size - 1;
 
@@ -414,11 +415,11 @@ struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__point
    void           *found;
    void           **storage;
 
-   if( ! map->_count)
+   if( ! map->count)
       return( NULL);
 
-   storage = map->_storage;
-   size    = map->_size;
+   storage = map->storage;
+   size    = map->size;
    mask    = size - 1;
 
    //
@@ -479,11 +480,11 @@ int   _mulle__pointermap_remove( struct mulle__pointermap *map,
    unsigned int   mask;
 
    // important to not hit a NULL storage later
-   if( map->_count == 0)
+   if( map->count == 0)
       return( 0);
 
-   storage = map->_storage;
-   size    = map->_size;
+   storage = map->storage;
+   size    = map->size;
 
    found = find_index( storage, size, key, &hole_index);
    if( found == mulle_not_found_e)
@@ -491,7 +492,7 @@ int   _mulle__pointermap_remove( struct mulle__pointermap *map,
 
    i = (unsigned int) found;
    q = &storage[ i];
-   map->_count--;
+   map->count--;
 
    // now we may need to do a whole lot of shifting, if
    // the following object isn't in its proper hash index.

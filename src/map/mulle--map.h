@@ -53,9 +53,9 @@
 // a smidgen slower (for very small dictionaries)
 //
 #define MULLE__MAP_BASE                   \
-   void                       **_storage; \
-   unsigned int               _count;     \
-   unsigned int               _size
+   void                       **storage; \
+   unsigned int               count;     \
+   unsigned int               size
 
 struct mulle__map
 {
@@ -68,14 +68,13 @@ struct mulle__map
    void                       **_curr;   \
    unsigned int               _left;     \
    unsigned int               _offset;   \
-   void                       *_notakey
+   void                       *notakey
 
 
 struct mulle__mapenumerator
 {
    MULLE__MAPENUMERATOR_BASE;
 };
-
 
 
 #define MULLE__MAPTINYENUMERATOR_BASE    \
@@ -128,9 +127,9 @@ static inline int   _mulle__map_is_full( struct mulle__map *map)
 {
    unsigned int    size;
 
-   size = map->_size;
+   size = map->size;
    size = (size - (size >> MULLE_MAP_FILL_SHIFT));  // full when 75% occupied
-   return( map->_count >= size);
+   return( map->count >= size);
 }
 
 
@@ -139,16 +138,16 @@ static inline int   _mulle__map_is_sparse( struct mulle__map *map)
 {
    unsigned int    size;
 
-   size = map->_size / 2;
+   size = map->size / 2;
    size = (size - (size >> MULLE_MAP_FILL_SHIFT));  // sparse if 50% of it wouldn't be full
-   return( map->_count < size);
+   return( map->count < size);
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__map_get_count( struct mulle__map *map)
 {
-   return( map->_count);
+   return( map->count);
 }
 
 
@@ -156,7 +155,7 @@ static inline unsigned int   _mulle__map_get_count( struct mulle__map *map)
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__map_get_size( struct mulle__map *map)
 {
-   return( map->_size);
+   return( map->size);
 }
 
 
@@ -282,13 +281,13 @@ static inline struct mulle__mapenumerator
 
    if( map)
    {
-      rover._left     = map->_count;
-      rover._curr     = map->_storage;
-      rover._offset   = _mulle__map_get_size( map);
-      rover._notakey  = callback->keycallback.notakey;
+      rover._left    = map->count;
+      rover._curr    = map->storage;
+      rover._offset  = _mulle__map_get_size( map);
+      rover.notakey = callback->keycallback.notakey;
    }
    else
-      rover._left     = 0;
+      rover._left    = 0;
 
    return( rover);
 }
@@ -313,7 +312,7 @@ static inline struct mulle_pointerpair   *
    {
       p   = rover->_curr++;
       key = *p;
-      if( key != rover->_notakey)
+      if( key != rover->notakey)
       {
          rover->space._key   = key;
          rover->space._value = p[ rover->_offset];
@@ -342,8 +341,8 @@ static inline struct mulle__maptinyenumerator
 
    if( map)
    {
-      rover._left   = map->_count;
-      rover._curr   = map->_storage;
+      rover._left   = map->count;
+      rover._curr   = map->storage;
       rover._offset = _mulle__map_get_size( map);
    }
    else

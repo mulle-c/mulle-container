@@ -81,8 +81,8 @@ static void  grow( void)
    mulle_array_guarantee( &array, 20);
    assert( mulle_array_guaranteedsize( &array) >= 20);
 
-   memo_size    = array._size;
-   memo_storage = array._storage;
+   memo_size    = array.size;
+   memo_storage = array.storage;
 
    n = mulle_array_guaranteedsize( &array);
    for( i = 0; i < n; i++)
@@ -92,8 +92,8 @@ static void  grow( void)
 
    // guarantee means unchanging internal storage
    assert( mulle_array_guaranteedsize( &array) == 0);
-   assert( array._size == memo_size);
-   assert( array._storage == memo_storage);
+   assert( array.size == memo_size);
+   assert( array.storage == memo_storage);
 
    assert( mulle_array_is_full( &array) == 1);
    mulle_array_grow( &array);

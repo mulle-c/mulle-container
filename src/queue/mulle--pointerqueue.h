@@ -25,7 +25,8 @@
 
 //
 // A struct mulle__pointerqueue is a FIFO, you can't use it as a stack.
-// As a queue has a pop operation. You can not store NULL into it.
+// As a queue has a pop operation. You can not store NULL into it. It can
+// be faster than a mulle--pointerarray, since it doesn't realloc/memcpy.
 //
 // MEMO: It is not useful to put memory management into the queue, as the queue
 // would need to release on pop, which would be disastrous if the release does
@@ -37,7 +38,7 @@ struct mulle__pointerqueuebucket;
    struct mulle__pointerqueuebucket   *_spares;          \
    struct mulle__pointerqueuebucket   *_read;            \
    struct mulle__pointerqueuebucket   *_write;           \
-   unsigned int                       _count;            \
+   unsigned int                       count;            \
    unsigned int                       _read_index;       \
    unsigned int                       _write_index;      \
                                                          \
@@ -54,7 +55,7 @@ struct mulle__pointerqueue
 struct mulle__pointerqueuebucket
 {
    struct mulle__pointerqueuebucket  *_next;
-   void                              *_storage[ 1];
+   void                              *storage[ 1];
 };
 
 
@@ -88,7 +89,7 @@ static inline void  _mulle__pointerqueue_init( struct mulle__pointerqueue *queue
    queue->_read        =
    queue->_write       = 0;
 
-   queue->_count       = 0;
+   queue->count       = 0;
 
    queue->_bucket_size =
    queue->_read_index  =
@@ -136,8 +137,8 @@ static inline void  _mulle__pointerqueue_push( struct mulle__pointerqueue *queue
 
    assert( queue->_write_index < queue->_bucket_size);
 
-   queue->_count++;
-   queue->_write->_storage[ queue->_write_index++] = p;
+   queue->count++;
+   queue->_write->storage[ queue->_write_index++] = p;
 }
 
 
@@ -150,7 +151,7 @@ MULLE_C_NONNULL_FIRST
 static inline unsigned int
    _mulle__pointerqueue_get_count( struct mulle__pointerqueue *queue)
 {
-   return( queue->_count);
+   return( queue->count);
 }
 
 
@@ -205,7 +206,7 @@ static inline void   *_mulle__pointerqueueenumerator_next( struct mulle__pointer
    // if rover._curr == NULL, set rover->_index to queue->_bucket_size
    limit = rover->_curr != queue->_write ? queue->_bucket_size : queue->_write_index;
    if( rover->_index < limit)
-      return( rover->_curr->_storage[ rover->_index++]);
+      return( rover->_curr->storage[ rover->_index++]);
 
    return( __mulle__pointerqueueenumerator_next( rover));
 }
