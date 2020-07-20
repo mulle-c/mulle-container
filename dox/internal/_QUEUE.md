@@ -39,10 +39,10 @@ void  _mulle__pointerqueue_init( struct mulle__pointerqueue *queue,
                          unsigned short spare_allowance)
 ```
 
-### `_mulle__pointerqueue_create`
+### `mulle__pointerqueue_create`
 
 ```
-struct mulle__pointerqueue   *_mulle__pointerqueue_create( unsigned short bucket_size,
+struct mulle__pointerqueue   *mulle__pointerqueue_create( unsigned short bucket_size,
                                             unsigned short spare_allowance,
                                             struct mulle_allocator *allocator);
 ```

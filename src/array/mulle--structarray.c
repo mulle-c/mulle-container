@@ -5,6 +5,10 @@
 #include "mulle-container-math.h"
 
 
+struct mulle__structarrayenumerator          mulle__structarrayenumerator_empty;
+struct mulle__structarrayreverseenumerator   mulle__structarrayreverseenumerator_empty;
+
+
 
 // Should also be usable for "size to fit"
 void   _mulle__structarray_sizeto( struct mulle__structarray *array,

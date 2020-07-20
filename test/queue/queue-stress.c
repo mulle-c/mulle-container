@@ -20,7 +20,7 @@ static void  stress_queue( int bucketsize, int spares)
    intptr_t                     write_cnt;
    intptr_t                     popped;
 
-   queue = _mulle__pointerqueue_create( bucketsize, spares, NULL);
+   queue = mulle__pointerqueue_create( bucketsize, spares, NULL);
 
    read_cnt  = 0;
    write_cnt = 0;

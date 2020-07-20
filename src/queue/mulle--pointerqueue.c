@@ -22,7 +22,7 @@ void  *__mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerato
 
 struct mulle__pointerqueuebucket *
    _mulle__pointerqueue_new_bucket( struct mulle__pointerqueue *queue,
-                                   struct mulle_allocator *allocator)
+                                    struct mulle_allocator *allocator)
 {
    struct mulle__pointerqueuebucket   *p;
    size_t                             space;
@@ -154,7 +154,7 @@ void   *__mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerat
 
 
 struct mulle__pointerqueue   *
-   _mulle__pointerqueue_create( unsigned short bucket_size,
+   mulle__pointerqueue_create( unsigned short bucket_size,
                                unsigned short spare_allowance,
                                struct mulle_allocator *allocator)
 {

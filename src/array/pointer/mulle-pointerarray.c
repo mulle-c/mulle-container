@@ -36,15 +36,3 @@
 
 #include "mulle-container-math.h"
 
-
-
-struct mulle_pointerarray *
-   mulle_pointerarray_create_nil( struct mulle_allocator *allocator)
-{
-   struct mulle_pointerarray   *array;
-
-   array = mulle_pointerarray_alloc( allocator);
-   _mulle_pointerarray_init( array, 0, NULL, allocator);
-   return( array);
-}
-

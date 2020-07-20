@@ -37,6 +37,9 @@
 #include "mulle-container-math.h"
 
 
+struct mulle__pointerarrayenumerator          mulle__pointerarrayenumerator_empty;
+struct mulle__pointerarrayreverseenumerator   mulle__pointerarrayreverseenumerator_empty;
+
 
 # pragma mark -
 # pragma mark mechanisms
@@ -46,21 +49,25 @@ static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
                                             size_t new_size,
                                             struct mulle_allocator *allocator)
 {
+   size_t    used;
+
+   used = _mulle__pointerarray_get_count( array);
    new_size = mulle_pow2round( new_size);
    if( new_size == 0)
       new_size = 4;
 
-   array->size     = new_size;
    array->storage = mulle_allocator_realloc( allocator,
-                                               array->storage,
-                                               sizeof( void *) * new_size);
+                                             array->storage,
+                                             sizeof( void *) * new_size);
+   array->curr     = &array->storage[ used];
+   array->sentinel = &array->storage[ new_size];
 }
 
 
 void   _mulle__pointerarray_grow( struct mulle__pointerarray *array,
                                   struct mulle_allocator *allocator)
 {
-   _mulle__pointerarray_realloc( array, array->size * 2, allocator);
+   _mulle__pointerarray_realloc( array, _mulle__pointerarray_get_size( array) * 2, allocator);
 }
 
 
@@ -70,10 +77,14 @@ void   _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
                                        struct mulle_allocator *allocator)
 {
    size_t   available;
+   size_t   size;
+   size_t   used;
 
-   available = array->size - array->used;
+   size      = _mulle__pointerarray_get_size( array);
+   used      = _mulle__pointerarray_get_count( array);
+   available = size - used;
    if( available < length)
-      _mulle__pointerarray_realloc( array, array->size + (length - available), allocator);
+      _mulle__pointerarray_realloc( array, size + (length - available), allocator);
 }
 
 
@@ -86,15 +97,16 @@ void   _mulle__pointerarray_compact( struct mulle__pointerarray *array,
 
    p        = array->storage;
    q        = p;
-   sentinel = &p[ array->used];
+   sentinel = array->curr;
 
-   for( ;p < sentinel; p++)
+   for( ; p < sentinel; p++)
    {
       if( *p != notakey)
          continue;
       *q++ = *p;
    }
-   array->used = q - array->storage;
+
+   array->curr = q;
 }
 
 
@@ -122,37 +134,12 @@ void
    _mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
                                          struct mulle_range range)
 {
-   assert( ! _mulle__pointerarray_needs_compaction( array));
-
+   range = mulle_range_validate_against_length( range,
+                                                _mulle__pointerarray_get_count( array));
    memmove( &array->storage[ range.location],
             &array->storage[ range.location + range.length],
             range.length * sizeof( void *));
 
-   array->used -= range.length;
+   array->curr -= range.length;
 }
 
-
-void  *
-   _mulle__pointerarray_remove_last( struct mulle__pointerarray *array,
-                                     void *notakey)
-{
-   void   **p;
-   void   **sentinel;
-   void   *pointer;
-
-   sentinel = array->storage;
-   p        = &sentinel[ array->used];
-
-   while( p > sentinel)
-   {
-      pointer = *--p;
-      if( pointer != notakey)
-      {
-         array->used = (size_t) (p - array->storage);
-         --array->count;
-         return( pointer);
-      }
-   }
-
-   return( notakey);
-}

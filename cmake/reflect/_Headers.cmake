@@ -10,6 +10,8 @@ src
 src/array
 src/array/pointer
 src/array/pointerpair
+src/array/struct
+src/array/uniquepointer
 src/farmhash
 src/hash
 src/map
@@ -40,13 +42,14 @@ set( PUBLIC_HEADERS
 src/array/mulle--array.h
 src/array/mulle-array.h
 src/array/mulle--structarray.h
-src/array/mulle-structarray.h
 src/array/pointer/mulle--pointerarray.h
 src/array/pointer/mulle-pointerarray.h
-src/array/pointer/mulle--pointers.h
 src/array/pointerpair/mulle--pointerpairarray.h
 src/array/pointerpair/mulle-pointerpairarray.h
 src/array/pointerpair/mulle-pointerpair.h
+src/array/struct/mulle-structarray.h
+src/array/uniquepointer/mulle--uniquepointerarray.h
+src/array/uniquepointer/mulle-uniquepointerarray.h
 src/hash/mulle-hash.h
 src/hash/mulle-prime.h
 src/include.h
@@ -64,7 +67,8 @@ src/range/mulle-range.h
 src/rangeset/mulle--rangeset.h
 src/set/mulle--set.h
 src/set/mulle-set.h
-src/set/pointer/mulle--uniquepointers.h
-src/set/pointer/mulle-uniquepointers.h
+src/set/pointer/mulle--pointerset-generic.h
+src/set/pointer/mulle--pointerset.h
+src/set/pointer/mulle--pointerset-struct.h
 )
 

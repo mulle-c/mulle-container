@@ -129,9 +129,9 @@ This is a stripped down version of `mulle_pointerarray` minus the embedded
 > The array was allocated with an initial capacity of 4. The additions of a fifth value forced an expansion to 8 (yellow: old cells, green: new cells)
 > Therefore this array has a capacity (`size`) of 8. It contains 5 values (`used`), and there are 3 cells left in the arrays capacity (`size` - `used`).
 
-##### `mulle__pointerset`
+##### `mulle__uniquepointerarray`
 
-`mulle__pointerset` is based on `mulle__pointerarray`. It keeps its elements of `void *` in an array in sorted order for searching by pointer equality. The sorting is done lazily.
+`mulle__uniquepointerarray` is based on `mulle__pointerarray`. It keeps its elements of `void *` in an array in sorted order for searching by pointer equality. The sorting is done lazily.
 
 ##### `mulle__rangeset`
 
@@ -244,7 +244,7 @@ File                                                         | Description
 [`mulle_map`](dox/API_MAP.md)                                | A single level growing hashmap (key indexing value map). Your standard key/value associating hashtable (NSMutableDictionary)
 &nbsp;                                                       | &nbsp;
 [`mulle_set`](dox/API_SET.md)                                | A single level growing hashed set. (NSMutableSet)
-[`mulle_pointerset`](dox/API_POINTERSET.md)                  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
+[`mulle_uniquepointerarray`](dox/API_uniquepointerarray.md)                  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
 
 
 Data structure names prefixed with an underscore, e.g. "mulle__set", indicate

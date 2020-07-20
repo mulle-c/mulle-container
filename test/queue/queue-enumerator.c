@@ -29,7 +29,7 @@ static void  simple_queue( void)
 {
    struct mulle__pointerqueue   *queue;
 
-   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   queue = mulle__pointerqueue_create( 0, 0, NULL);
    enumerate( queue);
    _mulle__pointerqueue_push( queue, "1", NULL);
    enumerate( queue);

@@ -41,12 +41,11 @@
 
 
 //
-// mulle_pointerarray adds storage of notakey and allocator to
+// mulle_pointerarray adds storage of allocator to
 // mulle__pointerarray, otherwise its the same
 //
 #define MULLE_POINTERARRAY_BASE          \
    MULLE__POINTERARRAY_BASE;             \
-   void                     *notakey;   \
    struct mulle_allocator   *allocator
 
 
@@ -66,9 +65,9 @@ static inline struct mulle_pointerarray  *
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle_pointerarray_init( struct mulle_pointerarray *array,
                                                size_t  capacity,
-                                               void *notakey,
                                                struct mulle_allocator *allocator)
 {
    _mulle__pointerarray_init( (struct mulle__pointerarray *) array,
@@ -76,16 +75,11 @@ static inline void   _mulle_pointerarray_init( struct mulle_pointerarray *array,
                               allocator);
 
    array->allocator = allocator;
-   array->notakey   = notakey;
 }
 
 
-// notakey = NULL
-// capacity = 0
-struct mulle_pointerarray *
-      mulle_pointerarray_create_nil( struct mulle_allocator *allocator);
 
-
+MULLE_C_NONNULL_FIRST
 static inline void  _mulle_pointerarray_done( struct mulle_pointerarray *array)
 {
    _mulle__pointerarray_done( (struct mulle__pointerarray *) array,
@@ -111,6 +105,7 @@ static inline void  mulle_pointerarray_destroy( struct mulle_pointerarray *array
 
 # pragma mark - petty accessors
 
+MULLE_C_NONNULL_FIRST
 static inline size_t
 	_mulle_pointerarray_get_count( struct mulle_pointerarray *array)
 {
@@ -125,28 +120,7 @@ static inline size_t
 }
 
 
-static inline size_t
-   _mulle_pointerarray_get_used( struct mulle_pointerarray *array)
-{
-   return( _mulle__pointerarray_get_used( (struct mulle__pointerarray *) array));
-}
-
-
-static inline size_t
-   mulle_pointerarray_get_used( struct mulle_pointerarray *array)
-{
-   return( mulle__pointerarray_get_used( (struct mulle__pointerarray *) array));
-}
-
-
-
-static inline int
-   _mulle_pointerarray_needs_compaction( struct mulle_pointerarray *array)
-{
-   return( _mulle__pointerarray_needs_compaction( (struct mulle__pointerarray *) array));
-}
-
-
+MULLE_C_NONNULL_FIRST
 static inline struct mulle_allocator  *
 	_mulle_pointerarray_get_allocator( struct mulle_pointerarray *array)
 {
@@ -154,21 +128,14 @@ static inline struct mulle_allocator  *
 }
 
 
-static inline void  *
-	_mulle_pointerarray_get_notakey( struct mulle_pointerarray *array)
-{
-   return( array->notakey);
-}
-
-
 # pragma mark - operations
 
+MULLE_C_NONNULL_FIRST
 static inline void
 	_mulle_pointerarray_add( struct mulle_pointerarray *array, void *p)
 {
    _mulle__pointerarray_add( (struct mulle__pointerarray *) array,
                               p,
-                              array->notakey,
                               array->allocator);
 }
 
@@ -182,22 +149,23 @@ static inline void
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void  *
 	_mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
 {
-   return( _mulle__pointerarray_remove_last( (struct mulle__pointerarray *) array,
-                                             array->notakey));
+   return( _mulle__pointerarray_remove_last( (struct mulle__pointerarray *) array));
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void  *
-	_mulle_pointerarray_find_last( struct mulle_pointerarray *array)
+	_mulle_pointerarray_get_last( struct mulle_pointerarray *array)
 {
-   return( _mulle__pointerarray_find_last( (struct mulle__pointerarray *) array,
-                                           array->notakey));
+   return( _mulle__pointerarray_get_last( (struct mulle__pointerarray *) array));
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void  *
 	_mulle_pointerarray_get( struct mulle_pointerarray *array, size_t i)
 {
@@ -212,7 +180,7 @@ static inline void  *
 }
 
 
-
+MULLE_C_NONNULL_FIRST
 static inline uintptr_t
 	_mulle_pointerarray_find( struct mulle_pointerarray *array, void *p)
 {
@@ -230,15 +198,14 @@ static inline uintptr_t
 }
 
 
-
+MULLE_C_NONNULL_FIRST
 static inline void   *_mulle_pointerarray_set( struct mulle_pointerarray *array,
                                                size_t i,
                                                void *p)
 {
    return( _mulle__pointerarray_set( (struct mulle__pointerarray *) array,
                                      i,
-                                     p,
-                                     array->notakey));
+                                     p));
 
 }
 
@@ -247,13 +214,13 @@ static inline void   *mulle_pointerarray_set( struct mulle_pointerarray *array,
                                               size_t i,
                                               void *p)
 {
-   if( ! array || i >= array->used)
-      return( array->notakey);
+   if( ! array || &array->storage[ i] >= array->curr)
+      return( NULL);
    return( _mulle_pointerarray_set( array, i, p));
 }
 
 
-
+MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_pointerarray_reset( struct mulle_pointerarray *array)
 {
@@ -268,7 +235,7 @@ static inline void
 }
 
 
-#pragma mark - enumerator
+#pragma mark - enumeration
 
 #define MULLE_POINTERARRAYENUMERATOR_BASE MULLE__POINTERARRAYENUMERATOR_BASE
 
@@ -277,64 +244,29 @@ struct mulle_pointerarrayenumerator
    MULLE_POINTERARRAYENUMERATOR_BASE;
 };
 
-//
-// still worth inlining especially if you check before! that
-// array must be != nil
-// should prefix mulle_pointerarray_enumerate with an underscore
-//
+
+MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerarrayenumerator
    _mulle_pointerarray_enumerate( struct mulle_pointerarray *array)
 {
    struct mulle__pointerarrayenumerator   rover;
 
-   rover = _mulle__pointerarray_enumerate( (struct mulle__pointerarray *) array,
-                                           array->notakey);
+   rover = _mulle__pointerarray_enumerate( (struct mulle__pointerarray *) array);
    return( *(struct mulle_pointerarrayenumerator *) &rover);
 }
 
 
-static inline struct  mulle_pointerarrayenumerator
-   mulle_pointerarray_enumerate_nil( struct mulle_pointerarray *array)
-{
-   struct mulle_pointerarrayenumerator   rover;
-
-   if( ! array)
-   {
-      memset( &rover, 0, sizeof( rover));
-      return( rover);
-   }
-
-   return( _mulle_pointerarray_enumerate( array));
-}
-
-
-static inline struct  mulle_pointerarrayenumerator
-   _mulle_pointerarray_reverseenumerate( struct mulle_pointerarray *array)
+static inline struct mulle_pointerarrayenumerator
+   mulle_pointerarray_enumerate( struct mulle_pointerarray *array)
 {
    struct mulle__pointerarrayenumerator   rover;
 
-   rover = _mulle__pointerarray_reverseenumerate( (struct mulle__pointerarray *) array,
-                                                  array->notakey);
+   rover = mulle__pointerarray_enumerate( (struct mulle__pointerarray *) array);
    return( *(struct mulle_pointerarrayenumerator *) &rover);
 }
 
 
-// use this if array->not_a_key is known to be null
-static inline struct  mulle_pointerarrayenumerator
-   mulle_pointerarray_reverseenumerate_nil( struct mulle_pointerarray *array)
-{
-   struct mulle_pointerarrayenumerator   rover;
-
-   if( ! array)
-   {
-      memset( &rover, 0, sizeof( rover));
-      return( rover);
-   }
-   assert( ! array->notakey);
-   return( _mulle_pointerarray_reverseenumerate( array));
-}
-
-
+MULLE_C_NONNULL_FIRST
 static inline void   *
 	_mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover)
 {
@@ -342,6 +274,7 @@ static inline void   *
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void
 	_mulle_pointerarrayenumerator_done( struct mulle_pointerarrayenumerator *rover)
 {
@@ -354,12 +287,64 @@ static inline void
 }
 
 
+#pragma mark - reverseenumeration
+
+
+#define MULLE_POINTERARRAYREVERSEENUMERATOR_BASE  MULLE__POINTERARRAYREVERSEENUMERATOR_BASE
+
+struct mulle_pointerarrayreverseenumerator
+{
+   MULLE_POINTERARRAYREVERSEENUMERATOR_BASE;
+};
+
+
+MULLE_C_NONNULL_FIRST
+static inline struct  mulle_pointerarrayreverseenumerator
+   _mulle_pointerarray_reverseenumerate( struct mulle_pointerarray *array)
+{
+   struct mulle__pointerarrayreverseenumerator   rover;
+
+   rover = _mulle__pointerarray_reverseenumerate( (struct mulle__pointerarray *) array);
+   return( *(struct mulle_pointerarrayreverseenumerator *) &rover);
+}
+
+
+static inline struct  mulle_pointerarrayreverseenumerator
+   mulle_pointerarray_reverseenumerate( struct mulle_pointerarray *array)
+{
+   struct mulle__pointerarrayreverseenumerator   rover;
+
+   rover = mulle__pointerarray_reverseenumerate( (struct mulle__pointerarray *) array);
+   return( *(struct mulle_pointerarrayreverseenumerator *) &rover);
+}
+
+MULLE_C_NONNULL_FIRST
+static inline void   *
+	_mulle_pointerarrayreverseenumerator_next( struct mulle_pointerarrayreverseenumerator *rover)
+{
+   return( _mulle__pointerarrayreverseenumerator_next( (struct mulle__pointerarrayreverseenumerator *) rover));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+	_mulle_pointerarrayreverseenumerator_done( struct mulle_pointerarrayreverseenumerator *rover)
+{
+}
+
+
+static inline void
+   mulle_pointerarrayreverseenumerator_done( struct mulle_pointerarrayreverseenumerator *rover)
+{
+}
+
+
 
 #pragma mark - enumerator convenience
 
 static inline int   mulle_pointerarray_member( struct mulle_pointerarray *array, void *p)
 {
-   return( mulle__pointerarray_member( (struct mulle__pointerarray *) array, p, array->notakey));
+   return( mulle__pointerarray_member( (struct mulle__pointerarray *) array, p));
 }
 
 #endif

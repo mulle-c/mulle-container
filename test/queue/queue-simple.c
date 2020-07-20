@@ -16,7 +16,7 @@ static void  no_leak_empty_queue( void)
 {
    struct mulle__pointerqueue   *queue;
 
-   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   queue = mulle__pointerqueue_create( 0, 0, NULL);
    _mulle__pointerqueue_destroy( queue, NULL);
 }
 
@@ -25,7 +25,7 @@ static void  no_leak_one_queue( void)
 {
    struct mulle__pointerqueue   *queue;
 
-   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   queue = mulle__pointerqueue_create( 0, 0, NULL);
    _mulle__pointerqueue_push( queue, "1", NULL);
    _mulle__pointerqueue_destroy( queue, NULL);
 }
@@ -36,7 +36,7 @@ static void  no_leak_filled_queue( void)
 {
    struct mulle__pointerqueue   *queue;
 
-   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   queue = mulle__pointerqueue_create( 0, 0, NULL);
    _mulle__pointerqueue_push( queue, "1", NULL);
    _mulle__pointerqueue_push( queue, "2", NULL);
    _mulle__pointerqueue_push( queue, "3", NULL);
@@ -50,7 +50,7 @@ static void  simple_queue( void)
 {
    struct mulle__pointerqueue   *queue;
 
-   queue = _mulle__pointerqueue_create( 0, 0, NULL);
+   queue = mulle__pointerqueue_create( 0, 0, NULL);
    printf( "%s\n", _mulle__pointerqueue_pop( queue, NULL) ? "???" : "NULL");
    _mulle__pointerqueue_push( queue, "1", NULL);
    _mulle__pointerqueue_push( queue, "2", NULL);

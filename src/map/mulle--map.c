@@ -528,7 +528,7 @@ struct mulle_pointerpair   *_mulle__map_get_any_pair( struct mulle__map *map,
 
 
 static void   *
-   _mulle__map_pointerequality_search( struct mulle__map *map,
+   _mulle__map_pointerequalitysearch( struct mulle__map *map,
                                        void *key)
 {
    void     **q;
@@ -560,7 +560,7 @@ void   *_mulle__map_get( struct mulle__map *map,
    assert( map);
    if( map->size <= 32)  // if the dictionary is small try to easy match
    {
-      value = _mulle__map_pointerequality_search( map, key);
+      value = _mulle__map_pointerequalitysearch( map, key);
       if( value)
          return( value);
       // else do regular search

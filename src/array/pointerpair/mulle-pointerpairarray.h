@@ -155,8 +155,8 @@ static inline void   _mulle_pointerpairarray_add( struct mulle_pointerpairarray 
 static inline struct mulle_pointerpair
 	mulle_pointerpairarray_remove_last( struct mulle_pointerpairarray *array)
 {
-   mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array,
-                                        array->notakey);
+   return( mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array,
+                                                array->notakey));
 }
 
 

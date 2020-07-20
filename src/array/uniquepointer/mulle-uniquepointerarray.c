@@ -1,12 +1,12 @@
 //
-//  mulle--uniquepointers.c
+//  mulle-uniquepointerarray.c
 //  mulle-container
 //
-//  Created by Nat! on 13.09.20.
-//  Copyright © 2020 Mulle kybernetiK. All rights reserved.
+//  Created by Nat! on 03.04.16.
+//  Copyright © 2016 Mulle kybernetiK. All rights reserved.
 //
 
-#include "mulle--uniquepointers.h"
+#include "mulle-uniquepointerarray.h"
 
 #include <stdlib.h>
 #include <stddef.h>
@@ -24,9 +24,9 @@ static int  _pointer_compare( void *p_a, void *p_b)
 
 
 MULLE_C_NONNULL_FIRST_THIRD
-static void   *mulle__uniquepointers_bsearch( void **buf,
-                                              size_t used,
-                                              void  *search)
+static void   *mulle_uniquepointerarray_bsearch( void **buf,
+                                                 size_t n,
+                                                 void  *search)
 {
    long   first;
    long   last;
@@ -34,7 +34,7 @@ static void   *mulle__uniquepointers_bsearch( void **buf,
    void   *p;
 
    first  = 0;
-   last   = (long) (used - 1);
+   last   = (long) (n - 1);
    middle = (first + last) / 2;
 
    while( first <= last)
@@ -58,18 +58,19 @@ static void   *mulle__uniquepointers_bsearch( void **buf,
 
 
 MULLE_C_NONNULL_FIRST_SECOND
-void   *_mulle__uniquepointers_member2( struct mulle__uniquepointers *set, void *p);
+void   *_mulle_uniquepointerarray_member2( struct mulle_uniquepointerarray *set, void *p);
+
 
 MULLE_C_NONNULL_FIRST_SECOND
-void   *_mulle__uniquepointers_member2( struct mulle__uniquepointers *set, void *p)
+void   *_mulle_uniquepointerarray_member2( struct mulle_uniquepointerarray *set, void *p)
 {
    void  **result;
 
    if( ! set->_sorted)
    {
-      qsort( set->storage, set->used, sizeof( void *), (void *) _pointer_compare);
+      qsort( set->storage, _mulle_uniquepointerarray_get_count( set), sizeof( void *), (void *) _pointer_compare);
       set->_sorted = 1;
    }
-   result = mulle__uniquepointers_bsearch( set->storage, set->used, p);
+   result = mulle_uniquepointerarray_bsearch( set->storage, _mulle_uniquepointerarray_get_count( set), p);
    return( result ? *result : NULL);
 }
