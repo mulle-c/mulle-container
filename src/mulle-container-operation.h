@@ -76,6 +76,6 @@ enum mulle_container_write_mode
 
 // Use this for "notakey" pointer to differentiate
 
-#define mulle_not_a_pointer   INTPTR_MIN
+#define mulle_not_a_pointer   ((void *) INTPTR_MIN)
 
 #endif /* mulle_container_operation_h */

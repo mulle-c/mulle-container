@@ -71,7 +71,7 @@ static inline struct mulle__pointerqueue *
 
 static inline void
   mulle__pointerqueue_free( struct mulle__pointerqueue *queue,
-                             struct mulle_allocator *allocator)
+                            struct mulle_allocator *allocator)
 {
    mulle_allocator_free( allocator, queue);
 }
@@ -99,7 +99,7 @@ static inline void  _mulle__pointerqueue_init( struct mulle__pointerqueue *queue
 }
 
 
-struct mulle__pointerqueue   *_mulle__pointerqueue_create( unsigned short bucket_size,
+struct mulle__pointerqueue   *mulle__pointerqueue_create( unsigned short bucket_size,
                                                            unsigned short spare_allowance,
                                                            struct mulle_allocator *allocator);
 
