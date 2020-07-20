@@ -39,9 +39,12 @@
 #include <stdio.h>  // debug
 
 
+struct mulle__arrayenumerator          mulle__arrayenumerator_empty;
+struct mulle__arrayreverseenumerator   mulle__arrayreverseenumerator_empty;
+
 #pragma mark - _mulle_arrayrange internal helper
 
-
+MULLE_C_NONNULL_FIRST_THIRD
 static inline void
    _mulle__array_release( struct mulle__array *array,
                           struct mulle_range range,
@@ -54,17 +57,8 @@ static inline void
    p        = &array->storage[ range.location];
    sentinel = &p[ range.length];
    while( p < sentinel)
-   {
-      while( *p == callback->notakey)
-      {
-         ++p;
-         ++sentinel;
-      }
       (*callback->release)( callback, *p++, allocator);
-   }
 }
-
-
 
 
 #pragma mark - creation and destruction
@@ -78,16 +72,16 @@ struct mulle__array   *mulle__array_create( struct mulle_allocator *allocator)
    return( array);
 }
 
-
+MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_done( struct mulle__array *array,
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator)
 {
-   _mulle__array_release( array, mulle_range_make( 0, array->used), callback, allocator);
+   _mulle__array_release( array, mulle_range_make( 0, _mulle__array_get_count( array)), callback, allocator);
    _mulle__pointerarray_done( (struct mulle__pointerarray *) array, allocator);
 }
 
-
+MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_destroy( struct mulle__array *array,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator)
@@ -102,6 +96,7 @@ void   _mulle__array_destroy( struct mulle__array *array,
 //
 // range must have been checked already
 //
+MULLE_C_NONNULL_FIRST_FOURTH
 uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
                                          void *obj,
                                          struct mulle_range range,
@@ -111,9 +106,7 @@ uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
    void     **p;
    void     **sentinel;
 
-   // allow obj == nil
-   if( obj == callback->notakey || ! _mulle__array_get_count( array))
-      return( mulle_not_found_e);
+   range = mulle_range_validate_against_length( range, _mulle__array_get_count( array));
 
    // quick check for first 32 pointers
    n = range.length;
@@ -136,11 +129,6 @@ uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
    sentinel = &p[ range.length];
    while( p < sentinel)
    {
-      if( *p == callback->notakey)
-      {
-         ++p;
-         ++sentinel;
-      }
       if( (*callback->is_equal)( callback, obj, *p))
          return( p - array->storage);
       ++p;
@@ -150,37 +138,34 @@ uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
 }
 
 
-
-
 #pragma mark - removal
 
-
+MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_reset( struct mulle__array *array,
                             struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator)
 {
    if( callback->release != mulle_container_keycallback_nop)
-      _mulle__array_release( array, mulle_range_make( 0, array->used), callback, allocator);
+      _mulle__array_release( array, mulle_range_make( 0, _mulle__array_get_count( array)), callback, allocator);
 
-   array->used = 0;
+   _mulle__pointerarray_reset( (struct mulle__pointerarray *) array);
 }
 
 
+MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__array_remove_in_range( struct mulle__array *array,
                                       struct mulle_range range,
                                       struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator)
 {
-   assert( ! _mulle__array_needs_compaction( array));
-
-   range = mulle_range_validate_against_length( range, array->count);
+   range = mulle_range_validate_against_length( range, _mulle__array_get_count( array));
    _mulle__array_release( array, range, callback, allocator);
 
    _mulle__pointerarray_remove_in_range( (struct mulle__pointerarray *) array,
                                          range);
 }
 
-
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
 int    _mulle__array_is_equal( struct mulle__array *array,
                                struct mulle__array *other,
                                struct mulle_container_keycallback *callback)
@@ -188,9 +173,6 @@ int    _mulle__array_is_equal( struct mulle__array *array,
    size_t   i, n;
    void     **p;
    void     **q;
-
-   if( ! other)
-      return( 0);
 
    n = _mulle__array_get_count( array);
    if( n != _mulle__array_get_count( other))
@@ -203,12 +185,6 @@ int    _mulle__array_is_equal( struct mulle__array *array,
    q = other->storage;
    for( i = 0; i < n; i++)
    {
-      // skip holes
-      while( *p == callback->notakey)
-         ++p;
-      while( *q == callback->notakey)
-         ++q;
-
       if( ! (callback->is_equal)( callback, *p, *q))
          return( 0);
    }
@@ -217,7 +193,7 @@ int    _mulle__array_is_equal( struct mulle__array *array,
 }
 
 
-MULLE_C_NONNULL_FIRST_THIRD
+MULLE_C_NONNULL_FIRST_FOURTH
 void    _mulle__array_set( struct mulle__array *array,
                            size_t i,
                            void  *p,
@@ -229,8 +205,6 @@ void    _mulle__array_set( struct mulle__array *array,
    p = (*callback->retain)( callback, p, allocator);
    old = _mulle__pointerarray_set( (struct mulle__pointerarray *)  array,
                                     i,
-                                    p,
-                                    callback->notakey);
-   if( old != callback->notakey)
-      (*callback->release)( callback, p, allocator);
+                                    p);
+   (*callback->release)( callback, old, allocator);
 }
