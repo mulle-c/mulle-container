@@ -1,0 +1,13 @@
+digraph so
+{
+    subgraph cluster0
+    {
+        rank = same{ Array notes }
+        color = white;
+        Array [ shape = record, label = "{ A | B | C | D }"] ;
+        notes [ shape = box, label = "{ a_1 | b_2 | c_3 | d_4 }" ];
+        Array -> notes[ style = invis ];
+    }
+    nodesep = .0;
+    X -> Array -> Z;
+}

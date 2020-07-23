@@ -62,6 +62,7 @@ void    *_mulle__pointerset_insert( struct mulle__pointerset *set,
 
 
 MULLE_C_NONNULL_FIRST
+static inline
 void   _mulle__pointerset_shrink( struct mulle__pointerset *set,
                                   struct mulle_allocator *allocator)
 {
@@ -79,8 +80,8 @@ static inline void  _mulle__pointerset_shrink_if_needed( struct mulle__pointerse
 
 
 MULLE_C_NONNULL_FIRST
-static inline int
-   _mulle__pointerset_remove( struct mulle__pointerset *set,
+static inline
+int  _mulle__pointerset_remove( struct mulle__pointerset *set,
                               void *p,
                               struct mulle_allocator *allocator)
 {
@@ -103,18 +104,8 @@ static inline int
 }
 
 
-struct mulle__pointerset   *_mulle__pointerset_copy( struct mulle__pointerset *set,
-                                                     struct mulle_allocator *allocator)
-{
-   struct mulle__pointerset   *other;
-
-   other = _mulle__pointerset_create( _mulle__pointerset_get_count( set), 0, allocator);
-   if( _mulle__pointerset_copy_items( other, set, allocator))
-   {
-      _mulle__pointerset_destroy( other, allocator);
-      other = NULL;
-   }
-   return( other);
-}
+struct mulle__pointerset  *
+   _mulle__pointerset_copy( struct mulle__pointerset *set,
+                            struct mulle_allocator *allocator);
 
 #endif

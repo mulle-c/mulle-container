@@ -137,6 +137,11 @@ void    *_mulle__set_insert( struct mulle__set *set,
                                                allocator));
 }
 
+
+//
+// you are getting the key here! If nothing is found it will be
+// callback->notakey, not NULL
+//
 MULLE_C_NONNULL_FIRST_THIRD
 static inline
 void   *_mulle__set_get( struct mulle__set *set,
@@ -146,6 +151,31 @@ void   *_mulle__set_get( struct mulle__set *set,
    return( _mulle__pointerset_get_generic( (struct mulle__pointerset *) set,
                                             p,
                                             callback));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline int
+   _mulle__set_member( struct mulle__set *set,
+                       void *p,
+                       struct mulle_container_keycallback *callback)
+{
+   return( _mulle__pointerset_member_generic( (struct mulle__pointerset *) set,
+                                              p,
+                                              callback));
+}
+
+
+static inline int
+   mulle__set_member( struct mulle__set *set,
+                      void *p,
+                      struct mulle_container_keycallback *callback)
+{
+   if( ! set)
+      return( 0);
+   return( _mulle__pointerset_member_generic( (struct mulle__pointerset *) set,
+                                               p,
+                                               callback));
 }
 
 
@@ -241,11 +271,21 @@ static inline struct mulle__setenumerator
 }
 
 
-MULLE_C_NONNULL_FIRST
-static inline void   *_mulle__setenumerator_next( struct mulle__setenumerator *rover)
+MULLE_C_NONNULL_FIRST_SECOND
+static inline int
+   _mulle__setenumerator_next( struct mulle__setenumerator *rover, void **item)
 {
-   return( _mulle__genericpointersetenumerator_next( (struct mulle__genericpointersetenumerator *) rover));
+   return( _mulle__genericpointersetenumerator_next( (struct mulle__genericpointersetenumerator *) rover,
+                                                   item));
 }
+
+static inline int
+   mulle__setenumerator_next( struct mulle__setenumerator *rover, void **item)
+{
+   return( mulle__genericpointersetenumerator_next( (struct mulle__genericpointersetenumerator *) rover,
+                                                   item));
+}
+
 
 
 MULLE_C_NONNULL_FIRST

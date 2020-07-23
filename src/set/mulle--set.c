@@ -57,16 +57,16 @@ void    _mulle__set_init( struct mulle__set *p,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
-   p->count = 0;
+   p->_count = 0;
    //
    // our set requires mulle_not_a_pointer to find an end
    // so give it ~25% holes. For this to work though, we can not be smaller
    // than 4 items.
    //
-   p->size  = capacity >= MULLE__POINTERSET_MIN_SIZE
+   p->_size  = capacity >= MULLE__POINTERSET_MIN_SIZE
                      ? mulle_pow2round( capacity + (capacity >> MULLE__POINTERSET_FILL_SHIFT))
                      : MULLE__POINTERSET_MIN_SIZE;
-   p->storage = _mulle__pointerset_allocate_storage_generic( p->size, callback->notakey, allocator);
+   p->_storage = _mulle__pointerset_allocate_storage_generic( p->_size, callback->notakey, allocator);
 }
 
 
@@ -89,13 +89,13 @@ void   _mulle__set_release_all( struct mulle__set *set,
                                 struct mulle_allocator *allocator)
 {
    struct mulle__setenumerator  rover;
-   void                         *p;
+   void                         *item;
 
    if( mulle_container_keycallback_releases( callback))
    {
       rover = _mulle__set_enumerate( set, callback);
-      while( (p = _mulle__setenumerator_next( &rover)) != callback->notakey)
-         (*callback->release)( callback, p, allocator);
+      while( _mulle__setenumerator_next( &rover, &item))
+         (*callback->release)( callback, item, allocator);
       _mulle__setenumerator_done( &rover);
    }
 }
@@ -164,7 +164,7 @@ char   *_mulle__set_describe( struct mulle__set *set,
    len    = 0;
 
    rover = _mulle__set_enumerate( set, callback);
-   while( (item = _mulle__setenumerator_next( &rover)) != callback->notakey)
+   while( _mulle__setenumerator_next( &rover, &item))
    {
       value_allocator = allocator ? allocator : &mulle_default_allocator;
 

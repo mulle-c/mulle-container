@@ -16,7 +16,8 @@
 #include "include-private.h"
 
 
-void  *__mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover);
+int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover,
+                                            void **item);
 
 
 
@@ -41,7 +42,7 @@ struct mulle__pointerqueuebucket *
 
       p = mulle_allocator_malloc( allocator, space);
    }
-   // storage may be garbage, but _next pointer must be clear
+   // _storage may be garbage, but _next pointer must be clear
    p->_next = NULL;
    return( p);
 }
@@ -105,7 +106,7 @@ void   _mulle__pointerqueue_shrink( struct mulle__pointerqueue *queue,
    {
       assert( queue->_write == queue->_read);
       assert( queue->_write_index == queue->_read_index);
-      assert( queue->count == 0);
+      assert( queue->_count == 0);
 
       // shrink completely to zero
       queue->_read        =
@@ -136,20 +137,21 @@ static void   free_chained_buckets( struct mulle__pointerqueuebucket *p,
 }
 
 
-void   *__mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover)
+int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover,
+                                            void **item)
 {
    if( rover->_index != rover->_queue->_bucket_size)
-      return( NULL);
+      return( 0);
 
    if( ! rover->_curr)
-      return( NULL);
+      return( 0);
 
    rover->_curr = rover->_curr->_next;
    if( ! rover->_curr)
-      return( NULL);
+      return( 0);
 
    rover->_index = 0;
-   return( _mulle__pointerqueueenumerator_next( rover));
+   return( _mulle__pointerqueueenumerator_next( rover, item));
 }
 
 
@@ -176,15 +178,15 @@ static inline void  *
       if( queue->_read_index == queue->_write_index)
          return( NULL);
 
-   assert( queue->count);
-   queue->count--;
+   assert( queue->_count);
+   queue->_count--;
    //
    // now if "release" truely releases, p is pointing to a zombie.
    // not so, if release is autorelease or nop
    // check one case with an assert
    //
    assert( queue->_read_index < queue->_bucket_size);
-   p = queue->_read->storage[ queue->_read_index++];
+   p = queue->_read->_storage[ queue->_read_index++];
    return( p);
 }
 
@@ -227,7 +229,7 @@ void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
    queue->_read_index  =
    queue->_write_index = queue->_bucket_size;
 
-   queue->count       = 0;
+   queue->_count       = 0;
 }
 
 

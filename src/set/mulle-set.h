@@ -48,9 +48,11 @@
 // a mulle_set is a mulle_hashtable, with callbacks added
 // this makes a mulle_set more convenient.
 //
+
+// callback and allocator can be public
 #define MULLE_SET_BASE                                \
    MULLE__SET_BASE;                                   \
-   struct mulle_container_keycallback   *callback;   \
+   struct mulle_container_keycallback   *callback;    \
    struct mulle_allocator               *allocator
 
 
@@ -58,20 +60,6 @@ struct mulle_set
 {
    MULLE_SET_BASE;
 };
-
-
-#define MULLE_SETENUMERATOR_BASE   \
-   MULLE__SETENUMERATOR_BASE
-
-
-struct  mulle_setenumerator
-{
-   MULLE_SETENUMERATOR_BASE;
-};
-
-
-extern struct mulle_setenumerator   mulle_setenumerator_empty;
-
 
 struct mulle_set   *mulle_set_create( unsigned int capacity,
                                       struct mulle_container_keycallback *callback,
@@ -128,6 +116,21 @@ static inline unsigned int   mulle_set_get_count( struct mulle_set *set)
 static inline void   *mulle_set_get( struct mulle_set *set, void *p)
 {
    return( set ? _mulle__set_get( (struct mulle__set *) set, p, set->callback) : NULL);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline int
+   _mulle_set_member( struct mulle_set *set, void *p)
+{
+   return( _mulle__set_member( (struct mulle__set *) set, p, set->callback));
+}
+
+
+static inline int
+   mulle_set_member( struct mulle_set *set, void *p)
+{
+   return( mulle__set_member( (struct mulle__set *) set, p, set->callback));
 }
 
 
@@ -192,24 +195,51 @@ static inline void   *mulle_set_describe( struct mulle_set *set,
 
 #pragma mark - enumerator
 
+#define MULLE_SETENUMERATOR_BASE   \
+   MULLE__SETENUMERATOR_BASE
 
-static inline struct mulle_setenumerator   mulle_set_enumerate( struct mulle_set *set)
+
+struct  mulle_setenumerator
+{
+   MULLE_SETENUMERATOR_BASE;
+};
+
+
+extern struct mulle_setenumerator   mulle_setenumerator_empty;
+
+
+MULLE_C_NONNULL_FIRST
+static inline struct mulle_setenumerator
+   _mulle_set_enumerate( struct mulle_set *set)
 {
    struct mulle__setenumerator  rover;
-
-   if( ! set)
-   {
-      memset( &rover, 0, sizeof( rover));
-      return( *(struct mulle_setenumerator *) &rover);
-   }
 
    rover = _mulle__set_enumerate( (struct mulle__set *) set, set->callback);
    return( *(struct mulle_setenumerator *) &rover);
 }
 
-static inline void   *mulle_setenumerator_next( struct mulle_setenumerator *rover)
+
+static inline struct mulle_setenumerator
+   mulle_set_enumerate( struct mulle_set *set)
 {
-   return( rover ? _mulle__setenumerator_next( (struct mulle__setenumerator *) rover) : NULL);
+   if( ! set)
+      return( mulle_setenumerator_empty);
+   return( _mulle_set_enumerate( set));
+}
+
+
+MULLE_C_NONNULL_FIRST_SECOND
+static inline int
+   _mulle_setenumerator__next( struct mulle_setenumerator *rover, void **item)
+{
+   return( _mulle__setenumerator_next( (struct mulle__setenumerator *) rover, item));
+}
+
+
+static inline int
+   mulle_setenumerator_next( struct mulle_setenumerator *rover, void **item)
+{
+   return( mulle__setenumerator_next( (struct mulle__setenumerator *) rover, item));
 }
 
 

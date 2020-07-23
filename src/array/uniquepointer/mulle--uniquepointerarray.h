@@ -22,7 +22,7 @@
 // You can't store NULL.
 //
 #define MULLE__UNIQUEPOINTERARRAY_BASE   \
-   MULLE__POINTERARRAY_BASE;     \
+   MULLE__POINTERARRAY_BASE;             \
    int   _sorted
 
 
@@ -41,7 +41,7 @@ static inline void    _mulle__uniquepointerarray_init( struct mulle__uniquepoint
 
 MULLE_C_NONNULL_FIRST
 static inline void    _mulle__uniquepointerarray_done( struct mulle__uniquepointerarray *set,
-                                                      struct mulle_allocator *allocator)
+                                                       struct mulle_allocator *allocator)
 {
    _mulle__pointerarray_done( (struct mulle__pointerarray *) set, allocator);
 }
@@ -50,14 +50,62 @@ static inline void    _mulle__uniquepointerarray_done( struct mulle__uniquepoint
 # pragma mark - petty accessors
 
 MULLE_C_NONNULL_FIRST
-static inline size_t   _mulle__uniquepointerarray_get_count( struct mulle__uniquepointerarray *set)
+static inline size_t
+	_mulle__uniquepointerarray_get_size( struct mulle__uniquepointerarray *array)
 {
-   return( _mulle__pointerarray_get_count( (struct mulle__pointerarray *) set));
+   return( mulle__pointerarray_get_size( (struct mulle__pointerarray *) array));
 }
 
-static inline size_t   mulle__uniquepointerarray_get_count( struct mulle__uniquepointerarray *set)
+
+static inline size_t
+   mulle__uniquepointerarray_get_size( struct mulle__uniquepointerarray *array)
 {
-   return( mulle__pointerarray_get_count( (struct mulle__pointerarray *) set));
+   return( _mulle__pointerarray_get_size( (struct mulle__pointerarray *) array));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline size_t
+	_mulle__uniquepointerarray_get_count( struct mulle__uniquepointerarray *array)
+{
+   return( _mulle__pointerarray_get_count( (struct mulle__pointerarray *) array));
+}
+
+
+static inline size_t
+   mulle__uniquepointerarray_get_count( struct mulle__uniquepointerarray *array)
+{
+   return( mulle__pointerarray_get_count( (struct mulle__pointerarray *) array));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline size_t
+	_mulle__uniquepointerarray_get_guaranteed_size( struct mulle__uniquepointerarray *array)
+{
+   return( _mulle__pointerarray_get_guaranteed_size( (struct mulle__pointerarray *) array));
+}
+
+
+static inline size_t
+	mulle__uniquepointerarray_get_guaranteed_size( struct mulle__uniquepointerarray *array)
+{
+   return( mulle__pointerarray_get_guaranteed_size( (struct mulle__pointerarray *) array));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline size_t
+   _mulle__uniquepointerarray_is_full( struct mulle__uniquepointerarray *array)
+{
+   return( _mulle__pointerarray_is_full( (struct mulle__pointerarray *) array));
+}
+
+
+static inline int
+   mulle__uniquepointerarray_is_full( struct mulle__uniquepointerarray *array)
+{
+   return( mulle__pointerarray_is_full( (struct mulle__pointerarray *) array));
 }
 
 
@@ -85,8 +133,8 @@ static inline void   *_mulle__uniquepointerarray_get( struct mulle__uniquepointe
    if( _mulle__uniquepointerarray_get_count( set) >= 12)
       return( _mulle__uniquepointerarray_member2( set, p));
 
-   q        = set->storage;
-   sentinel = set->curr;
+   q        = set->_storage;
+   sentinel = set->_curr;
 
    while( q < sentinel)
       if( *q++ == p)

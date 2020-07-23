@@ -88,6 +88,16 @@ void   *_mulle__pointerset_get_generic( struct mulle__pointerset *set,
                                         void *key,
                                         struct mulle_container_keycallback *callback);
 
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline int
+   _mulle__pointerset_member_generic( struct mulle__pointerset *set,
+                                      void *p,
+                                      struct mulle_container_keycallback *callback)
+{
+   return( _mulle__pointerset_get_generic( set, p, callback) != callback->notakey);
+}
+
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
                                            struct mulle_container_keycallback *callback,
@@ -107,9 +117,9 @@ int   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
 #pragma mark - enumeration
 
 #define MULLE__GENERICPOINTERSETENUMERATOR_BASE   \
-   void     **curr;                                \
-   size_t   left;                                  \
-   void     *notakey
+   void     **_curr;                              \
+   size_t   _left;                                \
+   void     *_notakey
 
 struct mulle__genericpointersetenumerator
 {
@@ -127,9 +137,9 @@ static inline struct mulle__genericpointersetenumerator
 {
    struct mulle__genericpointersetenumerator   rover;
 
-   rover.left    = set->count;
-   rover.curr    = set->storage;
-   rover.notakey = callback->notakey;
+   rover._left    = set->_count;
+   rover._curr    = set->_storage;
+   rover._notakey = callback->notakey;
 
    return( rover);
 }
@@ -146,25 +156,50 @@ static inline struct mulle__genericpointersetenumerator
 }
 
 
-MULLE_C_NONNULL_FIRST
-static inline void   *_mulle__genericpointersetenumerator_next( struct mulle__genericpointersetenumerator *rover)
+MULLE_C_NONNULL_FIRST_SECOND
+static inline int
+   _mulle__genericpointersetenumerator_next( struct mulle__genericpointersetenumerator *rover,
+                                             void **item)
 {
    void   *p;
 
-   if( ! rover->left)
-      return( rover->notakey);
+   if( ! rover->_left)
+      return( 0);
 
    for(;;)
    {
-      p = *rover->curr++;
-      if( p != rover->notakey)
+      p = *rover->_curr++;
+      if( p != rover->_notakey)
       {
-         rover->left--;
-         return( p);
+         rover->_left--;
+         *item = p;
+         return( 1);
       }
    }
 }
 
+
+static inline int
+   mulle__genericpointersetenumerator_next( struct mulle__genericpointersetenumerator *rover,
+                                            void **item)
+{
+   void   *p;
+
+   if( ! rover || ! rover->_left)
+      return( 0);
+
+   for(;;)
+   {
+      p = *rover->_curr++;
+      if( p != rover->_notakey)
+      {
+         rover->_left--;
+         if( item)
+            *item = p;
+         return( 1);
+      }
+   }
+}
 
 static inline void   _mulle__genericpointersetenumerator_done( struct mulle__genericpointersetenumerator *rover)
 {

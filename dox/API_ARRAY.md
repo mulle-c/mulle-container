@@ -83,8 +83,8 @@ void   mulle_array_destroy( struct mulle_array *array)
 
 Destroy the array. Array must have been allocated with `mulle_array_create`
  or `mulle_array_alloc`.
- 
- 
+
+
 ### `mulle_array_done`
 
 ```
@@ -176,7 +176,7 @@ void   **mulle_array_advance( struct mulle_array *array,
                               unsigned int length)
 ```
 
-This is like calling `mulle_array_next` for `length` times and ignoring the return value.                             
+This is like calling `mulle_array_next` for `length` times and ignoring the return value.
 
 ### `mulle_array_is_full`
 
@@ -256,7 +256,7 @@ void   mulle_array_add_multiple( struct mulle_array *array,
                                  void **pointers,
                                  unsigned int length)
 ```
-                                 
+
 Add `length` elements in `pointers` to the array.
 
 
@@ -293,23 +293,21 @@ You own the internal c-array of elements of array. `array` is empty afterwards.
 ```
 unsigned long  mulle_array_find_in_range_identical( struct mulle_array *array,
                                                     void *obj,
-                                                    unsigned int location,
-                                                    unsigned int length)
+                                                    struct mulle_range range)
 ```
 
-Find index of element which is identical to `obj` in the range given by `location` and `length`.
-                                                 
+Find index of element which is identical to `obj` in the range given by `range.location` and `range.length`.
+
 
 ### `mulle_array_find_in_range`
 
 ```
 unsigned long  mulle_array_find_in_range( struct mulle_array *array,
                                           void *obj,
-                                          unsigned int location,
-                                          unsigned int length)
+                                          struct mulle_range range)
 ```
 
-Find index of element which is equal to `obj` in the range given by `location` and `length`. The equality is determined by the callback of array.
+Find index of element which is equal to `obj` in the range given by `range.location` and `range.length`. The equality is determined by the callback of array.
 
 
 
@@ -327,8 +325,8 @@ Start the enumeration of array. It is OK to pass NULL as array.
 ```
 void    mulle_array_add_intptr( struct mulle_array *array, int v)
 ```
-                                          
-Type convenience for `mulle_array_add` adding an **`intptr_t`** `v`. 
+
+Type convenience for `mulle_array_add` adding an **`intptr_t`** `v`.
 
 
 ### `mulle_array_add_int`
@@ -336,8 +334,8 @@ Type convenience for `mulle_array_add` adding an **`intptr_t`** `v`.
 ```
 void    mulle_array_add_int( struct mulle_array *array, int v)
 ```
-                                          
-Type convenience for `mulle_array_add` adding an **`int`** `v`. 
+
+Type convenience for `mulle_array_add` adding an **`int`** `v`.
 
 
 
@@ -347,7 +345,7 @@ Type convenience for `mulle_array_add` adding an **`int`** `v`.
 intptr_t    mulle_array_get_intptr( struct mulle_array *array, unsigned int index)
 ```
 
-Type convenience for `mulle_array_get` returning an **`intptr_t`**. 
+Type convenience for `mulle_array_get` returning an **`intptr_t`**.
 
 
 ### `mulle_array_get_int`
@@ -356,7 +354,7 @@ Type convenience for `mulle_array_get` returning an **`intptr_t`**.
 int    mulle_array_get_int( struct mulle_array *array, unsigned int index)
 ```
 
-Type convenience for `mulle_array_get` returning an **`int`**. 
+Type convenience for `mulle_array_get` returning an **`int`**.
 
 
 ### `mulle_arrayenumerator_next_intptr`

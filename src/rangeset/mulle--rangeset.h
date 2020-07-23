@@ -17,31 +17,31 @@
 //
 // * to not have overlapping ranges
 // * to not have adjacent ranges
-// * to not have ranges of size 0
+// * to not have ranges of _size 0
 // * always be sorted
 //
-// MEMO: the previous incarnation used lazy coalescing, when deemed
+// MEMO: the previous incarnation _used lazy coalescing, when deemed
 //       necessary. But in the end the amount of memory moves necessary
 //       done laty was likely the same as doing it immediately.
 //
 struct mulle__rangeset
 {
    struct mulle_range   *_ranges;
-   uintptr_t             _length;
-   uintptr_t             size;
+   size_t                _length;
+   size_t                _size;
 };
 
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
-                                            uintptr_t capacity,
+                                            size_t capacity,
                                             struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
    if( capacity > 0)
    {
-      p->size   = capacity;
-      p->_ranges = mulle_allocator_malloc( allocator, sizeof( struct mulle_range) * p->size);
+      p->_size   = capacity;
+      p->_ranges = mulle_allocator_malloc( allocator, sizeof( struct mulle_range) * p->_size);
    }
 }
 
@@ -99,15 +99,15 @@ static inline struct mulle_range  _mulle__rangeset_get_range( struct mulle__rang
 MULLE_C_NONNULL_FIRST
 static inline uintptr_t   _mulle__rangeset_sum_lengths( struct mulle__rangeset *p)
 {
-   struct mulle_range   *curr;
+   struct mulle_range   *_curr;
    struct mulle_range   *sentinel;
    uintptr_t            length;
 
    length = 0;
-   curr   = p->_ranges;
+   _curr   = p->_ranges;
    sentinel = &p->_ranges[ p->_length];
-   for( ; curr < sentinel; curr++)
-      length += curr->length;
+   for( ; _curr < sentinel; _curr++)
+      length += _curr->length;
    return( length);
 }
 
@@ -118,15 +118,15 @@ uintptr_t   _mulle__rangeset_sum_lengths_range( struct mulle__rangeset *p,
 
 
 MULLE_C_NONNULL_FIRST
-static inline void   _mulle__rangeset_shrinktofit( struct mulle__rangeset *p,
-                                                  struct mulle_allocator *allocator)
+static inline void   _mulle__rangeset_shrink_to_fit( struct mulle__rangeset *p,
+                                                     struct mulle_allocator *allocator)
 {
-   if( p->_length > p->size)
+   if( p->_length > p->_size)
    {
       p->_ranges = mulle_allocator_realloc_strict( allocator,
                                                    p->_ranges,
                                                    p->_length * sizeof( struct mulle_range));
-      p->size   = p->_length;
+      p->_size   = p->_length;
    }
 }
 

@@ -19,7 +19,7 @@ static void  enumerate( struct mulle__pointerqueue *queue)
    char   *s;
 
    rover = mulle__pointerqueue_enumerate( queue);
-   while( s = _mulle__pointerqueueenumerator_next( &rover))
+   while( _mulle__pointerqueueenumerator_next( &rover, (void **) &s))
       printf( "%s\n", s);
    mulle__pointerqueueenumerator_done(&rover);
 }

@@ -1,0 +1,40 @@
+digraph {
+   graph [ pad="0.2", ranksep="0.7", nodesep="0.7"];
+
+   subgraph allocator {
+      rank = same;
+      rankdir=LR;
+
+      "mulle__array" [ label=<<TABLE BORDER="1">
+         <TR BORDER="0"><TD BGCOLOR="blue" COLSPAN="2"><FONT COLOR="white">mulle_array</FONT></TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">count</FONT></TD><TD>5</TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">size</FONT></TD><TD>8</TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">storage</FONT></TD><TD PORT="pointers"></TD></TR>
+         </TABLE>>, shape="none" ];
+   }
+
+   graph [ pad="0.2", ranksep="0.3", nodesep="0.0"];
+
+   subgraph pair {
+      rank = same;
+      rankdir=TD;
+
+      subgraph keys {
+         node [shape=record, style="filled", fontcolor=black, fontsize=14, fixedsize=true];
+         rank = same;
+         rankdir=LR;
+
+         "k_a" [ label="0", fillcolor="yellow"];
+         "k_b" [ label="1", fillcolor="yellow"];
+         "k_c" [ label="2", fillcolor="yellow"];
+         "k_d" [ label="3", fillcolor="yellow"];
+         "k_e" [ label="4", fillcolor="chartreuse"];
+         "k_f" [ label="5", fillcolor="white"];
+         "k_g" [ label="6", fillcolor="white"];
+         "k_h" [ label="7", fillcolor="white"];
+      }
+   }
+//   "keys" -> "values" [ style="invis" ]
+   // center doesn't work :(
+   "mulle__array":"pointers":"c"  -> "k_a"   [ arrowtail="dot", arrowhead="vee", dir="both" ]
+}

@@ -1,0 +1,44 @@
+digraph {
+   graph [ pad="0.2", ranksep="0.3", nodesep="0.0"];
+
+   subgraph allocator {
+      rank = same;
+      rankdir=LR;
+
+      "mulle_pointerpairarray" [ label=<<TABLE BORDER="1">
+         <TR BORDER="0"><TD BGCOLOR="blue" COLSPAN="2"><FONT COLOR="white">mulle_pointerpairarray</FONT></TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">allocator</FONT></TD><TD PORT="allocator"></TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">count</FONT></TD><TD>5</TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">size</FONT></TD><TD>8</TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">storage</FONT></TD><TD PORT="pointers"></TD></TR>
+         </TABLE>>, shape="none" ];
+
+      "mulle_allocator" [ label=<<TABLE BORDER="1">
+         <TR BORDER="0"><TD PORT="name" BGCOLOR="blue"><FONT COLOR="white">mulle_allocator</FONT></TD></TR>
+         <TR BORDER="0"><TD>calloc</TD></TR>
+         <TR BORDER="0"><TD>realloc</TD></TR>
+         <TR BORDER="0"><TD>free</TD></TR>
+         </TABLE>>, shape="none" ];
+
+      "mulle_pointerpairarray" ->  "mulle_allocator" [ style="invis" ]
+   }
+
+   subgraph keys {
+      node  [shape=record, style="filled", fontcolor=black, fontsize=14, fixedsize=true];
+      rank = same;
+
+      "k_a" [ label="{ 0 | a }", fillcolor="yellow"];
+      "k_b" [ label="{ 1 | b }", fillcolor="yellow"];
+      "k_c" [ label="{ 2 | c }", fillcolor="yellow"];
+      "k_d" [ label="{ 3 | d }", fillcolor="yellow"];
+      "k_e" [ label="{ 4 | e }", fillcolor="chartreuse"];
+      "k_f" [ label="{ 5 | f }", fillcolor="white"];
+      "k_g" [ label="{ 6 | g }", fillcolor="white"];
+      "k_h" [ label="{ 7 | h }", fillcolor="white"];
+   }
+
+//   "keys" -> "values" [ style="invis" ]
+   // center doesn't work :(
+   "mulle_pointerpairarray":"pointers":"c"  -> "k_a"               [ arrowtail="dot", arrowhead="vee", dir="both" ]
+   "mulle_pointerpairarray":"allocator":"c" -> "mulle_allocator":"name":"w"
+}

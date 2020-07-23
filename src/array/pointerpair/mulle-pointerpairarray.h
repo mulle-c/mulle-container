@@ -44,20 +44,17 @@
 //
 // mulle_pointerpairarray, simple growing array of pointer pairs
 // (kind of like a associative array)
-// Can overwrite pointers too (and keep count)
 // You can also use it as stack
 //
 struct mulle_pointerpairarray
 {
    MULLE__POINTERPAIRARRAY_BASE;
-   void                        *notakey;
    struct mulle_allocator      *allocator;
 };
 
 
 static inline struct mulle_pointerpairarray  *
-	mulle_pointerpairarray_alloc( void *notakey,
-											struct mulle_allocator *allocator)
+	mulle_pointerpairarray_alloc( struct mulle_allocator *allocator)
 {
    struct mulle_pointerpairarray   *array;
 
@@ -68,12 +65,12 @@ static inline struct mulle_pointerpairarray  *
 
 static inline void   _mulle_pointerpairarray_init( struct mulle_pointerpairarray *array,
                                                    size_t  capacity,
-                                                   void *notakey,
                                                    struct mulle_allocator *allocator)
 {
-   _mulle__pointerpairarray_init( (struct mulle__pointerpairarray *) array, capacity, allocator);
+   _mulle__pointerpairarray_init( (struct mulle__pointerpairarray *) array,
+                                   capacity,
+                                   allocator);
 
-   array->notakey   = notakey;
    array->allocator = allocator;
 }
 
@@ -93,6 +90,23 @@ static inline void  mulle_pointerpairarray_destroy( struct mulle_pointerpairarra
 
 # pragma mark - petty accessors
 
+
+MULLE_C_NONNULL_FIRST
+static inline size_t
+	_mulle_pointerpairarray_get_size( struct mulle_pointerpairarray *array)
+{
+   return( _mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) array));
+}
+
+
+static inline size_t
+   mulle_pointerpairarray_get_size( struct mulle_pointerpairarray *array)
+{
+   return( mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) array));
+}
+
+
+MULLE_C_NONNULL_FIRST
 static inline size_t
 	_mulle_pointerpairarray_get_count( struct mulle_pointerpairarray *array)
 {
@@ -100,23 +114,30 @@ static inline size_t
 }
 
 
-static inline struct mulle_allocator  *
-	_mulle_pointerpairarray_get_allocator( struct mulle_pointerpairarray *array)
+static inline size_t
+   mulle_pointerpairarray_get_count( struct mulle_pointerpairarray *array)
 {
-   return( array->allocator);
+   return( mulle__pointerpairarray_get_count( (struct mulle__pointerpairarray *) array));
 }
 
 
-static inline void  *
-	_mulle_pointerpairarray_get_notakey( struct mulle_pointerpairarray *array)
+MULLE_C_NONNULL_FIRST
+static inline size_t
+	_mulle_pointerpairarray_get_guaranteed_size( struct mulle_pointerpairarray *array)
 {
-   return( array->notakey);
+   return( _mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) array));
 }
 
 
-# pragma mark - petty functions
+static inline size_t
+	mulle_pointerpairarray_get_guaranteed_size( struct mulle_pointerpairarray *array)
+{
+   return( mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) array));
+}
 
-static inline int
+
+MULLE_C_NONNULL_FIRST
+static inline size_t
    _mulle_pointerpairarray_is_full( struct mulle_pointerpairarray *array)
 {
    return( _mulle__pointerpairarray_is_full( (struct mulle__pointerpairarray *) array));
@@ -124,16 +145,9 @@ static inline int
 
 
 static inline int
-   _mulle_pointerpairarray_can_compact( struct mulle_pointerpairarray *array)
+   mulle_pointerpairarray_is_full( struct mulle_pointerpairarray *array)
 {
-   return( _mulle__pointerpairarray_can_compact( (struct mulle__pointerpairarray *) array));
-}
-
-
-static inline int
-   _mulle_pointerpairarray_needs_compaction( struct mulle_pointerpairarray *array)
-{
-   return( _mulle__pointerpairarray_needs_compaction( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_is_full( (struct mulle__pointerpairarray *) array));
 }
 
 
@@ -148,33 +162,29 @@ static inline void   _mulle_pointerpairarray_add( struct mulle_pointerpairarray 
 }
 
 
-//
-// this removes notakey from the back, until it finds a pointer
-// then remove this
-//
-static inline struct mulle_pointerpair
+static inline
+struct mulle_pointerpair
 	mulle_pointerpairarray_remove_last( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array,
-                                                array->notakey));
+   return( mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array));
 }
 
 
-static inline struct mulle_pointerpair
+static inline
+struct mulle_pointerpair
 	mulle_pointerpairarray_find_last( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array,
-                                                array->notakey));
+   return( mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array));
 }
 
 
-static inline struct mulle_pointerpair
+static inline
+struct mulle_pointerpair
 	_mulle_pointerpairarray_get( struct mulle_pointerpairarray *array,
                                 size_t i)
 {
    return( _mulle__pointerpairarray_get( (struct mulle__pointerpairarray *) array,
-                                         i,
-                                         array->notakey));
+                                         i));
 }
 
 
@@ -185,8 +195,7 @@ static inline void
 {
    _mulle__pointerpairarray_set( (struct mulle__pointerpairarray *) array,
                                  i,
-                                 pair,
-                                 array->notakey);
+                                 pair);
 }
 
 
@@ -200,10 +209,14 @@ struct mulle_pointerpairarrayenumerator
 };
 
 
-static inline void
-   mulle_pointerpairarrayenumerator_zero( struct mulle_pointerpairarrayenumerator *rover)
+MULLE_C_NONNULL_FIRST
+static inline struct mulle_pointerpairarrayenumerator
+	_mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
-   mulle__pointerpairarrayenumerator_zero( (struct mulle__pointerpairarrayenumerator *) rover);
+   struct mulle__pointerpairarrayenumerator   rover;
+
+   rover = _mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
+   return( *(struct mulle_pointerpairarrayenumerator *) &rover);
 }
 
 
@@ -212,34 +225,35 @@ static inline struct mulle_pointerpairarrayenumerator
 {
    struct mulle__pointerpairarrayenumerator   rover;
 
-   mulle__pointerpairarrayenumerator_zero( (struct mulle__pointerpairarrayenumerator *) &rover);
-
-   rover = mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array,
-                                              array->notakey);
+   rover = mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
    return( *(struct mulle_pointerpairarrayenumerator *) &rover);
 }
 
 
-static inline struct  mulle_pointerpairarrayenumerator
-   mulle_pointerpairarray_enumerate_nil( struct mulle_pointerpairarray *array)
+MULLE_C_NONNULL_FIRST_SECOND
+static inline int
+	_mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover,
+                                           struct mulle_pointerpair  *pair)
 {
-   struct mulle_pointerpairarrayenumerator   rover;
-
-   if( ! array)
-   {
-      mulle_pointerpairarrayenumerator_zero( &rover);
-      return( rover);
-   }
-
-   assert( ! array->notakey);
-   return( mulle_pointerpairarray_enumerate( array));
+   return( _mulle__pointerpairarrayenumerator_next( (struct mulle__pointerpairarrayenumerator *) rover,
+                                                    pair));
 }
 
 
-static inline struct mulle_pointerpair
-	mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover)
+static inline int
+	mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover,
+                                          struct mulle_pointerpair  *pair)
 {
-   return( mulle__pointerpairarrayenumerator_next( (struct mulle__pointerpairarrayenumerator *) rover));
+   return( mulle__pointerpairarrayenumerator_next( (struct mulle__pointerpairarrayenumerator *) rover,
+                                                   pair));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+	_mulle_pointerpairarrayenumerator_done( struct mulle_pointerpairarrayenumerator *rover)
+{
+   _mulle__pointerpairarrayenumerator_done( (struct mulle__pointerpairarrayenumerator *) rover);
 }
 
 

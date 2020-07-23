@@ -38,12 +38,33 @@ struct mulle_range
 // Why this is moot: if we are storing void *, they will take up 2 or 3 bits
 // worth of address space
 //
-static inline struct mulle_range   mulle_range_make( uintptr_t location, uintptr_t length)
+static inline struct mulle_range
+   mulle_range_make( uintptr_t location, uintptr_t length)
 {
     struct mulle_range   range;
 
     range.location = location;
     range.length   = length;
+    return( range);
+}
+
+static inline struct mulle_range
+   mulle_range_make_all( void)
+{
+    struct mulle_range   range;
+
+    range.location = 0;
+    range.length   = -1;
+    return( range);
+}
+
+static inline struct mulle_range
+   mulle_range_make_invalid( void)
+{
+    struct mulle_range   range;
+
+    range.location = mulle_not_found_e;
+    range.length   = 0;
     return( range);
 }
 
@@ -99,7 +120,7 @@ static struct mulle_range
    //
    end = mulle_range_get_end( range);
    if( end > length || end < range.location)
-      return( mulle_range_make( 0, 0));
+      return( mulle_range_make_invalid());
 
    return( range);
 }

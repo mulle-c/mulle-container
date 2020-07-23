@@ -38,7 +38,7 @@
 #include <limits.h>
 #include <stdint.h>
 
-// https://stackoverflow.com/questions/1464174/size-t-vs-uintptr-t
+// https://stackoverflow.com/questions/1464174/_size-t-vs-uintptr-t
 //
 // size_t is a type that can hold any array index. So that's what we use
 // in container structures to address elements in contigous memory, allocated
@@ -59,7 +59,7 @@
 // size_t is the "indexing" value for an array
 //
 #ifndef INTPTR_MAX
-#error "intprt_t and friends are neede for this platform"
+#error "intprt_t and friends are needed for this platform"
 #endif
 
 
@@ -77,5 +77,18 @@ enum mulle_container_write_mode
 // Use this for "notakey" pointer to differentiate
 
 #define mulle_not_a_pointer   ((void *) INTPTR_MIN)
+
+
+// just to get rid of warnings
+static inline void   *mulle_int_as_pointer( int a)
+{
+   return( (void *) (intptr_t) a);
+}
+
+
+static inline int   mulle_pointer_as_int( void *a)
+{
+   return( (int) (intptr_t) a);
+}
 
 #endif /* mulle_container_operation_h */
