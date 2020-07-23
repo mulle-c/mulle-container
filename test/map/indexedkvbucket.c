@@ -30,8 +30,8 @@ static void   simple_fill_test()
 
    printf( "%ld\n", (long) _mulle__map_get_count( bucket));
 
-   pair._key   = key;
-   pair._value = key;
+   pair.key   = key;
+   pair.value = key;
 
    for( i = 0; i < 100000; i++)
    {

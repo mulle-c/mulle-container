@@ -15,10 +15,10 @@
 // It has been coded for a fast "reserve" operation.
 //
 #define MULLE__STRUCTARRAY_BASE              \
-   void                     *storage;       \
-   void                     *curr;          \
-   void                     *sentinel;      \
-   int                      sizeof_struct
+   void                     *_storage;       \
+   void                     *_curr;          \
+   void                     *_sentinel;      \
+   int                      _sizeof_struct
 
 struct mulle__structarray
 {
@@ -38,7 +38,7 @@ static inline struct mulle__structarray  *
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__structarray_init( struct mulle__structarray *array,
-                                               size_t sizeof_struct,
+                                               size_t _sizeof_struct,
                                                unsigned int alignof_struct,
                                                size_t capacity,
                                                struct mulle_allocator *allocator)
@@ -46,20 +46,20 @@ static inline void   _mulle__structarray_init( struct mulle__structarray *array,
    void   _mulle__structarray_sizeto( struct mulle__structarray *array, size_t new_size, struct mulle_allocator *allocator);
    intptr_t   misalignment;
 
-   array->storage       = NULL;
-   array->curr          = NULL;
-   array->sentinel      = NULL;
-   array->sizeof_struct = (int) (sizeof_struct + (sizeof_struct % alignof_struct));
+   array->_storage       = NULL;
+   array->_curr          = NULL;
+   array->_sentinel      = NULL;
+   array->_sizeof_struct = (int) (_sizeof_struct + (_sizeof_struct % alignof_struct));
 
-   assert( array->sizeof_struct);
+   assert( array->_sizeof_struct);
 
    if( capacity)
-      _mulle__structarray_sizeto( array, capacity * array->sizeof_struct, allocator);
+      _mulle__structarray_sizeto( array, capacity * array->_sizeof_struct, allocator);
 }
 
 
 static inline struct mulle__structarray *
-   mulle__structarray_create( size_t sizeof_struct,
+   mulle__structarray_create( size_t _sizeof_struct,
                               unsigned int alignof_struct,
                               size_t capacity,
                               struct mulle_allocator *allocator)
@@ -67,7 +67,7 @@ static inline struct mulle__structarray *
    struct mulle__structarray  *array;
 
    array = mulle__structarray_alloc( allocator);
-   _mulle__structarray_init( array, sizeof_struct, alignof_struct, capacity, allocator);
+   _mulle__structarray_init( array, _sizeof_struct, alignof_struct, capacity, allocator);
    return( array);
 }
 
@@ -76,7 +76,7 @@ MULLE_C_NONNULL_FIRST
 static inline void  _mulle__structarray_done( struct mulle__structarray *array,
                                               struct mulle_allocator *allocator)
 {
-   mulle_allocator_free( allocator, array->storage);
+   mulle_allocator_free( allocator, array->_storage);
 }
 
 
@@ -94,7 +94,7 @@ static inline void  mulle__structarray_destroy( struct mulle__structarray *array
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__structarray_reset( struct mulle__structarray *array)
 {
-   array->curr = array->storage;
+   array->_curr = array->_storage;
 }
 
 
@@ -104,7 +104,7 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle__structarray_get_count( struct mulle__structarray *array)
 {
-   return( (size_t) (((char *) array->curr - (char *) array->storage) / array->sizeof_struct));
+   return( (size_t) (((char *) array->_curr - (char *) array->_storage) / array->_sizeof_struct));
 }
 
 
@@ -129,7 +129,7 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle__structarray_get_usedsize( struct mulle__structarray *array)
 {
-   return( (size_t) ((char *) array->curr - (char *) array->storage));
+   return( (size_t) ((char *) array->_curr - (char *) array->_storage));
 }
 
 # pragma mark - array operations
@@ -143,11 +143,11 @@ static inline void
    void   _mulle__structarray_grow( struct mulle__structarray *array,
                                     struct mulle_allocator *allocator);
 
-   if( array->curr == array->sentinel)
+   if( array->_curr == array->_sentinel)
       _mulle__structarray_grow( array, allocator);
 
-   memcpy( array->curr, item, array->sizeof_struct);
-   array->curr = &((char *) array->curr)[ array->sizeof_struct];
+   memcpy( array->_curr, item, array->_sizeof_struct);
+   array->_curr = &((char *) array->_curr)[ array->_sizeof_struct];
 }
 
 
@@ -160,11 +160,11 @@ static inline void *
                                     struct mulle_allocator *allocator);
    void   *reserved;
 
-   if( array->curr == array->sentinel)
+   if( array->_curr == array->_sentinel)
       _mulle__structarray_grow( array, allocator);
 
-   reserved     = array->curr;
-   array->curr = &((char *) array->curr)[ array->sizeof_struct];
+   reserved     = array->_curr;
+   array->_curr = &((char *) array->_curr)[ array->_sizeof_struct];
 
    return( reserved);
 }
@@ -174,7 +174,7 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle__structarray_get_first( struct mulle__structarray *array)
 {
-   return( array->curr > array->storage ? array->storage : NULL);
+   return( array->_curr > array->_storage ? array->_storage : NULL);
 }
 
 
@@ -187,9 +187,9 @@ static inline void *
 
    assert( array);
 
-   address = &((char *) array->storage)[ array->sizeof_struct * i];
-   assert( address >= (char *) array->storage);
-   assert( address < (char *) array->sentinel);
+   address = &((char *) array->_storage)[ array->_sizeof_struct * i];
+   assert( address >= (char *) array->_storage);
+   assert( address < (char *) array->_sentinel);
 
    return( address);
 }
@@ -199,26 +199,26 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle__structarray_get_last( struct mulle__structarray *array)
 {
-   assert( &((char *) array->curr)[ - array->sizeof_struct] >= (char *) array->storage);
+   assert( &((char *) array->_curr)[ - array->_sizeof_struct] >= (char *) array->_storage);
 
-   return(  &((char *) array->curr)[ - array->sizeof_struct]);
+   return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
 }
 
 
 static inline void
    _mulle__structarray_remove_last( struct mulle__structarray *array)
 {
-   if( array->curr > array->storage)
-      array->curr = _mulle__structarray_get_last( array);
+   if( array->_curr > array->_storage)
+      array->_curr = _mulle__structarray_get_last( array);
 }
 
 
 static inline void *
    mulle__structarray_get_last( struct mulle__structarray *array)
 {
-   if( ! array || array->curr == array->storage)
+   if( ! array || array->_curr == array->_storage)
       return( NULL);
-   return(  &((char *) array->curr)[ - array->sizeof_struct]);
+   return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
 }
 
 
@@ -238,9 +238,9 @@ static inline void
 #pragma mark - structarray enumerator
 
 #define MULLE__STRUCTARRAYENUMERATOR_BASE \
-   void   *curr;                          \
-   void   *sentinel;                      \
-   int    sizeof_struct
+   void   *_curr;                          \
+   void   *_sentinel;                      \
+   int    _sizeof_struct
 
 
 struct mulle__structarrayenumerator
@@ -258,11 +258,11 @@ static inline struct mulle__structarrayenumerator
 {
    struct mulle__structarrayenumerator   rover;
 
-   rover.curr          = array->storage;
-   rover.sentinel      = array->curr;
-   rover.sizeof_struct = array->sizeof_struct;
+   rover._curr          = array->_storage;
+   rover._sentinel      = array->_curr;
+   rover._sizeof_struct = array->_sizeof_struct;
 
-   assert( (char *) rover.sentinel >= (char *) rover.curr);
+   assert( (char *) rover._sentinel >= (char *) rover._curr);
 
    return( rover);
 }
@@ -271,26 +271,42 @@ static inline struct mulle__structarrayenumerator
 static inline struct mulle__structarrayenumerator
    mulle__structarray_enumerate( struct mulle__structarray *array)
 {
-   if( array)
+   if( ! array)
       return( mulle__structarrayenumerator_empty);
    return( _mulle__structarray_enumerate( array));
 }
 
 
-MULLE_C_NONNULL_FIRST
-static inline void *
-   _mulle__structarrayenumerator_next( struct mulle__structarrayenumerator *rover)
+MULLE_C_NONNULL_FIRST_SECOND
+static inline int
+   _mulle__structarrayenumerator_next( struct mulle__structarrayenumerator *rover,
+                                       void **item)
 {
    void   *address;
 
-   if( rover->curr < rover->sentinel)
+   if( rover->_curr < rover->_sentinel)
    {
-      address      = rover->curr;
-      rover->curr = &((char *) rover->curr)[ rover->sizeof_struct];
-
-      return( address);
+      *item        = rover->_curr;
+      rover->_curr = &((char *) rover->_curr)[ rover->_sizeof_struct];
+      return( 1);
    }
-   return( NULL);
+   return( 0);
+}
+
+static inline int
+   mulle__structarrayenumerator_next( struct mulle__structarrayenumerator *rover,
+                                      void **item)
+{
+   void   *address;
+
+   if( ! rover)
+      return( 0);
+   if( rover->_curr >= rover->_sentinel)
+      return( 0);
+   if( item)
+      *item = rover->_curr;
+   rover->_curr = &((char *) rover->_curr)[ rover->_sizeof_struct];
+   return( 1);
 }
 
 
@@ -323,11 +339,11 @@ static inline struct mulle__structarrayreverseenumerator
 {
    struct mulle__structarrayreverseenumerator   rover;
 
-   rover.curr          = array->curr;
-   rover.sentinel      = array->storage;
-   rover.sizeof_struct = array->sizeof_struct;
+   rover._curr          = array->_curr;
+   rover._sentinel      = array->_storage;
+   rover._sizeof_struct = array->_sizeof_struct;
 
-   assert( (char *) rover.curr >= (char *) rover.sentinel);
+   assert( (char *) rover._curr >= (char *) rover._sentinel);
 
    return( rover);
 }
@@ -342,18 +358,34 @@ static inline struct mulle__structarrayreverseenumerator
 }
 
 
-MULLE_C_NONNULL_FIRST
-static inline void *
-   _mulle__structarrayreverseenumerator_next( struct mulle__structarrayreverseenumerator *rover)
+MULLE_C_NONNULL_FIRST_SECOND
+static inline int
+   _mulle__structarrayreverseenumerator_next( struct mulle__structarrayreverseenumerator *rover,
+                                              void **item)
 {
-   void   *address;
-
-   if( rover->curr > rover->sentinel)
+   if( rover->_curr > rover->_sentinel)
    {
-      rover->curr = &((char *) rover->curr)[ - rover->sizeof_struct];
-      return( rover->curr);
+      rover->_curr = &((char *) rover->_curr)[ - rover->_sizeof_struct];
+      *item = rover->_curr;
+      return( 1);
    }
-   return( NULL);
+   return( 0);
+}
+
+static inline int
+   mulle__structarrayreverseenumerator_next( struct mulle__structarrayreverseenumerator *rover,
+                                              void **item)
+{
+   if( ! rover)
+      return( 0);
+   if( rover->_curr > rover->_sentinel)
+   {
+      rover->_curr = &((char *) rover->_curr)[ - rover->_sizeof_struct];
+      if( item)
+         *item = rover->_curr;
+      return( 1);
+   }
+   return( 0);
 }
 
 

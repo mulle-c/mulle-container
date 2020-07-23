@@ -60,10 +60,12 @@ static inline size_t   mulle__pointerset_hash_for_size( size_t hash, size_t size
  * notakey is mulle_not_a_pointer
  * hash is mulle_hash_pointer
  */
+
+// fields are considered private
 #define MULLE__POINTERSET_BASE \
-   void     **storage;         \
-   size_t   count;             \
-   size_t   size
+   void     **_storage;         \
+   size_t   _count;             \
+   size_t   _size
 
 // NSSet/NSMutableSet/NSHashTable
 
@@ -108,14 +110,14 @@ struct mulle__pointerset   *_mulle__pointerset_copy( struct mulle__pointerset *s
 MULLE_C_NONNULL_FIRST
 static inline size_t   _mulle__pointerset_get_size( struct mulle__pointerset *set)
 {
-   return( set->size);
+   return( set->_size);
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline size_t   _mulle__pointerset_get_count( struct mulle__pointerset *set)
 {
-   return( set->count);
+   return( set->_count);
 }
 
 
@@ -126,9 +128,9 @@ static inline int  _mulle__pointerset_is_full( struct mulle__pointerset *set)
 {
    size_t    size;
 
-   size = set->size;
+   size = set->_size;
    size = (size - (size >> MULLE__POINTERSET_FILL_SHIFT));  // full when 75% occupied
-   return( set->count >= size);
+   return( set->_count >= size);
 }
 
 
@@ -137,9 +139,9 @@ static inline int  _mulle__pointerset_is_sparse( struct mulle__pointerset *set)
 {
    size_t    size;
 
-   size = set->size / 2;
+   size = set->_size / 2;
    size = (size - (size >> MULLE__POINTERSET_FILL_SHIFT));
-   return( set->count < size);
+   return( set->_count < size);
 }
 
 
@@ -154,8 +156,8 @@ void   *_mulle__pointerset_get( struct mulle__pointerset *set,
 #pragma mark - enumeration
 
 #define MULLE__POINTERSETENUMERATOR_BASE  \
-   void     **curr;                       \
-   size_t   left
+   void     **_curr;                      \
+   size_t   _left
 
 
 struct mulle__pointersetenumerator
@@ -173,8 +175,8 @@ static inline struct mulle__pointersetenumerator
 {
    struct mulle__pointersetenumerator   rover;
 
-   rover.left    = set->count;
-   rover.curr    = set->storage;
+   rover._left = set->_count;
+   rover._curr = set->_storage;
 
    return( rover);
 }
@@ -195,15 +197,15 @@ static inline void   *_mulle__pointersetenumerator_next( struct mulle__pointerse
 {
    void   *p;
 
-   if( ! rover->left)
+   if( ! rover->_left)
       return( mulle_not_a_pointer);
 
    for(;;)
    {
-      p = *rover->curr++;
+      p = *rover->_curr++;
       if( p != mulle_not_a_pointer)
       {
-         rover->left--;
+         rover->_left--;
          return( p);
       }
    }

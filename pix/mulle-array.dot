@@ -1,0 +1,64 @@
+digraph {
+   graph [ pad="0.2", ranksep="0.7", nodesep="0.7"];
+
+   subgraph allocator {
+      rank = same;
+      rankdir=LR;
+
+      "mulle_array" [ label=<<TABLE BORDER="1">
+         <TR BORDER="0"><TD BGCOLOR="blue" COLSPAN="2"><FONT COLOR="white">mulle_array</FONT></TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">allocator</FONT></TD><TD PORT="allocator"></TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">callback</FONT></TD><TD PORT="callback"></TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">count</FONT></TD><TD>7</TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">size</FONT></TD><TD>8</TD></TR>
+         <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">storage</FONT></TD><TD PORT="pointers"></TD></TR>
+         </TABLE>>, shape="none" ];
+
+      "mulle_container_keycallback" [ label=<<TABLE BORDER="1">
+         <TR BORDER="0"><TD PORT="name" BGCOLOR="blue"><FONT COLOR="white">mulle_container_keycallback</FONT></TD></TR>
+         <TR BORDER="0"><TD>hash</TD></TR>
+         <TR BORDER="0"><TD>is_equal</TD></TR>
+         <TR BORDER="0"><TD>retain</TD></TR>
+         <TR BORDER="0"><TD>release</TD></TR>
+         <TR BORDER="0"><TD>describe</TD></TR>
+         <TR BORDER="0"><TD><FONT COLOR="lightgray">notakey</FONT></TD></TR>
+         <TR BORDER="0"><TD>userinfo</TD></TR>
+         </TABLE>>, shape="none" ];
+
+      "mulle_allocator" [ label=<<TABLE BORDER="1">
+         <TR BORDER="0"><TD PORT="name" BGCOLOR="blue"><FONT COLOR="white">mulle_allocator</FONT></TD></TR>
+         <TR BORDER="0"><TD>calloc</TD></TR>
+         <TR BORDER="0"><TD>realloc</TD></TR>
+         <TR BORDER="0"><TD>free</TD></TR>
+         </TABLE>>, shape="none" ];
+
+      "mulle_array" -> "mulle_container_keycallback"  -> "mulle_allocator"  [ style="invis" ]
+   }
+
+   graph [ pad="0.2", ranksep="0.3", nodesep="0.0"];
+
+   subgraph pair {
+      rank = same;
+      rankdir=TD;
+
+      subgraph keys {
+         node [shape=record, style="filled", fontcolor=black, fontsize=14, fixedsize=true];
+         rank = same;
+         rankdir=LR;
+
+         "k_a" [ label="0", fillcolor="yellow"];
+         "k_b" [ label="1", fillcolor="yellow"];
+         "k_c" [ label="2", fillcolor="yellow"];
+         "k_d" [ label="3", fillcolor="yellow"];
+         "k_e" [ label="4", fillcolor="chartreuse"];
+         "k_f" [ label="5", fillcolor="chartreuse"];
+         "k_g" [ label="6", fillcolor="chartreuse"];
+         "k_h" [ label="7", fillcolor="white"];
+      }
+   }
+//   "keys" -> "values" [ style="invis" ]
+   // center doesn't work :(
+   "mulle_array":"pointers":"c"  -> "k_a"   [ arrowtail="dot", arrowhead="vee", dir="both" ]
+   "mulle_array":"allocator":"c" -> "mulle_allocator":"name":"w"
+   "mulle_array":"callback":"c"  -> "mulle_container_keycallback":"name":"w"
+}

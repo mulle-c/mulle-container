@@ -1,25 +1,69 @@
 # mulle-container
 
-#### 🛄 Sets, hashtables, arrays and more - written in C
+#### 🛄 Arrays, hashtables and a queue
 
-A collection of C (C99) data structures dealing exclusively with void pointers
-and their integer counterpart `intptr_t`.
+A collection of C (C11) data structures dealing mostly with void pointers and Objective-C objects.
 
 All data structures can live (temporarily) on the stack, or permanently in the
 heap. None of them are thread-safe.
-[mulle-allocator](//github.com/mulle-c/mulle-allocator) is used pervasively
-to simplify memory management.
-Some utilize callbacks that are compatible to OS X's
+[mulle-allocator](//github.com/mulle-c/mulle-allocator) is used pervasively to simplify memory management.
+Some data structures utilize callbacks that are compatible to OS X's
 [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
 
 Build Status | Release Version
 -------------|-----------------------------------
 [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container)
 
+
+## Aspects
+
+### Algorithms
+
+There are three basic algorithms employed by the data structures in
+mulle-container. The hashtable, the array and the queue.
+
+Both the array and the hashtable use a contiguous block of memory.
+An array reallocates on growth. A hashtable copies on growth. The queue is a linked list of smaller memory blocks.
+
+
+### Contents and "notakey"
+
+The hashtables use "holes" to discriminate between valid entries and available
+space. Consequently a hashtable can not use all possible `void *` values as
+keys and needs a special **notakey** marker for such holes.
+
+The "notakey" value is usually `mulle_not_a_pointer`, which is defined as
+`(void *) INTPTR_MIN`.
+
+
+### Embedded allocator
+
+For many data structures there exist two variants. One
+that keeps a reference to the memory allocator, and one that doesn't. The
+data structure without, is obviously smaller than the one with.
+If you are managing millions of hashtables, as may be the case when doing
+database fetches, this can be significant.
+On the other hand, embedding the allocator makes the API be simpler and
+less susceptible to allocator mix ups.
+
+### NULL leniency
+
+Each data structure supplies rigid functions and lenient functions, with
+respect to NULL parameters. The rigid functions are prefixed with '`_`' and
+do not check for NULL pointers. The lenient functions do nothing, if NULL is
+passed. This is like Objective-C where you can call methods with 'nil'.
+
+### Pointers or Objects
+
+A data structure, conventionally containing the word "pointer" in its name, may merely handle pointer equality as a way of comparing
+members. This is efficient and sometimes all you need. Other
+data structures use a number of **callback**, to test for equality, memory management and creating hash codes.
+
 ## Example
 
 Here is an example using `mulle_map` to associate c-strings with each other.
-All the necessary memory management (copying of keys and values) is performed by `mulle_map` using callbacks. The on-stack version is commented out:
+All the necessary memory management (copying of keys and values) is performed
+by `mulle_map` using the callbacks contained in a `mulle_container_keyvaluecallback` struct. The on-stack version is commented out:
 
 
 ```
@@ -58,6 +102,7 @@ static void  test( void)
 
 int   main( void)
 {
+   // use predefined structs to compose our custom callback
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
@@ -74,7 +119,8 @@ that is prefixed with the name of the data structure it handles. So for example
 the `get` function for `mulle_array` is `mulle_array_get`. The first parameter,
 except for creation functions, is always the container itself.
 
-Check out [VERBS.md](dox/VERBS.md) for a list of common verbs used.
+Check out [SYNTAX.md](dox/SYNTAX.md) for a somewhat formal
+explanation and [VERBS.md](dox/VERBS.md) for a list of common verbs being employed.
 
 The various functions `assert` their parameters, but when compiled for release
 there are no runtime checks. For development it is wise to use a debug version
@@ -84,27 +130,27 @@ of the library.
 
 All arrays store their elements in a single block of memory.
 
-### Standard Arrays
+#### Standard Arrays
 
 ##### `mulle_array`
 
 This is an array of `void *` that `realloc`s on power of two sizes. The
 elements equality is determined with a callback function and the elements
-can be  copied/freed or reference counted using [`mulle_container_callback`s](dox/API_CONTAINER_CALLBACK.md). Deletions use `memmove`. It could be the basis
-for a `NSMutableArray` implementation (but isn't).
-`mulle_array` is somewhat more efficient on element deletion, as compaction is delayed. For this it
-has a notion of `notakey` (usually NULL) that is used for the holes.
+can be copied/freed or reference counted using
+[`mulle_container_callback`s](dox/API_CONTAINER_CALLBACK.md). Deletions use
+`memmove`. It could be the basis for a `NSMutableArray` implementation
+(but isn't currently).
 
 ![](pix/mulle-array.svg)
 
-> Filled cells indicate a cell containing a pointer value. White cells have been removed (overwritten with notakey) or have not been used yet.
-> The array was allocated with an initial capacity of 4. The additions of a fifth value forced an expansion to 8 (yellow: old cells, green: new cells)
-> Therefore this array has a capacity (`size`) of 8. It contains 4 values (`count`), but there is only one cell left in the arrays capacity (`size` - `used`).
+> The array was allocated with an initial capacity of 4. The addition of a fifth value forced an expansion to 8 (yellow: old cells, green: new cells). The "notakey" is not used for arrays.
 
 
 ##### `mulle__array`
 
-This is `mulle_array` minus the embedded `mulle_allocator`.
+This is `mulle_array` minus the `allocator` and `callback`.
+
+![](pix/mulle--array.svg)
 
 
 ##### `mulle_pointerarray`
@@ -115,27 +161,29 @@ untyped `void *`. The pointers are simply compared with `==`.
 ![](pix/mulle-pointerarray.svg)
 
 
-
-
 ##### `mulle__pointerarray`
 
-This is a stripped down version of `mulle_pointerarray` minus the embedded
-`mulle_allocator` and `notakey`. As it has no notion of
-`notakey` it is not possible to erase values with random access.  It can be convenient for quickly building up C arrays of `void *`.
+This is a stripped down version of `mulle_pointerarray` minus the `allocator`. It can be
+convenient for quickly building up C arrays of `void *`.
 
 ![](pix/mulle--pointerarray.svg)
 
-> Filled cells indicate a cell containing a pointer value. All values are possible, so there are no holes.
-> The array was allocated with an initial capacity of 4. The additions of a fifth value forced an expansion to 8 (yellow: old cells, green: new cells)
-> Therefore this array has a capacity (`size`) of 8. It contains 5 values (`used`), and there are 3 cells left in the arrays capacity (`size` - `used`).
+
+#### Special Arrays
 
 ##### `mulle__uniquepointerarray`
 
-`mulle__uniquepointerarray` is based on `mulle__pointerarray`. It keeps its elements of `void *` in an array in sorted order for searching by pointer equality. The sorting is done lazily.
+`mulle__uniquepointerarray` is based on `mulle__pointerarray`. It keeps its
+elements of `void *` in an array in sorted order for searching by pointer
+equality. The sorting is done lazily. It's use is as a set. It's
+advantage over a hashtable set are low memory requirement and superior
+performance for smaller quantities.
+
 
 ##### `mulle__rangeset`
 
-This is a array of `mulle_range` elements, that are always kept in sorted order. A `mulle_range` is defined as
+This is an array of `mulle_range` elements, that are always kept in sorted
+order. A `mulle_range` is defined as
 
 ``` objective-c
 struct mulle_range
@@ -157,18 +205,25 @@ It could be the basis for an `NSIndexSet`.
 
 #### `mulle_structarray`
 
-This is a variant of `mulle_pointerarray`, but instead of using `void *` you can specify
-any C type as the element size. This can be useful for building arrays of `float` for example.
+This is a variant of `mulle_pointerarray`, but instead of using `void *` you
+can specify any C type as the element size. This can be useful for building
+arrays of `float` or any kind of `struct` for example.
 
 
-#### Associative Array
+#### Associative Arrays
 
 ##### `mulle_pointerpairarray`
 
-This is modified `mulle_pointerarray` that holds key/value pairs of `void *`, `void *` instead of
-just a single `void *`. In comparison to using a map, order of addition is preserved and the
-space requirement is lower. But it is slow in searches.
+This is modified `mulle_pointerarray` that holds key/value pairs of
+`void *`, `void *` instead of just a single `void *`. In comparison to using a
+map, order of addition is preserved and the space requirement is lower. But
+it is slow in searches.
 
+![](pix/mulle-pointerpairarray.svg)
+
+##### `mulle__pointerpairarray`
+
+This is the `mulle_pointerpairarray` variant without the `allocator`.
 
 ### Queues
 
@@ -207,27 +262,53 @@ Hashtable data structures that provide associative storage (key/value) are calle
 
 ##### `mulle_map`
 
-
 The elements equality is determined with a callback function and the elements
-can be copied/freed or reference counted using callbacks [`mulle_container_callback`](dox/API_CONTAINER_CALLBACK.md).
+can be copied/freed or reference counted using callbacks organized in a
+[`mulle_container_callback`](dox/API_CONTAINER_CALLBACK.md).
+
+![](pix/mulle-map.svg)
+
+> The contigous memory is split into two equal sized parts "KEYS" and "VALUES".
+> Gray cells indicate a "hole", they contain **notakey**. The corresponding value is undefined (white).
+> The map was allocated with an initial capacity of 4. The addition of a third value forced an expansion to 8, as the hashtable needs enough holes to operate. (yellow: old cells, green: new cells).
+> On growth all the keys and values are redistributed.
+> The cells are placed according to the hash of the key. On collision the next available hole is used.
 
 
 ##### `mulle__map`
 
-This is `mulle_map` minus the embedded `mulle_allocator`. It is the basis for
+This is `mulle_map` minus the `allocator` and the `callback`. It is the basis for
 the `NSMutableDictionary` implementation.
+
+![](pix/mulle--map.svg)
 
 
 ##### `mulle__pointermap`
 
-This is a stripped down version of `mulle__map` minus the callback and the
-allocator. So equality is determined by comparing pointers with `==`.
+This is a simplified version of `mulle__map`. Equality is determined by comparing pointers with `==` and holes are always filled with `mulle_not_a_pointer` (which is `INTPTR_MIN`). Therefore no callbacks are used by `mulle__pointermap`.
+
+![](pix/mulle--pointermap.svg)
 
 ### Sets
 
+A set is a map minus the value part. The storage of pointers and objects in a set is not very efficient, compared to an array, but searching is fast for larger item quantities.
+
 #### `mulle_set`
+
+![](pix/mulle-set.svg)
+
 #### `mulle__set`
 
+The `mulle__set` is a `mulle_set` without the `allocator` and the `callback`.
+
+![](pix/mulle--set.svg)
+
+
+##### `mulle__pointerset`
+
+This is a simplified version of `mulle__set`. Equality is determined by comparing pointers with `==` and holes are always filled with `mulle_not_a_pointer` (which is `INTPTR_MIN`). Therefore no callbacks are used by `mulle__pointerset`.
+
+![](pix/mulle--pointerset.svg)
 
 
 File                                                         | Description
@@ -244,22 +325,69 @@ File                                                         | Description
 [`mulle_map`](dox/API_MAP.md)                                | A single level growing hashmap (key indexing value map). Your standard key/value associating hashtable (NSMutableDictionary)
 &nbsp;                                                       | &nbsp;
 [`mulle_set`](dox/API_SET.md)                                | A single level growing hashed set. (NSMutableSet)
-[`mulle_uniquepointerarray`](dox/API_uniquepointerarray.md)                  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
+[`mulle_uniquepointerarray`](dox/API_uniquepointerarray.md)  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
 
 
-Data structure names prefixed with an underscore, e.g. "mulle__set", indicate
-that they are incomplete. You need to provide additional parameters like an
-"allocator" for operations. Otherwise the data structure is self-contained.
 
-### Platforms and Compilers
+## Efficiency
 
-All platforms and compilers supported by
-[mulle-c11](//github.com/mulle-c/mulle-c11).
+As time critical sections are all inlined, the performance of the
+library code is as good as your compiler (within the runtime limitations of the algorithm.
+
+Here is an example of mulle-container code, compiled with -Os:
+
+```
+
+int   _mulle__pointerset_count_zeroes_generic( struct mulle__pointerset *src,
+                                              struct mulle_container_keycallback *callback,
+                                              struct mulle_allocator *allocator)
+{
+   struct mulle__genericpointersetenumerator  rover;
+   void                                       *item;
+   int                                        rval;
+
+   rval  = 0;
+   rover = _mulle__pointerset_enumerate_generic( src, callback);
+   while( _mulle__genericpointersetenumerator_next( &rover, &item))
+   {
+       if( item == 0)
+           ++rval;
+   }
+   mulle__genericpointersetenumerator_done( &rover);
+   return( rval);
+}
+```
+
+produces:
+
+```
+_mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keycallback*, mulle_allocator*): # @_mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keycallback*, mulle_allocator*)
+        mov     rcx, qword ptr [rdi + 8]
+        test    rcx, rcx
+        je      .LBB0_1
+        mov     rdx, qword ptr [rsi + 40]
+        mov     rsi, qword ptr [rdi]
+        xor     eax, eax
+.LBB0_3:                                # =>This Inner Loop Header: Depth=1
+        mov     rdi, qword ptr [rsi]
+        add     rsi, 8
+        cmp     rdi, rdx
+        je      .LBB0_3
+        cmp     rdi, 1
+        adc     eax, 0
+        dec     rcx
+        jne     .LBB0_3
+        ret
+.LBB0_1:
+        xor     eax, eax
+        ret
+```
 
 
 ## Add
 
-Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
+Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your
+mulle-sde project:
 
 ```
 mulle-sde dependency add --c --github mulle-c mulle-container
@@ -298,6 +426,14 @@ mkdir build 2> /dev/null
    make install
 )
 ```
+
+
+
+## Platforms and Compilers
+
+All platforms and compilers supported by
+[mulle-c11](//github.com/mulle-c/mulle-c11).
+
 
 
 ## Author

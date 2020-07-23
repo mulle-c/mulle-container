@@ -61,23 +61,24 @@ struct mulle__pointersetenumerator   mulle__pointersetenumerator_empty;
 // 0 is also a power of two for these purposes
 //
 
-#pragma clang diagnostic ignored "-Wshift-count-overflow"
-
-
 void    _mulle__pointerset_init( struct mulle__pointerset *p,
                                  size_t capacity,
                                  struct mulle_allocator *allocator)
 {
-   p->count = 0;
+   memset( p, 0, sizeof( *p));
+
    //
    // our set requires mulle_not_a_pointer to find an end
    // so give it ~25% holes. For this to work though, we can not be smaller
    // than 4 items.
    //
-   p->size  = capacity >= MULLE__POINTERSET_MIN_SIZE
-                     ? mulle_pow2round( capacity + (capacity >> MULLE__POINTERSET_FILL_SHIFT))
-                     : MULLE__POINTERSET_MIN_SIZE;
-   p->storage = _mulle__pointerset_allocate_storage_generic( p->size, mulle_not_a_pointer, allocator);
+   if( capacity)
+   {
+      p->_size  = capacity >= MULLE__POINTERSET_MIN_SIZE
+                        ? mulle_pow2round( capacity + (capacity >> MULLE__POINTERSET_FILL_SHIFT))
+                        : MULLE__POINTERSET_MIN_SIZE;
+      p->_storage = _mulle__pointerset_allocate_storage_generic( p->_size, mulle_not_a_pointer, allocator);
+   }
 }
 
 
@@ -96,7 +97,7 @@ struct mulle__pointerset   *_mulle__pointerset_create( size_t capacity,
 void   _mulle__pointerset_done( struct mulle__pointerset *set,
                                 struct mulle_allocator *allocator)
 {
-   mulle_allocator_free( allocator, set->storage);
+   mulle_allocator_free( allocator, set->_storage);
 }
 
 
@@ -113,20 +114,20 @@ void   *_mulle__pointerset__get( struct mulle__pointerset *set,
                                  void *key)
 {
    size_t      i;
-   size_t      size;
+   size_t      _size;
    size_t      mask;
    void        *found;
-   void        **storage;
+   void        **_storage;
    uintptr_t   hash;
 
    hash    = mulle_hash_pointer( key);
-   storage = set->storage;
-   size    = set->size;
-   i       = mulle__pointerset_hash_for_size( hash, size);
-   mask    = size - 1;
+   _storage = set->_storage;
+   _size    = set->_size;
+   i       = mulle__pointerset_hash_for_size( hash, _size);
+   mask    = _size - 1;
    for(;;)
    {
-      found = storage[ i];
+      found = _storage[ i];
       if( found == mulle_not_a_pointer)
          break;
       if( key == found)
@@ -143,11 +144,29 @@ void   *_mulle__pointerset_get( struct mulle__pointerset *set,
    uintptr_t   hash;
    void        *value;
 
-   // important to not hit a NULL storage later
-   if( set->count == 0)
+   // important to not hit a NULL _storage later
+   if( set->_count == 0)
       return( NULL);
 
    value = _mulle__pointerset__get( set, key);
    return( value);
 }
 
+
+struct mulle__pointerset  *
+   _mulle__pointerset_copy( struct mulle__pointerset *set,
+                            struct mulle_allocator *allocator)
+{
+   struct mulle__pointerset   *other;
+
+   other = _mulle__pointerset_create( _mulle__pointerset_get_count( set), 0, allocator);
+   if( _mulle__pointerset_copy_items_generic( other,
+                                              set,
+                                              &mulle_container_keycallback_nonowned_pointer_or_null,
+                                              allocator))
+   {
+      _mulle__pointerset_destroy( other, allocator);
+      other = NULL;
+   }
+   return( other);
+}

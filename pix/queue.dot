@@ -1,0 +1,98 @@
+digraph mulle_classhierarchy
+{
+   {
+      rank = same;
+      rankdir=LR
+      "0xa98050" [ label=<<TABLE>
+      <TR><TD BGCOLOR="goldenrod" COLSPAN="2"><FONT COLOR="white">A</FONT></TD></TR>
+      </TABLE>>, shape="none" ];
+      "0xa98590" [ label=<<TABLE>
+      <TR><TD BGCOLOR="goldenrod" COLSPAN="2"><FONT COLOR="white">P</FONT></TD></TR>
+      </TABLE>>, shape="none" ];
+      "0xa98af0" [ label=<<TABLE>
+      <TR><TD BGCOLOR="goldenrod" COLSPAN="2"><FONT COLOR="white">Q</FONT></TD></TR>
+      </TABLE>>, shape="none" ];
+
+      "0xa98050" -> "0xa98590" -> "0xa98af0" [ style="invis"]
+   }
+
+   {
+      rank = same;
+      rankdir=LR
+
+      // B
+      "0xa99150" [ label=<<TABLE>
+      <TR><TD BGCOLOR="goldenrod" COLSPAN="2"><FONT COLOR="white">B</FONT></TD></TR>
+      </TABLE>>, shape="none" ];
+   }
+
+   // B -> A
+   "0xa98050" -> "0xa99150" [ label=" superclass" dir="back" ]
+   // B -> P
+   "0xa98590" -> "0xa99150" [ label=" protocolclass #0" dir="back" ]
+   // B -> Q
+   "0xa98af0" -> "0xa99150" [ label=" protocolclass #1" dir="back" ]
+
+   {
+      rank = same;
+      rankdir=LR
+
+      // A methodlist
+      "0xa98050" -> "0x408130"  [ label="methodlist #0" arrowhead="box" ];
+      "0x408130" [ label=<<TABLE>
+      <TR><TD BGCOLOR="black" COLSPAN="2"><FONT COLOR="white">methodlist</FONT></TD></TR>
+      <TR><TD COLSPAN="2">foo</TD></TR>
+      </TABLE>>, shape="none" ];
+
+      // P methodlist
+      "0xa98590" -> "0x4081e0"  [ label="methodlist #0" arrowhead="box"  ];
+      "0x4081e0" [ label=<<TABLE>
+      <TR><TD BGCOLOR="black" COLSPAN="2"><FONT COLOR="white">methodlist</FONT></TD></TR>
+      <TR><TD COLSPAN="2">foo</TD></TR>
+      </TABLE>>, shape="none" ];
+
+
+      // Q methodlist
+      "0xa98af0" -> "0x408268"  [ label="methodlist #0" arrowhead="box"  ];
+      "0x408268" [ label=<<TABLE>
+      <TR><TD BGCOLOR="black" COLSPAN="2"><FONT COLOR="white">methodlist</FONT></TD></TR>
+      <TR><TD COLSPAN="2" PORT="Q.foo" BGCOLOR="chartreuse">foo</TD></TR>
+      </TABLE>>, shape="none" ];
+   }
+
+   {
+      rank = same;
+      rankdir=LR
+
+      // B methodlist
+      "0x4082f0" [ label=<<TABLE>
+      <TR><TD BGCOLOR="black" COLSPAN="2"><FONT COLOR="white">methodlist</FONT></TD></TR>
+      <TR><TD COLSPAN="2">foo</TD></TR>
+      </TABLE>>, shape="none" ];
+
+      // B( X) methodlist
+      "0x408608" [ label=<<TABLE>
+      <TR><TD BGCOLOR="black" COLSPAN="2"><FONT COLOR="white">methodlist</FONT></TD></TR>
+      <TR><TD>category</TD><TD BGCOLOR="goldenrod"><FONT COLOR="white">X</FONT></TD></TR>
+      <TR><TD COLSPAN="2">foo</TD></TR>
+      </TABLE>>, shape="none" ];
+
+      // B( Y) methodlist
+      "0x408708" [ label=<<TABLE>
+      <TR><TD BGCOLOR="black" COLSPAN="2"><FONT COLOR="white">methodlist</FONT></TD></TR>
+      <TR><TD>category</TD><TD BGCOLOR="goldenrod"><FONT COLOR="white">Y</FONT></TD></TR>
+      <TR><TD COLSPAN="2" PORT="Y.foo" BGCOLOR="chartreuse">foo</TD></TR>
+      </TABLE>>, shape="none" ];
+
+      "0x4082f0" -> "0x408608" -> "0x408708" [ style="invis"]
+   }
+
+   // B methodlist
+   "0xa99150" -> "0x4082f0"  [ label="methodlist #0" arrowhead="box" ];
+   // B( X) methodlist
+   "0xa99150" -> "0x408608"  [ label="methodlist #1" arrowhead="box"  ];
+   // B( Y) methodlist
+   "0xa99150" -> "0x408708"  [ label="methodlist #2" arrowhead="box"  ];
+
+   "0x408268":"Q.foo" -> "0x408708":"Y.foo" [ label=" [super foo]" fontcolor="darkgreen"  dir="back", penwidth="2"]
+}

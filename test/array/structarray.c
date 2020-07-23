@@ -67,7 +67,7 @@ static void  simple( void)
 
    i     = 0;
    rover = mulle_structarray_enumerate( array);
-   while( a = _mulle_structarrayenumerator_next( &rover))
+   while( _mulle_structarrayenumerator_next( &rover, (void **) &a))
    {
       assert( a->x == (double) i + 1848);
       assert( a->y == (i & 0x7F));
@@ -77,7 +77,7 @@ static void  simple( void)
    mulle_structarrayenumerator_done( &rover);
 
    rrover = mulle_structarray_reverseenumerate( array);
-   while( a = _mulle_structarrayreverseenumerator_next( &rrover))
+   while( _mulle_structarrayreverseenumerator_next( &rrover, (void **) &a))
    {
       --i;
       assert( a->x == (double) i + 1848);

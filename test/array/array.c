@@ -34,17 +34,16 @@ static void  simple( void)
    assert( ! strcmp( "1848", mulle_array_get( array, 2)));
 
    rover = mulle_array_enumerate( array);
-   item = mulle_arrayenumerator_next( &rover);
+   mulle_arrayenumerator_next( &rover, &item);
    assert( item);
    assert( ! strcmp( "VfL", item));
-   item = mulle_arrayenumerator_next( &rover);
+   mulle_arrayenumerator_next( &rover, &item);
    assert( item);
    assert( ! strcmp( "Bochum", item));
-   item = mulle_arrayenumerator_next( &rover);
+   mulle_arrayenumerator_next( &rover, &item);
    assert( item);
    assert( ! strcmp( "1848", item));
-   item = mulle_arrayenumerator_next( &rover);
-   assert( !item);
+   assert( ! mulle_arrayenumerator_next( &rover, &item));
    mulle_arrayenumerator_done( &rover);
 
    mulle_array_remove_last( array);
@@ -78,25 +77,25 @@ static void  grow( void)
    size_t               i, n;
 
    mulle_array_init( &array, 10, &mulle_container_keycallback_copied_cstring, NULL);
-   mulle_array_guarantee( &array, 20);
-   assert( mulle_array_guaranteedsize( &array) >= 20);
+   _mulle_array_guarantee( &array, 20);
+   assert( mulle_array_get_guaranteed_size( &array) >= 20);
 
-   memo_size    = array.size;
-   memo_storage = array.storage;
+   memo_size    = mulle_array_get_size( &array);
+   memo_storage = array._storage;
 
-   n = mulle_array_guaranteedsize( &array);
+   n = mulle_array_get_guaranteed_size( &array);
    for( i = 0; i < n; i++)
    {
       mulle_array_add( &array, "VfL");
    }
 
-   // guarantee means unchanging internal storage
-   assert( mulle_array_guaranteedsize( &array) == 0);
-   assert( array.size == memo_size);
-   assert( array.storage == memo_storage);
+   // guarantee means unchanging internal _storage
+   assert( mulle_array_get_guaranteed_size( &array) == 0);
+   assert( mulle_array_get_size( &array) == memo_size);
+   assert( array._storage == memo_storage);
 
    assert( mulle_array_is_full( &array) == 1);
-   mulle_array_grow( &array);
+   _mulle_array_grow( &array);
    assert( mulle_array_is_full( &array) == 0);
 
    mulle_array_done( &array);
@@ -109,32 +108,34 @@ static void  notakeymarker( void)
    struct mulle_arrayenumerator    rover;
    int                             item;
    size_t                          index;
+   void                            *pointer;
 
    array = mulle_array_create( &mulle_container_keycallback_int, NULL);
-   mulle_array_add_int( array, 0);
-   mulle_array_add_int( array, 1);
-   mulle_array_add_int( array, 2);
+   mulle_array_add( array, mulle_int_as_pointer( 0));
+   mulle_array_add( array, mulle_int_as_pointer( 1));
+   mulle_array_add( array, mulle_int_as_pointer( 2));
 
-   assert( 0 == mulle_array_get_int( array, 0));
-   assert( 1 == mulle_array_get_int( array, 1));
-   assert( 2 == mulle_array_get_int( array, 2));
+   assert( 0 == mulle_pointer_as_int( mulle_array_get( array, 0)));
+   assert( 1 == mulle_pointer_as_int( mulle_array_get( array, 1)));
+   assert( 2 == mulle_pointer_as_int( mulle_array_get( array, 2)));
 
    assert( mulle_array_get_count( array) == 3);
 
    rover = mulle_array_enumerate( array);
-   item = mulle_arrayenumerator_next_int( &rover);
+   mulle_arrayenumerator_next( &rover, &pointer);
+   item = mulle_pointer_as_int( pointer);
    assert( 0 == item);
-   item = mulle_arrayenumerator_next_int( &rover);
+   mulle_arrayenumerator_next( &rover, &pointer);
+   item = mulle_pointer_as_int( pointer);
    assert( 1 == item);
-   item = mulle_arrayenumerator_next_int( &rover);
+   mulle_arrayenumerator_next( &rover, &pointer);
+   item = mulle_pointer_as_int( pointer);
    assert( 2 == item);
-   item = mulle_arrayenumerator_next_int( &rover);
-   assert( mulle_container_keycallback_int.notakey == (void *) (intptr_t) item);
    assert( mulle_container_keycallback_int.notakey == mulle_container_not_an_int_key);
 
-   index = mulle_array_find_in_range_identical_int( array, 1, 0, 3);
+   index = mulle_array_find_in_range_identical( array, mulle_int_as_pointer( 1), mulle_range_make( 0, 3));
    assert( index == 1);
-   index = mulle_array_find_in_range_identical_int( array, 1, 0, 1);
+   index = mulle_array_find_in_range_identical( array, mulle_int_as_pointer( 1), mulle_range_make( 0, 1));
    assert( index == mulle_not_found_e);
    mulle_arrayenumerator_done( &rover);
    mulle_array_destroy( array);
@@ -155,7 +156,7 @@ static void  copy( void)
 
    mulle_array_init( &copy, 0, &mulle_container_keycallback_copied_cstring, NULL);
    assert( mulle_array_get_count( &copy) == 0);
-   mulle_array_add_array( &copy, &array);
+   mulle_array_add_array( &copy, &array, mulle_range_make_all());
    assert( mulle_array_get_count( &copy) == 3);
    assert( mulle_array_get_count( &array) == 3);
    assert( mulle_array_is_equal( &copy, &array));
@@ -175,31 +176,31 @@ static void  find( void)
 
    mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
 
-   found = mulle_array_find_in_range_identical( &array, "xxx", 0, 0);
+   found = mulle_array_find_in_range_identical( &array, "xxx", mulle_range_make( 0, 0));
    assert( found == mulle_not_found_e);
 
    mulle_array_add( &array, s1 = "VfL");
    mulle_array_add( &array, s2 = "Bochum");
    mulle_array_add( &array, s3 = "1848");
 
-   found = mulle_array_find_in_range( &array, s1, 0, 0);
+   found = mulle_array_find_in_range( &array, s1, mulle_range_make( 0, 0));
    assert( found ==  mulle_not_found_e);
 
    // can't happen since we use copied cstring!
-   found = mulle_array_find_in_range_identical( &array, s1, 0, 3);
+   found = mulle_array_find_in_range_identical( &array, s1, mulle_range_make( 0, 3));
    assert( found ==  mulle_not_found_e);
 
-   found = mulle_array_find_in_range( &array, s1, 0, 3);
+   found = mulle_array_find_in_range( &array, s1, mulle_range_make( 0, 3));
    assert( found == 0);
-   found = mulle_array_find_in_range( &array, s2, 0, 3);
+   found = mulle_array_find_in_range( &array, s2, mulle_range_make( 0, 3));
    assert( found == 1);
-   found = mulle_array_find_in_range( &array, s3, 0, 3);
+   found = mulle_array_find_in_range( &array, s3, mulle_range_make( 0, 3));
    assert( found == 2);
 
-   found = mulle_array_find_in_range( &array, s3, 2, 1);
+   found = mulle_array_find_in_range( &array, s3, mulle_range_make( 2, 1));
    assert( found == 2);
 
-   found = mulle_array_find_in_range( &array, s1, 1, 0);
+   found = mulle_array_find_in_range( &array, s1, mulle_range_make( 1, 0));
    assert( found == mulle_not_found_e);
 
    mulle_array_done( &array);
@@ -209,7 +210,9 @@ static void  find( void)
 static void  run_test( void (*f)( void), char *name)
 {
    mulle_testallocator_reset();
-  // printf( "%s\n", name);
+#ifdef DEBUG
+   fprintf( stderr, "%s\n", name);
+#endif
    (f)();
    mulle_testallocator_reset();
 }

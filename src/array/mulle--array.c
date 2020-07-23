@@ -54,7 +54,7 @@ static inline void
    void   **p;
    void   **sentinel;
 
-   p        = &array->storage[ range.location];
+   p        = &array->_storage[ range.location];
    sentinel = &p[ range.length];
    while( p < sentinel)
       (*callback->release)( callback, *p++, allocator);
@@ -116,21 +116,21 @@ uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
 
    assert( n >= range.location);
 
-   p        = array->storage[ range.location];
+   p        = &array->_storage[ range.location];
    sentinel = &p[ n];
    while( p < sentinel)
    {
       if( *p == obj)
-         return( p - array->storage);
+         return( p - array->_storage);
       ++p;
    }
 
-   p        = array->storage[ range.location];
+   p        = &array->_storage[ range.location];
    sentinel = &p[ range.length];
    while( p < sentinel)
    {
       if( (*callback->is_equal)( callback, obj, *p))
-         return( p - array->storage);
+         return( p - array->_storage);
       ++p;
    }
 
@@ -179,10 +179,10 @@ int    _mulle__array_is_equal( struct mulle__array *array,
       return( 0);
 
    if( callback->is_equal == mulle_container_keycallback_pointer_is_equal)
-      return( ! memcmp( array->storage, other->storage, n * sizeof( void *)));
+      return( ! memcmp( array->_storage, other->_storage, n * sizeof( void *)));
 
-   p = array->storage;
-   q = other->storage;
+   p = array->_storage;
+   q = other->_storage;
    for( i = 0; i < n; i++)
    {
       if( ! (callback->is_equal)( callback, *p, *q))
@@ -207,4 +207,34 @@ void    _mulle__array_set( struct mulle__array *array,
                                     i,
                                     p);
    (*callback->release)( callback, old, allocator);
+}
+
+
+
+void
+   mulle__array_add_array( struct mulle__array *array,
+                           struct mulle__array *other,
+                           struct mulle_range range,
+                           struct mulle_container_keycallback *callback,
+                           struct mulle_allocator *allocator)
+{
+   size_t   count;
+   void     **q;
+   void     **sentinel;
+
+   assert( callback);
+   if( ! array || ! callback)
+      return;
+
+   count = mulle__array_get_count( other);
+   range = mulle_range_validate_against_length( range, count);
+   if( ! range.length)
+      return;
+
+   _mulle__pointerarray_guarantee( (struct mulle__pointerarray *) array, range.length, allocator);
+
+   q        = &other->_storage[ range.location];
+   sentinel = &q[ range.length];
+   while( q < sentinel)
+      _mulle__array_add_guaranteed( array, *q++, callback, allocator);
 }
