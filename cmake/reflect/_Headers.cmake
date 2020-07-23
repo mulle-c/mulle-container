@@ -55,7 +55,9 @@ src/hash/mulle-prime.h
 src/include.h
 src/map/mulle--map.h
 src/map/mulle-map.h
+src/map/pointer/mulle--pointermap-generic.h
 src/map/pointer/mulle--pointermap.h
+src/map/pointer/mulle--pointermap-struct.h
 src/mulle-container-callback-global.h
 src/mulle-container-callback.h
 src/mulle-container-compiler-attributes.h

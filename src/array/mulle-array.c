@@ -46,3 +46,4 @@ struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *c
    mulle_array_init( buffer, 0, callback, allocator);
    return( buffer);
 }
+

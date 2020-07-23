@@ -189,6 +189,25 @@ static inline void   assert_mulle_container_keyvaluecallback( struct mulle_conta
 }
 
 
+static inline int   mulle_container_keycallback_retains( struct mulle_container_keycallback *callback)
+{
+   return( callback->retain != mulle_container_keycallback_self);
+}
+
+
+static inline int   mulle_container_valuecallback_retains( struct mulle_container_valuecallback *callback)
+{
+   return( callback->retain != mulle_container_valuecallback_self);
+}
+
+
+static inline int   mulle_container_keyvaluecallback_retains( struct mulle_container_keyvaluecallback *callback)
+{
+   return( mulle_container_keycallback_retains( &callback->keycallback) ||
+           mulle_container_valuecallback_retains( &callback->valuecallback));
+}
+
+
 static inline int   mulle_container_keycallback_releases( struct mulle_container_keycallback *callback)
 {
    return( callback->release != mulle_container_keycallback_nop);
@@ -207,5 +226,32 @@ static inline int   mulle_container_keyvaluecallback_releases( struct mulle_cont
            mulle_container_valuecallback_releases( &callback->valuecallback));
 }
 
+
+char   *
+   mulle_container_callback_int_describe( struct mulle_container_valuecallback *callback,
+                                          void *p,
+                                          struct mulle_allocator **p_allocator);
+char   *
+   mulle_container_callback_intptr_describe( struct mulle_container_valuecallback *callback,
+                                             void *p,
+                                             struct mulle_allocator **p_allocator);
+char *
+   mulle_container_callback_pointer_describe( struct mulle_container_valuecallback  *callback,
+                                              void *p,
+                                              struct mulle_allocator **p_allocator);
+char *
+   mulle_container_callback_cstring_copy( struct mulle_container_valuecallback  *callback,
+                                          void *s,
+                                          struct mulle_allocator *allocator);
+char   *mulle_container_callback_cstring_describe( struct mulle_container_valuecallback  *ignore,
+                                                   void *p,
+                                                   struct mulle_allocator **p_allocator);
+uintptr_t
+   mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *ignore,
+                                             void *s);
+int
+   mulle_container_keycallback_cstring_is_equal( struct mulle_container_keycallback *ignore,
+                                                 void *a,
+                                                 void *b);
 #endif
 

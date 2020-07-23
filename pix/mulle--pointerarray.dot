@@ -1,0 +1,28 @@
+digraph {
+   "mulle__pointerarray" [ label=<<TABLE BORDER="1">
+      <TR BORDER="0"><TD BGCOLOR="blue" COLSPAN="2"><FONT COLOR="white">mulle__pointerarray</FONT></TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">used</FONT></TD><TD>5</TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">size</FONT></TD><TD>8</TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">storage</FONT></TD><TD PORT="pointers"></TD></TR>
+      </TABLE>>, shape="none" ];
+
+   graph [ pad="0.2", ranksep="0.3", nodesep="0.0"];
+
+   subgraph array {
+      node [shape=record, style="filled", fontcolor=black, fontsize=14, fixedsize=true];
+      rank = same;
+      rankdir=LR;
+
+      a [ label="0", fillcolor="yellow"];
+      b [ label="1", fillcolor="yellow"];
+      c [ label="2", fillcolor="yellow"];
+      d [ label="3", fillcolor="yellow"];
+      e [ label="4", fillcolor="chartreuse"];
+      f [ label="5", fillcolor="white"];
+      g [ label="6", fillcolor="white"];
+      h [ label="7", fillcolor="white"];
+   }
+
+   // center doesn't work :(
+   "mulle__pointerarray":"pointers:c" -> "a" [ arrowtail="dot", arrowhead="vee", dir="both" ]
+}

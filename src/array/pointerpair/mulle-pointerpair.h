@@ -38,11 +38,16 @@
 
 #include "mulle-container-callback.h"
 
+#define mulle_pointerpair_notakey    mulle_not_a_pointer
 
+//
+// It is assumed, that the key must not have the value
+// mulle_pointerpair_notakey.
+//
 struct mulle_pointerpair
 {
-   void   *_key;  // suggestively named
-   void   *_value;
+   void   *key;
+   void   *value;
 };
 
 
@@ -51,69 +56,22 @@ static inline struct mulle_pointerpair
 {
    struct mulle_pointerpair   result;
 
-   result._key   = key;
-   result._value = value;
+   result.key   = key;
+   result.value = value;
+
    return( result);
 }
 
-
-static inline void   *
-   _mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
+static inline struct mulle_pointerpair
+   mulle_pointerpair_make_invalid( void)
 {
-   return( pair->_key);
+   struct mulle_pointerpair   result;
+
+   result.key   = mulle_pointerpair_notakey;
+   result.value = NULL;
+
+   return( result);
 }
 
-
-static inline void   *
-   mulle_pointerpair_get_key( struct mulle_pointerpair *pair)
-{
-   return( pair ? pair->_key : NULL);
-}
-
-
-static inline void *
-   _mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
-{
-   return( pair->_value);
-}
-
-
-static inline void *
-   mulle_pointerpair_get_value( struct mulle_pointerpair *pair)
-{
-   return( pair ? pair->_value : NULL);
-}
-
-
-static inline void
-   _mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
-{
-   assert( pair);
-   pair->_key = key;
-}
-
-
-static inline void
-   _mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void *value)
-{
-   assert( pair);
-   pair->_value = value;
-}
-
-
-static inline void
-   mulle_pointerpair_set_key( struct mulle_pointerpair *pair, void *key)
-{
-   if( pair)
-      pair->_key = key;
-}
-
-
-static inline void
-   mulle_pointerpair_set_value( struct mulle_pointerpair *pair, void *value)
-{
-   if( pair)
-      pair->_value = value;
-}
 
 #endif

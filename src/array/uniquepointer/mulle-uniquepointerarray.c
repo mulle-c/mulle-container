@@ -68,9 +68,9 @@ void   *_mulle_uniquepointerarray_member2( struct mulle_uniquepointerarray *set,
 
    if( ! set->_sorted)
    {
-      qsort( set->storage, _mulle_uniquepointerarray_get_count( set), sizeof( void *), (void *) _pointer_compare);
+      qsort( set->_storage, _mulle_uniquepointerarray_get_count( set), sizeof( void *), (void *) _pointer_compare);
       set->_sorted = 1;
    }
-   result = mulle_uniquepointerarray_bsearch( set->storage, _mulle_uniquepointerarray_get_count( set), p);
+   result = mulle_uniquepointerarray_bsearch( set->_storage, _mulle_uniquepointerarray_get_count( set), p);
    return( result ? *result : NULL);
 }

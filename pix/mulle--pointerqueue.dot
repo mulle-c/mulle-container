@@ -1,0 +1,48 @@
+digraph G {
+   rankdir="LR";
+
+   "mulle__pointerqueue" [ label=<<TABLE BORDER="1">
+      <TR BORDER="0"><TD BGCOLOR="blue" COLSPAN="2"><FONT COLOR="white">mulle__pointerqueue</FONT></TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">count</FONT></TD><TD>10</TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">_read_index</FONT></TD><TD>1</TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">_write_index</FONT></TD><TD>2</TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">_read</FONT></TD><TD PORT="read"></TD></TR>
+      <TR BORDER="0"><TD BGCOLOR="black"><FONT COLOR="white">_write</FONT></TD><TD PORT="write"></TD></TR>
+      </TABLE>>, shape="none" ];
+
+   "bucket_0" [ label=<<TABLE BORDER="1">
+      <TR BORDER="0"><TD COLSPAN="3" PORT="name" BGCOLOR="black"><FONT COLOR="white">_next</FONT></TD><TD PORT="name_value"></TD></TR>
+      <TR BORDER="0">
+         <TD BGCOLOR="yellow">0</TD>
+         <TD BGCOLOR="chartreuse">1</TD>
+         <TD BGCOLOR="chartreuse">2</TD>
+         <TD BGCOLOR="chartreuse">3</TD>
+      </TR>
+   </TABLE>>, shape="none" ];
+
+   "bucket_1" [ label=<<TABLE BORDER="1">
+      <TR BORDER="0"><TD COLSPAN="3" PORT="name" BGCOLOR="black"><FONT COLOR="white">_next</FONT></TD><TD PORT="name_value"></TD></TR>
+      <TR BORDER="0">
+         <TD BGCOLOR="chartreuse">4</TD>
+         <TD BGCOLOR="chartreuse">5</TD>
+         <TD BGCOLOR="chartreuse">6</TD>
+         <TD BGCOLOR="chartreuse">7</TD>
+      </TR>
+   </TABLE>>, shape="none" ];
+
+   "bucket_2" [ label=<<TABLE BORDER="1">
+      <TR BORDER="0"><TD COLSPAN="3" PORT="name" BGCOLOR="black"><FONT COLOR="white">_next</FONT></TD><TD PORT="name_value"></TD></TR>
+      <TR BORDER="0">
+         <TD BGCOLOR="chartreuse">8</TD>
+         <TD BGCOLOR="chartreuse">9</TD>
+         <TD BGCOLOR="white">10</TD>
+         <TD BGCOLOR="white">11</TD>
+      </TR>
+   </TABLE>>, shape="none" ];
+
+   // center doesn't work :(
+   "mulle__pointerqueue":"read:c" -> "bucket_0":"name"  [ arrowtail="dot", arrowhead="vee", dir="both" ]
+   "mulle__pointerqueue":"write:c" -> "bucket_2":"name" [ arrowtail="dot", arrowhead="vee", dir="both" ]
+   "bucket_0":"name_value" -> "bucket_1":"name"                      [ arrowtail="dot", arrowhead="vee", dir="both" ]
+   "bucket_1":"name_value" -> "bucket_2":"name"                      [ arrowtail="dot", arrowhead="vee", dir="both" ]
+}

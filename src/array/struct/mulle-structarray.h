@@ -35,13 +35,13 @@ static inline struct mulle_structarray  *
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_init( struct mulle_structarray *array,
-                                              unsigned int sizeof_struct,
+                                              unsigned int _sizeof_struct,
                                               unsigned int alignof_struct,
                                               unsigned int capacity,
                                               struct mulle_allocator *allocator)
 {
    _mulle__structarray_init( (struct mulle__structarray *) array,
-                             sizeof_struct,
+                             _sizeof_struct,
                              alignof_struct,
                              capacity,
                              allocator);
@@ -51,7 +51,7 @@ static inline void   _mulle_structarray_init( struct mulle_structarray *array,
 
 
 static inline struct mulle_structarray *
-   mulle_structarray_create( unsigned int sizeof_struct,
+   mulle_structarray_create( unsigned int _sizeof_struct,
                              unsigned int alignof_struct,
                              unsigned int capacity,
                              struct mulle_allocator *allocator)
@@ -59,7 +59,7 @@ static inline struct mulle_structarray *
    struct mulle_structarray  *array;
 
    array = mulle_structarray_alloc( allocator);
-   _mulle_structarray_init( array, sizeof_struct, alignof_struct, capacity, allocator);
+   _mulle_structarray_init( array, _sizeof_struct, alignof_struct, capacity, allocator);
    return( array);
 }
 
@@ -231,11 +231,23 @@ static inline struct mulle_structarrayenumerator
 
 
 MULLE_C_NONNULL_FIRST
-static inline void *
-   _mulle_structarrayenumerator_next( struct mulle_structarrayenumerator *rover)
+static inline int
+   _mulle_structarrayenumerator_next( struct mulle_structarrayenumerator *rover,
+                                      void **item)
 {
-   return( _mulle__structarrayenumerator_next( (struct mulle__structarrayenumerator *) rover));
+   return( _mulle__structarrayenumerator_next( (struct mulle__structarrayenumerator *) rover,
+                                               item));
 }
+
+
+static inline int
+   mulle_structarrayenumerator_next( struct mulle_structarrayenumerator *rover,
+                                     void **item)
+{
+   return( mulle__structarrayenumerator_next( (struct mulle__structarrayenumerator *) rover,
+                                               item));
+}
+
 
 
 MULLE_C_NONNULL_FIRST
@@ -281,12 +293,24 @@ static inline struct mulle_structarrayreverseenumerator
    return( *(struct mulle_structarrayreverseenumerator *) &rover);
 }
 
-MULLE_C_NONNULL_FIRST
-static inline void *
-   _mulle_structarrayreverseenumerator_next( struct mulle_structarrayreverseenumerator *rover)
+MULLE_C_NONNULL_FIRST_SECOND
+static inline int
+   _mulle_structarrayreverseenumerator_next( struct mulle_structarrayreverseenumerator *rover,
+                                             void **item)
 {
-   return( _mulle__structarrayreverseenumerator_next( (struct mulle__structarrayreverseenumerator *) rover));
+   return( _mulle__structarrayreverseenumerator_next( (struct mulle__structarrayreverseenumerator *) rover,
+                                                      item));
 }
+
+
+static inline int
+   mulle_structarrayreverseenumerator_next( struct mulle_structarrayreverseenumerator *rover,
+                                             void **item)
+{
+   return( mulle__structarrayreverseenumerator_next( (struct mulle__structarrayreverseenumerator *) rover,
+                                                     item));
+}
+
 
 MULLE_C_NONNULL_FIRST
 static inline void

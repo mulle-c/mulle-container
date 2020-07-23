@@ -51,16 +51,16 @@ static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
 {
    size_t    used;
 
-   used = _mulle__pointerarray_get_count( array);
+   used     = _mulle__pointerarray_get_count( array);
    new_size = mulle_pow2round( new_size);
    if( new_size == 0)
       new_size = 4;
 
-   array->storage = mulle_allocator_realloc( allocator,
-                                             array->storage,
+   array->_storage = mulle_allocator_realloc( allocator,
+                                             array->_storage,
                                              sizeof( void *) * new_size);
-   array->curr     = &array->storage[ used];
-   array->sentinel = &array->storage[ new_size];
+   array->_curr     = &array->_storage[ used];
+   array->_sentinel = &array->_storage[ new_size];
 }
 
 
@@ -77,14 +77,14 @@ void   _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
                                        struct mulle_allocator *allocator)
 {
    size_t   available;
-   size_t   size;
-   size_t   used;
+   size_t   _size;
+   size_t   _used;
 
-   size      = _mulle__pointerarray_get_size( array);
-   used      = _mulle__pointerarray_get_count( array);
-   available = size - used;
+   _size      = _mulle__pointerarray_get_size( array);
+   _used      = _mulle__pointerarray_get_count( array);
+   available = _size - _used;
    if( available < length)
-      _mulle__pointerarray_realloc( array, size + (length - available), allocator);
+      _mulle__pointerarray_realloc( array, _size + (length - available), allocator);
 }
 
 
@@ -95,9 +95,9 @@ void   _mulle__pointerarray_compact( struct mulle__pointerarray *array,
    void   **q;
    void   **sentinel;
 
-   p        = array->storage;
+   p        = array->_storage;
    q        = p;
-   sentinel = array->curr;
+   sentinel = array->_curr;
 
    for( ; p < sentinel; p++)
    {
@@ -106,25 +106,29 @@ void   _mulle__pointerarray_compact( struct mulle__pointerarray *array,
       *q++ = *p;
    }
 
-   array->curr = q;
+   array->_curr = q;
 }
 
 
 uintptr_t
    _mulle__pointerarray_find_in_range( struct mulle__pointerarray *array,
-                                       struct mulle_range range,
-                                       void *p)
+                                       void *q,
+                                       struct mulle_range range)
 {
-   void   **curr;
+   void   **p;
    void   **sentinel;
 
-   curr     = array->storage[ range.location];
-   sentinel = &curr[ range.length];
-   while( curr < sentinel)
+   p        = &array->_storage[ range.location];
+   sentinel = &p[ range.length];
+
+   assert( p >= array->_storage);
+   assert( sentinel <= array->_sentinel);
+
+   while( p < sentinel)
    {
-      if( *curr == p)
-         return( curr - array->storage);
-      curr++;
+      if( *p == q)
+         return( p - array->_storage);
+      p++;
    }
    return( mulle_not_found_e);
 }
@@ -136,10 +140,10 @@ void
 {
    range = mulle_range_validate_against_length( range,
                                                 _mulle__pointerarray_get_count( array));
-   memmove( &array->storage[ range.location],
-            &array->storage[ range.location + range.length],
+   memmove( &array->_storage[ range.location],
+            &array->_storage[ range.location + range.length],
             range.length * sizeof( void *));
 
-   array->curr -= range.length;
+   array->_curr -= range.length;
 }
 

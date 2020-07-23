@@ -21,7 +21,8 @@ src/hash/mulle-hash.c
 src/hash/mulle-prime.c
 src/map/mulle--map.c
 src/map/mulle-map.c
-src/map/pointer/mulle--pointermap.c
+src/map/pointer/mulle--pointermap-generic.c
+src/map/pointer/mulle--pointermap-struct.c
 src/mulle-container-callback.c
 src/queue/mulle--pointerqueue.c
 src/range/mulle-range.c

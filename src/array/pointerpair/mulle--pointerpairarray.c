@@ -40,28 +40,36 @@
 # pragma mark - allocation
 
 
+struct mulle__pointerpairarrayenumerator   mulle__pointerpairarrayenumerator_empty;
+
 // intentionally not static inline
 static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *array,
                                                 size_t new_size,
                                                 struct mulle_allocator *allocator)
 {
+   size_t   used;
+
    new_size = mulle_pow2round( new_size);
    if( new_size == 0)
       new_size = 4;
 
-   array->size  = new_size;
-   array->storage = mulle_allocator_realloc( allocator,
-                                            array->storage,
-                                            sizeof( struct mulle_pointerpair) * new_size);
+   used            = _mulle__pointerpairarray_get_count( array);
+   array->_storage = mulle_allocator_realloc( allocator,
+                                              array->_storage,
+                                              sizeof( struct mulle_pointerpair) * new_size);
+   array->_curr     = &array->_storage[ used];
+   array->_sentinel = &array->_storage[ new_size];
 }
 
 
 void   _mulle__pointerpairarray_grow( struct mulle__pointerpairarray *array,
                                       struct mulle_allocator *allocator)
 {
-   _mulle__pointerpairarray_realloc( array, array->size * 2, allocator);
-}
+   size_t   size;
 
+   size = _mulle__pointerpairarray_get_size( array);
+   _mulle__pointerpairarray_realloc( array, size * 2, allocator);
+}
 
 
 void   _mulle__pointerpairarray_guarantee( struct mulle__pointerpairarray *array,
@@ -69,34 +77,15 @@ void   _mulle__pointerpairarray_guarantee( struct mulle__pointerpairarray *array
                                            struct mulle_allocator *allocator)
 {
    size_t   available;
+   size_t   size;
 
-   available = array->size - array->used;
-   if( available < length)
-      _mulle__pointerpairarray_realloc( array, array->size + (length - available), allocator);
+   available = _mulle__pointerpairarray_get_guaranteed_size( array);
+   if( available >= length)
+      return;
+   size = _mulle__pointerpairarray_get_size( array);
+   _mulle__pointerpairarray_realloc( array, size + (length - available), allocator);
 }
 
-# pragma mark - compaction
-
-
-void   _mulle__pointerpairarray_compact( struct mulle__pointerpairarray *array,
-                                         void *notakey)
-{
-   struct mulle_pointerpair   *p;
-   struct mulle_pointerpair   *q;
-   struct mulle_pointerpair   *sentinel;
-
-   p        = array->storage;
-   q        = p;
-   sentinel = &p[ array->used];
-
-   for( ;p < sentinel; p++)
-   {
-      if( p->_key != notakey)
-         continue;
-      *q++ = *p;
-   }
-   array->used = q - array->storage;
-}
 
 
 # pragma mark - searching
@@ -106,29 +95,21 @@ void   _mulle__pointerpairarray_compact( struct mulle__pointerpairarray *array,
 
 uintptr_t
    _mulle__pointerpairarray_find( struct mulle__pointerpairarray *array,
-                                  void *key,
-                                  void *notakey)
+                                  void *key)
 {
-   struct mulle_pointerpair   *curr;
+   struct mulle_pointerpair   *p;
    struct mulle_pointerpair   *sentinel;
-   size_t               n_empty;
 
-   assert( key != notakey);
+   assert( key != mulle_pointerpair_notakey);
 
-   n_empty  = 0;
-   curr     = array->storage;
-   sentinel = &curr[ array->used];
-   while( curr < sentinel)
+   p        = array->_storage;
+   sentinel = array->_curr;
+   while( p < sentinel)
    {
-      if( curr->_key == key)
-         return( (curr - array->storage) - n_empty);
+      if( p->key == key)
+         return( p - array->_storage);
 
-      if( curr->_key == notakey)
-      {
-         ++n_empty;
-         continue;
-      }
-      curr++;
+      p++;
    }
    return( mulle_not_found_e);
 }
