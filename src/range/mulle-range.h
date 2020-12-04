@@ -10,7 +10,8 @@
 
 //
 // The range values are unsigned, but the actual range is limited to
-// positive signed values
+// positive signed values. The range is measured with 'uintptr_t'.
+//
 //
 // a range with zero length can be valid
 // the location of a range with zero length is basically undefined, but
@@ -99,7 +100,7 @@ static inline int  mulle_range_is_valid( struct mulle_range range)
 }
 
 
-static struct mulle_range
+static inline struct mulle_range
    mulle_range_validate_against_length( struct mulle_range range,
                                         uintptr_t length)
 {

@@ -61,14 +61,14 @@ static inline void    mulle_uniquepointerarray_done( struct mulle_uniquepointera
 # pragma mark - petty accessors
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline unsigned int
 	_mulle_uniquepointerarray_get_size( struct mulle_uniquepointerarray *array)
 {
    return( mulle__uniquepointerarray_get_size( (struct mulle__uniquepointerarray *) array));
 }
 
 
-static inline size_t
+static inline unsigned int
    mulle_uniquepointerarray_get_size( struct mulle_uniquepointerarray *array)
 {
    return( _mulle__uniquepointerarray_get_size( (struct mulle__uniquepointerarray *) array));
@@ -76,14 +76,14 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline unsigned int
 	_mulle_uniquepointerarray_get_count( struct mulle_uniquepointerarray *array)
 {
    return( _mulle__uniquepointerarray_get_count( (struct mulle__uniquepointerarray *) array));
 }
 
 
-static inline size_t
+static inline unsigned int
    mulle_uniquepointerarray_get_count( struct mulle_uniquepointerarray *array)
 {
    return( mulle__uniquepointerarray_get_count( (struct mulle__uniquepointerarray *) array));
@@ -91,14 +91,14 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline unsigned int
 	_mulle_uniquepointerarray_get_guaranteed_size( struct mulle_uniquepointerarray *array)
 {
    return( _mulle__uniquepointerarray_get_guaranteed_size( (struct mulle__uniquepointerarray *) array));
 }
 
 
-static inline size_t
+static inline unsigned int
 	mulle_uniquepointerarray_get_guaranteed_size( struct mulle_uniquepointerarray *array)
 {
    return( mulle__uniquepointerarray_get_guaranteed_size( (struct mulle__uniquepointerarray *) array));
@@ -106,7 +106,7 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline int
    _mulle_uniquepointerarray_is_full( struct mulle_uniquepointerarray *array)
 {
    return( _mulle__uniquepointerarray_is_full( (struct mulle__uniquepointerarray *) array));

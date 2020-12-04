@@ -454,12 +454,13 @@ static struct mulle_range  *_mulle__rangeset_search_nearest( struct mulle__range
 {
    struct mulle_range   *_curr;
    uintptr_t            index;
+   
    //
    // re-retrieve _curr since we don't know what remove ranges did
    //
    _curr = mulle_range_intersects_bsearch( p->_ranges,
-                                       p->_length,
-                                       mulle_range_make( location, 1));
+                                           p->_length,
+                                           mulle_range_make( location, 1));
    if( ! _curr)
    {
       // get the best fitting hole index then
@@ -611,9 +612,9 @@ void   _mulle__rangeset_fprint( struct mulle__rangeset *p, FILE *fp)
 
 
 uintptr_t   _mulle__rangeset_search( struct mulle__rangeset *p,
-                                    uintptr_t location,
-                                    enum mulle_rangeset_searchoperation op)
-{
+                                     uintptr_t location,
+                                     enum mulle_rangeset_searchoperation op)
+{ 
    struct mulle_range   *_curr;
 
    _curr  = _mulle__rangeset_search_nearest( p, location);

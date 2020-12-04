@@ -68,9 +68,8 @@ static void  enumerate( void)
 
    state = 0;
    rover = mulle_set_enumerate( set);
-   for( i = 0; i < 3; i++)
+   while( mulle_setenumerator_next( &rover, &key))
    {
-      mulle_setenumerator_next( &rover, &key);
       assert( key);
       if( ! strcmp( "VfL", key))
       {

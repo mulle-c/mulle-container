@@ -36,7 +36,6 @@
 
 #include "mulle-container-operation.h"
 #include "mulle-container-math.h"
-#include "mulle-prime.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -48,7 +47,7 @@
 // static const void   *dummy_notakey_storage[ _MULLE_MAP_INITIAL_SIZE * 2];
 
 void   _mulle__map_init( struct mulle__map *p,
-                         size_t capacity,
+                         unsigned int capacity,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
 {
@@ -71,7 +70,7 @@ void   _mulle__map_init( struct mulle__map *p,
 }
 
 
-struct mulle__map   *_mulle__map_create( size_t capacity,
+struct mulle__map   *_mulle__map_create( unsigned int capacity,
                                          size_t extra,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator)
@@ -89,6 +88,7 @@ static inline void _mulle__map_free_storage( struct mulle__map *map,
 {
    mulle_allocator_free( allocator, map->_storage);
 }
+
 
 void   _mulle__map_release_all( struct mulle__map *map,
                                 struct mulle_container_keyvaluecallback *callback,
@@ -154,7 +154,7 @@ void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
    pair.key   = firstkey;
    while( pair.key != callback->keycallback.notakey)
    {
-      _mulle__map_insert( map, &pair, callback, allocator);
+      _mulle__map_insert_pair( map, &pair, callback, allocator);
 
       pair.value = va_arg( args, void *);
       pair.key   = va_arg( args, void *);
@@ -190,7 +190,7 @@ char   *_mulle__map_describe( struct mulle__map *set,
    char                          *key;
    char                          *value;
    int                           separate;
-   size_t                        len;
+   unsigned int                        len;
    size_t                        key_len;
    size_t                        value_len;
    struct mulle__mapenumerator   rover;

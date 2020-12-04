@@ -35,21 +35,28 @@ extern struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
 
 #pragma mark - setup and teardown
 
-struct mulle_map   *mulle_map_create( size_t capacity,
+MULLE_C_NONNULL_SECOND
+struct mulle_map   *mulle_map_create( unsigned int capacity,
                                       struct mulle_container_keyvaluecallback *callback,
-                                      struct mulle_allocator *allocator)
-                                          MULLE_C_NONNULL_SECOND;
+                                      struct mulle_allocator *allocator);
 
-void   mulle_map_init( struct mulle_map *map,
-                       size_t capacity,
-                       struct mulle_container_keyvaluecallback *callback,
-                       struct mulle_allocator *allocator)
-                           MULLE_C_NONNULL_FIRST_THIRD;
+MULLE_C_NONNULL_FIRST_THIRD
+void   _mulle_map_init( struct mulle_map *map,
+                        unsigned int capacity,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator);
 
 
-static inline void    mulle_map_done( struct mulle_map *map)
+static inline void    _mulle_map_done( struct mulle_map *map)
 {
    _mulle__map_done( (struct mulle__map *) map, map->callback, map->allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   _mulle_map_destroy( struct mulle_map *map)
+{
+   _mulle__map_destroy( (struct mulle__map *) map, map->callback, map->allocator);
 }
 
 
@@ -60,11 +67,19 @@ static inline void   mulle_map_destroy( struct mulle_map *map)
 }
 
 
+MULLE_C_NONNULL_FIRST
+static inline void   _mulle_map_reset( struct mulle_map *map)
+{
+   _mulle__map_reset( (struct mulle__map *) map, map->callback, map->allocator);
+}
+
+
 static inline void    mulle_map_reset( struct mulle_map *map)
 {
-   mulle_map_done( map);
-   mulle_map_init( map, 0, map->callback, map->allocator);
+   if( map)
+      _mulle__map_reset( (struct mulle__map *) map, map->callback, map->allocator);
 }
+
 
 #pragma mark - petty accessors
 
@@ -80,19 +95,39 @@ static inline struct mulle_allocator   *mulle_map_get_allocator( struct mulle_ma
 }
 
 
-static inline size_t   mulle_map_get_count( struct mulle_map *map)
+MULLE_C_NONNULL_FIRST
+static inline unsigned int   _mulle_map_get_count( struct mulle_map *map)
 {
-   return( map ? _mulle__map_get_count( (struct mulle__map *) map) : 0);
+   return( _mulle__map_get_count( (struct mulle__map *) map));
+}
+
+
+static inline unsigned int   mulle_map_get_count( struct mulle_map *map)
+{
+   return( mulle__map_get_count( (struct mulle__map *) map));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   *_mulle_map_get_notakey( struct mulle_map *map)
+{
+   return( _mulle_container_keycallback_get_notakey( &map->callback->keycallback));
 }
 
 
 static inline void   *mulle_map_get_notakey( struct mulle_map *map)
 {
-   return( map ? mulle_container_keycallback_get_notakey( &map->callback->keycallback) : NULL);
+   return( map ? _mulle_map_get_notakey( map) : NULL);
 }
 
 
 #pragma mark - operations
+
+MULLE_C_NONNULL_FIRST
+static inline void   *_mulle_map_get( struct mulle_map *map, void *key)
+{
+   return( _mulle__map_get( (struct mulle__map *) map, key, map->callback));
+}
 
 
 static inline void   *mulle_map_get( struct mulle_map *map, void *key)
@@ -103,13 +138,35 @@ static inline void   *mulle_map_get( struct mulle_map *map, void *key)
 }
 
 
-static inline void   mulle_map_remove( struct mulle_map *map, void *key)
+
+MULLE_C_NONNULL_FIRST
+static inline int   _mulle_map_remove( struct mulle_map *map, void *key)
 {
-   if( map)
-      _mulle__map_remove( (struct mulle__map *) map,
-                          key,
-                          map->callback,
-                          map->allocator);
+   return( _mulle__map_remove( (struct mulle__map *) map,
+                               key,
+                               map->callback,
+                               map->allocator));
+}
+
+
+static inline int   mulle_map_remove( struct mulle_map *map, void *key)
+{
+   if( ! map)
+      return( 0);
+
+   return( _mulle__map_remove( (struct mulle__map *) map,
+                               key,
+                               map->callback,
+                               map->allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   _mulle_map_shrink_if_needed( struct mulle_map *map)
+{
+   _mulle__map_shrink_if_needed( (struct mulle__map *) map,
+                                  map->callback,
+                                  map->allocator);
 }
 
 
@@ -119,6 +176,22 @@ static inline void   mulle_map_shrink_if_needed( struct mulle_map *map)
       _mulle__map_shrink_if_needed( (struct mulle__map *) map,
                                      map->callback,
                                      map->allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_map_insert_values_for_keysv( struct mulle_map *map,
+                                       void *firstvalue,
+                                       void *firstkey,
+                                       va_list args)
+{
+   _mulle__map_insert_values_for_keysv( (struct mulle__map *) map,
+                                        firstvalue,
+                                        firstkey,
+                                        args,
+                                        map->callback,
+                                        map->allocator);
 }
 
 
@@ -158,19 +231,24 @@ static inline void
 
 
 static inline void
-   mulle_map_set( struct mulle_map *map, void *key, void *value)
+   _mulle_map_set( struct mulle_map *map, void *key, void *value)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   _mulle__map_set_pair( (struct mulle__map *) map,
+                          &pair,
+                          map->callback,
+                          map->allocator);
+}
+
+
+static inline
+void   mulle_map_set( struct mulle_map *map, void *key, void *value)
 {
    if( map)
-   {
-      struct mulle_pointerpair   pair;
-
-      pair.key   = key;
-      pair.value = value;
-      _mulle__map_set( (struct mulle__map *) map,
-                        &pair,
-                        map->callback,
-                        map->allocator);
-   }
+      _mulle_map_set( map, key, value);
 }
 
 
@@ -183,10 +261,10 @@ static inline void   *
 
       pair.key   = key;
       pair.value = value;
-      return( _mulle__map_insert( (struct mulle__map *) map,
-                                  &pair,
-                                  map->callback,
-                                  map->allocator));
+      return( _mulle__map_insert_pair( (struct mulle__map *) map,
+                                        &pair,
+                                        map->callback,
+                                        map->allocator));
    }
    return( NULL);
 }
@@ -225,15 +303,23 @@ static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
 
 #pragma mark - debugging
 
-// in C, expect a strdup()ed string, in ObjC an autorelease NSString *
-static inline void *
+static inline char *
+   _mulle_map_describe( struct mulle_map *map,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator)
+{
+   return( _mulle__map_describe( (struct mulle__map *) map,
+                                  map->callback,
+                                  map->allocator));
+}
+
+
+static inline char *
    mulle_map_describe( struct mulle_map *map,
                        struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
 {
-   if( ! map)
-      return( NULL);
-   return( _mulle__map_describe( (struct mulle__map *) map,
+   return( mulle__map_describe( (struct mulle__map *) map,
                                  map->callback,
                                  map->allocator));
 }
