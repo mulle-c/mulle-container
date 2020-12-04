@@ -8,17 +8,14 @@ endif()
 set( SOURCES
 src/array/mulle--array.c
 src/array/mulle-array.c
-src/array/mulle--structarray.c
 src/array/pointer/mulle--pointerarray.c
 src/array/pointer/mulle-pointerarray.c
 src/array/pointerpair/mulle--pointerpairarray.c
 src/array/pointerpair/mulle-pointerpairarray.c
+src/array/struct/mulle--structarray.c
 src/array/struct/mulle-structarray.c
 src/array/uniquepointer/mulle--uniquepointerarray.c
 src/array/uniquepointer/mulle-uniquepointerarray.c
-src/farmhash/farmhash.c
-src/hash/mulle-hash.c
-src/hash/mulle-prime.c
 src/map/mulle--map.c
 src/map/mulle-map.c
 src/map/pointer/mulle--pointermap-generic.c

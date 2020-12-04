@@ -102,22 +102,15 @@ uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
                                          struct mulle_range range,
                                          struct mulle_container_keycallback *callback)
 {
-   size_t   i, n;
+   unsigned int   i;
    void     **p;
    void     **sentinel;
 
    range = mulle_range_validate_against_length( range, _mulle__array_get_count( array));
 
    // quick check for first 32 pointers
-   n = range.length;
-   if( n > 32)
-      n = 32;
-   n += range.location;
-
-   assert( n >= range.location);
-
    p        = &array->_storage[ range.location];
-   sentinel = &p[ n];
+   sentinel = &p[ range.length < 32 ? range.length : 32];
    while( p < sentinel)
    {
       if( *p == obj)
@@ -170,7 +163,7 @@ int    _mulle__array_is_equal( struct mulle__array *array,
                                struct mulle__array *other,
                                struct mulle_container_keycallback *callback)
 {
-   size_t   i, n;
+   unsigned int   i, n;
    void     **p;
    void     **q;
 
@@ -195,12 +188,14 @@ int    _mulle__array_is_equal( struct mulle__array *array,
 
 MULLE_C_NONNULL_FIRST_FOURTH
 void    _mulle__array_set( struct mulle__array *array,
-                           size_t i,
+                           unsigned int i,
                            void  *p,
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator)
 {
    void   *old;
+
+   assert( p != callback->notakey);
 
    p = (*callback->retain)( callback, p, allocator);
    old = _mulle__pointerarray_set( (struct mulle__pointerarray *)  array,
@@ -218,7 +213,7 @@ void
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator)
 {
-   size_t   count;
+   unsigned int   count;
    void     **q;
    void     **sentinel;
 
@@ -238,3 +233,54 @@ void
    while( q < sentinel)
       _mulle__array_add_guaranteed( array, *q++, callback, allocator);
 }
+
+
+// use this only for debugging
+char   *_mulle__array_describe( struct mulle__array *set,
+                                struct mulle_container_keycallback *callback,
+                                struct mulle_allocator *allocator)
+{
+   char                            *result;
+   char                            *key;
+   int                             separate;
+   size_t                          len;
+   size_t                          key_len;
+   struct mulle__arrayenumerator   rover;
+   void                            *item;
+   struct mulle_allocator          *key_allocator;
+
+   result = NULL;
+   len    = 0;
+   rover = mulle__array_enumerate( set);
+   while( _mulle__arrayenumerator_next( &rover, &item))
+   {
+      key_allocator  = allocator ? allocator : &mulle_default_allocator;
+
+      key        = (*callback->describe)( callback, item, &key_allocator);
+      key_len    = strlen( key);
+      separate   = result != NULL;
+
+      result = mulle_allocator_realloc( allocator, result, len + (separate * 2) + key_len + 1);
+
+      if( separate)
+      {
+         memcpy( &result[ len], ", ", 2);
+         len   += 2;
+      }
+
+      memcpy( &result[ len], key, key_len);
+      len += key_len;
+
+      if( allocator)
+         mulle_allocator_free( key_allocator, key);
+   }
+   mulle__arrayenumerator_done( &rover);
+
+   if( ! result)
+      return( mulle_allocator_strdup( allocator, "*empty*"));
+
+   result[ len] = 0;
+   return( result);
+}
+
+

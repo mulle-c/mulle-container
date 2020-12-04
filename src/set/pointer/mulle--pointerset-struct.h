@@ -48,7 +48,8 @@
 // to 0 an 2 for better insert perfomance
 //
 // 0 2
-static inline size_t   mulle__pointerset_hash_for_size( size_t hash, size_t size)
+static inline unsigned int
+   mulle__pointerset_hash_for_size( uintptr_t hash, unsigned int size)
 {
    assert( size >= 2);
    return( hash & (size - 2));
@@ -58,14 +59,14 @@ static inline size_t   mulle__pointerset_hash_for_size( size_t hash, size_t size
 /* set is a primitive growing hashtable, it's like mulle-set but without a
  * callback, therefore no retain/release and two choices hardcoded:
  * notakey is mulle_not_a_pointer
- * hash is mulle_hash_pointer
+ * hash is mulle_pointer_hash
  */
 
 // fields are considered private
 #define MULLE__POINTERSET_BASE \
    void     **_storage;         \
-   size_t   _count;             \
-   size_t   _size
+   unsigned int   _count;             \
+   unsigned int   _size
 
 // NSSet/NSMutableSet/NSHashTable
 
@@ -78,7 +79,7 @@ struct mulle__pointerset
 #pragma mark - setup and takedown
 
 MULLE_C_NONNULL_THIRD
-struct mulle__pointerset   *_mulle__pointerset_create( size_t capacity,
+struct mulle__pointerset   *_mulle__pointerset_create( unsigned int capacity,
                                                        size_t extra,
                                                        struct mulle_allocator *allocator) ;
 
@@ -89,7 +90,7 @@ void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
 
 MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__pointerset_init( struct mulle__pointerset *set,
-                                 size_t capacity,
+                                 unsigned int capacity,
                                  struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST_SECOND
@@ -108,14 +109,14 @@ struct mulle__pointerset   *_mulle__pointerset_copy( struct mulle__pointerset *s
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t   _mulle__pointerset_get_size( struct mulle__pointerset *set)
+static inline unsigned int   _mulle__pointerset_get_size( struct mulle__pointerset *set)
 {
    return( set->_size);
 }
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t   _mulle__pointerset_get_count( struct mulle__pointerset *set)
+static inline unsigned int   _mulle__pointerset_get_count( struct mulle__pointerset *set)
 {
    return( set->_count);
 }
@@ -126,7 +127,7 @@ static inline size_t   _mulle__pointerset_get_count( struct mulle__pointerset *s
 MULLE_C_NONNULL_FIRST
 static inline int  _mulle__pointerset_is_full( struct mulle__pointerset *set)
 {
-   size_t    size;
+   unsigned int    size;
 
    size = set->_size;
    size = (size - (size >> MULLE__POINTERSET_FILL_SHIFT));  // full when 75% occupied
@@ -137,7 +138,7 @@ static inline int  _mulle__pointerset_is_full( struct mulle__pointerset *set)
 MULLE_C_NONNULL_FIRST
 static inline int  _mulle__pointerset_is_sparse( struct mulle__pointerset *set)
 {
-   size_t    size;
+   unsigned int    size;
 
    size = set->_size / 2;
    size = (size - (size >> MULLE__POINTERSET_FILL_SHIFT));
@@ -157,7 +158,7 @@ void   *_mulle__pointerset_get( struct mulle__pointerset *set,
 
 #define MULLE__POINTERSETENUMERATOR_BASE  \
    void     **_curr;                      \
-   size_t   _left
+   unsigned int   _left
 
 
 struct mulle__pointersetenumerator

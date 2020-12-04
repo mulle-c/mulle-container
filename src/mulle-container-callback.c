@@ -35,8 +35,6 @@
 
 #include "mulle-container-callback.h"
 
-#include "mulle-hash.h"
-
 #include "include-private.h"
 #include <stdlib.h>
 #include <string.h>
@@ -48,7 +46,7 @@
 
 uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p)
 {
-   return( mulle_hash_pointer( p));
+   return( mulle_pointer_hash( p));
 }
 
 
@@ -82,9 +80,9 @@ char   *mulle_container_valuecallback_no_description( struct mulle_container_val
 }
 
 
-void   mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback,
-                                                 void *p,
-                                                 struct mulle_allocator *allocator)
+void   _mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback,
+                                                  void *p,
+                                                  struct mulle_allocator *allocator)
 {
    if( p != callback->notakey)
       mulle_allocator_free( allocator, p);
@@ -165,7 +163,7 @@ uintptr_t
    mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *ignore,
                                              void *s)
 {
-   return( mulle_hash( s, strlen( s)));
+   return( _mulle_fnv1a_inline( s, strlen( s)));
 }
 
 
@@ -187,7 +185,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_int =
    .retain   = mulle_container_keycallback_self,
    .release  = mulle_container_keycallback_nop,
    .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_int_describe,
-   .notakey  = mulle_container_not_an_int_key,
+   .notakey  = mulle_not_an_int,
    .userinfo = NULL
 };
 
@@ -200,7 +198,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_intptr =
    .retain   = mulle_container_keycallback_self,
    .release  = mulle_container_keycallback_nop,
    .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_intptr_describe,
-   .notakey  = mulle_container_not_an_intptr_key,
+   .notakey  = mulle_not_an_intptr,
    .userinfo = NULL
 };
 
@@ -213,7 +211,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointe
    .retain   = mulle_container_keycallback_self,
    .release  = mulle_container_keycallback_nop,
    .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_pointer_describe,
-   .notakey  = mulle_container_not_a_pointer_key,
+   .notakey  = mulle_not_a_pointer,
    .userinfo = NULL,
 };
 
@@ -237,7 +235,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer =
    .hash     = mulle_container_keycallback_pointer_hash,
    .is_equal = mulle_container_keycallback_pointer_is_equal,
    .retain   = mulle_container_keycallback_self,
-   .release  = mulle_container_keycallback_pointer_free,
+   .release  = _mulle_container_keycallback_pointer_free,
    .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_pointer_describe,
    .notakey  = NULL,
    .userinfo = NULL
@@ -252,7 +250,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring 
    .hash     = mulle_container_keycallback_cstring_hash,
    .is_equal = mulle_container_keycallback_cstring_is_equal,
    .retain   = (void *(*)()) mulle_container_callback_cstring_copy,
-   .release  = mulle_container_keycallback_pointer_free,
+   .release  = _mulle_container_keycallback_pointer_free,
    .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_cstring_describe,
    .notakey  = NULL,
    .userinfo = NULL
@@ -278,7 +276,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_owned_cstring =
    .hash     = mulle_container_keycallback_cstring_hash,
    .is_equal = mulle_container_keycallback_cstring_is_equal,
    .retain   = mulle_container_keycallback_self,
-   .release  = mulle_container_keycallback_pointer_free,
+   .release  = _mulle_container_keycallback_pointer_free,
    .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_cstring_describe,
    .notakey  = NULL,
    .userinfo = NULL

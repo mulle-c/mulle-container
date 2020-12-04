@@ -30,6 +30,16 @@ create  | destroy
 init    | done
 copy    | destroy
 
+## Verb modifier
+
+Verb        | Meaning
+------------|----------
+length      | a quantity in bytes
+count       | a quantity of something other than bytes (usually pointers)
+size        | the current maximum quantity
+size_as_length | as above but in bytes
+used        | the amount of the maximum quantity in use
+used_as_length | as above but in bytes
 
 ## Field Accessors
 
@@ -75,7 +85,7 @@ set         | a destructive insert (may or may not return previous value)
 Verb        | Meaning
 ------------|---------------
 enumerate   | create enumerator
-find        | a search that is linear, returns an index or key
+find        | a search that is linear, returns an index (mulle_not_found_e) or key
 search      | a search that's not linear, probably a binary search, returns the value
 copy_items  | copy each element from source to destination struct [ dst, src]
 

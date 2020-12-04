@@ -41,24 +41,29 @@ struct mulle__pointerarrayenumerator          mulle__pointerarrayenumerator_empt
 struct mulle__pointerarrayreverseenumerator   mulle__pointerarrayreverseenumerator_empty;
 
 
-# pragma mark -
-# pragma mark mechanisms
+# pragma mark - memory allocation
 
-// intentionally not static inline
 static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
-                                            size_t new_size,
+                                            unsigned int new_size,
                                             struct mulle_allocator *allocator)
 {
-   size_t    used;
+   unsigned int    used;
 
    used     = _mulle__pointerarray_get_count( array);
    new_size = mulle_pow2round( new_size);
    if( new_size == 0)
       new_size = 4;
 
-   array->_storage = mulle_allocator_realloc( allocator,
-                                             array->_storage,
-                                             sizeof( void *) * new_size);
+   if( array->_storage == array->_initial_storage)
+   {
+      array->_storage = mulle_allocator_malloc( allocator,
+                                                sizeof( void *) * new_size);
+      memcpy( array->_storage, array->_initial_storage, sizeof( void *) * used);
+   }
+   else
+      array->_storage = mulle_allocator_realloc( allocator,
+                                                 array->_storage,
+                                                 sizeof( void *) * new_size);
    array->_curr     = &array->_storage[ used];
    array->_sentinel = &array->_storage[ new_size];
 }
@@ -67,24 +72,29 @@ static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
 void   _mulle__pointerarray_grow( struct mulle__pointerarray *array,
                                   struct mulle_allocator *allocator)
 {
-   _mulle__pointerarray_realloc( array, _mulle__pointerarray_get_size( array) * 2, allocator);
+   _mulle__pointerarray_realloc( array,
+                                 _mulle__pointerarray_get_size( array) * 2,
+                                 allocator);
 }
 
 
 
-void   _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
-                                       size_t length,
-                                       struct mulle_allocator *allocator)
+void **   _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
+                                          unsigned int length,
+                                          struct mulle_allocator *allocator)
 {
-   size_t   available;
-   size_t   _size;
-   size_t   _used;
+   unsigned int   available;
+   unsigned int   _size;
+   unsigned int   _used;
 
    _size      = _mulle__pointerarray_get_size( array);
    _used      = _mulle__pointerarray_get_count( array);
    available = _size - _used;
    if( available < length)
-      _mulle__pointerarray_realloc( array, _size + (length - available), allocator);
+      _mulle__pointerarray_realloc( array,
+                                    _size + (length - available),
+                                    allocator);
+   return( array->_curr);
 }
 
 
@@ -118,6 +128,8 @@ uintptr_t
    void   **p;
    void   **sentinel;
 
+   range    = mulle_range_validate_against_length( range,
+                                                   _mulle__pointerarray_get_count( array));
    p        = &array->_storage[ range.location];
    sentinel = &p[ range.length];
 
@@ -147,3 +159,45 @@ void
    array->_curr -= range.length;
 }
 
+
+
+unsigned int
+   _mulle__pointerarray_get_in_range( struct mulle__pointerarray *array,
+                                      struct mulle_range range,
+                                      void *buf)
+{
+   range = mulle_range_validate_against_length( range,
+                                                _mulle__pointerarray_get_count( array));
+   memcpy( buf, &array->_storage[ range.location], range.length * sizeof( void *));
+   return( range.length);
+}
+
+
+MULLE_C_NONNULL_FIRST
+struct mulle_pointers
+   _mulle__pointerarray_extract_pointers( struct mulle__pointerarray *buffer,
+                                          struct mulle_allocator *allocator)
+{
+   struct mulle_pointers   data;
+
+   data.pointers = buffer->_storage;
+   data.count    = _mulle__pointerarray_get_count( buffer);
+
+   if( data.pointers && data.pointers == buffer->_initial_storage)
+   {
+      data.pointers = _mulle_allocator_malloc( allocator, data.count * sizeof( void *));
+      memcpy( data.pointers, buffer->_storage, data.count * sizeof( void *));
+
+      buffer->_curr    =
+      buffer->_storage = buffer->_initial_storage;
+
+      return( data);
+   }
+
+   buffer->_storage          =
+   buffer->_curr             =
+   buffer->_sentinel         =
+   buffer->_initial_storage  = NULL;
+
+   return( data);
+}

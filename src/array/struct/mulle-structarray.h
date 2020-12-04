@@ -35,7 +35,7 @@ static inline struct mulle_structarray  *
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_init( struct mulle_structarray *array,
-                                              unsigned int _sizeof_struct,
+                                              size_t _sizeof_struct,
                                               unsigned int alignof_struct,
                                               unsigned int capacity,
                                               struct mulle_allocator *allocator)
@@ -46,12 +46,12 @@ static inline void   _mulle_structarray_init( struct mulle_structarray *array,
                              capacity,
                              allocator);
 
-   array->allocator      = allocator;
+   array->allocator = allocator;
 }
 
 
 static inline struct mulle_structarray *
-   mulle_structarray_create( unsigned int _sizeof_struct,
+   mulle_structarray_create( size_t _sizeof_struct,
                              unsigned int alignof_struct,
                              unsigned int capacity,
                              struct mulle_allocator *allocator)
@@ -70,6 +70,12 @@ static inline void  _mulle_structarray_done( struct mulle_structarray *array)
    _mulle__structarray_done( (struct mulle__structarray *) array, array->allocator);
 }
 
+
+static inline void  mulle_structarray_done( struct mulle_structarray *array)
+{
+   if( array)
+      _mulle__structarray_done( (struct mulle__structarray *) array, array->allocator);
+}
 
 
 static inline void  mulle_structarray_destroy( struct mulle_structarray *array)
@@ -114,10 +120,28 @@ static inline unsigned int
 // cheaper as we don't divide here
 MULLE_C_NONNULL_FIRST
 static inline size_t
-   _mulle_structarray_get_usedsize( struct mulle_structarray *array)
+   _mulle_structarray_get_used_as_length( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_usedsize( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_used_as_length( (struct mulle__structarray *) array));
 }
+
+
+
+MULLE_C_NONNULL_FIRST
+static inline unsigned int
+   _mulle_structarray_get_size( struct mulle_structarray *array)
+{
+   return( _mulle__structarray_get_size( (struct mulle__structarray *) array));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline size_t
+   _mulle_structarray_get_size_as_length( struct mulle_structarray *array)
+{
+   return( _mulle__structarray_get_size_as_length( (struct mulle__structarray *) array));
+}
+
 
 
 # pragma mark - array operations
@@ -134,11 +158,32 @@ static inline void
 
 
 MULLE_C_NONNULL_FIRST
+static inline void   *_mulle_structarray_guarantee( struct mulle_structarray *array,
+                                                    unsigned int length)
+{
+   return( _mulle__structarray_guarantee( (struct mulle__structarray *) array,
+                                          length,
+                                          array->allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void *
+   _mulle_structarray_advance( struct mulle_structarray *array,
+                               unsigned int length)
+{
+   return( _mulle__structarray_advance( (struct mulle__structarray *) array,
+                                        length,
+                                        array->allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_reserve( struct mulle_structarray *array)
 {
    return( _mulle__structarray_reserve( (struct mulle__structarray *) array,
-                                        array->allocator));
+                                         array->allocator));
 }
 
 
@@ -147,6 +192,15 @@ static inline struct mulle_allocator  *
    _mulle_structarray_get_allocator( struct mulle_structarray *array)
 {
    return( array->allocator);
+}
+
+
+// use in conjunction with guarantee only
+MULLE_C_NONNULL_FIRST
+static inline void *
+   _mulle_structarray_get_current( struct mulle_structarray *array)
+{
+   return( _mulle__structarray_get_current( (struct mulle__structarray *) array));
 }
 
 

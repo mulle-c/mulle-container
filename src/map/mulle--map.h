@@ -61,7 +61,7 @@ struct mulle__map
 
 
 MULLE_C_NONNULL_THIRD
-struct mulle__map   *_mulle__map_create( size_t capacity,
+struct mulle__map   *_mulle__map_create( unsigned int capacity,
                                          size_t extra,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator);
@@ -73,7 +73,7 @@ void   _mulle__map_destroy( struct mulle__map *map,
 
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__map_init( struct mulle__map *map,
-                         size_t capacity,
+                         unsigned int capacity,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator);
 
@@ -96,6 +96,11 @@ static inline int   _mulle__map_is_full( struct mulle__map *map)
    return( _mulle__pointermap_is_full( (struct mulle__pointermap *) map));
 }
 
+static inline int   mulle__map_is_full( struct mulle__map *map)
+{
+   return( mulle__pointermap_is_full( (struct mulle__pointermap *) map));
+}
+
 
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__map_is_sparse( struct mulle__map *map)
@@ -103,19 +108,35 @@ static inline int   _mulle__map_is_sparse( struct mulle__map *map)
    return( _mulle__pointermap_is_sparse( (struct mulle__pointermap *) map));
 }
 
+static inline int   mulle__map_is_sparse( struct mulle__map *map)
+{
+   return( mulle__pointermap_is_sparse( (struct mulle__pointermap *) map));
+}
+
+
 
 MULLE_C_NONNULL_FIRST
-static inline size_t   _mulle__map_get_count( struct mulle__map *map)
+static inline unsigned int   _mulle__map_get_count( struct mulle__map *map)
 {
    return( _mulle__pointermap_get_count( (struct mulle__pointermap *) map));
+}
+
+static inline unsigned int   mulle__map_get_count( struct mulle__map *map)
+{
+   return( mulle__pointermap_get_count( (struct mulle__pointermap *) map));
 }
 
 
 // _size for key really
 MULLE_C_NONNULL_FIRST
-static inline size_t   _mulle__map_get_size( struct mulle__map *map)
+static inline unsigned int   _mulle__map_get_size( struct mulle__map *map)
 {
    return( _mulle__pointermap_get_size( (struct mulle__pointermap *) map));
+}
+
+static inline unsigned int   mulle__map_get_size( struct mulle__map *map)
+{
+   return( mulle__pointermap_get_size( (struct mulle__pointermap *) map));
 }
 
 
@@ -135,6 +156,22 @@ void   *_mulle__map__get( struct mulle__map *map,
                                             callback));
 }
 
+//
+// returns the value for the key, will return NULL if no value is found.
+//
+MULLE_C_NONNULL_FIRST_FOURTH
+static inline
+void   *_mulle__map__get_knownhash( struct mulle__map *map,
+                                    void *key,
+                                    uintptr_t hash,
+                                    struct mulle_container_keyvaluecallback *callback)
+{
+   return( _mulle__pointermap__get_generic_knownhash( (struct mulle__pointermap *) map,
+                                                      key,
+                                                      hash,
+                                                      callback));
+}
+
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
@@ -146,6 +183,8 @@ struct mulle_pointerpair   *_mulle__map_get_any_pair( struct mulle__map *map,
 }
 
 
+// this will do a little cursor pointer equality check before actually
+// doing the hash lookup
 MULLE_C_NONNULL_FIRST_THIRD
 static inline
 void   *_mulle__map_get( struct mulle__map *map,
@@ -158,38 +197,141 @@ void   *_mulle__map_get( struct mulle__map *map,
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
-void   _mulle__map_set( struct mulle__map *map,
-                        struct mulle_pointerpair *pair,
-                        struct mulle_container_keyvaluecallback *callback,
-                        struct mulle_allocator *allocator)
-{
-   _mulle__pointermap_set_generic( (struct mulle__pointermap *) map, pair, callback, allocator);
-}
-
-
-MULLE_C_NONNULL_FIRST_SECOND_THIRD
-static inline
-void    *_mulle__map_insert( struct mulle__map *map,
+void   _mulle__map_set_pair( struct mulle__map *map,
                              struct mulle_pointerpair *pair,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
-   return( _mulle__pointermap_insert_generic( (struct mulle__pointermap *) map, pair, callback, allocator));
+   _mulle__pointermap_set_pair_generic( (struct mulle__pointermap *) map, pair, callback, allocator);
 }
+
+
+static inline
+void   mulle__map_set_pair( struct mulle__map *map,
+                            struct mulle_pointerpair *pair,
+                            struct mulle_container_keyvaluecallback *callback,
+                            struct mulle_allocator *allocator)
+{
+   if( map)
+      _mulle__map_set_pair( map, pair, callback, allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST_FOURTH
+static inline
+void   _mulle__map_set( struct mulle__map *map,
+                        void *key,
+                        void *value,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   _mulle__map_set_pair( map, &pair, callback, allocator);
+}
+
+
+static inline
+void   mulle__map_set( struct mulle__map *map,
+                       void *key,
+                       void *value,
+                       struct mulle_container_keyvaluecallback *callback,
+                       struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   mulle__map_set_pair( map, &pair, callback, allocator);
+}
+
 
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
-int   _mulle__map_remove( struct mulle__map *map,
+void    *_mulle__map_insert_pair( struct mulle__map *map,
+                                  struct mulle_pointerpair *pair,
+                                  struct mulle_container_keyvaluecallback *callback,
+                                  struct mulle_allocator *allocator)
+{
+   return( _mulle__pointermap_insert_pair_generic( (struct mulle__pointermap *) map, pair, callback, allocator));
+}
+
+
+static inline
+void    *mulle__map_insert_pair( struct mulle__map *map,
+                                 struct mulle_pointerpair *pair,
+                                 struct mulle_container_keyvaluecallback *callback,
+                                 struct mulle_allocator *allocator)
+{
+   if( ! map)
+      return( NULL);
+   return( _mulle__map_insert_pair( map, pair, callback, allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST_FOURTH
+static inline
+void   _mulle__map_insert( struct mulle__map *map,
+                           void *key,
+                           void *value,
+                           struct mulle_container_keyvaluecallback *callback,
+                           struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   _mulle__map_insert_pair( map, &pair, callback, allocator);
+}
+
+
+static inline
+void   mulle__map_insert( struct mulle__map *map,
                           void *key,
+                          void *value,
                           struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   mulle__map_insert_pair( map, &pair, callback, allocator);
+}
+
+
+
+
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+static inline int
+   _mulle__map_remove( struct mulle__map *map,
+                       void *key,
+                       struct mulle_container_keyvaluecallback *callback,
+                       struct mulle_allocator *allocator)
 {
    return( _mulle__pointermap_remove_generic( (struct mulle__pointermap *) map,
                                               key,
                                               callback,
                                               allocator));
 }
+
+
+
+static inline int
+   mulle__map_remove( struct mulle__map *map,
+                      void *key,
+                      struct mulle_container_keyvaluecallback *callback,
+                      struct mulle_allocator *allocator)
+{
+   if( ! map)
+      return( 0);
+   return( _mulle__map_remove( map, key, callback, allocator));
+}
+
+
 
 
 MULLE_C_NONNULL_FIRST_SECOND
@@ -231,6 +373,17 @@ void  _mulle__map_shrink_if_needed( struct mulle__map *map,
       _mulle__map_shrink( map, callback, allocator);
 }
 
+
+//
+static inline
+void  mulle__map_shrink_if_needed( struct mulle__map *map,
+                                   struct mulle_container_keyvaluecallback *callback,
+                                   struct mulle_allocator *allocator)
+{
+   if( map)
+      _mulle__map_shrink_if_needed( map, callback, allocator);
+}
+
 //
 // Experimental!
 // You need to provide zeroed space on the initial call for the return value.
@@ -262,12 +415,32 @@ char   *_mulle__map_describe( struct mulle__map *map,
                               struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator);
 
+
+MULLE_C_NONNULL_SECOND
+static inline
+char   *mulle__map_describe( struct mulle__map *map,
+                             struct mulle_container_keyvaluecallback *callback,
+                             struct mulle_allocator *allocator)
+{
+   if( ! map)
+      return( mulle_allocator_strdup( allocator, "NULL"));
+   return( _mulle__map_describe( map, callback, allocator));
+}
+
+
 //
 // collisions is the amount of additional compares needed for misplaced keys
 //
-size_t   _mulle__map_count_collisions( struct mulle__map *set,
+MULLE_C_NONNULL_FIRST_SECOND
+static inline
+unsigned int   _mulle__map_count_collisions( struct mulle__map *set,
                                        struct mulle_container_keyvaluecallback *callback,
-                                       size_t *perfects);
+                                       unsigned int *perfects)
+{
+   return( _mulle__pointermap_count_collisions_generic( (struct mulle__pointermap *) set,
+                                                         callback,
+                                                         perfects));
+}
 
 
 # pragma mark - enumeration
@@ -357,8 +530,8 @@ static inline void
 
 #define MULLE__MAPTINYENUMERATOR_BASE  \
    void     **_curr;                   \
-   size_t   _left;                     \
-   size_t   _offset
+   unsigned int   _left;                     \
+   unsigned int   _offset
 
 
 struct mulle__maptinyenumerator
@@ -395,7 +568,13 @@ static inline int
    void   **p;
 
    if( ! rover->_left)
+   {
+      if( key)
+         *key   = NULL;
+      if( value)
+         *value = NULL;
       return( 0);
+   }
 
    rover->_left--;
    for(;;)

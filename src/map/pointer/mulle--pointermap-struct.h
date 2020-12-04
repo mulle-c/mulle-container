@@ -55,9 +55,9 @@
 // mulle_not_a_pointer to anything.
 //
 #define MULLE__POINTERMAP_BASE   \
-   void     **_storage;           \
-   size_t   _count;               \
-   size_t   _size
+   void           **_storage;    \
+   unsigned int   _count;        \
+   unsigned int   _size
 
 
 struct mulle__pointermap
@@ -76,7 +76,8 @@ extern struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallba
 // to 0 or 2 (leave odd alone) for better insert perfomance
 //
 // (?)
-static inline size_t   mulle__pointermap_hash_for_size( uintptr_t  hash, size_t _size)
+static inline unsigned int   mulle__pointermap_hash_for_size( uintptr_t  hash,
+                                                              unsigned int _size)
 {
    assert( _size >= 2);
 
@@ -92,7 +93,7 @@ static inline size_t   mulle__pointermap_hash_for_size( uintptr_t  hash, size_t 
 #pragma mark - setup and takedown
 
 
-struct mulle__pointermap   *mulle__pointermap_create( size_t capacity,
+struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator);
 
@@ -101,7 +102,7 @@ void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
                                    struct mulle_allocator *allocator);
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_init( struct mulle__pointermap *map,
-                                size_t capacity,
+                                unsigned int capacity,
                                 struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST
@@ -112,23 +113,29 @@ MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                  struct mulle_allocator *allocator);
 
+
 #pragma mark - petty accessors
 
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__pointermap_is_full( struct mulle__pointermap *map)
 {
-   size_t    _size;
+   unsigned int    _size;
 
    _size = map->_size;
    _size = (_size - (_size >> MULLE__POINTERMAP_FILL_SHIFT));  // full when 75% occupied
    return( map->_count >= _size);
 }
 
+static inline int   mulle__pointermap_is_full( struct mulle__pointermap *map)
+{
+   return( map ? _mulle__pointermap_is_full( map) : 1);
+}
+
 
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 {
-   size_t    _size;
+   unsigned int    _size;
 
    _size = map->_size / 2;
    _size = (_size - (_size >> MULLE__POINTERMAP_FILL_SHIFT));  // sparse if 50% of it wouldn't be full
@@ -136,57 +143,38 @@ static inline int   _mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 }
 
 
+static inline int   mulle__pointermap_is_sparse( struct mulle__pointermap *map)
+{
+   return( map ? _mulle__pointermap_is_sparse( map) : 0);
+}
+
+
 MULLE_C_NONNULL_FIRST
-static inline size_t   _mulle__pointermap_get_count( struct mulle__pointermap *map)
+static inline unsigned int   _mulle__pointermap_get_count( struct mulle__pointermap *map)
 {
    return( map->_count);
+}
+
+static inline unsigned int   mulle__pointermap_get_count( struct mulle__pointermap *map)
+{
+   return( map ? _mulle__pointermap_get_count( map) : 0);
 }
 
 
 // _size for key really
 MULLE_C_NONNULL_FIRST
-static inline size_t   _mulle__pointermap_get_size( struct mulle__pointermap *map)
+static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointermap *map)
 {
    return( map->_size);
 }
 
-
-#pragma mark - operations
-
-
-MULLE_C_NONNULL_FIRST_SECOND
-void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
-                                    struct mulle_pointerpair *pair,
-                                    struct mulle_allocator *allocator);
-
-MULLE_C_NONNULL_FIRST_SECOND_THIRD
-static inline void   _mulle__pointermap_set( struct mulle__pointermap *map,
-                                             void *key,
-                                             void *value,
-                                             struct mulle_allocator *allocator)
+static inline unsigned int   mulle__pointermap_get_size( struct mulle__pointermap *map)
 {
-   struct mulle_pointerpair   pair;
-
-   pair.key   = key;
-   pair.value = value;
-   _mulle__pointermap_set_pair( map, &pair, allocator);
+   return( map ? _mulle__pointermap_get_size( map) : 0);
 }
 
 
-MULLE_C_NONNULL_FIRST_SECOND
-void    *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
-                                         struct mulle_pointerpair *pair,
-                                         struct mulle_allocator *allocator);
-
-MULLE_C_NONNULL_FIRST_SECOND
-void   *_mulle__pointermap_insert_pair_known_absent( struct mulle__pointermap *map,
-                                                     struct mulle_pointerpair *pair,
-                                                     struct mulle_allocator *allocator);
-
-MULLE_C_NONNULL_FIRST_SECOND
-int   _mulle__pointermap_remove( struct mulle__pointermap *map,
-                                 void *key,
-                                 struct mulle_allocator *allocator);
+#pragma mark - operations
 
 //
 // call this after remove operations, to make enumerations quicker and
@@ -196,9 +184,19 @@ MULLE_C_NONNULL_FIRST
 void  _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
                                            struct mulle_allocator *allocator);
 
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST
 void   *_mulle__pointermap_get( struct mulle__pointermap *map,
                                 void *key);
+
+
+// returns NULL because that's the notfound *value*!
+static inline void   *mulle__pointermap_get( struct mulle__pointermap *map,
+                                             void *key)
+{
+   if( ! map)
+      return( NULL);
+   return( _mulle__pointermap_get( map, key));
+}
 
 
 
@@ -247,8 +245,8 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
 #define MULLE__POINTERMAPENUMERATOR_BASE  \
    struct mulle_pointerpair   space;      \
    void                       **_curr;    \
-   size_t                     _left;      \
-   size_t                     _offset
+   unsigned int                     _left;      \
+   unsigned int                     _offset
 
 
 struct mulle__pointermapenumerator
@@ -285,7 +283,6 @@ static inline struct mulle_pointerpair   *
    _mulle__pointermapenumerator_next( struct mulle__pointermapenumerator *rover)
 {
    void   **p;
-   void   *key;
 
    if( ! rover->_left)
       return( 0);
