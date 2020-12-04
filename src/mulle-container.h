@@ -36,7 +36,7 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#define MULLE_CONTAINER_VERSION  ((3 << 20) | (1 << 8) | 0)
+#define MULLE_CONTAINER_VERSION  ((4 << 20) | (0 << 8) | 0)
 
 #include "include.h"
 
@@ -44,9 +44,6 @@
 #include "mulle-container-math.h"
 #include "mulle-container-callback.h"
 #include "mulle-container-callback-global.h"
-
-#include "mulle-prime.h"
-#include "mulle-hash.h"
 
 #include "mulle--array.h"
 #include "mulle-array.h"

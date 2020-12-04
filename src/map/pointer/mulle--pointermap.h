@@ -36,4 +36,70 @@
 #include "mulle--pointermap-struct.h"
 #include "mulle--pointermap-generic.h"
 
+
+
+MULLE_C_NONNULL_FIRST_SECOND
+void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
+                                    struct mulle_pointerpair *pair,
+                                    struct mulle_allocator *allocator);
+
+static inline void   mulle__pointermap_set_pair( struct mulle__pointermap *map,
+                                                 struct mulle_pointerpair *pair,
+                                                 struct mulle_allocator *allocator)
+{
+   if( ! map || ! pair)
+      return;
+   _mulle__pointermap_set_pair_generic( map, pair, &mulle__pointermap_keyvaluecallback, allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+static inline void   _mulle__pointermap_set( struct mulle__pointermap *map,
+                                             void *key,
+                                             void *value,
+                                             struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   _mulle__pointermap_set_pair_generic( map, &pair, &mulle__pointermap_keyvaluecallback, allocator);
+}
+
+static inline void   mulle__pointermap_set( struct mulle__pointermap *map,
+                                            void *key,
+                                            void *value,
+                                            struct mulle_allocator *allocator)
+{
+   if( ! map)
+      return;
+   _mulle__pointermap_set( map, key, value, allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST_SECOND
+static inline
+void    *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
+                                         struct mulle_pointerpair *pair,
+                                         struct mulle_allocator *allocator)
+{
+   return( _mulle__pointermap_insert_pair_generic( map,
+                                                   pair,
+                                                   &mulle__pointermap_keyvaluecallback,
+                                                   allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST_SECOND
+static inline
+int   _mulle__pointermap_remove( struct mulle__pointermap *map,
+                                 void *key,
+                                 struct mulle_allocator *allocator)
+{
+   return( _mulle__pointermap_remove_generic( map,
+                                              key,
+                                              &mulle__pointermap_keyvaluecallback,
+                                              allocator));
+}
+
 #endif

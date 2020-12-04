@@ -205,7 +205,10 @@ static inline int
 
    queue = rover->_queue;
    if( ! queue)
+   {
+      *item = NULL;
       return( 0);
+   }
 
    // if rover._curr == NULL, set rover->_index to queue->_bucket_size
    limit = rover->_curr != queue->_write ? queue->_bucket_size : queue->_write_index;
@@ -217,6 +220,7 @@ static inline int
 
    return( __mulle__pointerqueueenumerator_next( rover, item));
 }
+
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__pointerqueueenumerator_done( struct mulle__pointerqueueenumerator *rover)

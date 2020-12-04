@@ -36,15 +36,13 @@
 
 #include "mulle-container-operation.h"
 #include "mulle-container-math.h"
-#include "mulle-hash.h"
-#include "mulle-prime.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
 
-void   **mulle__pointermap_allocate_storage_generic( size_t n,
+void   **mulle__pointermap_allocate_storage_generic( unsigned int n,
                                                      void *notakey,
                                                      struct mulle_allocator *allocator)
 {
@@ -91,22 +89,22 @@ void   _mulle__pointermap_reset_generic( struct mulle__pointermap *map,
 
 #pragma mark - insert / remove / get
 
-static inline void   store_key_value_generic( void **_storage,
-                                              size_t _size,
-                                              size_t i,
+static inline void   store_key_value_generic( void **storage,
+                                              unsigned int size,
+                                              unsigned int i,
                                               void *key,
                                               void *value,
                                               void *notakey)
 {
-   while( _storage[ i] != notakey)
+   while( storage[ i] != notakey)
    {
-      if( ++i < _size)
+      if( ++i < size)
          continue;
       i = 0;
    }
 
-   _storage[ i]        = key;
-   _storage[ i + _size] = value;
+   storage[ i]        = key;
+   storage[ i + size] = value;
 }
 
 
@@ -115,19 +113,18 @@ static inline void   store_key_value_generic( void **_storage,
 // disappear after copy, so values won't be retained
 //
 static void   copy_storage_generic( void **dst,
-                                    size_t dst_size,
+                                    unsigned int dst_size,
                                     void **src,
-                                    size_t src_size,
+                                    unsigned int src_size,
                                     struct mulle_container_keycallback *callback)
 {
-   void        *key;
-   void        **sentinel;
-   size_t      i;
-   uintptr_t   hash;
+   void           *key;
+   void           **sentinel;
+   unsigned int   i;
+   uintptr_t      hash;
 
    assert( mulle_is_pow2( dst_size));
    assert( mulle_is_pow2( src_size));
-   assert( dst_size >= src_size);
 
    sentinel = &src[ src_size];
    while( src < sentinel)
@@ -148,8 +145,8 @@ static void   grow_generic( struct mulle__pointermap *map,
                             struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator)
 {
-   void     **buf;
-   size_t   new_size;
+   void           **buf;
+   unsigned int   new_size;
 
    new_size = map->_size * 2;
    if( new_size < map->_size)
@@ -174,11 +171,13 @@ static void   shrink_generic( struct mulle__pointermap *map,
                               struct mulle_allocator *allocator)
 {
    void     **buf;
-   size_t   new_size;
+   unsigned int   new_size;
 
    new_size = map->_size / 2;
    if( new_size < MULLE__POINTERMAP_INITIAL_SIZE)
       return;
+
+   assert( map->_count < map->_size);
 
    buf = mulle__pointermap_allocate_storage_generic( new_size, callback->notakey, allocator);
    copy_storage_generic( buf, new_size, map->_storage, map->_size, callback);
@@ -190,25 +189,25 @@ static void   shrink_generic( struct mulle__pointermap *map,
 
 
 
-static unsigned long  _find_index_generic( void **_storage,
-                                           size_t _size,
+static unsigned long  _find_index_generic( void **storage,
+                                           unsigned int size,
                                            void *key,
                                            void *q,
-                                           size_t i,
-                                           size_t *hole_index,
+                                           unsigned int i,
+                                           unsigned int *hole_index,
                                            struct mulle_container_keycallback *callback)
 {
    int      (*f)( void *, void *, void *);
    void     *param1;
    void     *param2;
    void     *notakey;
-   size_t   mask;
+   unsigned int   mask;
 
    f       = (int (*)()) callback->is_equal;
    param1  = callback;
    param2  = key;
    notakey = callback->notakey;
-   mask    = _size - 1;
+   mask    = size - 1;
 
    do
    {
@@ -216,7 +215,7 @@ static unsigned long  _find_index_generic( void **_storage,
          return( i);
 
       i = (i + 1) & mask;
-      q = _storage[ i];
+      q = storage[ i];
    }
    while( q != notakey);
 
@@ -225,40 +224,40 @@ static unsigned long  _find_index_generic( void **_storage,
 }
 
 
-static inline uintptr_t  find_index_generic( void **_storage,
-                                             size_t _size,
+static inline uintptr_t  find_index_generic( void **storage,
+                                             unsigned int size,
                                              void *key,
                                              uintptr_t  hash,
-                                             size_t *hole_index,
+                                             unsigned int *hole_index,
                                              struct mulle_container_keycallback *callback)
 {
    void     *q;
-   size_t   i;
+   unsigned int   i;
 
-   assert( _storage);
+   assert( storage);
 
-   i = mulle__pointermap_hash_for_size( hash, _size);
-   q = _storage[ i];
+   i = mulle__pointermap_hash_for_size( hash, size);
+   q = storage[ i];
    if( q == callback->notakey)
    {
       *hole_index = i;
       return( mulle_not_found_e);
    }
 
-   return( _find_index_generic( _storage, _size, key, q, i, hole_index, callback));
+   return( _find_index_generic( storage, size, key, q, i, hole_index, callback));
 }
 
 
 #pragma mark - operations
 
-void   *_mulle__pointermap_write_generic( struct mulle__pointermap *map,
-                                          struct mulle_pointerpair *pair,
-                                          enum mulle_container_write_mode mode,
-                                          struct mulle_container_keyvaluecallback *callback,
-                                          struct mulle_allocator *allocator)
+void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
+                                               struct mulle_pointerpair *pair,
+                                               enum mulle_container_write_mode mode,
+                                               struct mulle_container_keyvaluecallback *callback,
+                                               struct mulle_allocator *allocator)
 {
    uintptr_t                  found;
-   size_t                     i;
+   unsigned int                     i;
    void                       **q;
    struct mulle_pointerpair   new_pair;
    uintptr_t                  hash;
@@ -269,39 +268,39 @@ void   *_mulle__pointermap_write_generic( struct mulle__pointermap *map,
 
    if( map->_count)
    {
-      size_t   _size;
-      void     **_storage;  // only valid in this no-grow block
-      size_t   hole_index;
+      unsigned int   size;
+      void     **storage;  // only valid in this no-grow block
+      unsigned int   hole_index;
 
-      _storage    = map->_storage;
-      _size       = map->_size;
+      storage   = map->_storage;
+      size       = map->_size;
 
       hole_index = 0xfeedface;  // for the analyzer
-      found      = find_index_generic( _storage, _size, pair->key, hash, &hole_index, &callback->keycallback);
+      found      = find_index_generic( storage, size, pair->key, hash, &hole_index, &callback->keycallback);
 
       if( found != mulle_not_found_e)
       {
-         i = (size_t) found;
-         q = &_storage[ i];
+         i = (unsigned int) found;
+         q = &storage[ i];
          switch( mode)
          {
          case mulle_container_overwrite_e :
-            q = &_storage[ i];
-            if( q[ _size] == pair->value && *q == pair->key)
-               return( q[ _size]);
+            q = &storage[ i];
+            if( q[ size] == pair->value && *q == pair->key)
+               return( q[ size]);
 
             new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
             new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
 
             (callback->keycallback.release)( &callback->keycallback, *q, allocator);
-            (callback->valuecallback.release)( &callback->valuecallback, q[ _size], allocator);
+            (callback->valuecallback.release)( &callback->valuecallback, q[ size], allocator);
 
             *q       = new_pair.key;
-            q[ _size] = new_pair.value;
-            return( q[ _size]);
+            q[ size] = new_pair.value;
+            return( q[ size]);
 
          case mulle_container_insert_e :
-            return( q[ _size]);
+            return( q[ size]);
          }
       }
 
@@ -311,8 +310,8 @@ void   *_mulle__pointermap_write_generic( struct mulle__pointermap *map,
          new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
          new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
 
-         _storage[ i]        = new_pair.key;
-         _storage[ i + _size] = new_pair.value;
+         storage[ i]        = new_pair.key;
+         storage[ i + size] = new_pair.value;
          map->_count++;
          return( NULL);
       }
@@ -333,39 +332,36 @@ void   *_mulle__pointermap_write_generic( struct mulle__pointermap *map,
 
 
 //
-// returns NULL if nothing found. There is no way to distinguish with
-// get, if a key/value pair exists, if NULL is a valid value!
+// If the hash of the key is already known, this can be quite a timesaver
 //
-void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
-                                         void *key,
-                                         struct mulle_container_keyvaluecallback *callback)
+void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map,
+                                                   void *key,
+                                                   uintptr_t hash,
+                                                   struct mulle_container_keyvaluecallback *callback)
 {
    int         (*f)( void *, void *, void *);
-   size_t      i;
-   size_t      _size;
-   size_t      mask;
-   uintptr_t   hash;
+   unsigned int      i;
+   unsigned int      size;
+   unsigned int      mask;
    void        *found;
-   void        **_storage;
+   void        **storage;
    void        *notakey;
 
-   // important to not hit a NULL _storage later
-   // _size must be > 2 for the hash to work, otherwise we could get
+   // important to not hit a NULL storage later
+   // size must be > 2 for the hash to work, otherwise we could get
    if( map->_count == 0)
       return( NULL);
 
-   hash    = (*callback->keycallback.hash)( &callback->keycallback, key);
-
-   _storage = map->_storage;
-   _size    = map->_size;
-   i        = mulle__pointermap_hash_for_size( hash, _size);
+   storage  = map->_storage;
+   size     = map->_size;
+   i        = mulle__pointermap_hash_for_size( hash, size);
    f        = (int (*)()) callback->keycallback.is_equal;
    notakey  = callback->keycallback.notakey;
-   mask     = _size - 1;
+   mask     = size - 1;
 
    for(;;)
    {
-      found = _storage[ i];
+      found = storage[ i];
       if( found == notakey)
          return( NULL);
       if( key == found)
@@ -375,7 +371,22 @@ void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
       i = (i + 1) & mask;
    }
 
-   return( _storage[ i + _size]);
+   return( storage[ i + size]);
+}
+
+
+//
+// returns NULL if nothing found. There is no way to distinguish with
+// get, if a key/value pair exists, if NULL is a valid value!
+//
+void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
+                                         void *key,
+                                         struct mulle_container_keyvaluecallback *callback)
+{
+   uintptr_t   hash;
+
+   hash = (*callback->keycallback.hash)( &callback->keycallback, key);
+   return( _mulle__pointermap__get_generic_knownhash( map, key, hash, callback));
 }
 
 
@@ -384,21 +395,21 @@ struct mulle_pointerpair   *
                                             struct mulle_container_keyvaluecallback *callback,
                                             struct mulle_pointerpair *space)
 {
-   size_t      i;
-   size_t      _size;
-   size_t      mask;
+   unsigned int      i;
+   unsigned int      size;
+   unsigned int      mask;
    uintptr_t   hash;
    void        *found;
-   void        **_storage;
+   void        **storage;
    void        *notakey;
 
    if( ! map->_count)
       return( NULL);
 
-   _storage = map->_storage;
-   _size    = map->_size;
+   storage = map->_storage;
+   size    = map->_size;
    notakey = callback->keycallback.notakey;
-   mask    = _size - 1;
+   mask    = size - 1;
 
    //
    // we use a random starting point, it doesn't matter what space->key is
@@ -406,14 +417,14 @@ struct mulle_pointerpair   *
    // fairly optimal ? when you are deleting contents with this in a loop
    // or ?
    //
-   hash  = (size_t) (*callback->keycallback.hash)( &callback->keycallback, space->key);
-   i     = mulle__pointermap_hash_for_size( hash, _size);
+   hash  = (*callback->keycallback.hash)( &callback->keycallback, space->key);
+   i     = mulle__pointermap_hash_for_size( hash, size);
 
    for(;;)
    {
-      found = _storage[ i];
+      found = storage[ i];
       if( found != notakey)
-         return( _storage[ i + _size]);
+         return( storage[ i + size]);
       i = (i + 1) & mask;
    }
 }
@@ -438,6 +449,27 @@ static void   *
          return( q[ map->_size]);
 
    return( NULL);
+}
+
+
+void   *_mulle__pointermap_get_generic_knownhash( struct mulle__pointermap *map,
+                                                  void *key,
+                                                  uintptr_t hash,
+                                                  struct mulle_container_keyvaluecallback *callback)
+{
+   void   *value;
+
+   assert( map);
+   if( map->_size <= 32)  // if the dictionary is small try to easy match
+   {
+      value = _mulle__pointermap_pointerequalitysearch( map, key);
+      if( value)
+         return( value);
+      // else do regular search
+   }
+
+   value = _mulle__pointermap__get_generic_knownhash( map, key, hash, callback);
+   return( value);
 }
 
 
@@ -467,33 +499,33 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator)
 {
-   size_t      hole_index;
-   size_t      i;
+   unsigned int      hole_index;
+   unsigned int      i;
    uintptr_t   found;
-   void        **_storage;
+   void        **storage;
    void        **q;
-   size_t      dst_index;
-   size_t      search_start;
-   size_t      _size;
-   size_t      mask;
+   unsigned int      dst_index;
+   unsigned int      search_start;
+   unsigned int      size;
+   unsigned int      mask;
    uintptr_t   hash;
 
-   // important to not hit a NULL _storage later
+   // important to not hit a NULL storage later
    if( map->_count == 0)
       return( 0);
 
    hash    = (callback->keycallback.hash)( &callback->keycallback, key);
-   _storage = map->_storage;
-   _size    = map->_size;
+   storage = map->_storage;
+   size    = map->_size;
 
-   found = find_index_generic( _storage, _size, key, hash, &hole_index, &callback->keycallback);
+   found = find_index_generic( storage, size, key, hash, &hole_index, &callback->keycallback);
    if( found == mulle_not_found_e)
       return( 0);
 
-   i = (size_t) found;
-   q = &_storage[ i];
+   i = (unsigned int) found;
+   q = &storage[ i];
    (callback->keycallback.release)( &callback->keycallback, *q, allocator);  // get rid of it
-   (callback->valuecallback.release)( &callback->valuecallback, q[ _size], allocator);  // get rid of it
+   (callback->valuecallback.release)( &callback->valuecallback, q[ size], allocator);  // get rid of it
    map->_count--;
 
    // now we may need to do a whole lot of shifting, if
@@ -503,16 +535,16 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
    // hole.
 
    dst_index = i;
-   mask      = _size - 1;
+   mask      = size - 1;
    for(;;)
    {
       i = (i + 1) & mask;
 
-      q = &_storage[ i];
+      q = &storage[ i];
       if( *q == callback->keycallback.notakey)
       {
-         _storage[ dst_index]        = *q;
-         _storage[ dst_index + _size] = NULL;
+         storage[ dst_index]        = *q;
+         storage[ dst_index + size] = NULL;
          break;
       }
 
@@ -521,8 +553,8 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
       // the "hole" in the front we just made
       // but keep going because "wrong" hashes might be behind
       // be sure not to move items that won't be found
-      hash         = (size_t ) (*callback->keycallback.hash)( &callback->keycallback, *q);
-      search_start = mulle__pointermap_hash_for_size( hash, _size);
+      hash         = (*callback->keycallback.hash)( &callback->keycallback, *q);
+      search_start = mulle__pointermap_hash_for_size( hash, size);
 
       // object better off where it is ?
       // CASE:
@@ -606,8 +638,8 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
             continue;                     // no ->
       }
       // move it up
-      _storage[ dst_index]        = *q;
-      _storage[ dst_index + _size] = q[ _size];
+      storage[ dst_index]        = *q;
+      storage[ dst_index + size] = q[ size];
       dst_index                  = i;
    }
 
@@ -636,7 +668,7 @@ int   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
    rval  = 0;
    rover = mulle__pointermap_enumerate( src);
    while( item = _mulle__pointermapenumerator_next( &rover))
-      if( _mulle__pointermap_insert_generic( dst, item, callback, allocator))
+      if( _mulle__pointermap_insert_pair_generic( dst, item, callback, allocator))
       {
          rval = -1;
          break;
@@ -647,15 +679,16 @@ int   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
 
 
 // use this only for debugging
-size_t   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
-                                                      struct mulle_container_keyvaluecallback *callback,
-                                                      size_t *perfects)
+unsigned int
+   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
+                                                struct mulle_container_keyvaluecallback *callback,
+                                                unsigned int *perfects)
 {
-   size_t                                      collisions;
-   size_t                                      distance;
-   size_t                                      dummy;
-   size_t                                      i;
-   size_t                                      search_start;
+   unsigned int                                collisions;
+   unsigned int                                distance;
+   unsigned int                                dummy;
+   unsigned int                                i;
+   unsigned int                                search_start;
    struct mulle__genericpointermapenumerator   rover;
    uintptr_t                                   hash;
    void                                        **sentinel;

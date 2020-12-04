@@ -72,11 +72,17 @@ enum mulle_container_write_mode
 };
 
 // Convenient to be different to "notakey"
-#define mulle_not_found_e     INTPTR_MAX
+#define mulle_not_found_e     ((uintptr_t) INTPTR_MAX)
 
-// Use this for "notakey" pointer to differentiate
-
+// Use this for "notakey" pointer to differentiate valid pointers & NULL
 #define mulle_not_a_pointer   ((void *) INTPTR_MIN)
+
+// Use this for "notakey" pointer to differentiate valid int keys
+#define mulle_not_an_int      ((void *) INTPTR_MIN)
+
+// Use this for "notakey" pointer to differentiate valid intptr keys
+#define mulle_not_an_intptr   ((void *) INTPTR_MIN)
+
 
 
 // just to get rid of warnings
@@ -90,5 +96,18 @@ static inline int   mulle_pointer_as_int( void *a)
 {
    return( (int) (intptr_t) a);
 }
+
+// just to have something for intptr too, cast is easier though
+static inline void   *mulle_intptr_as_pointer( intptr_t a)
+{
+   return( (void *) a);
+}
+
+
+static inline intptr_t   mulle_pointer_as_intptr( void *a)
+{
+   return( (intptr_t) a);
+}
+
 
 #endif /* mulle_container_operation_h */

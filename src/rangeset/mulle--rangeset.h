@@ -27,14 +27,14 @@
 struct mulle__rangeset
 {
    struct mulle_range   *_ranges;
-   size_t                _length;
-   size_t                _size;
+   unsigned int         _length;
+   unsigned int         _size;
 };
 
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
-                                            size_t capacity,
+                                            unsigned int capacity,
                                             struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));

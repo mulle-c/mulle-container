@@ -37,12 +37,11 @@
 
 #include "mulle-container-operation.h"
 #include "mulle-container-math.h"
-#include "mulle-hash.h"
-#include "mulle-prime.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+
 
 // both nonowned-pointer
 struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback =
@@ -53,7 +52,7 @@ struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback =
       .retain   = mulle_container_keycallback_self,
       .release  = mulle_container_keycallback_nop,
       .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_pointer_describe,
-      .notakey  = NULL,
+      .notakey  = mulle_not_a_pointer,
       .userinfo = NULL
    },
    {
@@ -72,7 +71,7 @@ struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback =
 
 
 void   _mulle__pointermap_init( struct mulle__pointermap *p,
-                                size_t capacity,
+                                unsigned int capacity,
                                 struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
@@ -90,7 +89,7 @@ void   _mulle__pointermap_init( struct mulle__pointermap *p,
 }
 
 
-struct mulle__pointermap   *mulle__pointermap_create( size_t capacity,
+struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator)
 {
@@ -134,6 +133,45 @@ void   _mulle__pointermap_reset( struct mulle__pointermap *map,
 
 #pragma mark - operations
 
+//
+// returns NULL if nothing found. There is no way to distinguish with
+// get, if a key/value pair exists, if NULL is a valid value!
+//
+void   *_mulle__pointermap_get( struct mulle__pointermap *map,
+                                void *key)
+{
+   unsigned int      i;
+   unsigned int      size;
+   unsigned int      mask;
+   uintptr_t   hash;
+   void        *found;
+   void        **storage;
+
+   // important to not hit a NULL storage later
+   // _size must be > 2 for the hash to work, otherwise we could get
+   if( map->_count == 0)
+      return( NULL);
+
+   hash     = mulle_pointer_hash( key);
+
+   storage  = map->_storage;
+   size     = map->_size;
+   i        = mulle__pointermap_hash_for_size( hash, size);
+   mask     = size - 1;
+
+   for(;;)
+   {
+      found = storage[ i];
+      if( key == found)
+         break;
+      if( found == mulle_not_a_pointer)
+         return( NULL);
+      i = (i + 1) & mask;
+   }
+
+   return( storage[ i + size]);
+}
+
 
 void   _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
                                             struct mulle_allocator *allocator)
@@ -156,7 +194,7 @@ void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map
 
    while( pair.key != mulle__pointermap_keyvaluecallback.keycallback.notakey)
    {
-      _mulle__pointermap_insert_generic( map, &pair, &mulle__pointermap_keyvaluecallback, allocator);
+      _mulle__pointermap_insert_pair_generic( map, &pair, &mulle__pointermap_keyvaluecallback, allocator);
 
       pair.value = va_arg( args, void *);
       pair.key   = va_arg( args, void *);
@@ -192,7 +230,7 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
    char                                *key;
    char                                *value;
    int                                 separate;
-   size_t                              len;
+   unsigned int                        len;
    size_t                              key_len;
    size_t                              value_len;
    struct mulle__pointermapenumerator  rover;

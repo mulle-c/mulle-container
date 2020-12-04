@@ -21,4 +21,13 @@
 //    remove for os:   `mulle-sourcetree mark mulle-allocator no-os-<osname>`
 # include <mulle-allocator/mulle-allocator.h>   // mulle-allocator
 
+// How to tweak the following mulle-data #include
+//    remove:          `mulle-sourcetree mark mulle-data no-header`
+//    rename:          `mulle-sde dependency|library set mulle-data include whatever.h`
+//    toggle #import:  `mulle-sourcetree mark mulle-data [no-]import`
+//    toggle public:   `mulle-sourcetree mark mulle-data [no-]public`
+//    toggle optional: `mulle-sourcetree mark mulle-data [no-]require`
+//    remove for os:   `mulle-sourcetree mark mulle-data no-os-<osname>`
+# include <mulle-data/mulle-data.h>   // mulle-data
+
 #endif

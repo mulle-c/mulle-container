@@ -64,7 +64,7 @@ static inline struct mulle_pointerpairarray  *
 
 
 static inline void   _mulle_pointerpairarray_init( struct mulle_pointerpairarray *array,
-                                                   size_t  capacity,
+                                                   unsigned int  capacity,
                                                    struct mulle_allocator *allocator)
 {
    _mulle__pointerpairarray_init( (struct mulle__pointerpairarray *) array,
@@ -92,14 +92,14 @@ static inline void  mulle_pointerpairarray_destroy( struct mulle_pointerpairarra
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline unsigned int
 	_mulle_pointerpairarray_get_size( struct mulle_pointerpairarray *array)
 {
    return( _mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) array));
 }
 
 
-static inline size_t
+static inline unsigned int
    mulle_pointerpairarray_get_size( struct mulle_pointerpairarray *array)
 {
    return( mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) array));
@@ -107,14 +107,14 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline unsigned int
 	_mulle_pointerpairarray_get_count( struct mulle_pointerpairarray *array)
 {
    return( _mulle__pointerpairarray_get_count( (struct mulle__pointerpairarray *) array));
 }
 
 
-static inline size_t
+static inline unsigned int
    mulle_pointerpairarray_get_count( struct mulle_pointerpairarray *array)
 {
    return( mulle__pointerpairarray_get_count( (struct mulle__pointerpairarray *) array));
@@ -122,14 +122,14 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline unsigned int
 	_mulle_pointerpairarray_get_guaranteed_size( struct mulle_pointerpairarray *array)
 {
    return( _mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) array));
 }
 
 
-static inline size_t
+static inline unsigned int
 	mulle_pointerpairarray_get_guaranteed_size( struct mulle_pointerpairarray *array)
 {
    return( mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) array));
@@ -137,7 +137,7 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
-static inline size_t
+static inline unsigned int
    _mulle_pointerpairarray_is_full( struct mulle_pointerpairarray *array)
 {
    return( _mulle__pointerpairarray_is_full( (struct mulle__pointerpairarray *) array));
@@ -153,12 +153,24 @@ static inline int
 
 # pragma mark - operations
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle_pointerpairarray_add( struct mulle_pointerpairarray *array,
                                                   struct mulle_pointerpair pair)
 {
    _mulle__pointerpairarray_add( (struct mulle__pointerpairarray *) array,
                                  pair,
                                  array->allocator);
+}
+
+
+static inline void
+   mulle_pointerpairarray_add( struct mulle_pointerpairarray *array,
+                               struct mulle_pointerpair pair)
+{
+   if( array)
+      _mulle__pointerpairarray_add( (struct mulle__pointerpairarray *) array,
+                                    pair,
+                                    array->allocator);
 }
 
 
@@ -172,25 +184,62 @@ struct mulle_pointerpair
 
 static inline
 struct mulle_pointerpair
-	mulle_pointerpairarray_find_last( struct mulle_pointerpairarray *array)
+	mulle_pointerpairarray_get_last( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_get_last( (struct mulle__pointerpairarray *) array));
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline
 struct mulle_pointerpair
 	_mulle_pointerpairarray_get( struct mulle_pointerpairarray *array,
-                                size_t i)
+                                unsigned int i)
 {
    return( _mulle__pointerpairarray_get( (struct mulle__pointerpairarray *) array,
                                          i));
 }
 
 
+static inline
+struct mulle_pointerpair
+   mulle_pointerpairarray_get( struct mulle_pointerpairarray *array,
+                               unsigned int i)
+{
+   if( ! array )
+      return( mulle_pointerpair_make_invalid());
+
+   return( _mulle__pointerpairarray_get( (struct mulle__pointerpairarray *) array,
+                                         i));
+}
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline unsigned int
+   _mulle_pointerpairarray_get_in_range( struct mulle_pointerpairarray *array,
+                                         struct mulle_range range,
+                                         void *buf)
+{
+   return( _mulle__pointerpairarray_get_in_range( (struct mulle__pointerpairarray *) array,
+                                                  range,
+                                                  buf));
+}
+
+static inline
+unsigned int
+   mulle_pointerpairarray_get_in_range( struct mulle_pointerpairarray *array,
+                                        struct mulle_range range,
+                                        void *buf)
+{
+   return( mulle__pointerpairarray_get_in_range( (struct mulle__pointerpairarray *) array,
+                                                 range,
+                                                 buf));
+}
+
+
 static inline void
 	mulle_pointerpairarray_set( struct mulle_pointerpairarray *array,
-                               size_t i,
+                               unsigned int i,
                                struct mulle_pointerpair pair)
 {
    _mulle__pointerpairarray_set( (struct mulle__pointerpairarray *) array,

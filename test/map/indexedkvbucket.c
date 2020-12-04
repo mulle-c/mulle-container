@@ -36,13 +36,13 @@ static void   simple_fill_test()
    for( i = 0; i < 100000; i++)
    {
       random_key( key);
-      _mulle__map_set( bucket, &pair, CALLBACK, NULL);
+      _mulle__map_set_pair( bucket, &pair, CALLBACK, NULL);
    }
 
    _mulle__map_reset( bucket, CALLBACK, NULL);
 
    printf( "%ld\n", (long) _mulle__map_get_count( bucket));
-   _mulle__map_set( bucket, &pair, CALLBACK, NULL);
+   _mulle__map_set_pair( bucket, &pair, CALLBACK, NULL);
    printf( "%ld\n", (long) _mulle__map_get_count( bucket));
 
    _mulle__map_destroy( bucket, CALLBACK, NULL);

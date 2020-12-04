@@ -24,9 +24,7 @@ static int  _pointer_compare( void *p_a, void *p_b)
 
 
 MULLE_C_NONNULL_FIRST_THIRD
-static void   *mulle__uniquepointerarray_bsearch( void **buf,
-                                                  size_t _used,
-                                                  void  *search)
+void   *mulle_pointers_bsearch( void **buf, unsigned int n, void *search)
 {
    long   first;
    long   last;
@@ -34,7 +32,7 @@ static void   *mulle__uniquepointerarray_bsearch( void **buf,
    void   *p;
 
    first  = 0;
-   last   = (long) (_used - 1);
+   last   = (long) (n - 1);
    middle = (first + last) / 2;
 
    while( first <= last)
@@ -67,9 +65,14 @@ void   *_mulle__uniquepointerarray_member2( struct mulle__uniquepointerarray *se
 
    if( ! set->_sorted)
    {
-      qsort( set->_storage, _mulle__uniquepointerarray_get_count( set), sizeof( void *), (void *) _pointer_compare);
+      qsort( set->_storage,
+             _mulle__uniquepointerarray_get_count( set),
+             sizeof( void *),
+             (void *) _pointer_compare);
       set->_sorted = 1;
    }
-   result = mulle__uniquepointerarray_bsearch( set->_storage, _mulle__uniquepointerarray_get_count( set), p);
+   result = mulle_pointers_bsearch( set->_storage,
+                                    _mulle__uniquepointerarray_get_count( set),
+                                    p);
    return( result ? *result : NULL);
 }

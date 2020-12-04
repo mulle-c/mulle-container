@@ -35,7 +35,6 @@
 #include "mulle-container-math.h"
 #include "mulle-container-callback.h"
 #include "mulle-container-callback-global.h"
-#include "mulle-hash.h"
 
 #include <stddef.h>
 #include <assert.h>
@@ -62,7 +61,7 @@ struct mulle__pointersetenumerator   mulle__pointersetenumerator_empty;
 //
 
 void    _mulle__pointerset_init( struct mulle__pointerset *p,
-                                 size_t capacity,
+                                 unsigned int capacity,
                                  struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
@@ -82,7 +81,7 @@ void    _mulle__pointerset_init( struct mulle__pointerset *p,
 }
 
 
-struct mulle__pointerset   *_mulle__pointerset_create( size_t capacity,
+struct mulle__pointerset   *_mulle__pointerset_create( unsigned int capacity,
                                                        size_t extra,
                                                        struct mulle_allocator *allocator)
 {
@@ -113,21 +112,21 @@ void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
 void   *_mulle__pointerset__get( struct mulle__pointerset *set,
                                  void *key)
 {
-   size_t      i;
-   size_t      _size;
-   size_t      mask;
-   void        *found;
-   void        **_storage;
-   uintptr_t   hash;
+   unsigned int      i;
+   unsigned int      size;
+   unsigned int      mask;
+   void              *found;
+   void              **storage;
+   uintptr_t         hash;
 
-   hash    = mulle_hash_pointer( key);
-   _storage = set->_storage;
-   _size    = set->_size;
-   i       = mulle__pointerset_hash_for_size( hash, _size);
-   mask    = _size - 1;
+   hash    = mulle_pointer_hash( key);
+   storage = set->_storage;
+   size    = set->_size;
+   i       = mulle__pointerset_hash_for_size( hash, size);
+   mask    = size - 1;
    for(;;)
    {
-      found = _storage[ i];
+      found = storage[ i];
       if( found == mulle_not_a_pointer)
          break;
       if( key == found)
@@ -137,6 +136,7 @@ void   *_mulle__pointerset__get( struct mulle__pointerset *set,
 
    return( found);
 }
+
 
 void   *_mulle__pointerset_get( struct mulle__pointerset *set,
                                 void *key)

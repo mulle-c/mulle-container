@@ -44,10 +44,10 @@ struct mulle__pointerpairarrayenumerator   mulle__pointerpairarrayenumerator_emp
 
 // intentionally not static inline
 static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *array,
-                                                size_t new_size,
+                                                unsigned int new_size,
                                                 struct mulle_allocator *allocator)
 {
-   size_t   used;
+   unsigned int   used;
 
    new_size = mulle_pow2round( new_size);
    if( new_size == 0)
@@ -65,25 +65,28 @@ static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *
 void   _mulle__pointerpairarray_grow( struct mulle__pointerpairarray *array,
                                       struct mulle_allocator *allocator)
 {
-   size_t   size;
+   unsigned int   size;
 
    size = _mulle__pointerpairarray_get_size( array);
    _mulle__pointerpairarray_realloc( array, size * 2, allocator);
 }
 
 
-void   _mulle__pointerpairarray_guarantee( struct mulle__pointerpairarray *array,
-                                           size_t length,
-                                           struct mulle_allocator *allocator)
+struct mulle_pointerpair  *
+   _mulle__pointerpairarray_guarantee( struct mulle__pointerpairarray *array,
+                                       unsigned int length,
+                                       struct mulle_allocator *allocator)
 {
-   size_t   available;
-   size_t   size;
+   unsigned int   available;
+   unsigned int   size;
 
    available = _mulle__pointerpairarray_get_guaranteed_size( array);
-   if( available >= length)
-      return;
-   size = _mulle__pointerpairarray_get_size( array);
-   _mulle__pointerpairarray_realloc( array, size + (length - available), allocator);
+   if( available < length)
+   {
+      size = _mulle__pointerpairarray_get_size( array);
+      _mulle__pointerpairarray_realloc( array, size + (length - available), allocator);
+   }
+   return( array->_curr);
 }
 
 
@@ -112,4 +115,32 @@ uintptr_t
       p++;
    }
    return( mulle_not_found_e);
+}
+
+
+
+void
+   _mulle__pointerpairarray_remove_in_range( struct mulle__pointerpairarray *array,
+                                             struct mulle_range range)
+{
+   range = mulle_range_validate_against_length( range,
+                                                _mulle__pointerpairarray_get_count( array));
+   memmove( &array->_storage[ range.location],
+            &array->_storage[ range.location + range.length],
+            range.length * sizeof( struct mulle_pointerpair));
+
+   array->_curr -= range.length;
+}
+
+
+
+unsigned int
+   _mulle__pointerpairarray_get_in_range( struct mulle__pointerpairarray *array,
+                                          struct mulle_range range,
+                                          void *buf)
+{
+   range = mulle_range_validate_against_length( range,
+                                                mulle__pointerpairarray_get_count( array));
+   memcpy( buf, &array->_storage[ range.location], range.length * sizeof( struct mulle_pointerpair));
+   return( range.length);
 }

@@ -35,7 +35,7 @@
 
 #include "mulle--pointermap-struct.h"
 
-void   **mulle__pointermap_allocate_storage_generic( size_t n,
+void   **mulle__pointermap_allocate_storage_generic( unsigned int n,
                                                      void *notakey,
                                                      struct mulle_allocator *allocator);
 
@@ -47,36 +47,43 @@ void   _mulle__pointermap_reset_generic( struct mulle__pointermap *map,
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
-void   _mulle__pointermap_set_generic( struct mulle__pointermap *map,
-                                       struct mulle_pointerpair *pair,
-                                       struct mulle_container_keyvaluecallback *callback,
-                                       struct mulle_allocator *allocator)
+void   _mulle__pointermap_set_pair_generic( struct mulle__pointermap *map,
+                                            struct mulle_pointerpair *pair,
+                                            struct mulle_container_keyvaluecallback *callback,
+                                            struct mulle_allocator *allocator)
 {
-   void   *_mulle__pointermap_write_generic( struct mulle__pointermap *map,
-                                             struct mulle_pointerpair *pair,
-                                             enum mulle_container_write_mode mode,
-                                             struct mulle_container_keyvaluecallback *callback,
-                                             struct mulle_allocator *allocator);
+   void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
+                                                  struct mulle_pointerpair *pair,
+                                                  enum mulle_container_write_mode mode,
+                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  struct mulle_allocator *allocator);
 
-   _mulle__pointermap_write_generic( map, pair, mulle_container_overwrite_e, callback, allocator);
+   _mulle__pointermap_write_pair_generic( map, pair, mulle_container_overwrite_e, callback, allocator);
 }
 
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
-void    *_mulle__pointermap_insert_generic( struct mulle__pointermap *map,
+void    *_mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
                                             struct mulle_pointerpair *pair,
                                             struct mulle_container_keyvaluecallback *callback,
                                             struct mulle_allocator *allocator)
 {
-   void   *_mulle__pointermap_write_generic( struct mulle__pointermap *map,
+   void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                              struct mulle_pointerpair *pair,
                                              enum mulle_container_write_mode mode,
                                              struct mulle_container_keyvaluecallback *callback,
                                              struct mulle_allocator *allocator);
 
-   return( _mulle__pointermap_write_generic( map, pair, mulle_container_insert_e, callback, allocator));
+   return( _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator));
 }
+
+
+MULLE_C_NONNULL_FIRST_FOURTH
+void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map,
+                                                   void *key,
+                                                   uintptr_t hash,
+                                                   struct mulle_container_keyvaluecallback *callback);
 
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
@@ -87,6 +94,12 @@ MULLE_C_NONNULL_FIRST_SECOND_THIRD
 struct mulle_pointerpair   *_mulle__pointermap_get_any_pair_generic( struct mulle__pointermap *map,
                                                                      struct mulle_container_keyvaluecallback *callback,
                                                                      struct mulle_pointerpair *space);
+
+MULLE_C_NONNULL_FIRST_FOURTH
+void   *_mulle__pointermap_get_generic_knownhash( struct mulle__pointermap *map,
+                                                  void *key,
+                                                  uintptr_t hash,
+                                                  struct mulle_container_keyvaluecallback *callback);
 
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
@@ -112,9 +125,9 @@ int   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
                                              struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST_SECOND
-size_t   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
+unsigned int   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
                                                       struct mulle_container_keyvaluecallback *callback,
-                                                      size_t *perfects);
+                                                      unsigned int *perfects);
 
 
 # pragma mark - enumeration
@@ -123,8 +136,8 @@ size_t   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *
 #define MULLE__GENERICPOINTERMAPENUMERATOR_BASE        \
    struct mulle_pointerpair                 _space;    \
    void                                     **_curr;   \
-   size_t                                   _left;     \
-   size_t                                   _offset;   \
+   unsigned int                             _left;     \
+   unsigned int                             _offset;   \
    void                                     *_notakey
 
 
@@ -205,7 +218,13 @@ static inline int
 
    pair = _mulle__genericpointermapenumerator_next_pair( rover);
    if( ! pair)
+   {
+      if( key)
+         *key = NULL;
+      if( value)
+         *value = NULL;
       return( 0);
+   }
 
    if( key)
       *key = pair->key;

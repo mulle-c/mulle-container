@@ -53,7 +53,7 @@ struct mulle__setenumerator   mulle__setenumerator_empty;
 //
 
 void    _mulle__set_init( struct mulle__set *p,
-                          size_t capacity,
+                          unsigned int capacity,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
@@ -71,7 +71,7 @@ void    _mulle__set_init( struct mulle__set *p,
 
 
 
-struct mulle__set   *_mulle__set_create( size_t capacity,
+struct mulle__set   *_mulle__set_create( unsigned int capacity,
                                          size_t extra,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator)
@@ -91,7 +91,7 @@ void   _mulle__set_release_all( struct mulle__set *set,
    struct mulle__setenumerator  rover;
    void                         *item;
 
-   if( mulle_container_keycallback_releases( callback))
+   if( callback && _mulle_container_keycallback_releases( callback))
    {
       rover = _mulle__set_enumerate( set, callback);
       while( _mulle__setenumerator_next( &rover, &item))
@@ -148,8 +148,8 @@ struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
 
 // use this only for debugging
 char   *_mulle__set_describe( struct mulle__set *set,
-                             struct mulle_container_keycallback *callback,
-                             struct mulle_allocator *allocator)
+                              struct mulle_container_keycallback *callback,
+                              struct mulle_allocator *allocator)
 {
    char                          *result;
    char                          *s;

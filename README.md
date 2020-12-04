@@ -43,7 +43,7 @@ that keeps a reference to the memory allocator, and one that doesn't. The
 data structure without, is obviously smaller than the one with.
 If you are managing millions of hashtables, as may be the case when doing
 database fetches, this can be significant.
-On the other hand, embedding the allocator makes the API be simpler and
+On the other hand, embedding the allocator makes the API simpler and
 less susceptible to allocator mix ups.
 
 ### NULL leniency
@@ -112,7 +112,7 @@ int   main( void)
 ```
 
 
-## API
+## Data Structures
 
 The names of the functions are consistent. Each function is a **verb**
 that is prefixed with the name of the data structure it handles. So for example
@@ -144,6 +144,8 @@ can be copied/freed or reference counted using
 ![](pix/mulle-array.svg)
 
 > The array was allocated with an initial capacity of 4. The addition of a fifth value forced an expansion to 8 (yellow: old cells, green: new cells). The "notakey" is not used for arrays.
+
+There is also an [API Documentation](dox/API_ARRAY.md).
 
 
 ##### `mulle__array`
@@ -311,23 +313,6 @@ This is a simplified version of `mulle__set`. Equality is determined by comparin
 ![](pix/mulle--pointerset.svg)
 
 
-File                                                         | Description
------------------------------------------------------------- | ----------------------------------------
-[`mulle_container_callback`](dox/API_CONTAINER_CALLBACK.md)  | Callback structures for sets, arrays and maps.
-&nbsp;                                                       | &nbsp;
-[`mulle_array`](dox/API_ARRAY.md)                            | A growing mutable array of void pointers (-> objects) with enumeration. (NSMutableArray)
-[`mulle_pointerarray`](dox/API_POINTERARRAY.md)              | A growing mutable array of void pointers w/o callbacks.
-[`mulle_pointerpairarray`](dox/API_POINTERPAIRARRAY.md)      | A growing mutable array of pairs of void pointers w/o callbacks.
-&nbsp;                                                       | &nbsp;
-[`mulle_hash`](dox/API_HASH.md)                              | The default hash. Currently it's a wrapper for the [CityHash](https://en.wikipedia.org/wiki/CityHash). The choice of CityHash is pretty close to arbitrary, it might change in the future.
-[`mulle_prime`](dox/API_PRIME.md)                            | A simple scheme to get prime values for bit depths (up to 32 bit)
-&nbsp;                                                       | &nbsp;
-[`mulle_map`](dox/API_MAP.md)                                | A single level growing hashmap (key indexing value map). Your standard key/value associating hashtable (NSMutableDictionary)
-&nbsp;                                                       | &nbsp;
-[`mulle_set`](dox/API_SET.md)                                | A single level growing hashed set. (NSMutableSet)
-[`mulle_uniquepointerarray`](dox/API_uniquepointerarray.md)  | A binary searching set of void pointers, based on pointer equality. Useful for very small sets.
-
-
 
 ## Efficiency
 
@@ -426,7 +411,6 @@ mkdir build 2> /dev/null
    make install
 )
 ```
-
 
 
 ## Platforms and Compilers

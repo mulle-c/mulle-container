@@ -33,7 +33,7 @@
 #include "mulle--pointerset-struct.h"
 
 
-void   **_mulle__pointerset_allocate_storage_generic( size_t n,
+void   **_mulle__pointerset_allocate_storage_generic( unsigned int n,
                                                       void *notakey,
                                                       struct mulle_allocator *allocator);
 
@@ -116,10 +116,10 @@ int   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
 
 #pragma mark - enumeration
 
-#define MULLE__GENERICPOINTERSETENUMERATOR_BASE   \
-   void     **_curr;                              \
-   size_t   _left;                                \
-   void     *_notakey
+#define MULLE__GENERICPOINTERSETENUMERATOR_BASE \
+   void           **_curr;                      \
+   unsigned int   _left;                        \
+   void           *_notakey
 
 struct mulle__genericpointersetenumerator
 {
@@ -164,7 +164,10 @@ static inline int
    void   *p;
 
    if( ! rover->_left)
+   {
+      *item = NULL;
       return( 0);
+   }
 
    for(;;)
    {
@@ -186,7 +189,11 @@ static inline int
    void   *p;
 
    if( ! rover || ! rover->_left)
+   {
+      if( item)
+         *item = NULL;
       return( 0);
+   }
 
    for(;;)
    {

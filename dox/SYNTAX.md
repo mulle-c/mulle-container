@@ -17,7 +17,7 @@ data structure keeps track of the allocator in its struct:
 struct my__data
 {
    void                    *bytes;
-   size_t                  *length;
+   size_t                  length;
    // no allocator, therefore my__data and not my_data
 };
 ```
@@ -26,7 +26,7 @@ struct my__data
 struct my_data
 {
    void                    *bytes;
-   size_t                  *length;
+   size_t                  length;
    struct mulle_allocator  *allocator;
 };
 ```
@@ -62,7 +62,7 @@ has no allocator or adds an allocator. A typical case is an enumerator:
 struct my_dataenumerator
 {
    void                    *curr;
-   size_t                  *length;  // has no allocator, but belongs to `my_data`
+   size_t                  length;  // has no allocator, but belongs to `my_data`
                                      // therefore not my__dataenumerator
 };
 
@@ -114,7 +114,7 @@ What the function does, is expressed in its name which is most often a
 verb            : [a-z_][a-z0-9_]+
                 ;
 
-
+```
 
 ``` c
 size_t   mulle__string_get_length( struct mulle__string *s);

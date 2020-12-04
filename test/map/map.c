@@ -53,13 +53,13 @@ static void  simple( void)
 
 static void  enumerate( void)
 {
-   struct mulle_map              *map;
-   struct mulle_mapenumerator    rover;
-   void                          *key;
-   void                          *value;
-   int                           rval;
-   int                           i;
-   int                           state;
+   struct mulle_map                             *map;
+   struct mulle_mapenumerator                   rover;
+   void                                         *key;
+   void                                         *value;
+   int                                          rval;
+   int                                          i;
+   int                                          state;
    struct mulle_container_keyvaluecallback      callback;
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
@@ -70,6 +70,8 @@ static void  enumerate( void)
    mulle_map_set( map, "VfL", "VFL");
    mulle_map_set( map, "Bochum", "BOCHUM");
    mulle_map_set( map, "1848", "1848");
+
+   assert( mulle_map_get_count( map) == 3);
 
    state = 0;
    rover = mulle_map_enumerate( map);
