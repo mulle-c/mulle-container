@@ -10,9 +10,9 @@ heap. None of them are thread-safe.
 Some data structures utilize callbacks that are compatible to OS X's
 [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
 
-Build Status | Release Version
--------------|-----------------------------------
-[![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://travis-ci.org/mulle-c/mulle-container.svg?branch=release)](https://travis-ci.org/mulle-c/mulle-container)
+| Release Version
+|-----------------------------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](https://github.com/mulle-c/mulle-container/actions)
 
 
 ## Aspects
@@ -371,12 +371,20 @@ _mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keyc
 
 ## Add
 
-Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your
-mulle-sde project:
+### Either: link library
+
+Use [mulle-sde](//github.com/mulle-sde) to add mulle-buffer to your project:
 
 ```
-mulle-sde dependency add --c --github mulle-c mulle-container
+mulle-sde dependency add --c --github mulle-c mulle-buffer
 ```
+
+### Or: add Sources
+
+Alternatively you can read [STEAL.md](//github.com/mulle-c11/dox/STEAL.md) on
+how to add mulle-c source code into your own projects.
+
+
 
 ## Install
 
@@ -397,7 +405,7 @@ Install the requirements:
 Requirements                                             | Description
 ---------------------------------------------------------|-----------------------
 [mulle-allocator](//github.com/mulle-c/mulle-allocator)  | Memory allocation wrapper
-[farmhash](//github.com/mulle-c/farmhash)                | A hash function
+[mulle-data](//github.com/mulle-c/mulle-data)            | Hash code
 
 Install into `/usr/local`:
 
@@ -411,6 +419,8 @@ mkdir build 2> /dev/null
    make install
 )
 ```
+
+
 
 
 ## Platforms and Compilers

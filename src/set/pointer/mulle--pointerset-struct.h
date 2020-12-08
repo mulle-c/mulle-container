@@ -63,9 +63,9 @@ static inline unsigned int
  */
 
 // fields are considered private
-#define MULLE__POINTERSET_BASE \
-   void     **_storage;         \
-   unsigned int   _count;             \
+#define MULLE__POINTERSET_BASE  \
+   void           **_storage;   \
+   unsigned int   _count;       \
    unsigned int   _size
 
 // NSSet/NSMutableSet/NSHashTable
@@ -81,7 +81,7 @@ struct mulle__pointerset
 MULLE_C_NONNULL_THIRD
 struct mulle__pointerset   *_mulle__pointerset_create( unsigned int capacity,
                                                        size_t extra,
-                                                       struct mulle_allocator *allocator) ;
+                                                       struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST_SECOND
 void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
