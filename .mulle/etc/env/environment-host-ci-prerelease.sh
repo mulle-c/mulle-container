@@ -35,3 +35,21 @@ export MULLE_C11_URL="https://github.com/mulle-c/mulle-c11.git"
 export MULLE_C11_BRANCH="prerelease"
 
 
+#
+#
+#
+export MULLE_DATA_NODETYPE="git"
+
+
+#
+#
+#
+export MULLE_DATA_BRANCH="prerelease"
+
+
+#
+#
+#
+export MULLE_DATA_URL="https://github.com/mulle-c/mulle-data.git"
+
+
