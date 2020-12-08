@@ -164,7 +164,7 @@ export MULLE_CONTAINER_BRANCH="prerelease"
 #
 #
 #
-export MULLE_DATA_NODETYPE="g"
+export MULLE_DATA_NODETYPE="git"
 
 
 #
