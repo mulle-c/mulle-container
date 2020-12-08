@@ -161,3 +161,21 @@ export MULLE_CONTAINER_URL="https://github.com/mulle-c/mulle-container.git"
 export MULLE_CONTAINER_BRANCH="prerelease"
 
 
+#
+#
+#
+export MULLE_DATA_NODETYPE="g"
+
+
+#
+#
+#
+export MULLE_DATA_URL="https://github.com/mulle-c/mulle-data.git"
+
+
+#
+#
+#
+export MULLE_DATA_BRANCH="prerelease"
+
+
