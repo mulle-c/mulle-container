@@ -1,0 +1,17 @@
+{
+   "name" : "mulle-container",
+   "version" : "4.0.0",
+   "description" : "🛄 Arrays, hashtables and a queue",
+   "homepage" : "https://github.com/mulle-c/mulle-container",
+   "bugs" : "https://github.com/mulle-c/mulle-container/issues",
+   "keywords" : [],
+   "license" : "BSD-3-Clause",
+   "repository" : {
+      "type" : "git",
+      "url" : "mulle-c/mulle-container"
+   },
+   "dependencies" : {
+      "mulle-allocator" : "mulle-c/mulle-allocator",
+      "mulle-data" : "mulle-c/mulle-data"
+   }
+}
