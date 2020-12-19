@@ -74,4 +74,9 @@ static inline struct mulle_pointerpair
 }
 
 
+static inline int   mulle_pointerpair_is_invalid( struct mulle_pointerpair pair)
+{
+   return( pair.key == mulle_not_a_pointer);
+}
+
 #endif
