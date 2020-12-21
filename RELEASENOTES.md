@@ -1,3 +1,25 @@
+# 4.0.0
+
+* still flip/flopping on the index type. Started with ``uintpr_t`,` then moved to ``size_t`` and now `unsigned int`. Don't want to typedef this though. See dox/DATATYPES.md for this.
+* moved prime and hash code to new project mulle-data
+* removed some stub documentation, that now does more harm than good
+* added verb modifiers to the function naming style doc
+* added `describe` for debugging
+* `guarantee` now returns a non-null pointer on success
+* new range get methods like ``_mulle__array_get_in_range`` for example
+* `compact` as a verb is no more, use ``size_to_fit``
+* enumerators now nil the by reference item when they are exhausted
+* redid all enumerators, so that they are uniformly returning the value by reference
+* made the capabilities of the various data structures more orthogonal to each other, but there is still some functions lacking
+* There is no more notakey functionality in the arrays
+* Improved README with nice pictures
+* redid mulle-set it is now based on a mulle--pointerset, similar to mulle-array
+* mulle--pointers have no notakey and mulle-pointerarray has notakey
+* add mulle--pointerset and mulle--pointerarray
+* added ``_mulle__map_count_collisions``
+* add mulle-structarray
+
+
 ### 3.0.1
 
 * Various small improvements
