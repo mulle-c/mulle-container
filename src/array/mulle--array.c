@@ -138,7 +138,7 @@ void   _mulle__array_reset( struct mulle__array *array,
                             struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator)
 {
-   if( callback->release != mulle_container_keycallback_nop)
+   if( _mulle_container_keycallback_releases( callback))
       _mulle__array_release( array, mulle_range_make( 0, _mulle__array_get_count( array)), callback, allocator);
 
    _mulle__pointerarray_reset( (struct mulle__pointerarray *) array);

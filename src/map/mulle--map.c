@@ -135,8 +135,13 @@ void   _mulle__map_reset( struct mulle__map *map,
                           struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator)
 {
-   _mulle__map_done( map, callback, allocator);
-   _mulle__map_init( map, 0, callback, allocator);
+   // this is good because it allows reset of empty uninitialized maps and
+   // avoids superflouse free/dealloc pair
+   if( map->_count)
+   {
+      _mulle__map_done( map, callback, allocator);
+      _mulle__map_init( map, 0, callback, allocator);
+   }
 }
 
 
