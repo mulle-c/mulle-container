@@ -18,3 +18,11 @@ Type               | Usage
 `size_t`           | byte quantity values
 `uintptr_t`        | hashes, search results (and other functions returning
                    | `mulle_not_found`)
+
+
+## Struct datatypes
+
+Usually struct fields are accessed via inline functions. The actual fields
+that are prefixed with a `_` are not public and therefore subject to change
+within a major version.
+
