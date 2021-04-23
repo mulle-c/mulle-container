@@ -37,8 +37,8 @@
 #include "mulle-container-math.h"
 
 
-struct mulle__pointerarrayenumerator          mulle__pointerarrayenumerator_empty;
-struct mulle__pointerarrayreverseenumerator   mulle__pointerarrayreverseenumerator_empty;
+const struct mulle__pointerarrayenumerator          mulle__pointerarrayenumerator_empty;
+const struct mulle__pointerarrayreverseenumerator   mulle__pointerarrayreverseenumerator_empty;
 
 
 # pragma mark - memory allocation

@@ -280,7 +280,7 @@ void  _mulle__array_remove_last( struct mulle__array *array,
 {
    void   *p;
 
-   p = _mulle__pointerarray_remove_last( (struct mulle__pointerarray *) array);
+   p = _mulle__pointerarray_pop( (struct mulle__pointerarray *) array);
    (*callback->release)( callback, p, allocator);
 }
 

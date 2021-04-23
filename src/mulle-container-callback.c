@@ -71,7 +71,7 @@ void   *mulle_container_valuecallback_self( struct mulle_container_valuecallback
 }
 
 
-char   *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback,
+void   *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback,
                                                       void *p,
                                                       struct mulle_allocator **p_allocator)
 {
@@ -99,31 +99,31 @@ void
 
 
 
-char   *
+void   *
    mulle_container_callback_int_describe( struct mulle_container_valuecallback *callback,
                                           void *p,
                                           struct mulle_allocator **p_allocator)
 {
    char   buf[ 64];
 
-   sprintf( buf, "%d", (int) (uintptr_t) p);
+   sprintf( buf, "%d", (int) (intptr_t) p);
    return( mulle_allocator_strdup( *p_allocator, buf));
 }
 
 
-char   *
+void   *
    mulle_container_callback_intptr_describe( struct mulle_container_valuecallback *callback,
                                              void *p,
                                              struct mulle_allocator **p_allocator)
 {
    char   buf[ 64];
 
-   sprintf( buf, "%lld", (long long) (uintptr_t) p);
+   sprintf( buf, "%lld", (long long) (intptr_t) p);
    return( mulle_allocator_strdup( *p_allocator, buf));
 }
 
 
-char *
+void *
    mulle_container_callback_pointer_describe( struct mulle_container_valuecallback  *callback,
                                               void *p,
                                               struct mulle_allocator **p_allocator)
@@ -150,7 +150,7 @@ char *
 }
 
 
-char   *mulle_container_callback_cstring_describe( struct mulle_container_valuecallback  *ignore,
+void   *mulle_container_callback_cstring_describe( struct mulle_container_valuecallback  *ignore,
                                                    void *p,
                                                    struct mulle_allocator **p_allocator)
 {

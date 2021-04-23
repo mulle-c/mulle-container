@@ -176,9 +176,9 @@ static inline void
 
 static inline
 struct mulle_pointerpair
-	mulle_pointerpairarray_remove_last( struct mulle_pointerpairarray *array)
+	mulle_pointerpairarray_pop( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_remove_last( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_pop( (struct mulle__pointerpairarray *) array));
 }
 
 

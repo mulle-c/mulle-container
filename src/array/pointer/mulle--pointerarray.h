@@ -78,9 +78,10 @@ static inline struct mulle__pointerarray  *
 
 
 MULLE_C_NONNULL_FIRST
-static inline void   _mulle__pointerarray_init_with_static_pointers( struct mulle__pointerarray *array,
-                                                                     void **storage,
-                                                                     unsigned int capacity)
+static inline void
+   _mulle__pointerarray_init_with_static_pointers( struct mulle__pointerarray *array,
+                                                   void **storage,
+                                                   unsigned int capacity)
 {
    assert( storage);
    assert( capacity);
@@ -322,7 +323,7 @@ void   mulle__pointerarray_add( struct mulle__pointerarray *array,
 
 MULLE_C_NONNULL_FIRST
 static inline
-void   *_mulle__pointerarray_remove_last( struct mulle__pointerarray *array)
+void   *_mulle__pointerarray_pop( struct mulle__pointerarray *array)
 {
    if( array->_curr > array->_storage)
       return( *--array->_curr);
@@ -331,11 +332,11 @@ void   *_mulle__pointerarray_remove_last( struct mulle__pointerarray *array)
 
 
 static inline
-void   *mulle__pointerarray_remove_last( struct mulle__pointerarray *array)
+void   *mulle__pointerarray_pop( struct mulle__pointerarray *array)
 {
    if( ! array)
       return( NULL);
-   return( _mulle__pointerarray_remove_last( array));
+   return( _mulle__pointerarray_pop( array));
 }
 
 
@@ -514,7 +515,7 @@ struct mulle__pointerarrayenumerator
    MULLE__POINTERARRAYENUMERATOR_BASE;
 };
 
-extern struct mulle__pointerarrayenumerator   mulle__pointerarrayenumerator_empty;
+extern const struct mulle__pointerarrayenumerator   mulle__pointerarrayenumerator_empty;
 
 
 MULLE_C_NONNULL_FIRST
@@ -600,7 +601,8 @@ struct mulle__pointerarrayreverseenumerator
    MULLE__POINTERARRAYREVERSEENUMERATOR_BASE;
 };
 
-extern struct mulle__pointerarrayreverseenumerator   mulle__pointerarrayreverseenumerator_empty;
+const extern struct mulle__pointerarrayreverseenumerator
+   mulle__pointerarrayreverseenumerator_empty;
 
 
 MULLE_C_NONNULL_FIRST

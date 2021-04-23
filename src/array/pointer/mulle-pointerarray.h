@@ -46,7 +46,7 @@
 //
 #define MULLE_POINTERARRAY_BASE          \
    MULLE__POINTERARRAY_BASE;             \
-   struct mulle_allocator   *allocator
+   struct mulle_allocator   *allocator    // public...
 
 
 struct mulle_pointerarray
@@ -195,42 +195,49 @@ static inline struct mulle_allocator *
 MULLE_C_NONNULL_FIRST
 static inline void **
    _mulle_pointerarray_guarantee( struct mulle_pointerarray *array,
-                                  unsigned int length,
-                                  struct mulle_allocator *allocator)
+                                  unsigned int length)
 {
    return( _mulle__pointerarray_guarantee( (struct mulle__pointerarray *) array,
                                            length,
-                                           allocator));
+                                           array->allocator));
 }
 
 
 static inline void **
    mulle_pointerarray_guarantee( struct mulle_pointerarray *array,
-                                 unsigned int length,
-                                 struct mulle_allocator *allocator)
+                                 unsigned int length)
 {
    return( mulle__pointerarray_guarantee( (struct mulle__pointerarray *) array,
                                           length,
-                                          allocator));
+                                          array->allocator));
 }
 
+
+// there can be no useful "lenient" variant
+MULLE_C_NONNULL_FIRST
+static inline void **
+   _mulle_pointerarray_advance( struct mulle_pointerarray *array,
+                                unsigned int length)
+{
+   return( _mulle__pointerarray_advance( (struct mulle__pointerarray *) array,
+                                         length,
+                                         array->allocator));
+}
 
 
 MULLE_C_NONNULL_FIRST
 static inline void
-   _mulle_pointerarray_grow( struct mulle_pointerarray *array,
-                             struct mulle_allocator *allocator)
+   _mulle_pointerarray_grow( struct mulle_pointerarray *array)
 {
    _mulle__pointerarray_grow( (struct mulle__pointerarray *) array,
-                              allocator);
+                              array->allocator);
 }
 
 static inline void
-   mulle_pointerarray_grow( struct mulle_pointerarray *array,
-                             struct mulle_allocator *allocator)
+   mulle_pointerarray_grow( struct mulle_pointerarray *array)
 {
    mulle__pointerarray_grow( (struct mulle__pointerarray *) array,
-                              allocator);
+                              array->allocator);
 }
 
 
@@ -245,7 +252,7 @@ static inline void
 
 static inline void
    mulle_pointerarray_compact( struct mulle_pointerarray *array,
-                                void *notakey)
+                               void *notakey)
 {
    mulle__pointerarray_compact( (struct mulle__pointerarray *) array, notakey);
 }
@@ -257,7 +264,7 @@ static inline void
 MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_pointerarray_add_guaranteed( struct mulle_pointerarray *array,
-                                           void *p)
+                                       void *p)
 {
    _mulle__pointerarray_add_guaranteed( (struct mulle__pointerarray *) array,
                                         p);
@@ -284,15 +291,15 @@ static inline void
 
 MULLE_C_NONNULL_FIRST
 static inline void  *
-	_mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
+	_mulle_pointerarray_pop( struct mulle_pointerarray *array)
 {
-   return( _mulle__pointerarray_remove_last( (struct mulle__pointerarray *) array));
+   return( _mulle__pointerarray_pop( (struct mulle__pointerarray *) array));
 }
 
 static inline void *
-   mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
+   mulle_pointerarray_pop( struct mulle_pointerarray *array)
 {
-   return( mulle__pointerarray_remove_last( (struct mulle__pointerarray *) array));
+   return( mulle__pointerarray_pop( (struct mulle__pointerarray *) array));
 }
 
 

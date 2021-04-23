@@ -36,46 +36,14 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#define MULLE_CONTAINER_VERSION  ((4 << 20) | (0 << 8) | 0)
+#define MULLE_CONTAINER_VERSION  ((5 << 20) | (0 << 8) | 0)
 
 #include "include.h"
 
-#include "mulle-container-operation.h"
-#include "mulle-container-math.h"
-#include "mulle-container-callback.h"
-#include "mulle-container-callback-global.h"
+#include "_mulle-container-provide.h"
 
-#include "mulle--array.h"
-#include "mulle-array.h"
-
-#include "mulle--set.h"
-#include "mulle-set.h"
-
-#include "mulle--map.h"
-#include "mulle-map.h"
-
-#include "mulle-range.h"
-#include "mulle--rangeset.h"
-
-#include "mulle--pointerarray.h"
-#include "mulle--pointerqueue.h"
-#include "mulle--pointermap.h"
-#include "mulle--uniquepointerarray.h"
-#include "mulle-pointerarray.h"
-#include "mulle-uniquepointerarray.h"
-#include "mulle-pointerpairarray.h"
-#include "mulle-structarray.h"
-
-#include "mulle-container-callback.h"
-#include "mulle-container-operation.h"
-
-#if MULLE_C11_VERSION < ((3 << 20) | (2 << 8) | 0)
-# error "mulle-c11 is too old"
+#if __has_include( "_mulle-container-versioncheck.h")
+# include "_mulle-container-versioncheck.h"
 #endif
-
-#if MULLE_ALLOCATOR_VERSION < ((2 << 20) | (0 << 8) | 0)
-# error "mulle-allocator is too old"
-#endif
-
 
 #endif /* mulle_container_h */
