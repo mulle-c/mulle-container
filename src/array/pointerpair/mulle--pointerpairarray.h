@@ -171,9 +171,11 @@ static inline int
 # pragma mark - operations
 
 // intentionally not static inline
+MULLE_C_NONNULL_FIRST
 void   _mulle__pointerpairarray_grow( struct mulle__pointerpairarray *array,
                                       struct mulle_allocator *allocator);
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle__pointerpairarray_add( struct mulle__pointerpairarray *array,
                                                    struct mulle_pointerpair pair,
                                                    struct mulle_allocator *allocator)
@@ -189,8 +191,9 @@ static inline void   _mulle__pointerpairarray_add( struct mulle__pointerpairarra
 // this removes notakey from the back, until it finds a pointer
 // then remove this
 //
+MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair
-	mulle__pointerpairarray_remove_last( struct mulle__pointerpairarray *array)
+	_mulle__pointerpairarray_pop( struct mulle__pointerpairarray *array)
 {
    if( array->_curr > array->_storage)
       return( *--array->_curr);
@@ -198,12 +201,29 @@ static inline struct mulle_pointerpair
 }
 
 
-
 static inline struct mulle_pointerpair
-	mulle__pointerpairarray_get_last( struct mulle__pointerpairarray *array)
+   mulle__pointerpairarray_pop( struct mulle__pointerpairarray *array)
+{
+   if( array)
+      return( _mulle__pointerpairarray_pop( array));
+   return( mulle_pointerpair_make_invalid());
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline struct mulle_pointerpair
+	_mulle__pointerpairarray_get_last( struct mulle__pointerpairarray *array)
 {
    if( array->_curr > array->_storage)
       return( array->_curr[ -1]);
+   return( mulle_pointerpair_make_invalid());
+}
+
+static inline struct mulle_pointerpair
+   mulle__pointerpairarray_get_last( struct mulle__pointerpairarray *array)
+{
+   if( array)
+      return( _mulle__pointerpairarray_get_last( array));
    return( mulle_pointerpair_make_invalid());
 }
 
@@ -249,11 +269,13 @@ static inline unsigned int
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline uintptr_t
 	_mulle__pointerpairarray_find( struct mulle__pointerpairarray *array,
 	 									    void  *key);
 
 
+MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair
 	_mulle__pointerpairarray_set( struct mulle__pointerpairarray *array,
                                  unsigned int i,
