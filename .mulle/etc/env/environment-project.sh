@@ -37,18 +37,18 @@ export PROJECT_EXTENSIONS="c"
 #
 #
 #
-export PROJECT_IDENTIFIER="mulle_container"
 
-
-#
-#
-#
-export PROJECT_DOWNCASE_IDENTIFIER="mulle_container"
 
 
 #
 #
 #
-export PROJECT_UPCASE_IDENTIFIER="MULLE_CONTAINER"
+
+
+
+#
+#
+#
+
 
 

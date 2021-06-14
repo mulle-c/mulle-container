@@ -50,6 +50,22 @@ static inline void   _mulle_structarray_init( struct mulle_structarray *array,
 }
 
 
+static inline void   mulle_structarray_init( struct mulle_structarray *array,
+                                             size_t _sizeof_struct,
+                                             unsigned int alignof_struct,
+                                             unsigned int capacity,
+                                             struct mulle_allocator *allocator)
+{
+   if(  array)
+      _mulle_structarray_init( array,
+                               _sizeof_struct,
+                               alignof_struct,
+                               capacity,
+                               allocator);
+}
+
+
+
 static inline struct mulle_structarray *
    mulle_structarray_create( size_t _sizeof_struct,
                              unsigned int alignof_struct,
@@ -148,13 +164,21 @@ static inline size_t
 
 MULLE_C_NONNULL_FIRST
 static inline void
-   _mulle_structarray_add( struct mulle_structarray *array,
-                           void *item)
+   _mulle_structarray_add( struct mulle_structarray *array, void *item)
 {
-   return( _mulle__structarray_add( (struct mulle__structarray *) array,
-                                    item,
-                                    array->allocator));
+   _mulle__structarray_add( (struct mulle__structarray *) array,
+                             item,
+                             array->allocator);
 }
+
+
+static inline void
+   mulle_structarray_add( struct mulle_structarray *array, void *item)
+{
+   if( array && item)
+      _mulle_structarray_add( array, item);
+}
+
 
 
 MULLE_C_NONNULL_FIRST
@@ -212,11 +236,21 @@ static inline void *
 }
 
 
+// use get to set as well
 MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_get( struct mulle_structarray *array, unsigned int i)
 {
    return( _mulle__structarray_get( (struct mulle__structarray *) array, i));
+}
+
+
+static inline void *
+   mulle_structarray_get( struct mulle_structarray *array, unsigned int i)
+{
+   if( array)
+      return( _mulle_structarray_get( array, i));
+   return( NULL);
 }
 
 
@@ -228,18 +262,28 @@ static inline void *
 }
 
 
+static inline void *
+   mulle_structarray_get_last( struct mulle_structarray *array)
+{
+   if( array)
+      return( _mulle_structarray_get_last( array));
+    return( NULL);
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_structarray_remove_last( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_remove_last( (struct mulle__structarray *) array));
+   _mulle__structarray_remove_last( (struct mulle__structarray *) array);
 }
 
 
-static inline void *
-   mulle_structarray_get_last( struct mulle_structarray *array)
+static inline void
+   mulle_structarray_remove_last( struct mulle_structarray *array)
 {
-   return( mulle__structarray_get_last( (struct mulle__structarray *) array));
+   if( array)
+      _mulle_structarray_remove_last( array);
 }
 
 

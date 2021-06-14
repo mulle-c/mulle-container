@@ -8,6 +8,9 @@ if( MULLE_TRACE_INCLUDE)
    MESSAGE( STATUS "# Include \"${CMAKE_CURRENT_LIST_FILE}\"" )
 endif()
 
+#
+# contents are derived from the file locations
+
 set( INCLUDE_DIRS
 src
 src/array
@@ -15,40 +18,48 @@ src/array/pointer
 src/array/pointerpair
 src/array/struct
 src/array/uniquepointer
-src/farmhash
 src/map
 src/map/pointer
 src/queue
-src/range
 src/rangeset
 src/reflect
 src/set
 src/set/pointer
 )
 
+#
+# contents selected with patternfile ??-header--private-generated-headers
+#
 set( PRIVATE_GENERATED_HEADERS
 src/reflect/_mulle-container-include-private.h
 )
 
+#
+# contents selected with patternfile ??-header--private-generic-headers
+#
 set( PRIVATE_GENERIC_HEADERS
 src/include-private.h
 )
 
-set( PRIVATE_HEADERS
-src/farmhash/farmhash.h
-src/farmhash/largeint.h
-)
-
+#
+# contents selected with patternfile ??-header--public-generated-headers
+#
 set( PUBLIC_GENERATED_HEADERS
 src/reflect/_mulle-container-include.h
 src/reflect/_mulle-container-provide.h
 src/reflect/_mulle-container-versioncheck.h
 )
 
+#
+# contents selected with patternfile ??-header--public-generic-headers
+#
 set( PUBLIC_GENERIC_HEADERS
 src/include.h
 )
 
+#
+# contents selected with patternfile ??-header--public-headers
+#
 set( PUBLIC_HEADERS
 src/array/mulle--array.h
 src/array/mulle-array.h
@@ -74,7 +85,6 @@ src/mulle-container-math.h
 src/mulle-container-operation.h
 src/queue/mulle--pointerqueue.h
 src/queue/mulle-pointerqueue.h
-src/range/mulle-range.h
 src/rangeset/mulle--rangeset.h
 src/set/mulle--set.h
 src/set/mulle-set.h

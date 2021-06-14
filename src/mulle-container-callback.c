@@ -44,13 +44,16 @@
 
 #define MULLE_CONTAINER_GLOBAL  MULLE_C_GLOBAL
 
-uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p)
+uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback,
+                                                      void *p)
 {
    return( mulle_pointer_hash( p));
 }
 
 
-int   mulle_container_keycallback_pointer_is_equal( struct mulle_container_keycallback *callback, void *a, void *b)
+int   mulle_container_keycallback_pointer_is_equal( struct mulle_container_keycallback *callback,
+                                                    void *a,
+                                                    void *b)
 {
    return( a == b);
 }

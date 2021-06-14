@@ -63,8 +63,6 @@
 #endif
 
 
-
-
 enum mulle_container_write_mode
 {
    mulle_container_insert_e,
@@ -72,7 +70,8 @@ enum mulle_container_write_mode
 };
 
 // Convenient to be different to "notakey"
-#define mulle_not_found_e     ((uintptr_t) INTPTR_MAX)
+// moved to mulle-data! but kept same
+// #define mulle_not_found_e     ((uintptr_t) INTPTR_MAX)
 
 // Use this for "notakey" pointer to differentiate valid pointers & NULL
 #define mulle_not_a_pointer   ((void *) INTPTR_MIN)

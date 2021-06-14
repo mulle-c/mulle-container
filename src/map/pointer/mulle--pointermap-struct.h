@@ -243,10 +243,9 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
 # pragma mark enumeration
 
 #define MULLE__POINTERMAPENUMERATOR_BASE  \
-   struct mulle_pointerpair   space;      \
    void                       **_curr;    \
-   unsigned int                     _left;      \
-   unsigned int                     _offset
+   unsigned int               _left;      \
+   unsigned int               _offset
 
 
 struct mulle__pointermapenumerator
@@ -255,6 +254,19 @@ struct mulle__pointermapenumerator
 };
 
 
+static inline struct mulle__pointermapenumerator
+   _mulle__pointermap_enumerate( struct mulle__pointermap *map)
+{
+   struct mulle__pointermapenumerator   rover;
+
+   assert( map);
+   rover._left   = map->_count;
+   rover._curr   = map->_storage;
+   rover._offset = _mulle__pointermap_get_size( map);
+
+   return( rover);
+}
+
 
 static inline struct mulle__pointermapenumerator
    mulle__pointermap_enumerate( struct mulle__pointermap *map)
@@ -262,14 +274,9 @@ static inline struct mulle__pointermapenumerator
    struct mulle__pointermapenumerator   rover;
 
    if( map)
-   {
-      rover._left   = map->_count;
-      rover._curr   = map->_storage;
-      rover._offset = _mulle__pointermap_get_size( map);
-   }
-   else
-      rover._left = 0;
+      return( _mulle__pointermap_enumerate( map));
 
+   rover._left = 0;
    return( rover);
 }
 
@@ -279,13 +286,18 @@ static inline struct mulle__pointermapenumerator
 // efficient, therefore it's important to shrink after lots of removes
 //
 MULLE_C_NONNULL_FIRST
-static inline struct mulle_pointerpair   *
-   _mulle__pointermapenumerator_next( struct mulle__pointermapenumerator *rover)
+static inline int
+   _mulle__pointermapenumerator_next_pair( struct mulle__pointermapenumerator *rover,
+                                           struct mulle_pointerpair *pair)
 {
    void   **p;
 
    if( ! rover->_left)
+   {
+      if( pair)
+         *pair = mulle_pointerpair_make( 0, 0);
       return( 0);
+   }
 
    rover->_left--;
    for(;;)
@@ -293,12 +305,49 @@ static inline struct mulle_pointerpair   *
       p = rover->_curr++;
       if( *p != mulle_not_a_pointer)
       {
-         rover->space.key   = *p;
-         rover->space.value = p[ rover->_offset];
-         return( &rover->space);
+         if( pair)
+         {
+            pair->key   = *p;
+            pair->value = p[ rover->_offset];
+         }
+         return( 1);
       }
    }
 }
+
+
+MULLE_C_NONNULL_FIRST
+static inline int
+   _mulle__pointermapenumerator_next( struct mulle__pointermapenumerator *rover,
+                                      void **key,
+                                      void **value)
+{
+   void   **p;
+
+   if( ! rover->_left)
+   {
+      if( key)
+         *key = 0;
+      if( value)
+         *value = 0;
+      return( 0);
+   }
+
+   rover->_left--;
+   for(;;)
+   {
+      p = rover->_curr++;
+      if( *p != mulle_not_a_pointer)
+      {
+         if( key)
+            *key = *p;
+         if( value)
+            *value = p[ rover->_offset];
+         return( 1);
+      }
+   }
+}
+
 
 
 static inline void

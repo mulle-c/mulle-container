@@ -33,7 +33,7 @@
 #include "mulle--pointerset-struct.h"
 #include "mulle--pointerset-generic.h"
 
-#pragma mark - operations built on generic operations
+#pragma mark - operations built on generic and struct operations
 
 
 MULLE_C_NONNULL_FIRST
@@ -82,8 +82,8 @@ static inline void  _mulle__pointerset_shrink_if_needed( struct mulle__pointerse
 MULLE_C_NONNULL_FIRST
 static inline
 int  _mulle__pointerset_remove( struct mulle__pointerset *set,
-                              void *p,
-                              struct mulle_allocator *allocator)
+                                void *p,
+                                struct mulle_allocator *allocator)
 {
    return( _mulle__pointerset_remove_generic( set,
                                               p,

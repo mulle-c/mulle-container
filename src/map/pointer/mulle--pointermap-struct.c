@@ -70,6 +70,8 @@ struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback =
 #pragma mark - setup and teardown
 
 
+// if capacity, this is just a memset, so if you know memory is zeroed
+// you can actually forego this
 void   _mulle__pointermap_init( struct mulle__pointermap *p,
                                 unsigned int capacity,
                                 struct mulle_allocator *allocator)
@@ -140,12 +142,12 @@ void   _mulle__pointermap_reset( struct mulle__pointermap *map,
 void   *_mulle__pointermap_get( struct mulle__pointermap *map,
                                 void *key)
 {
-   unsigned int      i;
-   unsigned int      size;
-   unsigned int      mask;
-   uintptr_t   hash;
-   void        *found;
-   void        **storage;
+   unsigned int   i;
+   unsigned int   size;
+   unsigned int   mask;
+   uintptr_t      hash;
+   void           *found;
+   void           **storage;
 
    // important to not hit a NULL storage later
    // _size must be > 2 for the hash to work, otherwise we could get
@@ -234,26 +236,28 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
    size_t                              key_len;
    size_t                              value_len;
    struct mulle__pointermapenumerator  rover;
-   struct mulle_pointerpair            *item;
+   struct mulle_pointerpair            item;
    struct mulle_allocator              *key_allocator;
    struct mulle_allocator              *value_allocator;
 
    result = NULL;
    len    = 0;
    rover  = mulle__pointermap_enumerate( set);
-   while( item = _mulle__pointermapenumerator_next( &rover))
+   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
       value_allocator = key_allocator;
 
-      key        = item->key;
+      key        = item.key;
       key_len    = strlen( key);
-      value      = item->value;
+      value      = item.value;
       value_len  = strlen( value);
 
       separate = result != NULL;
 
-      result = mulle_allocator_realloc( allocator, result, len + (separate * 2) + key_len + 3 + value_len + 1);
+      result = mulle_allocator_realloc( allocator,
+                                        result,
+                                        len + (separate * 2) + key_len + 3 + value_len + 1);
 
       if( separate)
       {

@@ -163,14 +163,22 @@ int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator
                                             void **item)
 {
    if( rover->_index != rover->_queue->_bucket_size)
+   {
+      *item = NULL;
       return( 0);
-
+   }
    if( ! rover->_curr)
+   {
+      *item = NULL;
       return( 0);
+   }
 
    rover->_curr = rover->_curr->_next;
    if( ! rover->_curr)
+   {
+      *item = NULL;
       return( 0);
+   }
 
    rover->_index = 0;
    return( _mulle__pointerqueueenumerator_next( rover, item));

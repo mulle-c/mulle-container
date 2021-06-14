@@ -195,7 +195,7 @@ char   *_mulle__map_describe( struct mulle__map *set,
    char                          *key;
    char                          *value;
    int                           separate;
-   unsigned int                        len;
+   unsigned int                  len;
    size_t                        key_len;
    size_t                        value_len;
    struct mulle__mapenumerator   rover;

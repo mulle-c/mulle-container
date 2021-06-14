@@ -88,6 +88,7 @@ void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
                                     struct mulle_allocator *allocator);
 
 
+// if capacity is 0, this just does a memset 0
 MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__pointerset_init( struct mulle__pointerset *set,
                                  unsigned int capacity,
@@ -108,6 +109,7 @@ struct mulle__pointerset   *_mulle__pointerset_copy( struct mulle__pointerset *s
 #pragma mark - petty accessors
 
 
+// size is the allocated size, it's always >= count
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__pointerset_get_size( struct mulle__pointerset *set)
 {
@@ -115,6 +117,7 @@ static inline unsigned int   _mulle__pointerset_get_size( struct mulle__pointers
 }
 
 
+// count is the number of pointers in the set
 MULLE_C_NONNULL_FIRST
 static inline unsigned int   _mulle__pointerset_get_count( struct mulle__pointerset *set)
 {
@@ -135,6 +138,7 @@ static inline int  _mulle__pointerset_is_full( struct mulle__pointerset *set)
 }
 
 
+// sparse means the size is too large for the contents, a shrink wouldn't hurt
 MULLE_C_NONNULL_FIRST
 static inline int  _mulle__pointerset_is_sparse( struct mulle__pointerset *set)
 {
@@ -194,12 +198,17 @@ static inline struct mulle__pointersetenumerator
 
 
 MULLE_C_NONNULL_FIRST
-static inline void   *_mulle__pointersetenumerator_next( struct mulle__pointersetenumerator *rover)
+static inline int   _mulle__pointersetenumerator_next( struct mulle__pointersetenumerator *rover,
+                                                       void **item)
 {
    void   *p;
 
    if( ! rover->_left)
-      return( mulle_not_a_pointer);
+   {
+      if( item)
+         *item = mulle_not_a_pointer;
+      return( 0);
+   }
 
    for(;;)
    {
@@ -207,7 +216,9 @@ static inline void   *_mulle__pointersetenumerator_next( struct mulle__pointerse
       if( p != mulle_not_a_pointer)
       {
          rover->_left--;
-         return( p);
+         if( item)
+            *item = p;
+         return( 1);
       }
    }
 }

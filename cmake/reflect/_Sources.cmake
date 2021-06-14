@@ -8,6 +8,9 @@ if( MULLE_TRACE_INCLUDE)
    MESSAGE( STATUS "# Include \"${CMAKE_CURRENT_LIST_FILE}\"" )
 endif()
 
+#
+# contents selected with patternfile ??-source--sources
+#
 set( SOURCES
 src/array/mulle--array.c
 src/array/mulle-array.c
@@ -19,7 +22,6 @@ src/array/struct/mulle--structarray.c
 src/array/struct/mulle-structarray.c
 src/array/uniquepointer/mulle--uniquepointerarray.c
 src/array/uniquepointer/mulle-uniquepointerarray.c
-src/farmhash/farmhash.c
 src/map/mulle--map.c
 src/map/mulle-map.c
 src/map/pointer/mulle--pointermap-generic.c
@@ -27,7 +29,6 @@ src/map/pointer/mulle--pointermap-struct.c
 src/mulle-container-callback.c
 src/queue/mulle--pointerqueue.c
 src/queue/mulle-pointerqueue.c
-src/range/mulle-range.c
 src/rangeset/mulle--rangeset.c
 src/set/mulle--set.c
 src/set/mulle-set.c
