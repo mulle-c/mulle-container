@@ -5,7 +5,7 @@
  *
  *      mulle-sde environment set MULLE_MATCH_TO_C_C_HEADERS_FILE DISABLE
  *
- *   To not generate any header files:
+ *   To not let mulle-match-to-c generate any header files:
  *
  *      mulle-sde environment set MULLE_MATCH_TO_C_RUN DISABLE
  */
@@ -32,7 +32,6 @@
 #include "mulle-container-operation.h"
 #include "mulle--pointerqueue.h"
 #include "mulle-pointerqueue.h"
-#include "mulle-range.h"
 #include "mulle--rangeset.h"
 #include "mulle--set.h"
 #include "mulle-set.h"

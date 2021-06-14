@@ -170,7 +170,7 @@ static void   shrink_generic( struct mulle__pointermap *map,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator)
 {
-   void     **buf;
+   void           **buf;
    unsigned int   new_size;
 
    new_size = map->_size / 2;
@@ -197,10 +197,10 @@ static unsigned long  _find_index_generic( void **storage,
                                            unsigned int *hole_index,
                                            struct mulle_container_keycallback *callback)
 {
-   int      (*f)( void *, void *, void *);
-   void     *param1;
-   void     *param2;
-   void     *notakey;
+   int            (*f)( void *, void *, void *);
+   void           *param1;
+   void           *param2;
+   void           *notakey;
    unsigned int   mask;
 
    f       = (int (*)()) callback->is_equal;
@@ -231,7 +231,7 @@ static inline uintptr_t  find_index_generic( void **storage,
                                              unsigned int *hole_index,
                                              struct mulle_container_keycallback *callback)
 {
-   void     *q;
+   void           *q;
    unsigned int   i;
 
    assert( storage);
@@ -257,7 +257,7 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                struct mulle_allocator *allocator)
 {
    uintptr_t                  found;
-   unsigned int                     i;
+   unsigned int               i;
    void                       **q;
    struct mulle_pointerpair   new_pair;
    uintptr_t                  hash;
@@ -282,26 +282,22 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
       {
          i = (unsigned int) found;
          q = &storage[ i];
-         switch( mode)
-         {
-         case mulle_container_overwrite_e :
-            q = &storage[ i];
-            if( q[ size] == pair->value && *q == pair->key)
-               return( q[ size]);
-
-            new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
-            new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
-
-            (callback->keycallback.release)( &callback->keycallback, *q, allocator);
-            (callback->valuecallback.release)( &callback->valuecallback, q[ size], allocator);
-
-            *q       = new_pair.key;
-            q[ size] = new_pair.value;
+         if( mode == mulle_container_insert_e)
             return( q[ size]);
 
-         case mulle_container_insert_e :
+         q = &storage[ i];
+         if( q[ size] == pair->value && *q == pair->key)
             return( q[ size]);
-         }
+
+         new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
+         new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
+
+         (callback->keycallback.release)( &callback->keycallback, *q, allocator);
+         (callback->valuecallback.release)( &callback->valuecallback, q[ size], allocator);
+
+         *q       = new_pair.key;
+         q[ size] = new_pair.value;
+         return( q[ size]);
       }
 
       i = hole_index;
@@ -339,13 +335,13 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
                                                    uintptr_t hash,
                                                    struct mulle_container_keyvaluecallback *callback)
 {
-   int         (*f)( void *, void *, void *);
-   unsigned int      i;
-   unsigned int      size;
-   unsigned int      mask;
-   void        *found;
-   void        **storage;
-   void        *notakey;
+   int             (*f)( void *, void *, void *);
+   unsigned int    i;
+   unsigned int    size;
+   unsigned int    mask;
+   void            *found;
+   void            **storage;
+   void            *notakey;
 
    // important to not hit a NULL storage later
    // size must be > 2 for the hash to work, otherwise we could get
@@ -395,13 +391,13 @@ struct mulle_pointerpair   *
                                             struct mulle_container_keyvaluecallback *callback,
                                             struct mulle_pointerpair *space)
 {
-   unsigned int      i;
-   unsigned int      size;
-   unsigned int      mask;
-   uintptr_t   hash;
-   void        *found;
-   void        **storage;
-   void        *notakey;
+   unsigned int   i;
+   unsigned int   size;
+   unsigned int   mask;
+   uintptr_t      hash;
+   void           *found;
+   void           **storage;
+   void           *notakey;
 
    if( ! map->_count)
       return( NULL);
@@ -501,14 +497,14 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
 {
    unsigned int      hole_index;
    unsigned int      i;
-   uintptr_t   found;
-   void        **storage;
-   void        **q;
+   uintptr_t         found;
+   void              **storage;
+   void              **q;
    unsigned int      dst_index;
    unsigned int      search_start;
    unsigned int      size;
    unsigned int      mask;
-   uintptr_t   hash;
+   uintptr_t         hash;
 
    // important to not hit a NULL storage later
    if( map->_count == 0)
@@ -662,13 +658,13 @@ int   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
                                              struct mulle_allocator *allocator)
 {
    struct mulle__pointermapenumerator  rover;
-   struct mulle_pointerpair           *item;
-   int                                rval;
+   struct mulle_pointerpair            item;
+   int                                 rval;
 
    rval  = 0;
    rover = mulle__pointermap_enumerate( src);
-   while( item = _mulle__pointermapenumerator_next( &rover))
-      if( _mulle__pointermap_insert_pair_generic( dst, item, callback, allocator))
+   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
+      if( _mulle__pointermap_insert_pair_generic( dst, &item, callback, allocator))
       {
          rval = -1;
          break;

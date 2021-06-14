@@ -203,7 +203,7 @@ static inline struct mulle_pointerpair *
 {
    if( ! rover)
       return( 0);
-   return(  _mulle__genericpointermapenumerator_next_pair( rover));
+   return( _mulle__genericpointermapenumerator_next_pair( rover));
 }
 
 
