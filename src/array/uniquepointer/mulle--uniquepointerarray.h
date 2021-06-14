@@ -19,7 +19,7 @@
 //
 // A really simple kind of set, that just stores pointers with pointer
 // quality and uses bsearch for lookup. Useful for small sets ( < 100 entries)
-// You can't store NULL.
+// You can't store NULL.  It grows and never shrinks.
 //
 #define MULLE__UNIQUEPOINTERARRAY_BASE   \
    MULLE__POINTERARRAY_BASE;             \

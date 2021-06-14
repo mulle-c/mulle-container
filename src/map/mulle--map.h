@@ -529,8 +529,8 @@ static inline void
  */
 
 #define MULLE__MAPTINYENUMERATOR_BASE  \
-   void     **_curr;                   \
-   unsigned int   _left;                     \
+   void           **_curr;             \
+   unsigned int   _left;               \
    unsigned int   _offset
 
 
@@ -540,6 +540,20 @@ struct mulle__maptinyenumerator
 };
 
 
+static inline struct mulle__maptinyenumerator
+   _mulle__map_tinyenumerate_nil( struct mulle__map *map)
+{
+   struct mulle__maptinyenumerator   rover;
+
+   assert( map);
+   rover._left   = map->_count;
+   rover._curr   = map->_storage;
+   rover._offset = _mulle__map_get_size( map);
+
+   return( rover);
+}
+
+
 
 static inline struct mulle__maptinyenumerator
    mulle__map_tinyenumerate_nil( struct mulle__map *map)
@@ -547,14 +561,9 @@ static inline struct mulle__maptinyenumerator
    struct mulle__maptinyenumerator   rover;
 
    if( map)
-   {
-      rover._left   = map->_count;
-      rover._curr   = map->_storage;
-      rover._offset = _mulle__map_get_size( map);
-   }
-   else
-      rover._left   = 0;
+      return( _mulle__map_tinyenumerate_nil( map));
 
+   rover._left = 0;
    return( rover);
 }
 

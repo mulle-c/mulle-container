@@ -36,7 +36,6 @@
 
 #include "include.h"
 #include "mulle-container-operation.h"
-#include "mulle-range.h"
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>
@@ -49,10 +48,10 @@ struct mulle_pointers
 };
 
 
-
-
 //
 // mulle__pointerarray is a growing array of pointers, it just reallocs.
+// You can remove the last item via "pop", but there is no random access
+// removal. You would create a copy for this.
 //
 #define MULLE__POINTERARRAY_BASE    \
    void      **_storage;            \
@@ -93,6 +92,8 @@ static inline void
 }
 
 
+// if capacity is zero, this is just a memset 0. So the init can be left out
+// for already zeroed memory
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__pointerarray_init( struct mulle__pointerarray *array,
                                                 unsigned int capacity,
