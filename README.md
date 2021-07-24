@@ -57,7 +57,7 @@ passed. This is like Objective-C where you can call methods with 'nil'.
 
 A data structure, conventionally containing the word "pointer" in its name, may merely handle pointer equality as a way of comparing
 members. This is efficient and sometimes all you need. Other
-data structures use a number of **callback**, to test for equality, memory management and creating hash codes.
+data structures use a number of callbacks, to test for equality, memory management and creating hash codes.
 
 ## Example
 
