@@ -88,11 +88,11 @@ static void  test( void)
 
    if( ! mulle_map_get( map, "1849"))
    {
-	   rover = mulle_map_enumerate( map);
-	   while( mulle_mapenumerator_next( &rover, &key, &value))
-		   printf( "%s : %s\n", key, value);
-	   mulle_mapenumerator_done( &rover);
-	}
+      rover = mulle_map_enumerate( map);
+      while( mulle_mapenumerator_next( &rover, &key, &value))
+         printf( "%s : %s\n", key, value);
+      mulle_mapenumerator_done( &rover);
+   }
    mulle_map_remove( map, "1848");
 
 //   mulle_map_done( &map);
