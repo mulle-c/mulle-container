@@ -1,12 +1,12 @@
 # 5.0.0
 
-* `struct mulle-range` and ``mulle_not_found_e`` moved to mulle-data
+* `struct mulle_range` and `mulle_not_found_e` moved to mulle-data
 * continued to unify enumerators to return value by reference and state by int return value
 * added more convenience functions to structarray and pointerarray
-* removed allocator from function signatures of ``mulle_pointerarray_guarantee`` and ``mulle_pointerarray_grow`` which was superflous
-* added ``mulle_pointerarray_advance``
-* renamed all ``*_remove_last`` functions to ``*_pop``
-* there is now a ``mulle_pointerqueue`` that complements the ``mulle__pointerqueue`` without the embedded allocator
+* removed allocator from function signatures of `mulle_pointerarray_guarantee` and `mulle_pointerarray_grow` which was superflous
+* added `mulle_pointerarray_advance`
+* renamed all `*_remove_last` functions to `*_pop`
+* there is now a `mulle_pointerqueue` that complements the `mulle__pointerqueue` without the embedded allocator
 
 
 # 4.0.0
