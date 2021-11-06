@@ -70,7 +70,7 @@ typedef void
    mulle_container_keycallback_release_t( struct mulle_container_keycallback *callback,
                                           void *p,
                                           struct mulle_allocator *allocator);
-typedef void *
+typedef char *
    mulle_container_keycallback_describe_t( struct mulle_container_keycallback *callback,
                                            void *p,
                                            struct mulle_allocator **p_allocator);
@@ -153,7 +153,7 @@ typedef void
                                             void *p,
                                             struct mulle_allocator *allocator);
 
-typedef void *
+typedef char *
    mulle_container_valuecallback_describe_t( struct mulle_container_valuecallback *callback,
                                              void *p,
                                              struct mulle_allocator **allocator);

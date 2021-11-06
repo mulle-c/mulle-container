@@ -74,7 +74,7 @@ void   *mulle_container_valuecallback_self( struct mulle_container_valuecallback
 }
 
 
-void   *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback,
+char   *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback,
                                                       void *p,
                                                       struct mulle_allocator **p_allocator)
 {
@@ -102,7 +102,7 @@ void
 
 
 
-void   *
+char   *
    mulle_container_callback_int_describe( struct mulle_container_valuecallback *callback,
                                           void *p,
                                           struct mulle_allocator **p_allocator)
@@ -114,7 +114,7 @@ void   *
 }
 
 
-void   *
+char   *
    mulle_container_callback_intptr_describe( struct mulle_container_valuecallback *callback,
                                              void *p,
                                              struct mulle_allocator **p_allocator)
@@ -126,7 +126,7 @@ void   *
 }
 
 
-void *
+char *
    mulle_container_callback_pointer_describe( struct mulle_container_valuecallback  *callback,
                                               void *p,
                                               struct mulle_allocator **p_allocator)
@@ -153,9 +153,10 @@ char *
 }
 
 
-void   *mulle_container_callback_cstring_describe( struct mulle_container_valuecallback  *ignore,
-                                                   void *p,
-                                                   struct mulle_allocator **p_allocator)
+char
+   *mulle_container_callback_cstring_describe( struct mulle_container_valuecallback  *ignore,
+                                               void *p,
+                                               struct mulle_allocator **p_allocator)
 {
    *p_allocator = NULL;
    return( p);

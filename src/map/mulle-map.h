@@ -46,10 +46,29 @@ void   _mulle_map_init( struct mulle_map *map,
                         struct mulle_container_keyvaluecallback *callback,
                         struct mulle_allocator *allocator);
 
+static inline void   mulle_map_init( struct mulle_map *map,
+                                     unsigned int capacity,
+                                     struct mulle_container_keyvaluecallback *callback,
+                                     struct mulle_allocator *allocator)
+{
+   if( ! map)
+      return;
+   _mulle_map_init( map, capacity, callback, allocator);
+}
 
+
+MULLE_C_NONNULL_FIRST
 static inline void    _mulle_map_done( struct mulle_map *map)
 {
    _mulle__map_done( (struct mulle__map *) map, map->callback, map->allocator);
+}
+
+
+static inline void    mulle_map_done( struct mulle_map *map)
+{
+   if( ! map)
+      return;
+   _mulle_map_done( map);
 }
 
 
@@ -135,6 +154,32 @@ static inline void   *mulle_map_get( struct mulle_map *map, void *key)
    if( ! map)
       return( NULL);
    return( _mulle__map_get( (struct mulle__map *) map, key, map->callback));
+}
+
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline
+struct mulle_pointerpair   *_mulle_map_get_pair( struct mulle_map *map,
+                                                 void *key,
+                                                 struct mulle_pointerpair *space)
+{
+   return( _mulle__map_get_pair( (struct mulle__map *) map,
+                                 key,
+                                 map->callback,
+                                 space));
+}
+
+
+MULLE_C_NONNULL_THIRD
+static inline
+struct mulle_pointerpair   *mulle_map_get_pair( struct mulle_map *map,
+                                                void *key,
+                                                struct mulle_pointerpair *space)
+{
+   if( ! map)
+      return( NULL);
+   return( _mulle_map_get_pair( map, key, space));
 }
 
 

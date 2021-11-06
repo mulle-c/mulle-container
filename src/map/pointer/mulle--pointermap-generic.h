@@ -35,6 +35,12 @@
 
 #include "mulle--pointermap-struct.h"
 
+//
+// mulle_pointermap_generic is the base for mulle-map
+// with the passing of the callbacks, this is now more generic to use than
+// pure mulle__pointermap
+//
+
 void   **mulle__pointermap_allocate_storage_generic( unsigned int n,
                                                      void *notakey,
                                                      struct mulle_allocator *allocator);
@@ -58,7 +64,11 @@ void   _mulle__pointermap_set_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
 
-   _mulle__pointermap_write_pair_generic( map, pair, mulle_container_overwrite_e, callback, allocator);
+   _mulle__pointermap_write_pair_generic( map,
+                                          pair,
+                                          mulle_container_overwrite_e,
+                                          callback,
+                                          allocator);
 }
 
 
@@ -85,10 +95,21 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
                                                    uintptr_t hash,
                                                    struct mulle_container_keyvaluecallback *callback);
 
+//
+// the __get function does not do a quick check for pointer equality.
+// If you know that a pointer equality check will fail anyway, you can
+// save some time using __get.
+//
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
                                          void *key,
                                          struct mulle_container_keyvaluecallback *callback);
+
+MULLE_C_NONNULL_FIRST_THIRD_FOURTH
+struct mulle_pointerpair   *_mulle__pointermap__get_pair_generic( struct mulle__pointermap *map,
+                                                                  void *key,
+                                                                  struct mulle_container_keyvaluecallback *callback,
+                                                                  struct mulle_pointerpair *space);
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 struct mulle_pointerpair   *_mulle__pointermap_get_any_pair_generic( struct mulle__pointermap *map,
@@ -105,6 +126,12 @@ MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
                                         void *key,
                                         struct mulle_container_keyvaluecallback *callback);
+
+MULLE_C_NONNULL_FIRST_THIRD
+struct mulle_pointerpair   *_mulle__pointermap_get_pair_generic( struct mulle__pointermap *map,
+                                                                 void *key,
+                                                                 struct mulle_container_keyvaluecallback *callback,
+                                                                 struct mulle_pointerpair *space);
 
 MULLE_C_NONNULL_FIRST_THIRD
 int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
@@ -157,9 +184,9 @@ static inline struct mulle__genericpointermapenumerator
 
    if( map)
    {
-      rover._left   = map->_count;
-      rover._curr   = map->_storage;
-      rover._offset = _mulle__pointermap_get_size( map);
+      rover._left    = map->_count;
+      rover._curr    = map->_storage;
+      rover._offset  = _mulle__pointermap_get_size( map);
       rover._notakey = callback->keycallback.notakey;
    }
    else
@@ -181,7 +208,7 @@ static inline struct mulle_pointerpair *
    void   *key;
 
    if( ! rover->_left)
-      return( 0);
+      return( NULL);
 
    rover->_left--;
    for(;;)
@@ -202,7 +229,7 @@ static inline struct mulle_pointerpair *
    mulle__genericpointermapenumerator_next_pair( struct mulle__genericpointermapenumerator *rover)
 {
    if( ! rover)
-      return( 0);
+      return( NULL);
    return( _mulle__genericpointermapenumerator_next_pair( rover));
 }
 
@@ -220,7 +247,7 @@ static inline int
    if( ! pair)
    {
       if( key)
-         *key = NULL;
+         *key = rover->_notakey;
       if( value)
          *value = NULL;
       return( 0);
