@@ -186,7 +186,9 @@ struct mulle__map   *_mulle__map_copy( struct mulle__map *set,
 }
 
 
+//
 // use this only for debugging
+//
 char   *_mulle__map_describe( struct mulle__map *set,
                               struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator)

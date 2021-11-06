@@ -47,8 +47,8 @@
 
 // A mulle__pointermap is like a mulle__pointerset with the corresponding
 // values appended. So if the set is [ 0, 1, 2 ] the map for { 0, a }
-// { 1, b }, { 2, c} is store as [ 0, 1, 2 ] [ a, b, c]. So the value is
-// offset +_size.
+// { 1, b }, { 2, c} is stored as [ 0, 1, 2 ] [ a, b, c]. The value is
+// located at offset +_size.
 //
 // This is a stripped down version of mulle__map without callbacks
 // So you just map unique pointers to each other. You can't map
