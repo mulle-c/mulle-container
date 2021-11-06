@@ -143,7 +143,10 @@ static inline unsigned int   mulle__map_get_size( struct mulle__map *map)
 #pragma mark - operations
 
 //
-// returns the value for the key, will return NULL if no value is found.
+// Returns the value for the key, will return NULL if no value is found.
+// This function will *not* do a quick pointer-equality check, which is often a
+// major speedup, but can also be a slowdown, if the keys are not prone
+// to pointer equality.
 //
 MULLE_C_NONNULL_FIRST_THIRD
 static inline
@@ -155,6 +158,25 @@ void   *_mulle__map__get( struct mulle__map *map,
                                             key,
                                             callback));
 }
+
+//
+// This function will *not* do a quick pointer-equality check, which is often a
+// major speedup, but can also be a slowdown, if the keys are not prone
+// to pointer equality.
+//
+MULLE_C_NONNULL_FIRST_THIRD_FOURTH
+static inline
+struct mulle_pointerpair   *_mulle__map__get_pair( struct mulle__map *map,
+                                                   void *key,
+                                                   struct mulle_container_keyvaluecallback *callback,
+                                                   struct mulle_pointerpair *space)
+{
+   return( _mulle__pointermap__get_pair_generic( (struct mulle__pointermap *) map,
+                                                  key,
+                                                  callback,
+                                                  space));
+}
+
 
 //
 // returns the value for the key, will return NULL if no value is found.
@@ -195,6 +217,20 @@ void   *_mulle__map_get( struct mulle__map *map,
 }
 
 
+MULLE_C_NONNULL_FIRST_THIRD_FOURTH
+static inline
+struct mulle_pointerpair   *_mulle__map_get_pair( struct mulle__map *map,
+                                                  void *key,
+                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  struct mulle_pointerpair *space)
+{
+   return( _mulle__pointermap_get_pair_generic( (struct mulle__pointermap *) map,
+                                                 key,
+                                                 callback,
+                                                 space));
+}
+
+
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
 void   _mulle__map_set_pair( struct mulle__map *map,
@@ -202,7 +238,10 @@ void   _mulle__map_set_pair( struct mulle__map *map,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
-   _mulle__pointermap_set_pair_generic( (struct mulle__pointermap *) map, pair, callback, allocator);
+   _mulle__pointermap_set_pair_generic( (struct mulle__pointermap *) map,
+                                         pair,
+                                         callback,
+                                         allocator);
 }
 
 
@@ -256,7 +295,10 @@ void    *_mulle__map_insert_pair( struct mulle__map *map,
                                   struct mulle_container_keyvaluecallback *callback,
                                   struct mulle_allocator *allocator)
 {
-   return( _mulle__pointermap_insert_pair_generic( (struct mulle__pointermap *) map, pair, callback, allocator));
+   return( _mulle__pointermap_insert_pair_generic( (struct mulle__pointermap *) map,
+                                                   pair,
+                                                   callback,
+                                                   allocator));
 }
 
 
@@ -301,8 +343,6 @@ void   mulle__map_insert( struct mulle__map *map,
    pair.value = value;
    mulle__map_insert_pair( map, &pair, callback, allocator);
 }
-
-
 
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD

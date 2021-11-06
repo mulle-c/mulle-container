@@ -134,7 +134,12 @@ static void   copy_storage_generic( void **dst,
       {
          hash = (callback->hash)( callback, key);
          i    = mulle__pointermap_hash_for_size( hash, dst_size);
-         store_key_value_generic( dst, dst_size, i, key, src[ src_size], callback->notakey);
+         store_key_value_generic( dst,
+                                  dst_size,
+                                  i,
+                                  key,
+                                  src[ src_size],
+                                  callback->notakey);
       }
       ++src;
    }
@@ -320,7 +325,12 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
    new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
    new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
 
-   store_key_value_generic( map->_storage, map->_size, i, new_pair.key, new_pair.value, callback->keycallback.notakey);
+   store_key_value_generic( map->_storage,
+                            map->_size,
+                            i,
+                            new_pair.key,
+                            new_pair.value,
+                            callback->keycallback.notakey);
    map->_count++;
 
    return( NULL);
@@ -329,6 +339,8 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
 
 //
 // If the hash of the key is already known, this can be quite a timesaver
+// returns NULL if not found. Since value is always NULL not found.
+// notakey is just for key.
 //
 void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map,
                                                    void *key,
@@ -343,6 +355,7 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
    void            **storage;
    void            *notakey;
 
+   notakey  = callback->keycallback.notakey;
    // important to not hit a NULL storage later
    // size must be > 2 for the hash to work, otherwise we could get
    if( map->_count == 0)
@@ -352,7 +365,6 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
    size     = map->_size;
    i        = mulle__pointermap_hash_for_size( hash, size);
    f        = (int (*)()) callback->keycallback.is_equal;
-   notakey  = callback->keycallback.notakey;
    mask     = size - 1;
 
    for(;;)
@@ -372,8 +384,7 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
 
 
 //
-// returns NULL if nothing found. There is no way to distinguish with
-// get, if a key/value pair exists, if NULL is a valid value!
+// returns NULL if nothing found.
 //
 void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
                                          void *key,
@@ -383,6 +394,63 @@ void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
 
    hash = (*callback->keycallback.hash)( &callback->keycallback, key);
    return( _mulle__pointermap__get_generic_knownhash( map, key, hash, callback));
+}
+
+
+struct mulle_pointerpair   *
+   _mulle__pointermap__get_pair_generic_knownhash( struct mulle__pointermap *map,
+                                                   void *key,
+                                                   uintptr_t hash,
+                                                   struct mulle_container_keyvaluecallback *callback,
+                                                   struct mulle_pointerpair *pair)
+{
+   int             (*f)( void *, void *, void *);
+   unsigned int    i;
+   unsigned int    size;
+   unsigned int    mask;
+   void            *found;
+   void            **storage;
+   void            *notakey;
+
+   // important to not hit a NULL storage later
+   // size must be > 2 for the hash to work, otherwise we could get
+   if( map->_count == 0)
+      return( NULL);
+
+   notakey  = callback->keycallback.notakey;
+   storage  = map->_storage;
+   size     = map->_size;
+   i        = mulle__pointermap_hash_for_size( hash, size);
+   f        = (int (*)()) callback->keycallback.is_equal;
+   mask     = size - 1;
+
+   for(;;)
+   {
+      found = storage[ i];
+      if( found == notakey)
+         return( NULL);
+      if( key == found)
+         break;
+      if( (*f)( callback, found, key))
+         break;
+      i = (i + 1) & mask;
+   }
+
+   pair->key   = found;
+   pair->value = storage[ i + size];
+   return( pair);
+}
+
+
+struct mulle_pointerpair   *_mulle__pointermap__get_pair_generic( struct mulle__pointermap *map,
+                                                                  void *key,
+                                                                  struct mulle_container_keyvaluecallback *callback,
+                                                                  struct mulle_pointerpair *space)
+{
+   uintptr_t   hash;
+
+   hash = (*callback->keycallback.hash)( &callback->keycallback, key);
+   return( _mulle__pointermap__get_pair_generic_knownhash( map, key, hash, callback, space));
 }
 
 
@@ -399,12 +467,12 @@ struct mulle_pointerpair   *
    void           **storage;
    void           *notakey;
 
+   notakey = callback->keycallback.notakey;
    if( ! map->_count)
       return( NULL);
 
    storage = map->_storage;
    size    = map->_size;
-   notakey = callback->keycallback.notakey;
    mask    = size - 1;
 
    //
@@ -438,8 +506,6 @@ static void   *
 
    //
    // first we search just for pointer equality of the key,
-   // which can't be notakey so we don't care about notakey here
-   //
    for( ; q < sentinel; q++)
       if( key == *q)
          return( q[ map->_size]);
@@ -456,6 +522,10 @@ void   *_mulle__pointermap_get_generic_knownhash( struct mulle__pointermap *map,
    void   *value;
 
    assert( map);
+
+   if( key == callback->keycallback.notakey)
+      return( NULL);
+
    if( map->_size <= 32)  // if the dictionary is small try to easy match
    {
       value = _mulle__pointermap_pointerequalitysearch( map, key);
@@ -476,13 +546,16 @@ void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
    uintptr_t   hash;
    void        *value;
 
+   if( key == callback->keycallback.notakey)
+      return( NULL);
+
    assert( map);
    if( map->_size <= 32)  // if the dictionary is small try to easy match
    {
       value = _mulle__pointermap_pointerequalitysearch( map, key);
       if( value)
          return( value);
-      // else do regular search
+      // fallback to regular search
    }
 
    value = _mulle__pointermap__get_generic( map, key, callback);
