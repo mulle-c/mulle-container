@@ -12,7 +12,10 @@
          "dependency",
          "stash",
          ".unison*"
-         ]
-		}
-	]
+                     ],
+		},
+              {
+			"path": "/home/src/srcO/mulle-c/mulle-data"
+		},
+       ],
 }

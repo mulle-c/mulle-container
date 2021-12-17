@@ -33,6 +33,7 @@ static inline struct mulle_structarray  *
    return( array);
 }
 
+
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_init( struct mulle_structarray *array,
                                               size_t _sizeof_struct,

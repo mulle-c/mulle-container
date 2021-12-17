@@ -41,11 +41,13 @@
 // pure mulle__pointermap
 //
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 void   **mulle__pointermap_allocate_storage_generic( unsigned int n,
                                                      void *notakey,
                                                      struct mulle_allocator *allocator);
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_reset_generic( struct mulle__pointermap *map,
                                          void *notakey);
@@ -58,6 +60,7 @@ void   _mulle__pointermap_set_pair_generic( struct mulle__pointermap *map,
                                             struct mulle_container_keyvaluecallback *callback,
                                             struct mulle_allocator *allocator)
 {
+   MULLE_CONTAINER_EXTERN_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_pointerpair *pair,
                                                   enum mulle_container_write_mode mode,
@@ -75,20 +78,22 @@ void   _mulle__pointermap_set_pair_generic( struct mulle__pointermap *map,
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
 void    *_mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
-                                            struct mulle_pointerpair *pair,
-                                            struct mulle_container_keyvaluecallback *callback,
-                                            struct mulle_allocator *allocator)
+                                                 struct mulle_pointerpair *pair,
+                                                 struct mulle_container_keyvaluecallback *callback,
+                                                 struct mulle_allocator *allocator)
 {
+   MULLE_CONTAINER_EXTERN_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
-                                             struct mulle_pointerpair *pair,
-                                             enum mulle_container_write_mode mode,
-                                             struct mulle_container_keyvaluecallback *callback,
-                                             struct mulle_allocator *allocator);
+                                                  struct mulle_pointerpair *pair,
+                                                  enum mulle_container_write_mode mode,
+                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  struct mulle_allocator *allocator);
 
    return( _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator));
 }
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_FOURTH
 void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map,
                                                    void *key,
@@ -100,61 +105,72 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
 // If you know that a pointer equality check will fail anyway, you can
 // save some time using __get.
 //
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
                                          void *key,
                                          struct mulle_container_keyvaluecallback *callback);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD_FOURTH
 struct mulle_pointerpair   *_mulle__pointermap__get_pair_generic( struct mulle__pointermap *map,
                                                                   void *key,
                                                                   struct mulle_container_keyvaluecallback *callback,
                                                                   struct mulle_pointerpair *space);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 struct mulle_pointerpair   *_mulle__pointermap_get_any_pair_generic( struct mulle__pointermap *map,
                                                                      struct mulle_container_keyvaluecallback *callback,
                                                                      struct mulle_pointerpair *space);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_FOURTH
 void   *_mulle__pointermap_get_generic_knownhash( struct mulle__pointermap *map,
                                                   void *key,
                                                   uintptr_t hash,
                                                   struct mulle_container_keyvaluecallback *callback);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
                                         void *key,
                                         struct mulle_container_keyvaluecallback *callback);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 struct mulle_pointerpair   *_mulle__pointermap_get_pair_generic( struct mulle__pointermap *map,
                                                                  void *key,
                                                                  struct mulle_container_keyvaluecallback *callback,
                                                                  struct mulle_pointerpair *space);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
                                          void *key,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__pointermap_shrink_generic( struct mulle__pointermap *map,
                                           struct mulle_container_keyvaluecallback *callback,
                                           struct mulle_allocator *allocator);
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 int   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
                                              struct mulle__pointermap *src,
                                              struct mulle_container_keyvaluecallback *callback,
                                              struct mulle_allocator *allocator);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
-unsigned int   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
-                                                      struct mulle_container_keyvaluecallback *callback,
-                                                      unsigned int *perfects);
+unsigned int
+   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
+                                                struct mulle_container_keyvaluecallback *callback,
+                                                unsigned int *perfects);
 
 
 # pragma mark - enumeration

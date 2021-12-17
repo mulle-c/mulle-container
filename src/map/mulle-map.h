@@ -35,11 +35,13 @@ extern struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
 
 #pragma mark - setup and teardown
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_SECOND
 struct mulle_map   *mulle_map_create( unsigned int capacity,
                                       struct mulle_container_keyvaluecallback *callback,
                                       struct mulle_allocator *allocator);
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle_map_init( struct mulle_map *map,
                         unsigned int capacity,
@@ -103,12 +105,14 @@ static inline void    mulle_map_reset( struct mulle_map *map)
 #pragma mark - petty accessors
 
 
-static inline struct mulle_container_keyvaluecallback   *mulle_map_get_callback( struct mulle_map *map)
+static inline struct mulle_container_keyvaluecallback *
+   mulle_map_get_callback( struct mulle_map *map)
 {
    return( map ? map->callback : NULL);
 }
 
-static inline struct mulle_allocator   *mulle_map_get_allocator( struct mulle_map *map)
+static inline struct mulle_allocator *
+   mulle_map_get_allocator( struct mulle_map *map)
 {
    return( map ? map->allocator : NULL);
 }
@@ -159,10 +163,10 @@ static inline void   *mulle_map_get( struct mulle_map *map, void *key)
 
 
 MULLE_C_NONNULL_FIRST_THIRD
-static inline
-struct mulle_pointerpair   *_mulle_map_get_pair( struct mulle_map *map,
-                                                 void *key,
-                                                 struct mulle_pointerpair *space)
+static inline struct mulle_pointerpair   *
+   _mulle_map_get_pair( struct mulle_map *map,
+                        void *key,
+                        struct mulle_pointerpair *space)
 {
    return( _mulle__map_get_pair( (struct mulle__map *) map,
                                  key,
@@ -172,10 +176,10 @@ struct mulle_pointerpair   *_mulle_map_get_pair( struct mulle_map *map,
 
 
 MULLE_C_NONNULL_THIRD
-static inline
-struct mulle_pointerpair   *mulle_map_get_pair( struct mulle_map *map,
-                                                void *key,
-                                                struct mulle_pointerpair *space)
+static inline struct mulle_pointerpair   *
+   mulle_map_get_pair( struct mulle_map *map,
+                       void *key,
+                       struct mulle_pointerpair *space)
 {
    if( ! map)
       return( NULL);
