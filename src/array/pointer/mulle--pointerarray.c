@@ -150,11 +150,15 @@ void
    _mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
                                          struct mulle_range range)
 {
-   range = mulle_range_validate_against_length( range,
-                                                _mulle__pointerarray_get_count( array));
+   unsigned int   count;
+   unsigned int   tail;
+
+   count  = _mulle__pointerarray_get_count( array);
+   tail   = range.location + range.length;
+   range  = mulle_range_validate_against_length( range, count);
    memmove( &array->_storage[ range.location],
-            &array->_storage[ range.location + range.length],
-            range.length * sizeof( void *));
+            &array->_storage[ tail],
+            (count - tail) * sizeof( void *));
 
    array->_curr -= range.length;
 }

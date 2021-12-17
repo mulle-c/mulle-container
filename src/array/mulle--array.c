@@ -39,8 +39,8 @@
 #include <stdio.h>  // debug
 
 
-struct mulle__arrayenumerator          mulle__arrayenumerator_empty;
-struct mulle__arrayreverseenumerator   mulle__arrayreverseenumerator_empty;
+const struct mulle__arrayenumerator          mulle__arrayenumerator_empty;
+const struct mulle__arrayreverseenumerator   mulle__arrayreverseenumerator_empty;
 
 #pragma mark - _mulle_arrayrange internal helper
 
@@ -158,6 +158,49 @@ void   _mulle__array_remove_in_range( struct mulle__array *array,
                                          range);
 }
 
+
+MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_C_NONNULL_FIRST_THIRD
+void   _mulle__array_remove( struct mulle__array *array,
+                             void *p,
+                             struct mulle_container_keycallback *callback,
+                             struct mulle_allocator *allocator)
+{
+   unsigned int  i;
+   unsigned int  *item;
+
+   //
+   // Removal back to front is cool, as long as we are the only one
+   // modifying the array. We don't use an enumerator here, but an index is
+   // safe...
+   //
+   if( callback->is_equal == mulle_container_keycallback_pointer_is_equal)
+   {
+      for( i = mulle__array_get_count( array); i;)
+      {
+         item = mulle__array_get( array, --i);
+         if( p == item)
+            _mulle__array_remove_in_range( array,
+                                           mulle_range_make( i, 1),
+                                           callback,
+                                           allocator);
+      }
+   }
+   else
+   {
+      for( i = mulle__array_get_count( array); i;)
+      {
+         item = mulle__array_get( array, --i);
+         if( (callback->is_equal)( callback, p, item))
+            _mulle__array_remove_in_range( array,
+                                           mulle_range_make( i, 1),
+                                           callback,
+                                           allocator);
+      }
+   }
+}
+
+
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 int    _mulle__array_is_equal( struct mulle__array *array,
                                struct mulle__array *other,
@@ -183,6 +226,24 @@ int    _mulle__array_is_equal( struct mulle__array *array,
    }
 
    return( 1);
+}
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+void    _mulle__array_add( struct mulle__array *array,
+                           void  *p,
+                           struct mulle_container_keycallback *callback,
+                           struct mulle_allocator *allocator)
+{
+   assert( callback);
+
+   if( p == callback->notakey)
+      abort();                    // what else ?
+
+   p = (*callback->retain)( callback, p, allocator);
+   _mulle__pointerarray_add( (struct mulle__pointerarray *)  array,
+                             p,
+                             allocator);
 }
 
 
@@ -251,7 +312,7 @@ char   *_mulle__array_describe( struct mulle__array *set,
 
    result = NULL;
    len    = 0;
-   rover = mulle__array_enumerate( set);
+   rover = mulle__array_enumerate( set, callback);
    while( _mulle__arrayenumerator_next( &rover, &item))
    {
       key_allocator  = allocator ? allocator : &mulle_default_allocator;
