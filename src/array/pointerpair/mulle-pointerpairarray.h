@@ -174,16 +174,14 @@ static inline void
 }
 
 
-static inline
-struct mulle_pointerpair
+static inline struct mulle_pointerpair
 	mulle_pointerpairarray_pop( struct mulle_pointerpairarray *array)
 {
    return( mulle__pointerpairarray_pop( (struct mulle__pointerpairarray *) array));
 }
 
 
-static inline
-struct mulle_pointerpair
+static inline struct mulle_pointerpair
 	mulle_pointerpairarray_get_last( struct mulle_pointerpairarray *array)
 {
    return( mulle__pointerpairarray_get_last( (struct mulle__pointerpairarray *) array));
@@ -191,8 +189,7 @@ struct mulle_pointerpair
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-struct mulle_pointerpair
+static inline struct mulle_pointerpair
 	_mulle_pointerpairarray_get( struct mulle_pointerpairarray *array,
                                 unsigned int i)
 {
@@ -201,8 +198,7 @@ struct mulle_pointerpair
 }
 
 
-static inline
-struct mulle_pointerpair
+static inline struct mulle_pointerpair
    mulle_pointerpairarray_get( struct mulle_pointerpairarray *array,
                                unsigned int i)
 {
@@ -225,8 +221,7 @@ static inline unsigned int
                                                   buf));
 }
 
-static inline
-unsigned int
+static inline unsigned int
    mulle_pointerpairarray_get_in_range( struct mulle_pointerpairarray *array,
                                         struct mulle_range range,
                                         void *buf)

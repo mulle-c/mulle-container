@@ -326,7 +326,33 @@ static inline void  *
 }
 
 
-
+/*
+ *  Loop over all items. This works as long as you don't remove
+ *  anything from the array. It will not retrieve newly added elements.
+ *
+ *  unsigned int  i, n;
+ *  unsigned int  *item;
+ *
+ *  for( i = 0, n = mulle_pointerarray_get_count( array); i < n; i++)
+ *  {
+ *     item = mulle_pointerarray_get( array, i);
+ *     printf( "%s\n", (char *) item);
+ *  }
+ *
+ *  Reverse loop over all items. This works as long as you don't remove
+ *  anything but the last element from the array. It will not retrieve newly 
+ *  added elements.
+ *
+ *  unsigned int  i;
+ *  unsigned int  *item;
+ *
+ *  for( i = mulle_pointerarray_get_count( array); i;)
+ *  {
+ *     item = mulle_pointerarray_get( array, --i);
+ *     printf( "%s\n", (char *) item);
+ *  }
+ *
+ */
 MULLE_C_NONNULL_FIRST
 static inline void  *
 	_mulle_pointerarray_get( struct mulle_pointerarray *array, unsigned int i)
@@ -419,6 +445,20 @@ static inline void
 
 #pragma mark - enumeration
 
+/*
+ *  Enumeration is likely to fail, if the array gets manipulated in the
+ *  loop. 
+ *
+ *  struct mulle_pointerarrayenumerator   rover;
+ *  void                                  *item;
+ *
+ *  rover = mulle_pointerarray_enumerate( array);
+ *  while( mulle_pointerarrayenumerator_next( &rover, &item))
+ *     printf( "%s\n", (char *) item);
+ *  mulle_pointerarrayenumerator_done( &rover);
+ *
+ */
+
 #define MULLE_POINTERARRAYENUMERATOR_BASE MULLE__POINTERARRAYENUMERATOR_BASE
 
 struct mulle_pointerarrayenumerator
@@ -450,14 +490,16 @@ static inline struct mulle_pointerarrayenumerator
 
 MULLE_C_NONNULL_FIRST
 static inline int
-	_mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover, void **item)
+	_mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover, 
+                                      void **item)
 {
    return( _mulle__pointerarrayenumerator_next( (struct mulle__pointerarrayenumerator *) rover,
                                                 item));
 }
 
 static inline int
-	mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover, void **item)
+	mulle_pointerarrayenumerator_next( struct mulle_pointerarrayenumerator *rover, 
+                                     void **item)
 {
    return( mulle__pointerarrayenumerator_next( (struct mulle__pointerarrayenumerator *) rover,
                                                 item));
@@ -479,6 +521,20 @@ static inline void
 
 #pragma mark - reverseenumeration
 
+/*
+ *  Enumeration is likely to fail, if the array gets manipulated in the
+ *  loop.  
+ *
+ *  struct mulle_pointerarrayreverseenumerator   rover;
+ *  void                                         *item;
+ *
+ *  rover = mulle_pointerarray_reverseenumerate( array);
+ *  while( mulle_pointerarrayreverseenumerator_next( &rover, &item))
+ *     printf( "%s", item);
+ *  mulle_pointerarrayreverseenumerator_done( &rover);
+ *  printf( "\n");
+ *
+ */
 #define MULLE_POINTERARRAYREVERSEENUMERATOR_BASE  MULLE__POINTERARRAYREVERSEENUMERATOR_BASE
 
 struct mulle_pointerarrayreverseenumerator
@@ -542,7 +598,8 @@ static inline void
 
 #pragma mark - enumerator convenience
 
-static inline int   mulle_pointerarray_member( struct mulle_pointerarray *array, void *p)
+static inline int   
+  mulle_pointerarray_member( struct mulle_pointerarray *array, void *p)
 {
    return( mulle__pointerarray_member( (struct mulle__pointerarray *) array, p));
 }

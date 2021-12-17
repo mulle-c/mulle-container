@@ -34,11 +34,6 @@
 #include "include.h"
 
 
-#ifndef MULLE_CONTAINER_EXTERN_GLOBAL
-# define MULLE_CONTAINER_EXTERN_GLOBAL   MULLE_C_EXTERN_GLOBAL
-#endif
-
-
 // notakey is mulle_not_an_int
 MULLE_CONTAINER_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_int;
 // notakey is mulle_not_an_intptr

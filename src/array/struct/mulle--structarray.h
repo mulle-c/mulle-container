@@ -44,6 +44,7 @@ static inline void   _mulle__structarray_init( struct mulle__structarray *array,
                                                unsigned int capacity,
                                                struct mulle_allocator *allocator)
 {
+   MULLE_CONTAINER_EXTERN_GLOBAL
    void   _mulle__structarray_sizeto( struct mulle__structarray *array,
                                       unsigned int new_size,
                                       struct mulle_allocator *allocator);
@@ -192,8 +193,10 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle__structarray_get_last( struct mulle__structarray *array)
 {
-   assert( &((char *) array->_curr)[ - array->_sizeof_struct] >= (char *) array->_storage);
+   if( array->_curr == array->_storage)
+      return( NULL);
 
+   assert( &((char *) array->_curr)[ - array->_sizeof_struct] >= (char *) array->_storage);
    return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
 }
 
@@ -209,7 +212,7 @@ static inline void
 static inline void *
    mulle__structarray_get_last( struct mulle__structarray *array)
 {
-   if( ! array || array->_curr == array->_storage)
+   if( ! array)
       return( NULL);
    return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
 }
@@ -224,6 +227,7 @@ static inline void
                             void *item,
                             struct mulle_allocator *allocator)
 {
+   MULLE_CONTAINER_EXTERN_GLOBAL
    void   _mulle__structarray_grow( struct mulle__structarray *array,
                                     struct mulle_allocator *allocator);
 
@@ -237,6 +241,7 @@ static inline void
 }
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__structarray_guarantee( struct mulle__structarray *array,
                                        unsigned int length,
@@ -277,6 +282,7 @@ static inline void
    _mulle__structarray_size_to_fit( struct mulle__structarray *array,
                                     struct mulle_allocator *allocator)
 {
+   MULLE_CONTAINER_EXTERN_GLOBAL
    void   _mulle__structarray_sizeto( struct mulle__structarray *array,
                                       unsigned int new_size,
                                       struct mulle_allocator *allocator);

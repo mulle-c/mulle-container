@@ -62,6 +62,7 @@ static inline struct mulle_pointerpair
    return( result);
 }
 
+
 static inline struct mulle_pointerpair
    mulle_pointerpair_make_invalid( void)
 {

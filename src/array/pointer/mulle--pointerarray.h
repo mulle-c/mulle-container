@@ -67,7 +67,7 @@ struct mulle__pointerarray
 
 
 static inline struct mulle__pointerarray  *
-	mulle__pointerarray_alloc( struct mulle_allocator *allocator)
+   mulle__pointerarray_alloc( struct mulle_allocator *allocator)
 {
    struct mulle__pointerarray   *array;
 
@@ -165,7 +165,7 @@ static inline void **
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int
-	_mulle__pointerarray_get_size( struct mulle__pointerarray *array)
+   _mulle__pointerarray_get_size( struct mulle__pointerarray *array)
 {
    return( (unsigned int) (array->_sentinel - array->_storage));
 }
@@ -180,7 +180,7 @@ static inline unsigned int
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int
-	_mulle__pointerarray_get_count( struct mulle__pointerarray *array)
+   _mulle__pointerarray_get_count( struct mulle__pointerarray *array)
 {
    return( (unsigned int) (array->_curr - array->_storage));
 }
@@ -195,14 +195,14 @@ static inline unsigned int
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int
-	_mulle__pointerarray_get_guaranteed_size( struct mulle__pointerarray *array)
+   _mulle__pointerarray_get_guaranteed_size( struct mulle__pointerarray *array)
 {
    return( (unsigned int) (array->_sentinel - array->_curr));
 }
 
 
 static inline unsigned int
-	mulle__pointerarray_get_guaranteed_size( struct mulle__pointerarray *array)
+   mulle__pointerarray_get_guaranteed_size( struct mulle__pointerarray *array)
 {
    return( array ? (unsigned int) (array->_sentinel - array->_curr) : 0);
 }
@@ -225,15 +225,16 @@ static inline int
 
 # pragma mark - memory operations
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 void **  _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
                                          unsigned int length,
                                          struct mulle_allocator *allocator);
 
-static inline
-void **   mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
-                                         unsigned int length,
-                                         struct mulle_allocator *allocator)
+static inline void **
+   mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
+                                  unsigned int length,
+                                  struct mulle_allocator *allocator)
 {
    if( ! array)
       return( NULL);
@@ -241,6 +242,7 @@ void **   mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
 }
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_grow( struct mulle__pointerarray *array,
                                   struct mulle_allocator *allocator);
@@ -254,14 +256,15 @@ void   mulle__pointerarray_grow( struct mulle__pointerarray *array,
 }
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_compact( struct mulle__pointerarray *array,
                                      void *notakey);
 
 
-static inline
-void   mulle__pointerarray_compact( struct mulle__pointerarray *array,
-                                    void *notakey)
+static inline void
+   mulle__pointerarray_compact( struct mulle__pointerarray *array,
+                                void *notakey)
 {
    if( array)
       _mulle__pointerarray_compact( array, notakey);
@@ -300,10 +303,10 @@ void   _mulle__pointerarray_add_guaranteed( struct mulle__pointerarray *array,
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-void   _mulle__pointerarray_add( struct mulle__pointerarray *array,
-                                 void *pointer,
-                                 struct mulle_allocator *allocator)
+static inline void
+   _mulle__pointerarray_add( struct mulle__pointerarray *array,
+                             void *pointer,
+                             struct mulle_allocator *allocator)
 {
    if( array->_curr == array->_sentinel)
       _mulle__pointerarray_grow( array, allocator);
@@ -312,10 +315,10 @@ void   _mulle__pointerarray_add( struct mulle__pointerarray *array,
 }
 
 
-static inline
-void   mulle__pointerarray_add( struct mulle__pointerarray *array,
-                                void  *pointer,
-                                struct mulle_allocator *allocator)
+static inline void
+   mulle__pointerarray_add( struct mulle__pointerarray *array,
+                            void  *pointer,
+                            struct mulle_allocator *allocator)
 {
    if( array)
       return( _mulle__pointerarray_add( array, pointer, allocator));
@@ -323,8 +326,8 @@ void   mulle__pointerarray_add( struct mulle__pointerarray *array,
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-void   *_mulle__pointerarray_pop( struct mulle__pointerarray *array)
+static inline void   *
+   _mulle__pointerarray_pop( struct mulle__pointerarray *array)
 {
    if( array->_curr > array->_storage)
       return( *--array->_curr);
@@ -332,8 +335,8 @@ void   *_mulle__pointerarray_pop( struct mulle__pointerarray *array)
 }
 
 
-static inline
-void   *mulle__pointerarray_pop( struct mulle__pointerarray *array)
+static inline void   *
+   mulle__pointerarray_pop( struct mulle__pointerarray *array)
 {
    if( ! array)
       return( NULL);
@@ -342,21 +345,22 @@ void   *mulle__pointerarray_pop( struct mulle__pointerarray *array)
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-void   _mulle__pointerarray_reset( struct mulle__pointerarray *array)
+static inline void
+   _mulle__pointerarray_reset( struct mulle__pointerarray *array)
 {
    array->_curr = array->_storage;
 }
 
 
-static inline
-void   mulle__pointerarray_reset( struct mulle__pointerarray *array)
+static inline void
+   mulle__pointerarray_reset( struct mulle__pointerarray *array)
 {
    if( array)
       _mulle__pointerarray_reset( array);
 }
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
                                              struct mulle_range range);
@@ -373,8 +377,8 @@ void
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-void   *_mulle__pointerarray_get( struct mulle__pointerarray *array, unsigned int i)
+static inline void   *
+   _mulle__pointerarray_get( struct mulle__pointerarray *array, unsigned int i)
 {
    assert( array);
    assert( &array->_storage[ i] >= array->_storage);
@@ -384,9 +388,36 @@ void   *_mulle__pointerarray_get( struct mulle__pointerarray *array, unsigned in
 }
 
 
-static inline
-void   *mulle__pointerarray_get( struct mulle__pointerarray *array,
-                                 unsigned int i)
+/*
+ *  Loop over all items. This works as long as you don't remove
+ *  anything from the array. It will not retrieve newly added elements.
+ *
+ *  unsigned int  i, n;
+ *  unsigned int  *item;
+ *
+ *  for( i = 0, n = mulle__pointerarray_get_count( array); i < n; i++)
+ *  {
+ *     item = mulle__pointerarray_get( array, i);
+ *     printf( "%s\n", (char *) item);
+ *  }
+ *
+ *  Reverse loop over all items. This works as long as you don't remove
+ *  anything but the last element from the array. It will not retrieve newly 
+ *  added elements.
+ *
+ *  unsigned int  i;
+ *  unsigned int  *item;
+ *
+ *  for( i = mulle__pointerarray_get_count( array); i;)
+ *  {
+ *     item = mulle__pointerarray_get( array, --i);
+ *     printf( "%s\n", (char *) item);
+ *  }
+ *
+ */
+static inline void   *
+   mulle__pointerarray_get( struct mulle__pointerarray *array,
+                            unsigned int i)
 {
    if( ! array)
       return( NULL);
@@ -400,8 +431,7 @@ unsigned int
                                       struct mulle_range range,
                                       void *buf);
 
-static inline
-unsigned int
+static inline unsigned int
    mulle__pointerarray_get_in_range( struct mulle__pointerarray *array,
                                      struct mulle_range range,
                                      void *buf)
@@ -415,6 +445,7 @@ unsigned int
 // return value is the index of a compacted array, but it doesn't compact
 // yet
 //
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t   _mulle__pointerarray_find_in_range( struct mulle__pointerarray *array,
                                                 void *p,
@@ -440,9 +471,9 @@ static inline uintptr_t
 }
 
 
-static inline
-uintptr_t   mulle__pointerarray_find( struct mulle__pointerarray *array,
-                                      void *p)
+static inline uintptr_t
+   mulle__pointerarray_find( struct mulle__pointerarray *array,
+                             void *p)
 {
    if( ! array)
       return( mulle_not_found_e);
@@ -451,16 +482,17 @@ uintptr_t   mulle__pointerarray_find( struct mulle__pointerarray *array,
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-void  *_mulle__pointerarray_get_last( struct mulle__pointerarray *array)
+static inline void  *
+   _mulle__pointerarray_get_last( struct mulle__pointerarray *array)
 {
    if( array->_curr == array->_storage)
       return( NULL);
    return( array->_curr[ -1]);
 }
 
-static inline
-void  *mulle__pointerarray_get_last( struct mulle__pointerarray *array)
+
+static inline void  *
+   mulle__pointerarray_get_last( struct mulle__pointerarray *array)
 {
    if( array)
       return( NULL);
@@ -470,10 +502,10 @@ void  *mulle__pointerarray_get_last( struct mulle__pointerarray *array)
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-void   *_mulle__pointerarray_set( struct mulle__pointerarray *array,
-                                  unsigned int i,
-                                  void *p)
+static inline void   *
+   _mulle__pointerarray_set( struct mulle__pointerarray *array,
+                             unsigned int i,
+                             void *p)
 {
    void   *old;
 
@@ -486,10 +518,10 @@ void   *_mulle__pointerarray_set( struct mulle__pointerarray *array,
 }
 
 
-static inline
-void   *mulle__pointerarray_set( struct mulle__pointerarray *array,
-                                 unsigned int i,
-                                 void *p)
+static inline void   *
+   mulle__pointerarray_set( struct mulle__pointerarray *array,
+                            unsigned int i,
+                            void *p)
 {
    if( ! array || &array->_storage[ i] >= array->_curr)
       return( NULL);
@@ -497,7 +529,7 @@ void   *mulle__pointerarray_set( struct mulle__pointerarray *array,
 }
 
 
-
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle_pointers
    _mulle__pointerarray_extract_pointers( struct mulle__pointerarray *buffer,
@@ -505,6 +537,21 @@ struct mulle_pointers
 
 
 #pragma mark - enumeration
+
+
+/*
+ *  Enumeration is likely to fail, if the array gets manipulated in the
+ *  loop. 
+ *
+ *  struct mulle__pointerarrayenumerator   rover;
+ *  void                                   *item;
+ *
+ *  rover = mulle__pointerarray_enumerate( array);
+ *  while( mulle__pointerarrayenumerator_next( &rover, &item))
+ *     printf( "%s\n", (char *) item);
+ *  mulle__pointerarrayenumerator_done( &rover);
+ *
+ */
 
 #define MULLE__POINTERARRAYENUMERATOR_BASE   \
    void   **_curr;                           \
@@ -533,6 +580,7 @@ static inline struct mulle__pointerarrayenumerator
 
    return( rover);
 }
+
 
 static inline struct mulle__pointerarrayenumerator
    mulle__pointerarray_enumerate( struct mulle__pointerarray *array)
@@ -563,20 +611,16 @@ static inline int
    mulle__pointerarrayenumerator_next( struct mulle__pointerarrayenumerator *rover,
                                        void **item)
 {
+   void   *dummy;
+
+   if( ! item)
+       item = &dummy;
    if( rover)
-      if( rover->_curr < rover->_sentinel)
-      {
-         if( item)
-            *item = *rover->_curr;
-         rover->_curr++;
-         return( 1);
-      }
-
-   if( item)
-      *item = NULL;
-
-   return( 0);
+      return( _mulle__pointerarrayenumerator_next( rover, item));
+   *item = *rover->_curr;
+   return( 1);
 }
+
 
 
 MULLE_C_NONNULL_FIRST
@@ -591,9 +635,23 @@ static inline void
 {
 }
 
+
 #pragma mark - reverse enumeration
 
 
+/*
+ *  Enumeration is likely to fail, if the array gets manipulated in the
+ *  loop. 
+ *
+ *  struct mulle__pointerarrayreverseenumerator   rover;
+ *  void                                          *item;
+ *
+ *  rover = mulle__pointerarray_reverseenumerate( array);
+ *  while( mulle__pointerarrayreverseenumerator_next( &rover, &item))
+ *     printf( "%s\n", (char *) item);
+ *  mulle__pointerarrayreverseenumerator_done( &rover);
+ *
+ */
 #define MULLE__POINTERARRAYREVERSEENUMERATOR_BASE   MULLE__POINTERARRAYENUMERATOR_BASE
 
 
@@ -607,8 +665,7 @@ const extern struct mulle__pointerarrayreverseenumerator
 
 
 MULLE_C_NONNULL_FIRST
-static inline
-struct  mulle__pointerarrayreverseenumerator
+static inline struct  mulle__pointerarrayreverseenumerator
    _mulle__pointerarray_reverseenumerate( struct mulle__pointerarray *array)
 {
    struct mulle__pointerarrayreverseenumerator   rover;
@@ -623,8 +680,7 @@ struct  mulle__pointerarrayreverseenumerator
 }
 
 
-static inline
-struct mulle__pointerarrayreverseenumerator
+static inline struct mulle__pointerarrayreverseenumerator
    mulle__pointerarray_reverseenumerate( struct mulle__pointerarray *array)
 {
    if( ! array)
@@ -654,23 +710,20 @@ static inline int
    mulle__pointerarrayreverseenumerator_next( struct mulle__pointerarrayreverseenumerator *rover,
                                               void **item)
 {
-   if( ! rover || rover->_curr == rover->_sentinel)
-   {
-      if( item)
-         *item = NULL;
-      return( 0);
-   }
+   void   *dummy;
 
-   --rover->_curr;
-   if( item)
-      *item = *rover->_curr;
+   if( ! item)
+       item = &dummy;
+   if( rover)
+      return( _mulle__pointerarrayreverseenumerator_next( rover, item));
+   *item = *rover->_curr;
    return( 1);
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline void
-	_mulle__pointerarrayreverseenumerator_done( struct mulle__pointerarrayreverseenumerator *rover)
+   _mulle__pointerarrayreverseenumerator_done( struct mulle__pointerarrayreverseenumerator *rover)
 {
 }
 

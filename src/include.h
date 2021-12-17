@@ -21,6 +21,11 @@
 
 #include "_mulle-container-include.h"
 
+#ifndef MULLE_CONTAINER_EXTERN_GLOBAL
+# define MULLE_CONTAINER_EXTERN_GLOBAL MULLE_C_EXTERN_GLOBAL
+#endif
+
+
 /* You can add some more include statements here */
 
 #endif

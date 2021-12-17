@@ -88,6 +88,7 @@ static inline void  _mulle_pointerqueue_init( struct mulle_pointerqueue *queue,
 }
 
 
+MULLE_CONTAINER_EXTERN_GLOBAL
 struct mulle_pointerqueue *
    mulle_pointerqueue_create( unsigned short bucket_size,
                               unsigned short spare_allowance,
@@ -260,8 +261,8 @@ static inline unsigned int
 }
 
 
-static inline
-unsigned int   mulle_pointerqueue_get_count( struct mulle_pointerqueue *queue)
+static inline unsigned int
+   mulle_pointerqueue_get_count( struct mulle_pointerqueue *queue)
 {
    return( queue ? _mulle_pointerqueue_get_count( queue) : 0);
 }
@@ -275,8 +276,8 @@ static inline unsigned short
 }
 
 
-static inline
-unsigned int   mulle_pointerqueue_get_bucketsize( struct mulle_pointerqueue *queue)
+static inline unsigned int
+   mulle_pointerqueue_get_bucketsize( struct mulle_pointerqueue *queue)
 {
    return( queue ? _mulle_pointerqueue_get_bucketsize( queue) : 0);
 }
