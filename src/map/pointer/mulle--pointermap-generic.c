@@ -730,19 +730,22 @@ int   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
                                              struct mulle_container_keyvaluecallback *callback,
                                              struct mulle_allocator *allocator)
 {
-   struct mulle__pointermapenumerator  rover;
-   struct mulle_pointerpair            item;
-   int                                 rval;
+   struct mulle__genericpointermapenumerator  rover;
+   struct mulle_pointerpair                   *item;
+   int                                        rval;
+
+   assert( dst);
+   assert( dst != src);
 
    rval  = 0;
-   rover = mulle__pointermap_enumerate( src);
-   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
-      if( _mulle__pointermap_insert_pair_generic( dst, &item, callback, allocator))
+   rover = mulle__pointermap_enumerate_generic( src, callback);
+   while( item = _mulle__genericpointermapenumerator_next_pair( &rover))
+      if( _mulle__pointermap_insert_pair_generic( dst, item, callback, allocator))
       {
          rval = -1;
          break;
       }
-   mulle__pointermapenumerator_done( &rover);
+   mulle__genericpointermapenumerator_done( &rover);
    return( rval);
 }
 

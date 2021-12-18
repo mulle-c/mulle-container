@@ -21,6 +21,9 @@ void   mulle_set_init( struct mulle_set *set,
                        struct mulle_container_keycallback *callback,
                        struct mulle_allocator *allocator)
 {
+   if( ! set)
+      return;
+
    _mulle__set_init( (struct mulle__set *) set, capacity, callback, allocator);
 
    assert( callback);

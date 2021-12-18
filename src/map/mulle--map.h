@@ -364,7 +364,6 @@ static inline int
 }
 
 
-
 static inline int
    mulle__map_remove( struct mulle__map *map,
                       void *key,
@@ -375,8 +374,6 @@ static inline int
       return( 0);
    return( _mulle__map_remove( map, key, callback, allocator));
 }
-
-
 
 
 MULLE_C_NONNULL_FIRST_SECOND
@@ -403,6 +400,17 @@ static inline int
                                                   callback,
                                                   allocator));
 }
+
+
+// Note: this function is not possible, as we have no equality checker for
+//       the values. Blowing up the API to add yet another callback feels
+//       awkward.
+//
+// MULLE_C_NONNULL_FIRST_SECOND_THIRD
+// int    _mulle__map_is_equal( struct mulle__map *map,
+//                              struct mulle__map *other,
+//                              struct mulle_container_keyvaluecallback *callback)
+//
 
 
 //

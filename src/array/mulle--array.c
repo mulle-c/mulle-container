@@ -345,3 +345,24 @@ char   *_mulle__array_describe( struct mulle__array *set,
 }
 
 
+int   mulle__array_member( struct mulle__array *array,
+                           void *p,
+                           struct mulle_container_keycallback *callback)
+{
+   struct mulle__arrayenumerator   rover;
+   void                            *q;
+   int                             rval;
+
+   rval  = 0;
+   rover = mulle__array_enumerate( array, callback);
+   {
+      while( _mulle__arrayenumerator_next( &rover, &q))
+         if( callback->is_equal( callback, q, p))
+         {
+            rval = 1;
+            break;
+         }
+   }
+   mulle__arrayenumerator_done( &rover);
+   return( rval);
+}

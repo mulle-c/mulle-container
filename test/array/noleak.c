@@ -18,7 +18,7 @@ static void  simple( void)
 {
    struct mulle_array   *array;
 
-   array = mulle_array_create( &mulle_container_keycallback_copied_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_add( array, "VfL");
    mulle_array_destroy( array);
 }
