@@ -21,7 +21,7 @@ static void   _mulle__rangeset_assert( struct mulle__rangeset *set)
    struct mulle_range   *sentinel;
 
    old      = NULL;
-   _curr     = &set->_ranges[ 0];
+   _curr    = &set->_ranges[ 0];
    sentinel = &set->_ranges[ set->_length];
    while( _curr < sentinel)
    {

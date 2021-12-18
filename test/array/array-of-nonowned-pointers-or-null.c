@@ -42,7 +42,7 @@ static void  loops( void)
 
    // the pointer is considered just void *  by the array nothing happens during
    // addition or removal
-   array = mulle_array_create( &mulle_container_keycallback_nonowned_pointer_or_null, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_nonowned_pointer_or_null, NULL);
 
    for( i = 0; i < 10; i++)
    {

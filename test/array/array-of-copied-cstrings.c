@@ -43,7 +43,7 @@ static void  loops( void)
    // the string is "strdup" by the array on add, and will be freed when
    // removed or destroyed
    //
-   array = mulle_array_create( &mulle_container_keycallback_copied_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
 
    for( i = 0; i < 10; i++)
    {

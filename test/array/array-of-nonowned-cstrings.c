@@ -42,7 +42,7 @@ static void  loops( void)
 
    // the string is assumed const by the array and nothing happens during
    // addition or removal
-   array = mulle_array_create( &mulle_container_keycallback_nonowned_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_nonowned_cstring, NULL);
 
    for( i = 0; i < 10; i++)
    {

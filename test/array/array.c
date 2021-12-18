@@ -7,6 +7,10 @@
 //  Copyright (c) 2015 Codeon GmbH.
 //  All rights reserved.
 //
+#ifdef NDEBUG
+# undef NDEBUG
+#endif
+#include <assert.h>
 
 #include <mulle-container/mulle-container.h>
 #include <mulle-testallocator/mulle-testallocator.h>
@@ -14,11 +18,6 @@
 #include <stdio.h>
 
 
-static void   test_assert( int x)
-{
-   if( ! x)
-      abort();
-}
 
 
 
@@ -26,10 +25,10 @@ static void   create( void)
 {
    struct mulle_array   *array;
 
-   array = mulle_array_create( &mulle_container_keycallback_copied_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
 
-   test_assert( array != NULL);
-   test_assert( mulle_array_get_count( array) == 0);
+   assert( array != NULL);
+   assert( mulle_array_get_count( array) == 0);
 
    mulle_array_destroy( array);
 }
@@ -41,9 +40,9 @@ static void   array_null( void)
 
    mulle_array_add( NULL, "foo");
 
-   test_assert( mulle_array_get_count( NULL) == 0);
-   test_assert( mulle_array_get_size( NULL) == 0);
-   test_assert( mulle_array_get_guaranteed_size( NULL) == 0);
+   assert( mulle_array_get_count( NULL) == 0);
+   assert( mulle_array_get_size( NULL) == 0);
+   assert( mulle_array_get_guaranteed_size( NULL) == 0);
 
    mulle_array_remove( NULL, "bar");
 
@@ -58,8 +57,8 @@ static void   init( void)
 
    mulle_array_init( &array, 10, &mulle_container_keycallback_copied_cstring, NULL);
 
-   test_assert( mulle_array_get_count( &array) == 0);
-   test_assert( mulle_array_get_size( &array) >= 10);
+   assert( mulle_array_get_count( &array) == 0);
+   assert( mulle_array_get_size( &array) >= 10);
 
    mulle_array_done( &array);
 }
@@ -71,12 +70,12 @@ static void   guarantee( void)
 
    mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
 
-   test_assert( mulle_array_get_count( &array) == 0);
+   assert( mulle_array_get_count( &array) == 0);
 
    mulle_array_guarantee( &array, 32);
-   test_assert( mulle_array_get_count( &array) == 0);
-   test_assert( mulle_array_get_size( &array) >= 32);
-   test_assert( mulle_array_get_guaranteed_size( &array) >= 32);
+   assert( mulle_array_get_count( &array) == 0);
+   assert( mulle_array_get_size( &array) >= 32);
+   assert( mulle_array_get_guaranteed_size( &array) >= 32);
 
    mulle_array_done( &array);
 }
@@ -86,13 +85,13 @@ static void   array_reset( void)
 {
    struct mulle_array   *array;
 
-   array = mulle_array_create( &mulle_container_keycallback_copied_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_add( array, "VfL");
    mulle_array_add( array, "Bochum");
    mulle_array_add( array, "1848");
 
    mulle_array_reset( array);
-   test_assert( mulle_array_get_count( array) == 0);
+   assert( mulle_array_get_count( array) == 0);
 
    mulle_array_destroy( array);
 }
@@ -103,17 +102,17 @@ static void   array_remove( void)
 {
    struct mulle_array   *array;
 
-   array = mulle_array_create( &mulle_container_keycallback_copied_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_add( array, "VfL");
    mulle_array_add( array, "Bochum");
    mulle_array_add( array, "1848");
 
    mulle_array_remove( array, "unknown");
-   test_assert( mulle_array_get_count( array) == 3);
+   assert( mulle_array_get_count( array) == 3);
    mulle_array_remove( array, "Bochum");
-   test_assert( mulle_array_get_count( array) == 2);
+   assert( mulle_array_get_count( array) == 2);
    mulle_array_remove( array, "Bochum");
-   test_assert( mulle_array_get_count( array) == 2);
+   assert( mulle_array_get_count( array) == 2);
 
    mulle_array_destroy( array);
 }
@@ -126,38 +125,38 @@ static void   simple( void)
    struct mulle_arrayenumerator    rover;
    void                            *item;
 
-   array = mulle_array_create( &mulle_container_keycallback_copied_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_add( array, "VfL");
-   test_assert("VfL" != mulle_array_get( array, 0)); // must have been copied
+   assert("VfL" != mulle_array_get( array, 0)); // must have been copied
 
    mulle_array_add( array, "Bochum");
    mulle_array_add( array, "1848");
 
-   test_assert( mulle_array_get_count( array) == 3);
+   assert( mulle_array_get_count( array) == 3);
 
-   test_assert( ! strcmp( "VfL", mulle_array_get( array, 0)));
-   test_assert( ! strcmp( "Bochum", mulle_array_get( array, 1)));
-   test_assert( ! strcmp( "1848", mulle_array_get( array, 2)));
+   assert( ! strcmp( "VfL", mulle_array_get( array, 0)));
+   assert( ! strcmp( "Bochum", mulle_array_get( array, 1)));
+   assert( ! strcmp( "1848", mulle_array_get( array, 2)));
 
    rover = mulle_array_enumerate( array);
    mulle_arrayenumerator_next( &rover, &item);
-   test_assert( item != NULL);
-   test_assert( ! strcmp( "VfL", item));
+   assert( item != NULL);
+   assert( ! strcmp( "VfL", item));
    mulle_arrayenumerator_next( &rover, &item);
-   test_assert( item != NULL);
-   test_assert( ! strcmp( "Bochum", item));
+   assert( item != NULL);
+   assert( ! strcmp( "Bochum", item));
    mulle_arrayenumerator_next( &rover, &item);
-   test_assert( item != NULL);
-   test_assert( ! strcmp( "1848", item));
-   test_assert( ! mulle_arrayenumerator_next( &rover, &item));
+   assert( item != NULL);
+   assert( ! strcmp( "1848", item));
+   assert( ! mulle_arrayenumerator_next( &rover, &item));
    mulle_arrayenumerator_done( &rover);
 
    mulle_array_remove_last( array);
-   test_assert( mulle_array_get_count( array) == 2);
+   assert( mulle_array_get_count( array) == 2);
    mulle_array_remove_last( array);
-   test_assert( mulle_array_get_count( array) == 1);
+   assert( mulle_array_get_count( array) == 1);
    mulle_array_remove_last( array);
-   test_assert( mulle_array_get_count( array) == 0);
+   assert( mulle_array_get_count( array) == 0);
 
    mulle_array_destroy( array);
 }
@@ -183,7 +182,7 @@ static void   grow( void)
 
    mulle_array_init( &array, 10, &mulle_container_keycallback_copied_cstring, NULL);
    _mulle_array_guarantee( &array, 20);
-   test_assert( mulle_array_get_guaranteed_size( &array) >= 20);
+   assert( mulle_array_get_guaranteed_size( &array) >= 20);
 
    memo_size    = mulle_array_get_size( &array);
    memo_storage = array._storage;
@@ -195,13 +194,13 @@ static void   grow( void)
    }
 
    // guarantee means unchanging internal _storage
-   test_assert( mulle_array_get_guaranteed_size( &array) == 0);
-   test_assert( mulle_array_get_size( &array) == memo_size);
-   test_assert( array._storage == memo_storage);
+   assert( mulle_array_get_guaranteed_size( &array) == 0);
+   assert( mulle_array_get_size( &array) == memo_size);
+   assert( array._storage == memo_storage);
 
-   test_assert( mulle_array_is_full( &array) == 1);
+   assert( mulle_array_is_full( &array) == 1);
    _mulle_array_grow( &array);
-   test_assert( mulle_array_is_full( &array) == 0);
+   assert( mulle_array_is_full( &array) == 0);
 
    mulle_array_done( &array);
 }
@@ -215,33 +214,33 @@ static void   find_in_range_identical( void)
    size_t                          index;
    void                            *pointer;
 
-   array = mulle_array_create( &mulle_container_keycallback_int, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_int, NULL);
 
    mulle_array_add( array, mulle_int_as_pointer( 0));
    mulle_array_add( array, mulle_int_as_pointer( 1));
    mulle_array_add( array, mulle_int_as_pointer( 2));
 
-   test_assert( 0 == mulle_pointer_as_int( mulle_array_get( array, 0)));
-   test_assert( 1 == mulle_pointer_as_int( mulle_array_get( array, 1)));
-   test_assert( 2 == mulle_pointer_as_int( mulle_array_get( array, 2)));
+   assert( 0 == mulle_pointer_as_int( mulle_array_get( array, 0)));
+   assert( 1 == mulle_pointer_as_int( mulle_array_get( array, 1)));
+   assert( 2 == mulle_pointer_as_int( mulle_array_get( array, 2)));
 
-   test_assert( mulle_array_get_count( array) == 3);
+   assert( mulle_array_get_count( array) == 3);
 
    rover = mulle_array_enumerate( array);
    mulle_arrayenumerator_next( &rover, &pointer);
    item = mulle_pointer_as_int( pointer);
-   test_assert( 0 == item);
+   assert( 0 == item);
    mulle_arrayenumerator_next( &rover, &pointer);
    item = mulle_pointer_as_int( pointer);
-   test_assert( 1 == item);
+   assert( 1 == item);
    mulle_arrayenumerator_next( &rover, &pointer);
    item = mulle_pointer_as_int( pointer);
-   test_assert( 2 == item);
+   assert( 2 == item);
 
    index = mulle_array_find_in_range_identical( array, mulle_int_as_pointer( 1), mulle_range_make( 0, 3));
-   test_assert( index == 1);
+   assert( index == 1);
    index = mulle_array_find_in_range_identical( array, mulle_int_as_pointer( 1), mulle_range_make( 0, 1));
-   test_assert( index == mulle_not_found_e);
+   assert( index == mulle_not_found_e);
    mulle_arrayenumerator_done( &rover);
    mulle_array_destroy( array);
 }
@@ -254,19 +253,19 @@ static void   array_is_equal( void)
 
    mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
 
-   test_assert( mulle_array_is_equal( NULL, NULL));
-   test_assert( ! mulle_array_is_equal( NULL, &array));
-   test_assert( ! mulle_array_is_equal( &array, NULL));
+   assert( mulle_array_is_equal( NULL, NULL));
+   assert( ! mulle_array_is_equal( NULL, &array));
+   assert( ! mulle_array_is_equal( &array, NULL));
 
    mulle_array_add( &array, "VfL");
    mulle_array_add( &array, "Bochum");
    mulle_array_add( &array, "1848");
 
    mulle_array_init( &copy, 0, &mulle_container_keycallback_copied_cstring, NULL);
-   test_assert( ! mulle_array_is_equal( &copy, &array));
+   assert( ! mulle_array_is_equal( &copy, &array));
 
    mulle_array_add_array( &copy, &array, mulle_range_make_all());
-   test_assert( mulle_array_is_equal( &copy, &array));
+   assert( mulle_array_is_equal( &copy, &array));
 
    mulle_array_done( &copy);
    mulle_array_done( &array);
@@ -283,14 +282,14 @@ static void   copy( void)
    mulle_array_add( &array, "VfL");
    mulle_array_add( &array, "Bochum");
    mulle_array_add( &array, "1848");
-   test_assert( mulle_array_get_count( &array) == 3);
+   assert( mulle_array_get_count( &array) == 3);
 
    mulle_array_init( &copy, 0, &mulle_container_keycallback_copied_cstring, NULL);
-   test_assert( mulle_array_get_count( &copy) == 0);
+   assert( mulle_array_get_count( &copy) == 0);
    mulle_array_add_array( &copy, &array, mulle_range_make_all());
-   test_assert( mulle_array_get_count( &copy) == 3);
-   test_assert( mulle_array_get_count( &array) == 3);
-   test_assert( mulle_array_is_equal( &copy, &array));
+   assert( mulle_array_get_count( &copy) == 3);
+   assert( mulle_array_get_count( &array) == 3);
+   assert( mulle_array_is_equal( &copy, &array));
 
    mulle_array_done( &copy);
    mulle_array_done( &array);
@@ -308,31 +307,31 @@ static void   find( void)
    mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
 
    found = mulle_array_find_in_range_identical( &array, "xxx", mulle_range_make( 0, 0));
-   test_assert( found == mulle_not_found_e);
+   assert( found == mulle_not_found_e);
 
    mulle_array_add( &array, s1 = "VfL");
    mulle_array_add( &array, s2 = "Bochum");
    mulle_array_add( &array, s3 = "1848");
 
    found = mulle_array_find_in_range( &array, s1, mulle_range_make( 0, 0));
-   test_assert( found ==  mulle_not_found_e);
+   assert( found ==  mulle_not_found_e);
 
    // can't happen since we use copied cstring!
    found = mulle_array_find_in_range_identical( &array, s1, mulle_range_make( 0, 3));
-   test_assert( found ==  mulle_not_found_e);
+   assert( found ==  mulle_not_found_e);
 
    found = mulle_array_find_in_range( &array, s1, mulle_range_make( 0, 3));
-   test_assert( found == 0);
+   assert( found == 0);
    found = mulle_array_find_in_range( &array, s2, mulle_range_make( 0, 3));
-   test_assert( found == 1);
+   assert( found == 1);
    found = mulle_array_find_in_range( &array, s3, mulle_range_make( 0, 3));
-   test_assert( found == 2);
+   assert( found == 2);
 
    found = mulle_array_find_in_range( &array, s3, mulle_range_make( 2, 1));
-   test_assert( found == 2);
+   assert( found == 2);
 
    found = mulle_array_find_in_range( &array, s1, mulle_range_make( 1, 0));
-   test_assert( found == mulle_not_found_e);
+   assert( found == mulle_not_found_e);
 
    mulle_array_done( &array);
 }
@@ -391,27 +390,27 @@ static void   get_in_range( void)
    mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
 
    length = mulle_array_get_in_range( &array, mulle_range_make_all(), buf);
-   test_assert( length == 0);
+   assert( length == 0);
 
    mulle_array_add( &array, "VfL");
    mulle_array_add( &array, "Bochum");
    mulle_array_add( &array, "1848");
 
    length = mulle_array_get_in_range( &array, mulle_range_make_all(), buf);
-   test_assert( length == 3);
+   assert( length == 3);
 
-   test_assert( ! strcmp( "VfL", buf[ 0]));
-   test_assert( ! strcmp( "Bochum", buf[ 1]));
-   test_assert( ! strcmp( "1848", buf[ 2]));
+   assert( ! strcmp( "VfL", buf[ 0]));
+   assert( ! strcmp( "Bochum", buf[ 1]));
+   assert( ! strcmp( "1848", buf[ 2]));
 
    length = mulle_array_get_in_range( &array, mulle_range_make( 1, 2), buf);
-   test_assert( length == 2);
+   assert( length == 2);
 
-   test_assert( ! strcmp( "Bochum", buf[ 0]));
-   test_assert( ! strcmp( "1848", buf[ 1]));
+   assert( ! strcmp( "Bochum", buf[ 0]));
+   assert( ! strcmp( "1848", buf[ 1]));
 
    length = mulle_array_get_in_range( &array, mulle_range_make( 1, 3), buf);
-   test_assert( length == 0);
+   assert( length == 0);
 
    mulle_array_done( &array);
 }
@@ -430,7 +429,7 @@ static void   run_test( void (*f)( void), char *name)
 }
 
 
-int   main(int argc, const char * argv[])
+int   main(int argc, char * argv[])
 {
    run_test( array_null, "null");
    run_test( create, "create");
@@ -448,5 +447,6 @@ int   main(int argc, const char * argv[])
    run_test( find, "find");
    run_test( enumerate, "enumerate");
    run_test( reverse_enumerate, "reverseenumerate");
+
    return( 0);
 }

@@ -48,7 +48,7 @@ MULLE_CONTAINER_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_contain
 MULLE_CONTAINER_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer;
 // notakey is NULL
 MULLE_CONTAINER_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer;
-// notakey is mulle_container_not_a_pointer_key
+// notakey is mulle_not_a_pointer
 MULLE_CONTAINER_EXTERN_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer_or_null;
 
 MULLE_CONTAINER_EXTERN_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_int;

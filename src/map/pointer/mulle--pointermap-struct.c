@@ -236,21 +236,21 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
    size_t                              key_len;
    size_t                              value_len;
    struct mulle__pointermapenumerator  rover;
-   struct mulle_pointerpair            item;
+   struct mulle_pointerpair            *item;
    struct mulle_allocator              *key_allocator;
    struct mulle_allocator              *value_allocator;
 
    result = NULL;
    len    = 0;
    rover  = mulle__pointermap_enumerate( set);
-   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
+   while( item = _mulle__pointermapenumerator_next_pair( &rover))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
       value_allocator = key_allocator;
 
-      key        = item.key;
+      key        = item->key;
       key_len    = strlen( key);
-      value      = item.value;
+      value      = item->value;
       value_len  = strlen( value);
 
       separate = result != NULL;

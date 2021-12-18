@@ -7,7 +7,8 @@
 #include <string.h>
 #include <stdio.h>
 
-
+// A mulle__rangeset is like an array of ns_ranges, where overlapping
+// ns_ranges are coalesced and removal of a ns_range may lead to splits.
 //
 // Remember: ns-range can just carry 0 to INT_MAX -1 !
 //

@@ -101,7 +101,8 @@ static inline struct mulle_allocator   *mulle_set_get_allocator( struct mulle_se
 }
 
 
-static inline struct mulle_container_keycallback   *mulle_set_get_keycallback( struct mulle_set *set)
+static inline struct mulle_container_keycallback   *
+   mulle_set_get_keycallback( struct mulle_set *set)
 {
    return( set ? set->callback : NULL);
 }
@@ -111,6 +112,13 @@ static inline unsigned int   mulle_set_get_count( struct mulle_set *set)
 {
    return( set ? _mulle__set_get_count( (struct mulle__set *) set) : 0);
 }
+
+
+static inline unsigned int   mulle_set_get_size( struct mulle__set *set)
+{
+   return( set ? _mulle__set_get_size( (struct mulle__set *) set) : 0);
+}
+
 
 
 #pragma mark - operations
@@ -175,9 +183,18 @@ static inline int   mulle_set_copy_items( struct mulle_set *dst, struct mulle_se
 
 static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 {
+   struct mulle_set   *other;
+
    if( ! set)
-      return( NULL);
-   return( (struct mulle_set *) _mulle__set_copy( (struct mulle__set *) set, set->callback, set->allocator));
+      return( set);
+
+   // can't allow creation to be done by struct mulle__set
+   other = mulle_set_create( mulle_set_get_count( set), set->callback, set->allocator);
+   _mulle__set_copy_items( (struct mulle__set *) other,
+                           (struct mulle__set *) set,
+                           set->callback,
+                           set->allocator);
+   return( other);
 }
 
 

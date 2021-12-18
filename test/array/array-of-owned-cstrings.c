@@ -39,7 +39,7 @@ static void  loops( void)
    int                                     i;
 
    // the string is given "strdup" to the array with "owned cstring"
-   array = mulle_array_create( &mulle_container_keycallback_owned_cstring, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_owned_cstring, NULL);
 
    for( i = 0; i < 10; i++)
       mulle_array_add( array, mulle_strdup( test_strings[ i]));
