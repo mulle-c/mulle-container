@@ -131,6 +131,19 @@ static inline unsigned int   mulle_map_get_count( struct mulle_map *map)
 }
 
 
+// _size for key really
+MULLE_C_NONNULL_FIRST
+static inline unsigned int   _mulle_map_get_size( struct mulle_map *map)
+{
+   return( _mulle__map_get_size( (struct mulle__map *) map));
+}
+
+static inline unsigned int   mulle_map_get_size( struct mulle_map *map)
+{
+   return( mulle__map_get_size( (struct mulle__map *) map));
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline void   *_mulle_map_get_notakey( struct mulle_map *map)
 {
@@ -328,6 +341,7 @@ static inline  int
                           struct mulle_allocator *allocator)
 {
    assert( dst->callback == src->callback);
+
    return( _mulle__map_copy_items( (struct mulle__map *) dst,
                                    (struct mulle__map *) src,
                                    dst->callback,
@@ -339,13 +353,14 @@ static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
 {
    struct mulle_map   *other;
 
+   if( ! map)
+      return( map);
    // can't allow creation to be done by struct mulle__map
    other = mulle_map_create( mulle_map_get_count( map), map->callback, map->allocator);
-   if( map)
-      _mulle__map_copy_items( (struct mulle__map *) other,
-                              (struct mulle__map *) map,
-                              map->callback,
-                              map->allocator);
+   _mulle__map_copy_items( (struct mulle__map *) other,
+                           (struct mulle__map *) map,
+                           map->callback,
+                           map->allocator);
    return( other);
 }
 

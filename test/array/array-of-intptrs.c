@@ -22,7 +22,7 @@ static void  loops( void)
    void                                   *item;
    intptr_t                                i;
 
-   array = mulle_array_create( &mulle_container_keycallback_int, NULL);
+   array = mulle_array_create( 0, &mulle_container_keycallback_int, NULL);
 
    for( i = -100; i <= 100; i++)
       mulle_array_add( array, (void *) i);

@@ -24,12 +24,14 @@ struct mulle_arrayreverseenumerator
 #### `mulle_array_create`
 
 ```
-struct mulle_array   *mulle_array_create( struct mulle_container_keycallback *callback,
+struct mulle_array   *mulle_array_create( unsigned int capacity,
+                                          struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator);
 ```
 
 Allocate and init a mulle_array. You must supply a `callback`, but you can
-pass NULL for `allocator`.
+pass NULL for `allocator`. `capacity` is the initial capacity of the array,
+it may be rounded up though.
 
 
 #### `mulle_array_destroy`
@@ -51,8 +53,8 @@ void    mulle_array_init( struct mulle_array *array,
 ```
 
 Setup array. Array will typically be stack based, if this function is called.
-`capacity` is the initial capacity of the array. `callback` must be given, but
-`allocator` may be NULL.
+`capacity` is the initial capacity of the array, it may be rounded up though.
+`callback` must be given, but `allocator` may be NULL.
 
 
 #### `mulle_array_done`

@@ -37,13 +37,14 @@
 #include "mulle-array.h"
 
 
-struct mulle_array    *mulle_array_create( struct mulle_container_keycallback *callback,
+struct mulle_array    *mulle_array_create( unsigned int capacity,
+                                           struct mulle_container_keycallback *callback,
                                            struct mulle_allocator *allocator)
 {
    struct mulle_array  *buffer;
 
    buffer = mulle_allocator_malloc( allocator, sizeof( struct mulle_array));
-   mulle_array_init( buffer, 0, callback, allocator);
+   mulle_array_init( buffer, capacity, callback, allocator);
    return( buffer);
 }
 
