@@ -49,3 +49,18 @@ struct mulle_map   *mulle_map_create( unsigned int capacity,
    return( map);
 }
 
+
+void   mulle_map_add_map( struct mulle_map *map, struct mulle_map *other)
+{
+   struct mulle_mapenumerator    rover;
+   void                          *key;
+   void                          *value;
+
+   if( ! map || map == other)
+      return;
+
+   rover = mulle_map_enumerate( other);
+   while( mulle_mapenumerator_next( &rover, &key, &value))
+      _mulle_map_set( map, key, value);
+   mulle_mapenumerator_done( &rover);
+}

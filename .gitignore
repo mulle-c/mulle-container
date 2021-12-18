@@ -6,13 +6,19 @@
 *.debug
 *.old
 *.bak
+*.*-workspace
+
 .gdb_history
 old/
 tmp/
+research/
 var/
 stacktrace/
 malloc-error/
+.vscode/
 
+TODO.md
+dox/
 
 environment-os-*.sh
 environment-host-*.sh

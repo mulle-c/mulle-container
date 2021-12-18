@@ -46,3 +46,19 @@ struct mulle_set   *mulle_set_create( unsigned int capacity,
    mulle_set_init( set, capacity, callback, allocator);
    return( set);
 }
+
+
+
+void   mulle_set_add_set( struct mulle_set *set, struct mulle_set *other)
+{
+   struct mulle_setenumerator    rover;
+   void                          *key;
+
+   if( ! set || set == other)
+      return;
+
+   rover = mulle_set_enumerate( other);
+   while( mulle_setenumerator_next( &rover, &key))
+      _mulle_set_set( set, key);
+   mulle_setenumerator_done( &rover);
+}

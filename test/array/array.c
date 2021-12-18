@@ -272,7 +272,7 @@ static void   array_is_equal( void)
 }
 
 
-static void   copy( void)
+static void   add_array( void)
 {
    struct mulle_array   array;
    struct mulle_array   copy;
@@ -292,6 +292,29 @@ static void   copy( void)
    assert( mulle_array_is_equal( &copy, &array));
 
    mulle_array_done( &copy);
+   mulle_array_done( &array);
+}
+
+
+static void   copy_array( void)
+{
+   struct mulle_array   array;
+   struct mulle_array   *copy;
+
+   mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
+
+   mulle_array_add( &array, "VfL");
+   mulle_array_add( &array, "Bochum");
+   mulle_array_add( &array, "1848");
+
+   copy = mulle_array_copy( &array);
+
+   assert( mulle_array_get_count( copy) == 3);
+   assert( mulle_array_get_count( &array) == 3);
+   assert( mulle_array_is_equal( copy, &array));
+
+   mulle_array_destroy( copy);
+
    mulle_array_done( &array);
 }
 
@@ -443,7 +466,8 @@ int   main(int argc, char * argv[])
    run_test( grow, "grow");
    run_test( find_in_range_identical, "find_in_range_identical");
    run_test( get_in_range, "get_in_range");
-   run_test( copy, "copy");
+   run_test( add_array, "add_array");
+   run_test( copy_array, "copy_array");
    run_test( find, "find");
    run_test( enumerate, "enumerate");
    run_test( reverse_enumerate, "reverseenumerate");

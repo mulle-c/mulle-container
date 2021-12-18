@@ -1,3 +1,17 @@
+# 6.0.0
+
+* new function `mulle_array_copy` for completeness
+* new function `mulle_set_add_set` for completeness
+* new function `mulle_map_add_map` for completeness
+* `mulle_array_create` gets a capacity parameter, to make it more similiar to `mulle_map_create` and `mulle_set_create`
+* `_mulle__pointermapenumerator_next_pair` now returns the pair as other pair enumerator functions do, at the expense of a larger enumerator
+* fixed `mulle_array` to also respect 'notakey'
+* added `mulle_array_remove` function
+* added `MULLE_CONTAINER_EXTERN_GLOBAL` to some functions
+* fix `notakey` sometimes not being used but NULL instead
+* add ``mulle_map_init`` and ``mulle_map_done``
+
+
 # 5.0.0
 
 * `struct mulle_range` and `mulle_not_found_e` moved to mulle-data
