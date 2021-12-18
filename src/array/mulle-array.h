@@ -417,6 +417,24 @@ static inline void
                            array->allocator);
 }
 
+
+static inline struct mulle_array   *mulle_array_copy( struct mulle_array *array)
+{
+   struct mulle_array   *other;
+
+   if( ! array)
+      return( array);
+   // can't allow creation to be done by struct mulle__map
+   other = mulle_array_create( _mulle_array_get_count( array),
+                               array->callback,
+                               array->allocator);
+   _mulle__array_copy_items( (struct mulle__array *) other,
+                             (struct mulle__array *) array,
+                             array->callback,
+                             array->allocator);
+   return( other);
+}
+
 #pragma mark - search
 
 static inline uintptr_t

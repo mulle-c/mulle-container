@@ -160,6 +160,12 @@ static inline void   *mulle_set_insert( struct mulle_set *set, void *p)
 }
 
 
+static inline void   _mulle_set_set( struct mulle_set *set, void *p)
+{
+   _mulle__set_set( (struct mulle__set *) set, p, set->callback, set->allocator);
+}
+
+
 static inline void   mulle_set_set( struct mulle_set *set, void *p)
 {
    if( set)
@@ -198,6 +204,9 @@ static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 }
 
 
+void   mulle_set_add_set( struct mulle_set *set, struct mulle_set *other);
+
+
 
 #pragma mark - debugging
 
@@ -214,6 +223,16 @@ static inline void   *mulle_set_describe( struct mulle_set *set,
 
 #pragma mark - enumerator
 
+/*
+ * struct mulle_setenumerator    rover;
+ * void                          *key;
+ *
+ * rover = mulle_set_enumerate( set);
+ * while( mulle_setenumerator_next( &rover, &key))
+ *    printf( "%s\n", key);
+ * mulle_setenumerator_done( &rover);
+ *
+ */
 #define MULLE_SETENUMERATOR_BASE   \
    MULLE__SETENUMERATOR_BASE
 

@@ -3,7 +3,7 @@
  *   Any edits will be lost.
  */
 #if defined( MULLE_ALLOCATOR_VERSION)
-# if MULLE_ALLOCATOR_VERSION < ((4 << 20) | (2 << 8) | 3)
+# if MULLE_ALLOCATOR_VERSION < ((4 << 20) | (2 << 8) | 4)
 #  error "mulle-allocator is too old"
 # endif
 # if MULLE_ALLOCATOR_VERSION >= ((5 << 20) | (0 << 8) | 0)
@@ -12,7 +12,7 @@
 #endif
 
 #if defined( MULLE_DATA_VERSION)
-# if MULLE_DATA_VERSION < ((0 << 20) | (0 << 8) | 2)
+# if MULLE_DATA_VERSION < ((0 << 20) | (0 << 8) | 3)
 #  error "mulle-data is too old"
 # endif
 # if MULLE_DATA_VERSION >= ((0 << 20) | (1 << 8) | 0)

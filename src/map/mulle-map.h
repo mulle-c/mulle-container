@@ -365,6 +365,10 @@ static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
 }
 
 
+void   mulle_map_add_map( struct mulle_map *map, struct mulle_map *other);
+
+
+
 #pragma mark - debugging
 
 static inline char *
@@ -391,6 +395,16 @@ static inline char *
 
 #pragma mark - enumeration
 
+/*
+ * struct mulle_mapenumerator    rover;
+ * void                          *key;
+ * void                          *value;
+
+ * rover = mulle_map_enumerate( map);
+ * while( mulle_mapenumerator_next( &rover, &key, &value))
+ *    printf( "%s : %s\n", key, value);
+ * mulle_mapenumerator_done( &rover);
+ */
 #define MULLE_MAPENUMERATOR_BASE    MULLE__MAPENUMERATOR_BASE
 
 

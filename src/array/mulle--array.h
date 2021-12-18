@@ -333,6 +333,13 @@ void   mulle__array_add_array( struct mulle__array *array,
                                struct mulle_allocator *allocator);
 
 MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+void _mulle__array_copy_items( struct mulle__array *dst,
+                              struct mulle__array *src,
+                              struct mulle_container_keycallback *callback,
+                              struct mulle_allocator *allocator);
+
+MULLE_CONTAINER_EXTERN_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_reset( struct mulle__array *array,
                             struct mulle_container_keycallback *callback,

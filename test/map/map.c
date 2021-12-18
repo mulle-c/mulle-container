@@ -140,6 +140,35 @@ static void   map_remove( void)
 }
 
 
+static void   map_add_map( void)
+{
+   struct mulle_map                          *map;
+   struct mulle_map                          *add;
+   struct mulle_container_keyvaluecallback   callback;
+
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+
+   map = mulle_map_create( 0, &callback, NULL);
+
+   mulle_map_set( map, "VfL", "VFL");
+   mulle_map_set( map, "Bochum", "BOCHUM");
+   mulle_map_set( map, "1848", "1848");
+
+   add = mulle_map_create( 0, &callback, NULL);
+   mulle_map_set( add, "Foo", "foo");
+   mulle_map_set( add, "VfL", "VFL");
+
+   mulle_map_add_map( map, add);
+
+   assert( mulle_map_get_count( map) == 4);
+   assert( mulle_map_get_count( add) == 2);
+
+   mulle_map_destroy( map);
+   mulle_map_destroy( add);
+}
+
+
 static void   map_copy( void)
 {
    struct mulle_map                          *map;
@@ -252,6 +281,7 @@ int   main( int argc, char * argv[])
    run_test( map_reset, "reset");
    run_test( map_remove, "remove");
    run_test( map_copy, "copy");
+   run_test( map_add_map, "add_map");
 
    return( 0);
 }
