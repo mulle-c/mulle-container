@@ -36,14 +36,16 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#define MULLE_CONTAINER_VERSION  ((5 << 20) | (0 << 8) | 0)
+#define MULLE_CONTAINER_VERSION  ((6 << 20) | (0 << 8) | 0)
 
 #include "include.h"
 
 #include "_mulle-container-provide.h"
 
-#if __has_include( "_mulle-container-versioncheck.h")
-# include "_mulle-container-versioncheck.h"
+#ifdef __has_include
+# if __has_include( "_mulle-container-versioncheck.h")
+#  include "_mulle-container-versioncheck.h"
+# endif
 #endif
 
 #endif /* mulle_container_h */

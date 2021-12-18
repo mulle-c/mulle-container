@@ -296,6 +296,41 @@ void
 }
 
 
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+void _mulle__array_copy_items( struct mulle__array *dst,
+                               struct mulle__array *src,
+                               struct mulle_container_keycallback *callback,
+                               struct mulle_allocator *allocator)
+{
+   unsigned int   n;
+   void           **p;
+   void           **sentinel;
+
+   n = mulle__array_get_count( src);
+   if( ! n)
+      return;
+
+   assert( dst != src);
+
+   _mulle__array_guarantee( dst, n, allocator);
+
+   p        = dst->_curr;
+   sentinel = dst->_curr + n;
+
+   memcpy( p, src->_storage, n * sizeof( void *));
+
+   if( _mulle_container_keycallback_retains( callback))
+      while( p < sentinel)
+      {
+         *p = (*callback->retain)( callback, *p, allocator);
+         ++p;
+      }
+
+   dst->_curr = sentinel;
+}
+
+
+
 // use this only for debugging
 char   *_mulle__array_describe( struct mulle__array *set,
                                 struct mulle_container_keycallback *callback,
