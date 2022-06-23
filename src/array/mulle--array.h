@@ -56,7 +56,7 @@ struct mulle__array
 };
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 struct mulle__array    *mulle__array_create( struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST
@@ -70,13 +70,13 @@ static inline void    _mulle__array_init( struct mulle__array *array,
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_destroy( struct mulle__array *array,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_done( struct mulle__array *array,
                            struct mulle_container_keycallback *callback,
@@ -173,7 +173,7 @@ static inline void
 
 # pragma mark - operations
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__array_remove_in_range( struct mulle__array *array,
                                       struct mulle_range location,
@@ -181,14 +181,14 @@ void   _mulle__array_remove_in_range( struct mulle__array *array,
                                       struct mulle_allocator *allocator);
 
 // convenience, that uses find in range and then remove in range
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__array_remove( struct mulle__array *array,
                              void *item,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_reset( struct mulle__array *array,
                             struct mulle_container_keycallback *callback,
@@ -197,7 +197,7 @@ void   _mulle__array_reset( struct mulle__array *array,
 
 
 // other may be NULL
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 int    _mulle__array_is_equal( struct mulle__array *array,
                                struct mulle__array *other,
@@ -229,7 +229,7 @@ void    _mulle__array_add( struct mulle__array *array,
                            struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__array_set( struct mulle__array *array,
                            unsigned int i,
@@ -325,21 +325,21 @@ void  _mulle__array_remove_last( struct mulle__array *array,
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 void   mulle__array_add_array( struct mulle__array *array,
                                struct mulle__array *other,
                                struct mulle_range range,
                                struct mulle_container_keycallback *callback,
                                struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 void _mulle__array_copy_items( struct mulle__array *dst,
                               struct mulle__array *src,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_reset( struct mulle__array *array,
                             struct mulle_container_keycallback *callback,
@@ -358,7 +358,7 @@ static inline uintptr_t
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t  _mulle__array_find_in_range( struct mulle__array *array,
                                         void *obj,
@@ -368,7 +368,7 @@ uintptr_t  _mulle__array_find_in_range( struct mulle__array *array,
 
 # pragma mark - debugging
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 char   *_mulle__array_describe( struct mulle__array *array,
                                 struct mulle_container_keycallback *callback,

@@ -1,3 +1,12 @@
+## 6.1.0
+
+* GLOBAL declaration changes for Windows
+* added function `mulle_structarray_get_first`
+* added function `mulle_structarray_get_current`
+* added function `mulle_structarray_get_allocator`
+* added function `mulle_structarray_reset`
+
+
 # 6.0.0
 
 * new function `mulle_array_copy` for completeness
