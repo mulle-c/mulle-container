@@ -1,9 +1,6 @@
-cmake_minimum_required( VERSION 3.1)
+cmake_minimum_required( VERSION 3.15)
 
 project( mulle-container C)
-
-add_definitions( -DMULLE_CONTAINER_EXTERN_GLOBAL=extern)
-
 
 
 ### mulle-sde environment

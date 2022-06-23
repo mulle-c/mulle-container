@@ -173,14 +173,14 @@ static inline int
 # pragma mark - operations
 
 // intentionally not static inline
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle_pointerpair  *
    _mulle__pointerpairarray_guarantee( struct mulle__pointerpairarray *array,
                                        unsigned int length,
                                        struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerpairarray_grow( struct mulle__pointerpairarray *array,
                                       struct mulle_allocator *allocator);
