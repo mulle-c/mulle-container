@@ -17,6 +17,7 @@ src/array/pointer
 src/array/pointerpair
 src/array/struct
 src/array/uniquepointer
+src/generic
 src/map
 src/map/pointer
 src/queue
@@ -37,7 +38,7 @@ src/reflect/_mulle-container-include-private.h
 # contents selected with patternfile ??-header--private-generic-headers
 #
 set( PRIVATE_GENERIC_HEADERS
-src/include-private.h
+src/generic/include-private.h
 )
 
 #
@@ -53,7 +54,7 @@ src/reflect/_mulle-container-versioncheck.h
 # contents selected with patternfile ??-header--public-generic-headers
 #
 set( PUBLIC_GENERIC_HEADERS
-src/include.h
+src/generic/include.h
 )
 
 #

@@ -35,13 +35,13 @@ extern struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
 
 #pragma mark - setup and teardown
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_SECOND
 struct mulle_map   *mulle_map_create( unsigned int capacity,
                                       struct mulle_container_keyvaluecallback *callback,
                                       struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle_map_init( struct mulle_map *map,
                         unsigned int capacity,

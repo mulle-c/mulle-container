@@ -88,7 +88,7 @@ static inline void  _mulle_pointerqueue_init( struct mulle_pointerqueue *queue,
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 struct mulle_pointerqueue *
    mulle_pointerqueue_create( unsigned short bucket_size,
                               unsigned short spare_allowance,

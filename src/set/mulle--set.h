@@ -47,35 +47,35 @@ struct mulle__set
 
 #pragma mark - setup and takedown
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_THIRD
 struct mulle__set   *_mulle__set_create( unsigned int capacity,
                                          size_t extra,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator) ;
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void    _mulle__set_destroy( struct mulle__set *set,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__set_init( struct mulle__set *set,
                           unsigned int capacity,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void    _mulle__set_done( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__set_reset( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,

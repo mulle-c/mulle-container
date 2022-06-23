@@ -115,6 +115,14 @@ static inline void   _mulle_structarray_reset( struct mulle_structarray *array)
 }
 
 
+static inline void   mulle_structarray_reset( struct mulle_structarray *array)
+{
+   if( array)
+      _mulle__structarray_reset( (struct mulle__structarray *) array);
+}
+
+
+
 # pragma mark - petty accessors
 
 MULLE_C_NONNULL_FIRST
@@ -220,6 +228,13 @@ static inline struct mulle_allocator  *
 }
 
 
+static inline struct mulle_allocator  *
+   mulle_structarray_get_allocator( struct mulle_structarray *array)
+{
+   return( array ? array->allocator : NULL);
+}
+
+
 // use in conjunction with guarantee only
 MULLE_C_NONNULL_FIRST
 static inline void *
@@ -229,12 +244,28 @@ static inline void *
 }
 
 
+static inline void *
+   mulle_structarray_get_current( struct mulle_structarray *array)
+{
+   return( array ? _mulle__structarray_get_current( (struct mulle__structarray *) array) : NULL);
+}
+
+
+
 MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_get_first( struct mulle_structarray *array)
 {
    return( _mulle__structarray_get_first( (struct mulle__structarray *) array));
 }
+
+
+static inline void *
+   mulle_structarray_get_first( struct mulle_structarray *array)
+{
+   return( array  ? _mulle__structarray_get_first( (struct mulle__structarray *) array) : NULL);
+}
+
 
 
 // use get to set as well

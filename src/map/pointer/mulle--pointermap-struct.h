@@ -66,7 +66,7 @@ struct mulle__pointermap
 };
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback;
 
 
@@ -94,28 +94,28 @@ static inline unsigned int   mulle__pointermap_hash_for_size( uintptr_t  hash,
 #pragma mark - setup and takedown
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
                                    struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_init( struct mulle__pointermap *map,
                                 unsigned int capacity,
                                 struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_done( struct mulle__pointermap *map,
                                 struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                  struct mulle_allocator *allocator);
@@ -187,12 +187,12 @@ static inline unsigned int   mulle__pointermap_get_size( struct mulle__pointerma
 // call this after remove operations, to make enumerations quicker and
 // conserve memory
 //
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void  _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
                                            struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__pointermap_get( struct mulle__pointermap *map,
                                 void *key);
@@ -215,12 +215,12 @@ static inline void   *mulle__pointermap_get( struct mulle__pointermap *map,
 // The intended use is for iterating over and deleting contents. This could be
 // fairly efficient, but its untested.
 //
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__pointermap *map,
                                                              struct mulle_pointerpair *space);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map,
                                                    void *firstvalue,
@@ -231,13 +231,13 @@ void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map
 
 # pragma mark - copy
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
                                      struct mulle__pointermap *src,
                                      struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *set,
                                                      struct mulle_allocator *allocator);
@@ -245,7 +245,7 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 
 # pragma mark - debugging
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
                                      struct mulle_allocator *allocator);

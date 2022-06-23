@@ -130,21 +130,21 @@ static inline void
    assert( callback->describe);
 }
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 int         mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 void        _mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 uintptr_t
    mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *ignore,
                                              void *s);
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 int
    mulle_container_keycallback_cstring_is_equal( struct mulle_container_keycallback *ignore,
                                                  void *a,
@@ -195,13 +195,13 @@ static inline void   assert_mulle_container_valuecallback( struct mulle_containe
 
 
 // define a few functions conveniently with the typedef
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 mulle_container_valuecallback_retain_t      mulle_container_valuecallback_self;
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 mulle_container_valuecallback_release_t     mulle_container_valuecallback_nop;
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t    mulle_container_valuecallback_no_description;
 
 /*
@@ -210,26 +210,26 @@ void   mulle_container_valuecallback_nop( struct mulle_container_valuecallback *
 char   *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator **p_allocator);
 */
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 void   mulle_container_valuecallback_pointer_free( struct mulle_container_valuecallback *callback,
                                                    void *p,
                                                    struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_int_describe;
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_intptr_describe;
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_pointer_describe;
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_cstring_describe;
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 char *
    mulle_container_callback_cstring_copy( struct mulle_container_valuecallback  *callback,
                                           void *s,

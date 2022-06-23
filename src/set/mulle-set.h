@@ -61,12 +61,12 @@ struct mulle_set
    MULLE_SET_BASE;
 };
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 struct mulle_set   *mulle_set_create( unsigned int capacity,
                                       struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 void   mulle_set_init( struct mulle_set *set,
                        unsigned int capacity,
                        struct mulle_container_keycallback *callback,

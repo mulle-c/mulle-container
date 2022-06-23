@@ -53,7 +53,7 @@ static inline void   _mulle__rangeset_done( struct mulle__rangeset *p,
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_reset( struct mulle__rangeset *p,
                                struct mulle_allocator *allocator);
@@ -112,7 +112,7 @@ static inline uintptr_t   _mulle__rangeset_sum_lengths( struct mulle__rangeset *
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t   _mulle__rangeset_sum_lengths_range( struct mulle__rangeset *p,
                                                 struct mulle_range range);
@@ -132,60 +132,60 @@ static inline void   _mulle__rangeset_shrink_to_fit( struct mulle__rangeset *p,
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   __mulle__rangeset_insert( struct mulle__rangeset *p,
                                  struct mulle_range range,
                                  struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   __mulle__rangeset_remove( struct mulle__rangeset *p,
                                  struct mulle_range range,
                                  struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert( struct mulle__rangeset *p,
                                 struct mulle_range range,
                                 struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_remove( struct mulle__rangeset *p,
                                 struct mulle_range range,
                                 struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_grow( struct mulle__rangeset *p,
                               struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert( struct mulle__rangeset *p,
                                 struct mulle_range range,
                                 struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 int   _mulle__rangeset_contains( struct mulle__rangeset *p,
                                  struct mulle_range range);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 int   _mulle__rangeset_intersects( struct mulle__rangeset *p,
                                    struct mulle_range range);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_remove( struct mulle__rangeset *p,
                                 struct mulle_range range,
                                 struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_fprint( struct mulle__rangeset *set, FILE *fp);
 
@@ -197,14 +197,14 @@ static inline void   _mulle__rangeset_print( struct mulle__rangeset *set)
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert_ranges( struct mulle__rangeset *p,
                                        struct mulle_range *ranges,
                                        uintptr_t n,
                                        struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_remove_ranges( struct mulle__rangeset *p,
                                        struct mulle_range *ranges,
@@ -234,7 +234,7 @@ static inline void   _mulle__rangeset_remove_rangeset( struct mulle__rangeset *p
 // returns 0 on success, -1 for underflow (no changes) and +1 for overflow
 // (no changes)
 //
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 int   _mulle__rangeset_shift( struct mulle__rangeset *p,
                               uintptr_t location,
@@ -251,7 +251,7 @@ enum mulle_rangeset_searchoperation
 };
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t   _mulle__rangeset_search( struct mulle__rangeset *p,
                                      uintptr_t location,

@@ -225,7 +225,7 @@ static inline int
 
 # pragma mark - memory operations
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void **  _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
                                          unsigned int length,
@@ -242,7 +242,7 @@ static inline void **
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_grow( struct mulle__pointerarray *array,
                                   struct mulle_allocator *allocator);
@@ -256,7 +256,7 @@ void   mulle__pointerarray_grow( struct mulle__pointerarray *array,
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_compact( struct mulle__pointerarray *array,
                                      void *notakey);
@@ -360,7 +360,7 @@ static inline void
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
                                              struct mulle_range range);
@@ -445,7 +445,7 @@ static inline unsigned int
 // return value is the index of a compacted array, but it doesn't compact
 // yet
 //
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t   _mulle__pointerarray_find_in_range( struct mulle__pointerarray *array,
                                                 void *p,
@@ -529,7 +529,7 @@ static inline void   *
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle_pointers
    _mulle__pointerarray_extract_pointers( struct mulle__pointerarray *buffer,

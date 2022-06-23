@@ -44,7 +44,7 @@ static inline void   _mulle__structarray_init( struct mulle__structarray *array,
                                                unsigned int capacity,
                                                struct mulle_allocator *allocator)
 {
-   MULLE_CONTAINER_EXTERN_GLOBAL
+   MULLE_CONTAINER_GLOBAL
    void   _mulle__structarray_sizeto( struct mulle__structarray *array,
                                       unsigned int new_size,
                                       struct mulle_allocator *allocator);
@@ -227,7 +227,7 @@ static inline void
                             void *item,
                             struct mulle_allocator *allocator)
 {
-   MULLE_CONTAINER_EXTERN_GLOBAL
+   MULLE_CONTAINER_GLOBAL
    void   _mulle__structarray_grow( struct mulle__structarray *array,
                                     struct mulle_allocator *allocator);
 
@@ -241,7 +241,7 @@ static inline void
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__structarray_guarantee( struct mulle__structarray *array,
                                        unsigned int length,
@@ -282,7 +282,7 @@ static inline void
    _mulle__structarray_size_to_fit( struct mulle__structarray *array,
                                     struct mulle_allocator *allocator)
 {
-   MULLE_CONTAINER_EXTERN_GLOBAL
+   MULLE_CONTAINER_GLOBAL
    void   _mulle__structarray_sizeto( struct mulle__structarray *array,
                                       unsigned int new_size,
                                       struct mulle_allocator *allocator);

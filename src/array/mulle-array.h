@@ -87,7 +87,7 @@ static inline void   mulle_array_done( struct mulle_array *array)
 }
 
 
-MULLE_CONTAINER_EXTERN_GLOBAL
+MULLE_CONTAINER_GLOBAL
 struct mulle_array    *
    mulle_array_create( unsigned int capacity,
                        struct mulle_container_keycallback *callback,
