@@ -14,7 +14,7 @@ Some data structures utilize callbacks that are compatible to OS X's
 
 | Release Version
 |-----------------------------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)
+| [![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release)](//github.com/mulle-c/mulle-container/tree/release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)
 
 
 ## Aspects
