@@ -14,7 +14,7 @@ Some data structures utilize callbacks that are compatible to OS X's
 
 | Release Version
 |-----------------------------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](https://github.com/mulle-c/mulle-container/actions)
+| ![Mulle kybernetiK tag](//img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](//github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)
 
 
 ## Aspects
@@ -125,9 +125,9 @@ that is prefixed with the name of the data structure it handles. So for example
 the `get` function for `mulle_array` is `mulle_array_get`. The first parameter,
 - except for creation functions - is always the container itself.
 
-Check out [SYNTAX.md](dox/SYNTAX.md) for a somewhat formal
-explanation and [VERBS.md](dox/VERBS.md) for a list of common verbs being
-employed.
+Check out [SYNTAX.md](//github.come/mulle-c/mulle-c11/dox/SYNTAX.md) for a somewhat
+formal explanation and [VERBS.md](dox/VERBS.md) for a list of common verbs
+being employed.
 
 The various functions `assert` their parameters, but when compiled for release
 there are no runtime checks. For development it is wise to use a debug version
@@ -462,7 +462,7 @@ Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container and
 
 ```
 mulle-sde install --prefix /usr/local \
-   https://github.com/mulle-c/mulle-container/archive/latest.tar.gz
+   //github.com/mulle-c/mulle-container/archive/latest.tar.gz
 ```
 
 ### Manual Installation
