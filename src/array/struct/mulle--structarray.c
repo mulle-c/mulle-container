@@ -9,8 +9,8 @@ struct mulle__structarrayenumerator          mulle__structarrayenumerator_empty;
 struct mulle__structarrayreverseenumerator   mulle__structarrayreverseenumerator_empty;
 
 void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
-                                         size_t new_size,
-                                         struct mulle_allocator *allocator)
+                                          size_t new_size,
+                                          struct mulle_allocator *allocator)
 {
    size_t   old_index;
 
@@ -18,9 +18,26 @@ void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
    if( new_size < old_index)
       abort();
 
-   array->_storage  = mulle_allocator_realloc( allocator,
-                                               array->_storage,
-                                               new_size);
+   // if we have an initial storage
+   if( array->_initial_storage)
+   {
+      // and we would still fit, ignore request
+      if( new_size <= _mulle__structarray_get_size( array))
+         return;
+
+      // otherwise we need to malloc, now
+      array->_storage  = mulle_allocator_malloc( allocator,
+                                                 new_size);
+      memcpy( array->_storage,
+              array->_initial_storage,
+              _mulle__structarray_get_used_as_length( array));
+
+      array->_initial_storage = NULL;
+   }
+   else
+      array->_storage  = mulle_allocator_realloc( allocator,
+                                                  array->_storage,
+                                                  new_size);
 
    array->_curr     = &((char *) array->_storage)[ old_index];
    array->_sentinel = &((char *) array->_storage)[ new_size];

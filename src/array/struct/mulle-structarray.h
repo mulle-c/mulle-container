@@ -66,6 +66,47 @@ static inline void   mulle_structarray_init( struct mulle_structarray *array,
 }
 
 
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_structarray_init_with_static_storage( struct mulle_structarray *array,
+                                                 size_t _sizeof_struct,
+                                                 unsigned int alignof_struct,
+                                                 unsigned int count,
+                                                 void  *storage,
+                                                 struct mulle_allocator *allocator)
+{
+   _mulle__structarray_init_with_static_storage( (struct mulle__structarray *) array,
+                                                  _sizeof_struct,
+                                                  alignof_struct,
+                                                  count,
+                                                  storage,
+                                                  allocator);
+
+   array->allocator = allocator;
+}
+
+
+static inline void
+   mulle_structarray_init_with_static_storage( struct mulle_structarray *array,
+                                               size_t _sizeof_struct,
+                                               unsigned int alignof_struct,
+                                               unsigned int count,
+                                               void  *storage,
+                                               struct mulle_allocator *allocator)
+{
+   if(  array)
+   {
+      _mulle__structarray_init_with_static_storage( (struct mulle__structarray *) array,
+                                                    _sizeof_struct,
+                                                    alignof_struct,
+                                                    count,
+                                                    storage, //  NULL storage is OK, so useless
+                                                    allocator);
+      array->allocator = allocator;
+   }
+}
+
+
 
 static inline struct mulle_structarray *
    mulle_structarray_create( size_t _sizeof_struct,
@@ -215,6 +256,16 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_reserve( struct mulle_structarray *array)
 {
+   return( _mulle__structarray_reserve( (struct mulle__structarray *) array,
+                                         array->allocator));
+}
+
+
+static inline void *
+   mulle_structarray_reserve( struct mulle_structarray *array)
+{
+   if( ! array)
+      return( NULL);
    return( _mulle__structarray_reserve( (struct mulle__structarray *) array,
                                          array->allocator));
 }
