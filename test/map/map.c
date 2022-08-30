@@ -36,7 +36,11 @@ static void   create( void)
 
 static void   map_null( void)
 {
-   struct mulle_container_keyvaluecallback      callback;
+   struct mulle_container_keyvaluecallback   callback;
+   struct mulle_mapenumerator                rover;
+   int                                       rval;
+   void                                      *key;
+   void                                      *value;
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
@@ -49,6 +53,15 @@ static void   map_null( void)
    assert( mulle_map_get_size( NULL) == 0);
 
    mulle_map_remove( NULL, "bar");
+
+   assert( mulle_map_get_count( NULL) == 0);
+
+   rover = mulle_map_enumerate( NULL);
+   rval  = mulle_mapenumerator_next( &rover, &key, &value);
+   assert( rval == 0);
+   assert( key == mulle_map_get_notakey( NULL));
+   assert( ! value);
+   mulle_mapenumerator_done( &rover);
 
    mulle_map_done( NULL);
 }
