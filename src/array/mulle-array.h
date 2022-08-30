@@ -247,13 +247,11 @@ static inline void
 static inline void   mulle_array_remove_in_range( struct mulle_array *array,
                                                   struct mulle_range range)
 {
-   if( ! array)
-      return;
-
-   _mulle__array_remove_in_range( (struct mulle__array *) array,
-                                  range,
-                                  array->callback,
-                                  array->allocator);
+   if( array)
+      _mulle__array_remove_in_range( (struct mulle__array *) array,
+                                     range,
+                                     array->callback,
+                                     array->allocator);
 }
 
 
@@ -270,13 +268,11 @@ static inline void   _mulle_array_remove( struct mulle_array *array,
 static inline void   mulle_array_remove( struct mulle_array *array,
                                          void *item)
 {
-   if( ! array)
-      return;
-
-   _mulle__array_remove( (struct mulle__array *) array,
-                         item,
-                         array->callback,
-                         array->allocator);
+   if( array)
+      _mulle__array_remove( (struct mulle__array *) array,
+                            item,
+                            array->callback,
+                            array->allocator);
 }
 
 
@@ -292,10 +288,8 @@ static inline void   _mulle_array_reset( struct mulle_array *array)
 
 static inline void   mulle_array_reset( struct mulle_array *array)
 {
-   if( ! array)
-      return;
-
-   _mulle_array_reset( array);
+   if( array)
+      _mulle_array_reset( array);
 }
 
 
@@ -316,13 +310,11 @@ static inline int   mulle_array_is_equal( struct mulle_array *array,
 static inline void    mulle_array_add( struct mulle_array *array,
                                        void  *p)
 {
-   if( ! array)
-      return;
-
-   _mulle__array_add( (struct mulle__array *) array,
-                      p,
-                      array->callback,
-                      array->allocator);
+   if( array)
+      _mulle__array_add( (struct mulle__array *) array,
+                         p,
+                         array->callback,
+                         array->allocator);
 }
 
 
@@ -396,12 +388,10 @@ static inline void   *mulle_array_get_last( struct mulle_array *array)
 
 static inline void   mulle_array_remove_last( struct mulle_array *array)
 {
-   if( ! array)
-      return;
-
-   _mulle__array_remove_last( (struct mulle__array *) array,
-                              array->callback,
-                              array->allocator);
+   if( array)
+      _mulle__array_remove_last( (struct mulle__array *) array,
+                                 array->callback,
+                                 array->allocator);
 }
 
 static inline void
@@ -423,7 +413,8 @@ static inline struct mulle_array   *mulle_array_copy( struct mulle_array *array)
    struct mulle_array   *other;
 
    if( ! array)
-      return( array);
+      return( NULL);
+
    // can't allow creation to be done by struct mulle__map
    other = mulle_array_create( _mulle_array_get_count( array),
                                array->callback,
@@ -529,7 +520,10 @@ static inline struct mulle_arrayenumerator
 {
    struct mulle__arrayenumerator   tmp;
 
-   tmp = mulle__array_enumerate( (struct mulle__array *) array, array->callback);
+   if( ! array)
+      tmp = mulle__arrayenumerator_empty;
+   else
+      tmp = mulle__array_enumerate( (struct mulle__array *) array, array->callback);
    return( *(struct mulle_arrayenumerator *) &tmp);
 }
 

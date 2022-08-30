@@ -205,3 +205,41 @@ struct mulle_pointers
 
    return( data);
 }
+
+
+
+void  _mulle__pointerarray_absorb( struct mulle__pointerarray *array,
+                                   struct mulle_allocator *allocator,
+                                   struct mulle__pointerarray *victim,
+                                   struct mulle_allocator *victim_allocator)
+{
+   struct mulle__pointerarrayenumerator   rover;
+   void                                   **reserved;
+   unsigned int                           n;
+
+   if( ! allocator)
+      allocator = &mulle_default_allocator;
+   if( ! victim_allocator)
+      victim_allocator = &mulle_default_allocator;
+
+   if( ! array->_storage && allocator == victim_allocator)
+   {
+      array->_initial_storage = NULL;
+      array->_storage         = victim->_storage;
+      array->_sentinel        = victim->_sentinel;
+      array->_curr            = victim->_curr;
+
+      // wipe victim, but keep victim initial storage
+      victim->_storage  = NULL;
+      victim->_sentinel = NULL;
+      victim->_curr     = NULL;
+      return;
+   }
+
+   n        = _mulle__pointerarray_get_count( victim);
+   reserved = _mulle__pointerarray_advance( array, n, allocator);
+   memcpy( reserved, victim->_storage, sizeof( void *) * n);
+
+   // clean out victim
+   _mulle__pointerarray_reset( victim);
+}

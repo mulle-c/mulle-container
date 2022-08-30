@@ -14,6 +14,35 @@
 #include <stdio.h>
 
 
+static void  null( void)
+{
+   struct mulle_pointerarray                    *array;
+   struct mulle_pointerarrayenumerator           rover;
+   struct mulle_pointerarrayreverseenumerator    rerover;
+   void                                          *item;
+
+   array = NULL;
+
+   mulle_pointerarray_add( array, "VfL");
+   mulle_pointerarray_add( array, "Bochum");
+   mulle_pointerarray_add( array, "1848");
+
+   assert( mulle_pointerarray_get_count( array) == 0);
+
+   rover = mulle_pointerarray_enumerate( array);
+   _mulle_pointerarrayenumerator_next( &rover, &item);
+   assert( ! item);
+   mulle_pointerarrayenumerator_done( &rover);
+
+   rerover = mulle_pointerarray_reverseenumerate( array);
+   _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
+   assert( ! item);
+   mulle_pointerarrayreverseenumerator_done( &rerover);
+
+   mulle_pointerarray_destroy( array);
+}
+
+
 static void  simple( void)
 {
    struct mulle_pointerarray                    *array;
@@ -96,6 +125,7 @@ static void  run_test( void (*f)( void), char *name)
 
 int main(int argc, const char * argv[])
 {
+   run_test( null, "null");
    run_test( simple, "simple");
    run_test( grow, "grow");
    return( 0);

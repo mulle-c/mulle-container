@@ -151,6 +151,25 @@ static inline void  mulle__pointerarray_destroy( struct mulle__pointerarray *arr
 }
 
 
+//
+// this will call "done" on array, then suck the victimless itemless
+// TODO: rename to eviscarate ?
+void   _mulle__pointerarray_absorb( struct mulle__pointerarray *array,
+                                    struct mulle_allocator *allocator,
+                                    struct mulle__pointerarray *victim,
+                                    struct mulle_allocator *victim_allocator);
+
+
+static inline void   mulle__pointerarray_absorb( struct mulle__pointerarray *array,
+                                                 struct mulle_allocator *allocator,
+                                                 struct mulle__pointerarray *victim,
+                                                 struct mulle_allocator *victim_allocator)
+{
+   if( array && victim)
+      _mulle__pointerarray_absorb( array, allocator, victim, victim_allocator);
+}
+
+
 # pragma mark - petty accessors
 
 
@@ -614,11 +633,11 @@ static inline int
    void   *dummy;
 
    if( ! item)
-       item = &dummy;
+      item = &dummy;
    if( rover)
       return( _mulle__pointerarrayenumerator_next( rover, item));
-   *item = *rover->_curr;
-   return( 1);
+   *item = NULL;
+   return( 0);
 }
 
 
@@ -716,8 +735,8 @@ static inline int
        item = &dummy;
    if( rover)
       return( _mulle__pointerarrayreverseenumerator_next( rover, item));
-   *item = *rover->_curr;
-   return( 1);
+   *item = NULL;
+   return( 0);
 }
 
 

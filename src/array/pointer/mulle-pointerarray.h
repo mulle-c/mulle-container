@@ -112,11 +112,33 @@ static inline struct mulle_pointerarray *
    return( array);
 }
 
+
 static inline void   mulle_pointerarray_destroy( struct mulle_pointerarray *array)
 {
    if( array)
       mulle__pointerarray_destroy( (struct mulle__pointerarray *) array,
-                                   array->allocator);
+                                    array->allocator);
+}
+
+
+static inline void  _mulle_pointerarray_absorb( struct mulle_pointerarray *array,
+                                                struct mulle_pointerarray *victim)
+{
+   _mulle__pointerarray_absorb( (struct mulle__pointerarray *) array,
+                                array->allocator,
+                                (struct mulle__pointerarray *) victim,
+                                victim->allocator);
+}
+
+
+// the victim is empty afterwards, owner ship of contents has transferred to
+// array...
+
+static inline void   mulle_pointerarray_absorb( struct mulle_pointerarray *array,
+                                                struct mulle_pointerarray *victim)
+{
+   if( array && victim)
+      _mulle_pointerarray_absorb( array, victim);
 }
 
 
@@ -215,9 +237,11 @@ static inline void **
    mulle_pointerarray_guarantee( struct mulle_pointerarray *array,
                                  unsigned int length)
 {
-   return( mulle__pointerarray_guarantee( (struct mulle__pointerarray *) array,
-                                          length,
-                                          array->allocator));
+   if( ! array)
+      return( NULL);
+   return( _mulle__pointerarray_guarantee( (struct mulle__pointerarray *) array,
+                                           length,
+                                           array->allocator));
 }
 
 
@@ -244,8 +268,9 @@ static inline void
 static inline void
    mulle_pointerarray_grow( struct mulle_pointerarray *array)
 {
-   mulle__pointerarray_grow( (struct mulle__pointerarray *) array,
-                              array->allocator);
+   if( array)
+      _mulle__pointerarray_grow( (struct mulle__pointerarray *) array,
+                                 array->allocator);
 }
 
 
@@ -257,6 +282,7 @@ static inline void
 {
    _mulle__pointerarray_compact( (struct mulle__pointerarray *) array, notakey);
 }
+
 
 static inline void
    mulle_pointerarray_compact( struct mulle_pointerarray *array,
@@ -291,9 +317,10 @@ static inline void
 static inline void
    mulle_pointerarray_add( struct mulle_pointerarray *array, void  *p)
 {
-   mulle__pointerarray_add( (struct mulle__pointerarray *) array,
-                             p,
-                             array->allocator);
+   if( array)
+      _mulle__pointerarray_add( (struct mulle__pointerarray *) array,
+                                 p,
+                                 array->allocator);
 }
 
 
@@ -323,6 +350,26 @@ static inline void  *
    mulle_pointerarray_get_last( struct mulle_pointerarray *array)
 {
    return( mulle__pointerarray_get_last( (struct mulle__pointerarray *) array));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline
+void   _mulle_pointerarray_remove_in_range( struct mulle_pointerarray *array,
+                                            struct mulle_range range)
+{
+   _mulle__pointerarray_remove_in_range( (struct mulle__pointerarray *) array,
+                                         range);
+}
+
+
+static inline
+void
+   mulle_pointerarray_remove_in_range( struct mulle_pointerarray *array,
+                                       struct mulle_range range)
+{
+   if( array)
+      _mulle_pointerarray_remove_in_range( array, range);
 }
 
 

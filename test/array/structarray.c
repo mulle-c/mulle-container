@@ -23,6 +23,41 @@ struct demo_struct
 
 #define LOOPS   2
 
+static void  null( void)
+{
+   char                                       *s;
+   struct demo_struct                         *a;
+   struct demo_struct                         space;
+   struct mulle_structarray                   *array;
+   struct mulle_structarrayenumerator         rover;
+   struct mulle_structarrayreverseenumerator  rrover;
+   unsigned int                               i;
+   void                                       *item;
+
+   array = NULL;
+
+   assert( mulle_structarray_get_last( array) == NULL);
+
+   a = mulle_structarray_reserve( array);
+   assert( a == NULL);
+   mulle_structarray_add( array, a);
+   assert( mulle_structarray_get_last( array) == NULL);
+
+   rover = mulle_structarray_enumerate( array);
+   if( _mulle_structarrayenumerator_next( &rover, (void **) &a))
+      abort();
+   mulle_structarrayenumerator_done( &rover);
+
+   rrover = mulle_structarray_reverseenumerate( array);
+   if( _mulle_structarrayreverseenumerator_next( &rrover, (void **) &a))
+      abort();
+   mulle_structarrayreverseenumerator_done( &rrover);
+
+   mulle_structarray_destroy( array);
+}
+
+
+
 static void  simple( void)
 {
    char                                       *s;
@@ -102,6 +137,7 @@ static void  run_test( void (*f)( void), char *name)
 
 int main(int argc, const char * argv[])
 {
+   run_test( null, "null");
    run_test( simple, "simple");
    return( 0);
 }

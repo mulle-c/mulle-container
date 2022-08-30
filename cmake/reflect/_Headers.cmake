@@ -63,6 +63,7 @@ src/generic/include.h
 set( PUBLIC_HEADERS
 src/array/mulle--array.h
 src/array/mulle-array.h
+src/array/mulle-flexarray.h
 src/array/pointer/mulle--pointerarray.h
 src/array/pointer/mulle-pointerarray.h
 src/array/pointerpair/mulle--pointerpairarray.h

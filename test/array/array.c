@@ -118,6 +118,33 @@ static void   array_remove( void)
 }
 
 
+static void   null( void)
+{
+   struct mulle_array              *array;
+   struct mulle_arrayenumerator    rover;
+   void                            *item;
+
+   array = NULL;
+   mulle_array_add( array, "VfL");
+   assert( mulle_array_get_count( array) == 0);
+
+   mulle_array_add( array, "Bochum");
+   mulle_array_add( array, "1848");
+
+   assert( mulle_array_get_count( array) == 0);
+
+   rover = mulle_array_enumerate( array);
+   mulle_arrayenumerator_next( &rover, &item);
+   assert( item == NULL);
+   assert( ! mulle_arrayenumerator_next( &rover, &item));
+   mulle_arrayenumerator_done( &rover);
+
+   mulle_array_remove_last( array);
+   assert( mulle_array_get_count( array) == 0);
+
+   mulle_array_destroy( array);
+}
+
 
 static void   simple( void)
 {
@@ -458,6 +485,7 @@ int   main(int argc, char * argv[])
    run_test( create, "create");
    run_test( init, "init");
    run_test( array_remove, "remove");
+   run_test( null, "null");
    run_test( simple, "simple");
    run_test( guarantee, "guarantee");
    run_test( ephemeral, "ephemeral");
