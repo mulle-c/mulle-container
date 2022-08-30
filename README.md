@@ -443,7 +443,7 @@ _mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keyc
 
 Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
 
-```
+``` sh
 mulle-sde dependency add --c --github mulle-c mulle-container
 ```
 
@@ -462,7 +462,7 @@ Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container and
 
 ```
 mulle-sde install --prefix /usr/local \
-   //github.com/mulle-c/mulle-container/archive/latest.tar.gz
+   https://github.com/mulle-c/mulle-container/archive/latest.tar.gz
 ```
 
 ### Manual Installation
@@ -477,15 +477,13 @@ Requirements                                             | Description
 
 Install into `/usr/local`:
 
-```
-mkdir build 2> /dev/null
-(
-   cd build ;
-   cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
-         -DCMAKE_PREFIX_PATH=/usr/local \
-         -DCMAKE_BUILD_TYPE=Release .. ;
-   make install
-)
+``` sh
+cmake -B build \
+      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      -DCMAKE_PREFIX_PATH=/usr/local \
+      -DCMAKE_BUILD_TYPE=Release &&
+cmake --build build --config Release &&
+cmake --install build --config Release
 ```
 
 

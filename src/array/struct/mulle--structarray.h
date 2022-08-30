@@ -18,6 +18,7 @@
    void     *_storage;          \
    void     *_curr;             \
    void     *_sentinel;         \
+   void     *_initial_storage;  \
    size_t   _sizeof_struct
 
 struct mulle__structarray
@@ -49,16 +50,36 @@ static inline void   _mulle__structarray_init( struct mulle__structarray *array,
                                       unsigned int new_size,
                                       struct mulle_allocator *allocator);
 
-   array->_storage       = NULL;
-   array->_curr          = NULL;
-   array->_sentinel      = NULL;
-   array->_sizeof_struct = (size_t) (_sizeof_struct + (_sizeof_struct % alignof_struct));
+   array->_storage         = NULL;
+   array->_curr            = NULL;
+   array->_sentinel        = NULL;
+   array->_initial_storage = NULL;
+   array->_sizeof_struct   = (size_t) (_sizeof_struct + (_sizeof_struct % alignof_struct));
 
    assert( array->_sizeof_struct);
 
    if( capacity)
       _mulle__structarray_sizeto( array, capacity, allocator);
 }
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   _mulle__structarray_init_with_static_storage( struct mulle__structarray *array,
+                                                                  size_t _sizeof_struct,
+                                                                  unsigned int alignof_struct,
+                                                                  unsigned int count,
+                                                                  void  *storage,
+                                                                  struct mulle_allocator *allocator)
+{
+   array->_storage         = storage;
+   array->_curr            = storage;
+   array->_sentinel        = &((char *) array->_storage)[ count];
+   array->_initial_storage = storage;
+   array->_sizeof_struct   = (size_t) (_sizeof_struct + (_sizeof_struct % alignof_struct));
+
+   assert( array->_sizeof_struct);
+}
+
 
 
 static inline struct mulle__structarray *
@@ -79,7 +100,8 @@ MULLE_C_NONNULL_FIRST
 static inline void  _mulle__structarray_done( struct mulle__structarray *array,
                                               struct mulle_allocator *allocator)
 {
-   mulle_allocator_free( allocator, array->_storage);
+   if( ! array->_initial_storage)
+      mulle_allocator_free( allocator, array->_storage);
 }
 
 
