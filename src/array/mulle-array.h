@@ -47,6 +47,11 @@
 // You can not insert callback->notakey and you will get back callback->notakey
 // if a value doesn't exist.
 //
+// You can use the mulle_container_keycallback_int callbacks to store "int"
+// into mulle-array and use mulle_int_as_pointer() and mulle_pointer_as_int()
+// to convert them for mulle-arrayconsumption. But it's much better and more
+// efficient to use mulle-structarray for this.
+//
 #define MULLE_ARRAY_BASE                           \
    MULLE__ARRAY_BASE;                              \
    struct mulle_container_keycallback   *callback; \
@@ -57,7 +62,6 @@ struct mulle_array
 {
    MULLE_ARRAY_BASE;
 };
-
 
 
 
@@ -484,8 +488,7 @@ static inline int   mulle_array_member( struct mulle_array *array,
 #pragma mark - enumeration
 
 /*
- *  Enumeration is likely to fail, if the array gets manipulated in the
- *  loop.
+ *  If the array gets manipulated in the loop, enumeration will likely fail.
  *
  *  struct mulle_arrayenumerator   rover;
  *  void                           *item;
@@ -495,6 +498,12 @@ static inline int   mulle_array_member( struct mulle_array *array,
  *     printf( "%s\n", (char *) item);
  *  mulle_arrayenumerator_done( &rover);
  *
+ * or use
+ *
+ *  char   *item;
+ *
+ *  mulle_array_for( array, item)
+ *     printf( "%s\n", item);
  */
 #define MULLE_ARRAYENUMERATOR_BASE   MULLE__ARRAYENUMERATOR_BASE
 
@@ -571,6 +580,13 @@ static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *r
  *  mulle_arrayreverseenumerator_done( &rover);
  *  printf( "\n");
  *
+ *
+ * or use
+ *
+ *  char   *item;
+ *
+ *  mulle_array_for_reverse( array, item)
+ *     printf( "%s\n", item);
  */
 #define MULLE_ARRAYREVERSENUMERATOR_BASE   MULLE__ARRAYREVERSEENUMERATOR_BASE
 
@@ -633,6 +649,19 @@ static inline void
    mulle_arrayreverseenumerator_done( struct mulle_arrayreverseenumerator *rover)
 {
 }
+
+
+//
+// sizeof( item) must be sizeof( void *)
+//
+#define mulle_array_for( array, item)                                                 \
+   for( struct mulle_arrayenumerator rover__ ## item = mulle_array_enumerate( array); \
+        _mulle_arrayenumerator_next( &rover__ ## item, (void **) &item);)
+
+#define mulle_array_for_reverse( array, item)                                                       \
+   for( struct mulle_arrayreverseenumerator rover__ ## item = mulle_array_reverseenumerate( array); \
+        _mulle_arrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
+
 
 #endif /* mulle_array_h */
 

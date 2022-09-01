@@ -121,6 +121,15 @@ static void  enumerate( void)
    assert( ! mulle_setenumerator_next( &rover, &key));
    mulle_setenumerator_done( &rover);
 
+   // more or less just a syntax check
+   i = 0;
+   mulle_set_for( set, key)
+   {
+      assert( key);
+      ++i;
+   }
+   assert( i == 3);
+
    assert( mulle_set_get_count( set) == 3);
    mulle_set_remove( set, "xxx");
    assert( mulle_set_get_count( set) == 3);

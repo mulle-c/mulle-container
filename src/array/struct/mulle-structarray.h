@@ -34,6 +34,10 @@ static inline struct mulle_structarray  *
 }
 
 
+//
+// it's assumed that "malloc" always returns memory that is properly aligned
+// for any given type
+//
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_init( struct mulle_structarray *array,
                                               size_t _sizeof_struct,
@@ -444,6 +448,7 @@ static inline void
 }
 
 
+
 #pragma mark - structarray enumerator
 
 #define MULLE_STRUCTARRAYREVERSEENUMERATOR_BASE   MULLE__STRUCTARRAYREVERSEENUMERATOR_BASE
@@ -504,6 +509,16 @@ static inline void
    mulle_structarrayreverseenumerator_done( struct mulle_structarrayreverseenumerator *rover)
 {
 }
+
+
+#define mulle_structarray_for( array, item)                                                        \
+   for( struct mulle_structarrayenumerator rover__ ## item = mulle_structarray_enumerate( array); \
+        _mulle_structarrayenumerator_next( &rover__ ## item, (void **) &item);)
+
+#define mulle_structarray_for_reverse( array, item)                                                              \
+   for( struct mulle_structarrayreverseenumerator rover__ ## item = mulle_structarray_reverseenumerate( array); \
+        _mulle_structarrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
+
 
 #endif
 

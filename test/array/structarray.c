@@ -32,7 +32,6 @@ static void  null( void)
    struct mulle_structarrayenumerator         rover;
    struct mulle_structarrayreverseenumerator  rrover;
    unsigned int                               i;
-   void                                       *item;
 
    array = NULL;
 
@@ -111,6 +110,15 @@ static void  simple( void)
    assert( i == LOOPS);
    mulle_structarrayenumerator_done( &rover);
 
+   // more or less just a syntax check
+   i = 0;
+   mulle_structarray_for( array, a)
+   {
+      assert( a);
+      ++i;
+   }
+   assert( i == LOOPS);
+
    rrover = mulle_structarray_reverseenumerate( array);
    while( _mulle_structarrayreverseenumerator_next( &rrover, (void **) &a))
    {
@@ -120,6 +128,15 @@ static void  simple( void)
    }
    assert( i == 0);
    mulle_structarrayreverseenumerator_done( &rrover);
+
+   // more or less just a syntax check
+   i = LOOPS;
+   mulle_structarray_for_reverse( array, a)
+   {
+      assert( a);
+      --i;
+   }
+   assert( i == 0);
 
    mulle_structarray_destroy( array);
 }

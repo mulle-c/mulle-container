@@ -37,6 +37,8 @@
 #ifndef mulle_flexarray__h__
 #define mulle_flexarray__h__
 
+#include <stdalign.h>
+
 
 // A mulle-flexarray is useful in functions, when you prefer to do the work
 // in a stack based (auto) array, but must remain flexible to use malloc
