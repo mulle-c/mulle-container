@@ -578,7 +578,6 @@ static inline void
 }
 
 
-
 /*
  * a different and smaller interface, where you have to pass in space
  * to store the enumeration result each iteration and where notakey

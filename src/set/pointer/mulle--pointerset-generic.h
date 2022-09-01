@@ -216,4 +216,9 @@ static inline void   mulle__genericpointersetenumerator_done( struct mulle__gene
 {
 }
 
+
+#define mulle__genericpointerset_for( set, item)                                                               \
+   for( struct mulle__genericpointersetenumerator rover__ ## item = mulle__pointerset_enumerate_generic( set); \
+        _mulle__genericpointersetenumerator_next( &rover__ ## item, (void **) &item);)
+
 #endif

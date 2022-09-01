@@ -382,4 +382,10 @@ static inline void
 {
 }
 
+
+#define mulle__pointerpairarray_for( array, pair)                                                             \
+   for( struct mulle__pointerpairarrayenumerator rover__ ## pair = mulle__pointerpairarray_enumerate( array); \
+        _mulle__pointerpairarrayenumerator_next( &rover__ ## pair, (void **) &pair);)
+
+
 #endif

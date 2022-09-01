@@ -152,8 +152,10 @@ static inline void  mulle__pointerarray_destroy( struct mulle__pointerarray *arr
 
 
 //
-// this will call "done" on array, then suck the victimless itemless
+// this will suck the victimless itemless, but keeps the original contents
+// of array.
 // TODO: rename to eviscarate ?
+//
 void   _mulle__pointerarray_absorb( struct mulle__pointerarray *array,
                                     struct mulle_allocator *allocator,
                                     struct mulle__pointerarray *victim,

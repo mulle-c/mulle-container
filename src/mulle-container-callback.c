@@ -144,7 +144,7 @@ char *
    size_t   len;
    char     *copy;
 
-   len = strlen( s) + 1;
+   len  = strlen( s) + 1;
    copy = mulle_allocator_malloc( allocator, len);
    memcpy( copy,  s, len);
    return( copy);
