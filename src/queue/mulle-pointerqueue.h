@@ -340,4 +340,9 @@ static inline void   mulle_pointerqueueenumerator_done( struct mulle_pointerqueu
 }
 
 
+#define mulle_pointerqueue_for( queue, item)                                                       \
+   for( struct mulle_pointerqueueenumerator rover__ ## item = mulle_pointerqueue_enumerate( queue); \
+        _mulle_pointerqueueenumerator_next( &rover__ ## item, (void **) &item);)
+
+
 #endif

@@ -268,7 +268,7 @@ static inline struct mulle_setenumerator
 
 MULLE_C_NONNULL_FIRST_SECOND
 static inline int
-   _mulle_setenumerator__next( struct mulle_setenumerator *rover, void **item)
+   _mulle_setenumerator_next( struct mulle_setenumerator *rover, void **item)
 {
    return( _mulle__setenumerator_next( (struct mulle__setenumerator *) rover, item));
 }
@@ -290,6 +290,11 @@ static inline void   _mulle_setenumerator_done( struct mulle_setenumerator *rove
 static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover)
 {
 }
+
+
+#define mulle_set_for( set, item)                                               \
+   for( struct mulle_setenumerator rover__ ## item = mulle_set_enumerate( set); \
+        _mulle_setenumerator_next( &rover__ ## item, (void **) &item);)
 
 #endif
 

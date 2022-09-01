@@ -50,6 +50,7 @@ static void  simple( void)
    struct mulle_pointerarrayreverseenumerator    rerover;
    void                                          *item;
    char                                          *s;
+   int                                           i;
 
    array = mulle_pointerarray_create( NULL);
 
@@ -79,6 +80,15 @@ static void  simple( void)
    assert( ! _mulle_pointerarrayenumerator_next( &rover, &item));
    mulle_pointerarrayenumerator_done( &rover);
 
+   // more or less just a syntax check
+   i = 0;
+   mulle_pointerarray_for( array, item)
+   {
+      assert( item);
+      ++i;
+   }
+   assert( i == 3);
+
    rerover = mulle_pointerarray_reverseenumerate( array);
    _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
    assert( item);
@@ -91,6 +101,16 @@ static void  simple( void)
    assert( ! strcmp( "VfL", item));
    assert( ! _mulle_pointerarrayreverseenumerator_next( &rerover, &item));
    mulle_pointerarrayreverseenumerator_done( &rerover);
+
+
+   // more or less just a syntax check
+   i = 0;
+   mulle_pointerarray_for_reverse( array, item)
+   {
+      assert( item);
+      ++i;
+   }
+   assert( i == 3);
 
    mulle_pointerarray_destroy( array);
 }

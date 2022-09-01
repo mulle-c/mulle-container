@@ -203,10 +203,11 @@ static inline struct mulle__genericpointermapenumerator
       rover._left    = map->_count;
       rover._curr    = map->_storage;
       rover._offset  = _mulle__pointermap_get_size( map);
-      rover._notakey = callback->keycallback.notakey;
    }
    else
       rover._left    = 0;
+
+   rover._notakey = callback ? callback->keycallback.notakey : NULL;
 
    return( rover);
 }
@@ -263,7 +264,7 @@ static inline int
    if( ! pair)
    {
       if( key)
-         *key = rover->_notakey;
+         *key = rover->_notakey;  // maybe should use NULL always for consistency
       if( value)
          *value = NULL;
       return( 0);
@@ -283,7 +284,14 @@ static inline int
                                             void **value)
 {
    if( ! rover)
+   {
+      if( key)
+         *key = NULL;
+      if( value)
+         *value = NULL;
       return( 0);
+   }
+
    return(  _mulle__genericpointermapenumerator_next( rover, key, value));
 }
 
@@ -300,6 +308,5 @@ static inline void
    mulle__genericpointermapenumerator_done( struct mulle__genericpointermapenumerator *rover)
 {
 }
-
 
 #endif

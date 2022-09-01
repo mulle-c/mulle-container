@@ -47,6 +47,39 @@ allocator, is obviously a bit smaller than the one with.
 If you are managing millions of hashtables, as may be the case when doing
 database fetches, this can be significant. On the other hand, embedding the
 allocator makes the API simpler and less susceptible to allocator mix ups.
+You also get "convenient enumeration" (see below)
+
+### Uniform and convenient enumeration
+
+Looping over the data structure contents is done with enumerators. The
+enumerator holds the state of the loop. The enumeration loop over any
+data structure, if unform. You setup an enumerator with `_enumerate`,
+use the enumerator with `_next` and end the loop with `_done`. It looks like
+this:
+
+``` c
+struct mulle_arrayenumerator  rover;
+char                          *item;
+
+rover = mulle_array_enumerate( &array);
+while( _mulle_arrayenumerator_next( &rover, &item))
+{
+   printf( "%s\n", item);
+}
+mulle_arrayenumerator_done( &rover);
+```
+
+With a convenience macro, the enumerator setup is hidden and the code
+simplifies to:
+
+``` c
+char   *item;
+
+mulle_array_for( &array, item)
+{
+   printf( "%s\n", item);
+}
+```
 
 ### NULL leniency
 
@@ -55,12 +88,20 @@ respect to NULL parameters. The rigid functions are prefixed with '`_`' and
 do not check for NULL pointers. The lenient functions do nothing, if NULL is
 passed. This is like Objective-C where you can call methods with 'nil'.
 
+> #### Caveat
+>
+> A NULL map will have always return NULL in an enumeration for the (failed)
+> key value.
+>
+
 ### Pointers or Objects
 
-A data structure, conventionally containing the word "pointer" in its name, may
-merely handle pointer equality as a way of comparing members. This is efficient
-and sometimes all you need. Other data structures use a number of callbacks, to
-test for equality, memory management and creating hash codes.
+A data structure may merely handle pointer equality as a way of comparing
+members. These data structures conventionally contain the word "pointer" in
+their name. They are very efficient and sometimes all you need. Other data
+structures use a number of callbacks, to test for equality and to handle memory
+management and to create hash codes.
+
 
 ## Example
 
@@ -79,10 +120,9 @@ static struct mulle_container_keyvaluecallback   callback;
 static void  test( void)
 {
 //   struct mulle_map              auto_map;
-   struct mulle_map              *map;
-   struct mulle_mapenumerator    rover;
-   void                          *key;
-   void                          *value;
+   struct mulle_map   *map;
+   char               *key;
+   char               *value;
 
 //   mulle_map_init( &auto_map, 0, &callback, NULL);
 //   map = &auto_map;
@@ -94,10 +134,10 @@ static void  test( void)
 
    if( ! mulle_map_get( map, "1849"))
    {
-      rover = mulle_map_enumerate( map);
-      while( mulle_mapenumerator_next( &rover, &key, &value))
+      mulle_map_for( map, key, value)
+      {
          printf( "%s : %s\n", key, value);
-      mulle_mapenumerator_done( &rover);
+      }
    }
    mulle_map_remove( map, "1848");
 
@@ -116,6 +156,33 @@ int   main( void)
    return( 0);
 }
 ```
+
+## flexarray, a replacement for alloca
+
+The `mulle_flexarray` can be used as an replacement for `alloca`. The problem
+with `alloca` is always two-fold. 1.) It's non-standard and not available on
+all platforms. 2.) The amount of memory to alloca may exceed the available
+stack space. The `mulle_flexarryy` solves this problem by using a small amount
+of stack space for low memory scenario and moving to `malloc`, when it's
+needed.
+
+Example:
+
+``` c
+ void  foo( int n, int *data)
+{
+   mulle_flexarray_define( copy, int, 32, n);
+
+   memcpy( copy, data, n * sizeof( int));    // using copy here for something
+
+   mulle_flexarray_done( copy);
+}
+```
+
+A mulle_flexarray named "copy" is created, this is either a pointer to stack
+space or to a malloc area. `mulle_flexarray_define` defines the basic type
+of the array (`int`) and the maximum amount to be stored in a stack array is
+`32`.
 
 
 ## Data Structures
@@ -151,7 +218,8 @@ can be copied/freed or reference counted using
 ![](pix/mulle-array.svg)
 
 > The array was allocated with an initial capacity of 4. The addition of a
-> fifth value forced an expansion to 8 (yellow: old cells, green: new cells).
+> fifth value forced an expansion to 8 (yellow: initial cells in use,
+> green: additional cells in use).
 > The "notakey" is not used for arrays.
 
 There is also an [API Documentation](dox/API_ARRAY.md).
@@ -289,7 +357,7 @@ can be copied/freed or reference counted using callbacks organized in a
 > value is undefined (white).
 > The map was allocated with an initial capacity of 4. The addition of a third
 > value forced an expansion to 8, as the hashtable needs enough holes to
-> operate. (yellow: old cells, green: new cells).
+> operate. (yellow: initial cells in use, green: additional cells in use).
 > On growth all the keys and values are redistributed.
 > The cells are placed according to the hash of the key. On collision the next
 > available hole is used.

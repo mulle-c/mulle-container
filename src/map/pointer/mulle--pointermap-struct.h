@@ -331,7 +331,7 @@ static inline int
    if( ! rover->_left)
    {
       if( key)
-         *key = 0;
+         *key = NULL;
       if( value)
          *value = 0;
       return( 0);

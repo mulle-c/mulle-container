@@ -498,7 +498,7 @@ static inline void
 
 #define MULLE__ARRAYREVERSEENUMERATOR_BASE                 \
    struct mulle__pointerarrayreverseenumerator   base;     \
-   void                                           *notakey
+   void                                          *notakey
 
 struct mulle__arrayreverseenumerator
 {
@@ -574,7 +574,6 @@ static inline void
   mulle__arrayreverseenumerator_done( struct mulle__arrayreverseenumerator *rover)
 {
 }
-
 
 /*
  *

@@ -8,7 +8,7 @@ Internally it uses a C array of void * pointers, that is grown with `realloc`.
 
 ## Types
 
-```
+``` c
 struct mulle_array
 struct mulle_arrayenumerator
 struct mulle_arrayreverseenumerator
@@ -23,7 +23,7 @@ struct mulle_arrayreverseenumerator
 
 #### `mulle_array_create`
 
-```
+``` c
 struct mulle_array   *mulle_array_create( unsigned int capacity,
                                           struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator);
@@ -36,7 +36,7 @@ it may be rounded up though.
 
 #### `mulle_array_destroy`
 
-```
+``` c
 void   mulle_array_destroy( struct mulle_array *array)
 ```
 
@@ -45,7 +45,7 @@ Destroy the array (done + free). Array must have been allocated with `mulle_arra
 
 #### `mulle_array_init`
 
-```
+``` c
 void    mulle_array_init( struct mulle_array *array,
                           size_t capacity,
                           struct mulle_container_keycallback *callback,
@@ -59,7 +59,7 @@ Setup array. Array will typically be stack based, if this function is called.
 
 #### `mulle_array_done`
 
-```
+``` c
 void   mulle_array_done( struct mulle_array *array)
 ```
 
@@ -70,7 +70,7 @@ Free internal resources of array. Don't use it aftewards, except for calling ini
 
 #### `mulle_array_get_count`
 
-```
+``` c
 size_t   mulle_array_get_count( struct mulle_array *array)
 ```
 
@@ -79,7 +79,7 @@ Return the number of elements in the array.
 
 #### `mulle_array_get_guaranteed_size`
 
-```
+``` c
 size_t   mulle_array_get_guaranteed_size( struct mulle_array *array)
 ```
 
@@ -87,7 +87,7 @@ Return the number of elements that can be added to the array without encurring a
 
 #### `mulle_array_get_guaranteed_size`
 
-```
+``` c
 struct mulle_allocator *mulle_array_get_allocator( struct mulle_array *array)
 ```
 
@@ -96,7 +96,7 @@ Return the allocator used by the array. `allocator` is also a public field of `s
 
 #### `mulle_array_get_size`
 
-```
+``` c
 size_t   mulle_array_get_size( struct mulle_array *array)
 ```
 
@@ -105,7 +105,7 @@ purposes.
 
 #### `mulle_array_is_full`
 
-```
+``` c
 int   mulle_array_is_full( struct mulle_array *array)
 ```
 
@@ -116,7 +116,7 @@ The array is filled to its capacity. That doesn't mean it can't grow by adding e
 
 ### `mulle_array_add`
 
-```
+``` c
 void    mulle_array_add( struct mulle_array *array, void  *p)
 ```
 
@@ -125,7 +125,7 @@ Add `p` to `array`. Array will grow automatically to accomodate the add.
 
 ### `mulle_array_get`
 
-```
+``` c
 void   *mulle_array_get( struct mulle_array *array, size_t index)
 ```
 
@@ -135,7 +135,7 @@ Return element at `index`. The caller is expected to ensure himself with a call 
 
 ### `mulle_array_get`
 
-```
+``` c
 void   *mulle_array_get_last( struct mulle_array *array)
 ```
 
@@ -144,7 +144,7 @@ Return the last element int he array. Will be **notakey** if array is empty.
 
 ### `mulle_array_remove_last`
 
-```
+``` c
 void   mulle_array_remove_last( struct mulle_array *array)
 ```
 
@@ -153,7 +153,7 @@ Remove the last element from array. Does nothing if array is empty.
 
 ### `mulle_array_remove_in_range`
 
-```
+``` c
 void   mulle_array_remove_in_range( struct mulle_array *array, struct mulle_range range)
 ```
 
@@ -167,7 +167,7 @@ Remove `range.length` elements at indices `range.location` and up,
 
 #### `mulle_array_guarantee`
 
-```
+``` c
 void   **mulle_array_guarantee( struct mulle_array *array,
                                 size_t length)
 ```
@@ -178,7 +178,7 @@ done without a `realloc`.
 
 #### `mulle_array_grow`
 
-```
+``` c
 void   **mulle_array_grow( struct mulle_array *array)
 ```
 
@@ -187,7 +187,7 @@ Grow the array to twice its current size. The count and element order remains th
 
 #### `mulle_array_reset`
 
-```
+``` c
 void   **mulle_array_reset( struct mulle_array *array)
 ```
 
@@ -197,8 +197,8 @@ Removes all elements in the array.
 #### `mulle_array_size_to_fit`
 
 
-```
-static inline int    mulle_array_size_to_fit( struct mulle_array *array)
+``` c
+int    mulle_array_size_to_fit( struct mulle_array *array)
 ```
 
 Minimize memory usage of array. Useful if you don't expect any further additions.
@@ -207,8 +207,8 @@ Minimize memory usage of array. Useful if you don't expect any further additions
 
 ### `mulle_array_is_equal `
 
-```
-inline int   mulle_array_is_equal( struct mulle_array *array, struct mulle_array *other)
+``` c
+int   mulle_array_is_equal( struct mulle_array *array, struct mulle_array *other)
 ```
 
 Check if two arrays contain the same elements. The callbacks of `array` will be used for the comparison.
@@ -216,7 +216,7 @@ Check if two arrays contain the same elements. The callbacks of `array` will be 
 
 ### `mulle_array_guaranteedsize`
 
-```
+``` c
 size_t   mulle_array_get_guaranteedsize( struct mulle_array *array)
 ```
 
@@ -224,7 +224,7 @@ Return number of elements that can be added without the array having to malloc a
 
 ### `mulle_array_guarantee`
 
-```
+``` c
 void   **mulle_array_guarantee( struct mulle_array *array, size_t length)
 ```
 
@@ -234,7 +234,7 @@ Extend array to be able to hold at least `range.length` more elements.
 
 ### `mulle_array_add_multiple`
 
-```
+``` c
 void   mulle_array_add_multiple( struct mulle_array *array,
                                  void **pointers,
                                  size_t length)
@@ -245,7 +245,7 @@ Add `range.length` elements in `pointers` to the array.
 
 ### `mulle_array_add_array`
 
-```
+``` c
 void   mulle_array_add_array( struct mulle_array *array,
                               struct mulle_array *other)
 ```
@@ -255,7 +255,7 @@ Add contents of other to array. `other` remains unchanged.
 
 ### `mulle_array_reset`
 
-```
+``` c
 void   mulle_array_reset( struct mulle_array *array)
 ```
 
@@ -264,7 +264,7 @@ Calls `mulle_array_done` and `mulle_array_init` in succession. The result is a c
 
 ### `mulle_array_find_in_range_identical`
 
-```
+``` c
 uintptr_t  mulle_array_find_in_range_identical( struct mulle_array *array,
                                                 void *obj,
                                                 struct mulle_range range)
@@ -275,7 +275,7 @@ Find index of element which is identical to `obj` in the range given by `range.l
 
 ### `mulle_array_find_in_range`
 
-```
+``` c
 uintptr_t  mulle_array_find_in_range( struct mulle_array *array,
                                       void *obj,
                                       struct mulle_range range)
@@ -287,7 +287,7 @@ Find index of element which is equal to `obj` in the range given by `range.locat
 
 ### `mulle_array_enumerate`
 
-```
+``` c
 struct mulle_arrayenumerator   mulle_array_enumerate( struct mulle_array *array)
 ```
 
@@ -296,7 +296,7 @@ Start the enumeration of array from front to back.
 
 ### `mulle_array_reverseenumerate`
 
-```
+``` c
 struct mulle_arrayreverseenumerator   mulle_array_reverseenumerate( struct mulle_array *array)
 ```
 
@@ -308,8 +308,8 @@ Start the enumeration of array from back to front.
 
 ### `mulle_arrayenumerator_next`
 
-```
-static inline int   mulle_arrayenumerator_next( struct mulle_arrayenumerator *rover, void **item)
+``` c
+int   mulle_arrayenumerator_next( struct mulle_arrayenumerator *rover, void **item)
 ```
 
 Returns 1 and the next element in the array in `item`. If there are no more
@@ -318,8 +318,8 @@ items left, returns 0 and leaves item unchanged!
 
 ### `mulle_arrayenumerator_done`
 
-```
-static inline void   * mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover)
+``` c
+void   * mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover)
 ```
 
 Marks the end of the lifetime of the enumerator. It's use is merely conventional.
@@ -329,8 +329,8 @@ Marks the end of the lifetime of the enumerator. It's use is merely conventional
 
 ### `mulle_arrayreverseenumerator_next`
 
-```
-static inline int   mulle_arrayreverseenumerator_next( struct mulle_arrayreverseenumerator *rover, void **item)
+``` c
+int   mulle_arrayreverseenumerator_next( struct mulle_arrayreverseenumerator *rover, void **item)
 ```
 
 Returns 1 and the next element in the array in `item`. If there are no more
@@ -339,8 +339,12 @@ items left, returns 0 and leaves item unchanged!
 
 ### `mulle_arrayreverseenumerator_done`
 
-```
+``` c
 static inline void   * mulle_arrayreverseenumerator_done( struct mulle_arrayreverseenumerator *rover)
 ```
 
 Marks the end of the lifetime of the enumerator. It's use is merely conventional.
+
+## Includes
+
+![](../pix/mulle-array-includes.svg)

@@ -651,4 +651,39 @@ static inline int
    return( mulle__pointerarray_member( (struct mulle__pointerarray *) array, p));
 }
 
+
+// -----------------------
+// Conveniences for iteration.
+// -----------------------
+// Instead of
+//
+//   struct  mulle_pointerarrayenumerator   rover;
+//   UIView                                 *view;
+//
+//   rover = mulle_pointerarray_enumerate( &_subviews);
+//   while(  _mulle_pointerarrayenumerator_next( &rover, (void **) &view))
+//   {
+//   }
+//   mulle_pointerarrayenumerator_done( &rover);
+//
+// write:
+//
+//   UIView   *view;
+//
+//   mulle_pointerarray_for( &_subviews, view)
+//   {
+//   }
+//
+// exploits that mulle_pointerarrayenumerator_done doesn't do anything.
+//
+
+#define mulle_pointerarray_for( array, item)                                                        \
+   for( struct mulle_pointerarrayenumerator rover__ ## item = mulle_pointerarray_enumerate( array); \
+        _mulle_pointerarrayenumerator_next( &rover__ ## item, (void **) &item);)
+
+#define mulle_pointerarray_for_reverse( array, item)                                                              \
+   for( struct mulle_pointerarrayreverseenumerator rover__ ## item = mulle_pointerarray_reverseenumerate( array); \
+        _mulle_pointerarrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
+
+
 #endif

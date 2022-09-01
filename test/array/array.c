@@ -151,6 +151,7 @@ static void   simple( void)
    struct mulle_array              *array;
    struct mulle_arrayenumerator    rover;
    void                            *item;
+   int                             i;
 
    array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
    mulle_array_add( array, "VfL");
@@ -177,6 +178,15 @@ static void   simple( void)
    assert( ! strcmp( "1848", item));
    assert( ! mulle_arrayenumerator_next( &rover, &item));
    mulle_arrayenumerator_done( &rover);
+
+   // more or less just a syntax check
+   i = 0;
+   mulle_array_for( array, item)
+   {
+      assert( item);
+      ++i;
+   }
+   assert( i == 3);
 
    mulle_array_remove_last( array);
    assert( mulle_array_get_count( array) == 2);

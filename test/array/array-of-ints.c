@@ -20,7 +20,7 @@ static void  loops( void)
    struct mulle_arrayenumerator           rover;
    struct mulle_arrayreverseenumerator    rerover;
    void                                   *item;
-   int                                     i;
+   int                                    i;
 
    array = mulle_array_create( 0, &mulle_container_keycallback_int, NULL);
 
@@ -36,6 +36,11 @@ static void  loops( void)
       printf( "%d ", mulle_pointer_as_int( item));
    mulle_arrayenumerator_done( &rover);
    printf( "\n");
+
+   // syntax check
+   mulle_array_for( array, item)
+   {
+   }
 
    rerover = mulle_array_reverseenumerate( array);
    while( mulle_arrayreverseenumerator_next( &rerover, &item))
