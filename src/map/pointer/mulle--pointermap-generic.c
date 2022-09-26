@@ -543,8 +543,7 @@ void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
                                         void *key,
                                         struct mulle_container_keyvaluecallback *callback)
 {
-   uintptr_t   hash;
-   void        *value;
+   void   *value;
 
    if( key == callback->keycallback.notakey)
       return( NULL);

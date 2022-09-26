@@ -278,7 +278,7 @@ static inline unsigned int
 
 
 MULLE_C_NONNULL_FIRST
-static inline uintptr_t
+uintptr_t
    _mulle__pointerpairarray_find( struct mulle__pointerpairarray *array,
                                   void  *key);
 

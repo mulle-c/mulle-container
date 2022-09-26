@@ -66,6 +66,9 @@ struct mulle__pointermap
 };
 
 
+#define MULLE__POINTERMAP_INIT   { 0, 0, 0 }
+
+
 MULLE_CONTAINER_GLOBAL
 struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback;
 

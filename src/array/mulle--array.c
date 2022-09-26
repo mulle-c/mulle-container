@@ -102,9 +102,8 @@ uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
                                          struct mulle_range range,
                                          struct mulle_container_keycallback *callback)
 {
-   unsigned int   i;
-   void     **p;
-   void     **sentinel;
+   void   **p;
+   void   **sentinel;
 
    range = mulle_range_validate_against_length( range, _mulle__array_get_count( array));
 

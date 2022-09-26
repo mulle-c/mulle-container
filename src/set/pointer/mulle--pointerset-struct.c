@@ -112,12 +112,12 @@ void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
 void   *_mulle__pointerset__get( struct mulle__pointerset *set,
                                  void *key)
 {
-   unsigned int      i;
-   unsigned int      size;
-   unsigned int      mask;
-   void              *found;
-   void              **storage;
-   uintptr_t         hash;
+   uintptr_t      hash;
+   unsigned int   i;
+   unsigned int   mask;
+   unsigned int   size;
+   void           **storage;
+   void           *found;
 
    hash    = mulle_pointer_hash( key);
    storage = set->_storage;
@@ -141,8 +141,7 @@ void   *_mulle__pointerset__get( struct mulle__pointerset *set,
 void   *_mulle__pointerset_get( struct mulle__pointerset *set,
                                 void *key)
 {
-   uintptr_t   hash;
-   void        *value;
+   void   *value;
 
    // important to not hit a NULL _storage later
    if( set->_count == 0)

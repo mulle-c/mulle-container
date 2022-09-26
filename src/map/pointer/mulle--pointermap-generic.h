@@ -176,12 +176,12 @@ unsigned int
 # pragma mark - enumeration
 
 
-#define MULLE__GENERICPOINTERMAPENUMERATOR_BASE        \
-   struct mulle_pointerpair                 _space;    \
-   void                                     **_curr;   \
-   unsigned int                             _left;     \
-   unsigned int                             _offset;   \
-   void                                     *_notakey
+#define MULLE__GENERICPOINTERMAPENUMERATOR_BASE   \
+   struct mulle_pointerpair    _space;            \
+   void                        **_curr;           \
+   unsigned int                _left;             \
+   unsigned int                _offset;           \
+   void                        *_notakey
 
 
 struct mulle__genericpointermapenumerator
@@ -191,7 +191,6 @@ struct mulle__genericpointermapenumerator
 
 
 
-MULLE_C_NONNULL_SECOND
 static inline struct mulle__genericpointermapenumerator
    mulle__pointermap_enumerate_generic( struct mulle__pointermap *map,
                                         struct mulle_container_keyvaluecallback *callback)
@@ -203,11 +202,10 @@ static inline struct mulle__genericpointermapenumerator
       rover._left    = map->_count;
       rover._curr    = map->_storage;
       rover._offset  = _mulle__pointermap_get_size( map);
+      rover._notakey = callback ? callback->keycallback.notakey : 0;
    }
    else
       rover._left    = 0;
-
-   rover._notakey = callback ? callback->keycallback.notakey : NULL;
 
    return( rover);
 }

@@ -486,7 +486,7 @@ static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover
 
 #define mulle_map_for( map, key, value)                                        \
    for( struct mulle_mapenumerator rover__ ## key = mulle_map_enumerate( map); \
-        _mulle_mapenumerator_next( &rover__ ## key, (void **) &key, (void **) &(value));)
+        _mulle_mapenumerator_next( &rover__ ## key, (void **) &(key), (void **) &(value));)
 
 
 #pragma mark - tiny enumeration

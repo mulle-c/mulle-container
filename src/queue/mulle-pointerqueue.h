@@ -40,7 +40,7 @@
 // A struct mulle_pointerqueue is a FIFO, you can't use it as a stack.
 // As a queue it has a pop operation. You can not store NULL into it. It can
 // be faster than a mulle-pointerarray, since it doesn't realloc/memcpy.
-// Main use is for an ever growing colletion of things.
+// Main use is for an ever growing collection of things.
 //
 // MEMO: It is not useful to put memory management into the queue, as the queue
 // would need to release on pop, which would be disastrous if the release does
@@ -86,6 +86,27 @@ static inline void  _mulle_pointerqueue_init( struct mulle_pointerqueue *queue,
                               spare_allowance);
    queue->allocator = allocator;
 }
+
+
+static inline void  mulle_pointerqueue_init( struct mulle_pointerqueue *queue,
+                                             unsigned short bucket_size,
+                                             unsigned short spare_allowance,
+                                              struct mulle_allocator *allocator)
+{
+   if( queue)
+      _mulle_pointerqueue_init( queue,
+                                bucket_size,
+                                spare_allowance,
+                                allocator);
+}
+
+static inline void  mulle_pointerqueue_init_default( struct mulle_pointerqueue *queue,
+                                                     struct mulle_allocator *allocator)
+{
+   if( queue)
+      _mulle_pointerqueue_init( queue, 256, 16, allocator);
+}
+
 
 
 MULLE_CONTAINER_GLOBAL
@@ -249,7 +270,7 @@ void  *_mulle_pointerqueue_pop( struct mulle_pointerqueue *queue)
 static inline
 void   *mulle_pointerqueue_pop( struct mulle_pointerqueue *queue)
 {
-   return( queue ? _mulle_pointerqueue_pop : NULL);
+   return( queue ? _mulle_pointerqueue_pop( queue) : NULL);
 }
 
 

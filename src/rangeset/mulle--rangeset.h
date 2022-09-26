@@ -85,6 +85,15 @@ static inline uintptr_t   _mulle__rangeset_get_rangecount( struct mulle__rangese
 }
 
 
+// non checker method for objc
+MULLE_C_NONNULL_FIRST
+static inline struct mulle_range  __mulle__rangeset_get_range( struct mulle__rangeset *p,
+                                                               uintptr_t i)
+{
+   return( p->_ranges[ i]);
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_range  _mulle__rangeset_get_range( struct mulle__rangeset *p,
                                                               uintptr_t i)
@@ -217,7 +226,7 @@ static inline void   _mulle__rangeset_insert_rangeset( struct mulle__rangeset *p
                                                        struct mulle__rangeset *other,
                                                        struct mulle_allocator *allocator)
 {
-   _mulle__rangeset_insert_ranges( p, p->_ranges, p->_length, allocator);
+   _mulle__rangeset_insert_ranges( p, other->_ranges, other->_length, allocator);
 }
 
 
@@ -226,17 +235,16 @@ static inline void   _mulle__rangeset_remove_rangeset( struct mulle__rangeset *p
                                                        struct mulle__rangeset *other,
                                                        struct mulle_allocator *allocator)
 {
-   _mulle__rangeset_remove_ranges( p, p->_ranges, p->_length, allocator);
+   _mulle__rangeset_remove_ranges( p, other->_ranges, other->_length, allocator);
 }
 
 
 //
-// returns 0 on success, -1 for underflow (no changes) and +1 for overflow
-// (no changes)
+// shift will destroy indexes that are then outside of the 0-mulle_max_range
 //
 MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
-int   _mulle__rangeset_shift( struct mulle__rangeset *p,
+void  _mulle__rangeset_shift( struct mulle__rangeset *p,
                               uintptr_t location,
                               intptr_t delta,
                               struct mulle_allocator *allocator);

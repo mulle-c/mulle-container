@@ -12,10 +12,10 @@ void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
                                           size_t new_size,
                                           struct mulle_allocator *allocator)
 {
-   size_t   old_index;
+   size_t   old_size;
 
-   old_index = _mulle__structarray_get_used_as_length( array);
-   if( new_size < old_index)
+   old_size = _mulle__structarray_get_used_as_length( array);
+   if( new_size < old_size)
       abort();
 
    // if we have an initial storage
@@ -30,7 +30,7 @@ void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
                                                  new_size);
       memcpy( array->_storage,
               array->_initial_storage,
-              _mulle__structarray_get_used_as_length( array));
+              old_size);
 
       array->_initial_storage = NULL;
    }
@@ -39,7 +39,7 @@ void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
                                                   array->_storage,
                                                   new_size);
 
-   array->_curr     = &((char *) array->_storage)[ old_index];
+   array->_curr     = &((char *) array->_storage)[ old_size];
    array->_sentinel = &((char *) array->_storage)[ new_size];
 
    assert( (char *) array->_storage <= (char *) array->_curr);

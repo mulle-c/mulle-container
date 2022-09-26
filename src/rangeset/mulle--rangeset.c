@@ -7,6 +7,7 @@
 
 #include <string.h>
 
+#define MULLE__RANGESET_MIN_SIZE    2
 
 
 #if defined( MULLE_TEST) && ! defined( NDEBUG)
@@ -52,7 +53,7 @@ void   _mulle__rangeset_grow( struct mulle__rangeset *p,
    new_size = p->_size * 2;
    new_size = mulle_pow2round( new_size);
    if( new_size == 0)
-      new_size = 2;
+      new_size = MULLE__RANGESET_MIN_SIZE;
 
    p->_ranges = mulle_allocator_realloc( allocator, p->_ranges, sizeof( struct mulle_range) * new_size);
 //   memset( &p->_ranges[ p->_size], 0, sizeof( struct mulle_range) * (new_size - p->_size));
@@ -75,18 +76,18 @@ void   _mulle__rangeset_reserve( struct mulle__rangeset *p,
 
 
 void   _mulle__rangeset_shrink( struct mulle__rangeset *p,
-                               struct mulle_allocator *allocator)
+                                struct mulle_allocator *allocator)
 {
    uintptr_t   new_size;
-   uintptr_t   _size;
+   uintptr_t   size;
 
-   _size = p->_size;
+   size = p->_size;
    do
    {
-      new_size = _size;
-      _size     = new_size / 2;
+      new_size = size;
+      size     = new_size / 2;
    }
-   while( _size >= p->_length);
+   while( size > MULLE__RANGESET_MIN_SIZE && size >= p->_length);
 
    if( new_size >= p->_size)
       return;
@@ -188,7 +189,6 @@ static void   __mulle__rangeset_insert_known_absent( struct mulle__rangeset *p,
    struct mulle_range   *prev;
    struct mulle_range   *next;
    uintptr_t            index;
-   uintptr_t            n;
 
    // we don't store empty ranges
    if( ! range.length)
@@ -255,11 +255,14 @@ void   __mulle__rangeset_insert( struct mulle__rangeset *p,
    struct mulle_range   *next;
    struct mulle_range   *found;
    struct mulle_range   *_curr;
-   uintptr_t            location;
    uintptr_t            length;
 
    // we don't store empty ranges
    if( ! range.length)
+      return;
+
+   // don't store broken ranges
+   if( ! mulle_range_is_valid( range))
       return;
 
    _mulle__rangeset_assert( p);
@@ -276,11 +279,11 @@ void   __mulle__rangeset_insert( struct mulle__rangeset *p,
    // 2. overflow in the front (possibly coalesce with previous and shrink)
    // 3. overflow in the back (possibly coalesce with next and shrink)
 
-_1:
+//_1:
    if( mulle_range_contains( *found, range))
       return;
 
-_2:
+//_2:
    if( range.location < found->location)
    {
       _curr     = found;
@@ -342,15 +345,16 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
                                  struct mulle_range range,
                                  struct mulle_allocator *allocator)
 {
-   struct mulle_range   *prev;
    struct mulle_range   *found;
    struct mulle_range   newRange;
    uintptr_t            range_end;
    uintptr_t            found_end;
-   uintptr_t            n;
 
    // we don't deal with empty ranges
    if( ! range.length)
+      return;
+
+   if( ! mulle_range_is_valid( range))
       return;
 
    _mulle__rangeset_assert( p);
@@ -431,9 +435,9 @@ void   _mulle__rangeset_insert_ranges( struct mulle__rangeset *p,
 
 
 void   _mulle__rangeset_remove_ranges( struct mulle__rangeset *p,
-                                      struct mulle_range *ranges,
-                                      uintptr_t n,
-                                      struct mulle_allocator *allocator)
+                                       struct mulle_range *ranges,
+                                       uintptr_t n,
+                                       struct mulle_allocator *allocator)
 {
    struct mulle_range   *_curr;
    struct mulle_range   *sentinel;
@@ -449,8 +453,9 @@ void   _mulle__rangeset_remove_ranges( struct mulle__rangeset *p,
 }
 
 
-static struct mulle_range  *_mulle__rangeset_search_nearest( struct mulle__rangeset *p,
-                                                            uintptr_t location)
+static struct mulle_range  *
+   _mulle__rangeset_search_nearest( struct mulle__rangeset *p,
+                                    uintptr_t location)
 {
    struct mulle_range   *_curr;
    uintptr_t            index;
@@ -474,8 +479,8 @@ static struct mulle_range  *_mulle__rangeset_search_nearest( struct mulle__range
 
 
 static void  _mulle__rangeset_deltashift( struct mulle__rangeset *p,
-                                                        struct mulle_range *_curr,
-                                                        intptr_t delta)
+                                          struct mulle_range *_curr,
+                                          intptr_t delta)
 {
    struct mulle_range   *sentinel;
 
@@ -489,45 +494,48 @@ static void  _mulle__rangeset_deltashift( struct mulle__rangeset *p,
 }
 
 
-int   _mulle__rangeset_shift( struct mulle__rangeset *p,
-                             uintptr_t location,
-                             intptr_t delta,
-                             struct mulle_allocator *allocator)
+void   _mulle__rangeset_shift( struct mulle__rangeset *p,
+                               uintptr_t location,
+                               intptr_t delta,
+                               struct mulle_allocator *allocator)
 {
    struct mulle_range   *found;
-   struct mulle_range   *sentinel;
    struct mulle_range   *prev;
    struct mulle_range   newRange;
-   struct mulle_range   killRange;
-   uintptr_t            start;
-   uintptr_t            end;
    uintptr_t            found_end;
-   uintptr_t            kill_start;
-   uintptr_t            n;
-   uintptr_t            index;
+   intptr_t             to_remove;
 
    if( ! p->_length  || ! delta)
-      return( 0);
+      return;
 
-   /* check that we are not creating negatives or mulle_not_found_e */
+   assert( location <= mulle_range_max);
+
+   /* check that we are not creating negatives or mulle_not_found_e.
+    * We are shifting, so negative locations "disappear"
+    */
    if( delta < 0)
    {
-      start = p->_ranges[ 0].location;
-      if( start < location)
-         start = location;
-      if( start < -delta)
-         return( -1);
+//      start = p->_ranges[ 0].location;
+//      if( start < location)
+//         start = location;
+//      if( start < -delta)
+//         return( -1);
 
-      // if delta is negative, we are clobbering so do this right now
-      __mulle__rangeset_remove( p,
-                               mulle_range_make( start + delta, -delta),
-                               allocator);
+      // if delta is negative, we may be shifting out, so do this right now
+      to_remove = location + delta;
+      if( to_remove < 0)
+         __mulle__rangeset_remove( p,
+                                  mulle_range_make( location, -to_remove),
+                                  allocator);
    }
    else
    {
-      end = mulle_range_get_end( p->_ranges[ p->_length - 1]);
-      if( end + delta >= mulle_range_max)
-         return( +1);
+      if( (uintptr_t) delta > mulle_range_max)
+         delta = mulle_range_max;
+
+      __mulle__rangeset_remove( p,
+                                mulle_range_make( mulle_range_max - delta, delta),
+                                allocator);
    }
 
    found = _mulle__rangeset_search_nearest( p, location);
@@ -547,7 +555,7 @@ int   _mulle__rangeset_shift( struct mulle__rangeset *p,
       // coalescing
       newRange      = mulle_range_make( location + delta, found_end - location);
       __mulle__rangeset_insert( p, newRange, allocator);
-      return( 0);
+      return;
    }
 
    _mulle__rangeset_deltashift( p, found, delta);
@@ -566,12 +574,11 @@ int   _mulle__rangeset_shift( struct mulle__rangeset *p,
          }
       }
    }
-   return( 0);
 }
 
 
 uintptr_t   _mulle__rangeset_sum_lengths_range( struct mulle__rangeset *p,
-                                               struct mulle_range range)
+                                                struct mulle_range range)
 {
    struct mulle_range   *_curr;
    struct mulle_range   *sentinel;
@@ -598,15 +605,16 @@ uintptr_t   _mulle__rangeset_sum_lengths_range( struct mulle__rangeset *p,
 
 void   _mulle__rangeset_fprint( struct mulle__rangeset *p, FILE *fp)
 {
-   struct mulle_range      range;
-   uintptr_t   i;
+   struct mulle_range   range;
+   uintptr_t            i;
 
    if( ! fp)
       fp = stderr;
    for( i = 0; i < _mulle__rangeset_get_rangecount( p); i++)
    {
       range = _mulle__rangeset_get_range( p, i);
-      fprintf( fp, "#%ld: %ld,%ld\n", (long) i, (long) range.location, (long) range.length);
+      fprintf( fp, "#%td: %tu,%tu\n",
+                     i, range.location, range.length);
    }
 }
 
