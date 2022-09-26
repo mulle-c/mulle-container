@@ -29,16 +29,6 @@ An array reallocates on growth. A hashtable copies on growth. The queue is a
 linked list of smaller memory blocks.
 
 
-### Contents and "notakey"
-
-The hashtables use "holes" to discriminate between valid entries and available
-space. Consequently a hashtable can not use all possible `void *` values as
-keys and needs a special **notakey** marker for such holes.
-
-The "notakey" value is usually `mulle_not_a_pointer`, which is defined as
-`(void *) INTPTR_MIN`.
-
-
 ### Embedded allocator
 
 For many data structures there exist two variants. One that keeps a reference
@@ -157,33 +147,6 @@ int   main( void)
 }
 ```
 
-## flexarray, a replacement for alloca
-
-The `mulle_flexarray` can be used as an replacement for `alloca`. The problem
-with `alloca` is always two-fold. 1.) It's non-standard and not available on
-all platforms. 2.) The amount of memory to alloca may exceed the available
-stack space. The `mulle_flexarryy` solves this problem by using a small amount
-of stack space for low memory scenario and moving to `malloc`, when it's
-needed.
-
-Example:
-
-``` c
- void  foo( int n, int *data)
-{
-   mulle_flexarray_define( copy, int, 32, n);
-
-   memcpy( copy, data, n * sizeof( int));    // using copy here for something
-
-   mulle_flexarray_done( copy);
-}
-```
-
-A mulle_flexarray named "copy" is created, this is either a pointer to stack
-space or to a malloc area. `mulle_flexarray_define` defines the basic type
-of the array (`int`) and the maximum amount to be stored in a stack array is
-`32`.
-
 
 ## Data Structures
 
@@ -206,14 +169,13 @@ All arrays store their elements in a single block of memory.
 
 #### Standard Arrays
 
-##### `mulle_array`
+##### `mulle_array` conveniently stores managed pointers
 
 This is an array of `void *` that `realloc`s on power of two sizes. The
-elements equality is determined with a callback function and the elements
+elements equality is determined with a callback function. The elements
 can be copied/freed or reference counted using
-[`mulle_container_callback`s](dox/API_CONTAINER_CALLBACK.md). Deletions use
-`memmove`. It could be the basis for a `NSMutableArray` implementation
-(but isn't currently).
+[`mulle_container_callback`s](dox/API_CONTAINER_CALLBACK.md). It could be the
+basis for a `NSMutableArray` implementation (but isn't currently).
 
 ![](pix/mulle-array.svg)
 
@@ -225,33 +187,108 @@ can be copied/freed or reference counted using
 There is also an [API Documentation](dox/API_ARRAY.md).
 
 
-##### `mulle__array`
+##### `mulle__array` conveniently stores managed pointers with minimal overhead
 
 This is `mulle_array` minus the `allocator` and `callback`.
 
 ![](pix/mulle--array.svg)
 
 
-##### `mulle_pointerarray`
+##### `mulle_pointerarray` stores unmanaged pointers
 
 This is a stripped down version of `mulle_array` to manage
 untyped `void *`. The pointers are simply compared with `==`. You can also
-store integers casted as `void *`.
+store integers casted as `void *`. The memory referenced by a pointer isn't
+managed (e.g. freed when removed from storage), like mulle-array does.
 
 ![](pix/mulle-pointerarray.svg)
 
 
-##### `mulle__pointerarray`
+##### `mulle__pointerarray` stores pointers with minimal overhead
 
 This is a stripped down version of `mulle_pointerarray` minus the `allocator`.
-It can be convenient for quickly building up C arrays of `void *`.
+It can be convenient for quickly building up lots of C arrays of `void *`.
 
 ![](pix/mulle--pointerarray.svg)
 
 
+
+##### flexarray, a replacement for alloca
+
+The `mulle_flexarray` can be used as an replacement for `alloca`. The problem
+with `alloca` is always two-fold. 1.) It's non-standard and not available on
+all platforms. 2.) The amount of memory to `alloca` may exceed the available
+stack space. The `mulle_flexarray` solves this problem by using a small amount
+of stack space for low memory scenarios and moving to `malloc`, when it's
+needed.
+
+Example:
+
+``` c
+ void  foo( int n, int *data)
+{
+   mulle_flexarray_do( copy, int, 32, n)
+   {
+      memcpy( copy, data, n * sizeof( int));    // using copy here for something
+   }
+}
+```
+
+A `int *` named "copy" is created. "copy" either points to stack memory or to
+a malloced area. `mulle_flexarray_do` defines the basic type
+of the array (`int`) and the maximum elements to be stored on the stack. In this
+case its `int[ 32]`. The actual amount used is determined by `n`. The flexarray
+will be valid in the scope of the `mulle_flexarray_do` only.
+
+> `mulle_flexarray` is actually a macro for `mulle_structarray`.
+> Due to a C language limitations, the symbol "copy" will be available outside
+> the block, but set to NULL.
+
+If you use a `return` statement in a `mulle_flexarray_do` block you risk a
+leak unless you issue `mulle_flexarray_done` before the return or use
+`mulle_flexarray_return` (which needs the compiler extension `__typeof__` to
+work though).
+
+``` c
+   mulle_flexarray_do( copy, int, 32, n)
+   {
+      memset( copy, 0, sizeof( int) * n);
+      if( n == 1)
+         mulle_flexarray_return( copy, copy[ 0]);
+      if( n == 2)
+      {
+         tmp = copy[ 0];                // rescue return value
+         mulle_flexarray_done( copy);   // "copy" is invalid after done
+         return( tmp);   // possible!
+      }
+   }
+```
+
+Using `break` to break out of `mulle_flexarray_do` is not a problem. A
+`continue` statement in `mulle_flexarray_do` will do the same thing as
+`break` though and is therefore only confusing:
+
+
+``` c
+   for( n = 0; n < 2; n++)
+   {
+      mulle_flexarray_do( copy, int, 16, n)
+      {
+         continue;  // affects mulle_flexarray_do, not for
+      }
+   }
+```
+
+> #### Note
+>
+> In general it's preferable and safer to use a `mulle_structarray` as it does
+> bounds checking (when built with DEBUG) and it can also be initially used
+> with stack memory.
+
+
 #### Special Arrays
 
-##### `mulle__uniquepointerarray`
+##### `mulle__uniquepointerarray` keeps unmanaged sorted pointers for reference
 
 `mulle__uniquepointerarray` is based on `mulle__pointerarray`. It keeps its
 elements of `void *` in an array in sorted order for searching by pointer
@@ -260,7 +297,7 @@ advantage over a hashtable set are low memory requirement and superior
 performance for smaller quantities.
 
 
-##### `mulle__rangeset`
+##### `mulle__rangeset` stores selected elements of an array
 
 This is an array of `mulle_range` elements, that are always kept in sorted
 order. A `mulle_range` is defined as
@@ -283,7 +320,7 @@ that `mulle_rangeset` can ensure that
 It could be the basis for an `NSIndexSet`.
 
 
-#### `mulle_structarray`
+#### `mulle_structarray` stores any kind of C type with proper alignment
 
 This is a variant of `mulle_pointerarray`, but instead of using `void *` you
 can specify any C type as the element size. This can be useful for building
@@ -292,22 +329,22 @@ arrays of `float` or any kind of `struct` for example.
 
 #### Associative Arrays
 
-##### `mulle_pointerpairarray`
+##### `mulle_pointerpairarray` stores unmanaged key/value pairs
 
-This is modified `mulle_pointerarray` that holds key/value pairs of
+This is a modified `mulle_pointerarray` that holds key/value pairs of
 `void *`, `void *` instead of just a single `void *`. In comparison to using a
 map, order of addition is preserved and the space requirement is lower. But
 it is slow in searches.
 
 ![](pix/mulle-pointerpairarray.svg)
 
-##### `mulle__pointerpairarray`
+##### `mulle__pointerpairarray` stores key/value pairs with minimal overhead
 
 This is the `mulle_pointerpairarray` variant without the `allocator`.
 
 ### Queues
 
-#### `mulle__pointerqueue`
+#### `mulle__pointerqueue` stores unmanaged pointers without copying
 
 This is a FIFO queue for `void *`. It does not `realloc` on addition. Instead
 it chains buckets of `void *` together. This makes large quantities of
@@ -331,20 +368,27 @@ It is the basis for the `NSAutoreleasePool` implementation.
 
 ### Hashtables
 
-A hashtable is
-about twice the size of the number of elements contained within, the rest being
-holes. A hash of the element is used to quickly
-locate the entry in the hashtable.
+A hashtable is about twice the size of the number of elements contained within,
+the rest being holes. A hash of the element is used to quickly locate the entry
+in the hashtable.
 
-Hashtable `realloc` and redistribute their
-elements on power of two size boundaries.
+Hashtable `realloc` and redistribute their elements on power of two size
+boundaries.
+
+A hashtables use "holes" to discriminate between valid entries and available
+space. Consequently a hashtable can not use all possible `void *` values as
+keys and needs a special **notakey** marker for such holes.
+
+The "notakey" value is usually `mulle_not_a_pointer`, which is defined as
+`(void *) INTPTR_MIN`.
+
 
 #### Maps
 
 Hashtable data structures that provide associative storage (key/value) are
 called maps.
 
-##### `mulle_map`
+##### `mulle_map` conveniently stores managed keys and values
 
 The elements equality is determined with a callback function and the elements
 can be copied/freed or reference counted using callbacks organized in a
@@ -363,7 +407,7 @@ can be copied/freed or reference counted using callbacks organized in a
 > available hole is used.
 
 
-##### `mulle__map`
+##### `mulle__map` stores managed keys and values with minimal overhead
 
 This is `mulle_map` minus the `allocator` and the `callback`. It is the basis
 for the `NSMutableDictionary` implementation.
@@ -371,7 +415,7 @@ for the `NSMutableDictionary` implementation.
 ![](pix/mulle--map.svg)
 
 
-##### `mulle__pointermap`
+##### `mulle__pointermap` stores unmanaged keys and values
 
 This is a simplified version of `mulle__map`. Equality is determined by
 comparing pointers with `==` and holes are always filled with
@@ -382,22 +426,23 @@ by `mulle__pointermap`.
 
 ### Sets
 
-A set is a map minus the value part. The storage of pointers and objects in a
-set is not very efficient, compared to an array, but searching is fast for
-larger item quantities.
+A set is the most simple hashtable. It's like a map minus the value part.
+The storage of pointers and objects in a set is not very memory efficient,
+compared to an array, but searching is fast for sets with larger item
+quantities. (ca. > 100)
 
-#### `mulle_set`
+#### `mulle_set` conveniently stores managed pointers for quick lookup
 
 ![](pix/mulle-set.svg)
 
-#### `mulle__set`
+#### `mulle__set` stores managed pointers with minimal overhead
 
 The `mulle__set` is a `mulle_set` without the `allocator` and the `callback`.
 
 ![](pix/mulle--set.svg)
 
 
-##### `mulle__pointerset`
+##### `mulle__pointerset` stores unmanaged pointers with minimal overhead
 
 This is a simplified version of `mulle__set`. Equality is determined by
 comparing pointers with `==` and holes are always filled with

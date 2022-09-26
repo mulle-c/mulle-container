@@ -213,9 +213,8 @@ void  _mulle__pointerarray_absorb( struct mulle__pointerarray *array,
                                    struct mulle__pointerarray *victim,
                                    struct mulle_allocator *victim_allocator)
 {
-   struct mulle__pointerarrayenumerator   rover;
-   void                                   **reserved;
-   unsigned int                           n;
+   void           **reserved;
+   unsigned int   n;
 
    if( ! allocator)
       allocator = &mulle_default_allocator;

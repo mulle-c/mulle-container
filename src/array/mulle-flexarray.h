@@ -37,7 +37,10 @@
 #ifndef mulle_flexarray__h__
 #define mulle_flexarray__h__
 
-#include <stdalign.h>
+#include "include.h"
+
+// use mulle-c11 for that
+//#include <stdalign.h>
 
 
 // A mulle-flexarray is useful in functions, when you prefer to do the work
@@ -65,23 +68,18 @@
 //
 // void  foo( int n, int *data)
 // {
-//    mulle_flexarray_define( copy, int, 32, n);
-//
-//    memcpy( copy, data, n * sizeof( int));
-//
-//    mulle_flexarray_done( copy);   // use copy here!
+//    mulle_flexarray_do( copy, int, 32, n);
+//    {
+//       memcpy( copy, data, n * sizeof( int));
+//    }
 // }
 
-#define mulle_flexarray( name, type, stackcount)                                   \
-   type                        name ## __storage[ stackcount];                     \
-   struct mulle__structarray   name ## __array =                                   \
-                               {                                                   \
-                                  name ## __storage,                               \
-                                  name ## __storage,                               \
-                                  &name ## __storage[ stackcount],                 \
-                                  name ## __storage,                               \
-                                  sizeof( type) + (sizeof( type) % alignof( type)) \
-                               }
+#define mulle_flexarray( name, type, stackcount)                           \
+   type                        name ## __storage[ (stackcount)];           \
+   struct mulle__structarray   name ## __array =                           \
+                               MULLE__STRUCTARRAY_INIT( name ## __storage, \
+                                                        type,              \
+                                                        (stackcount))
 
 #define mulle_flexarray_alloc( name, actualcount)                          \
       _mulle__structarray_guarantee( &name ## __array, (actualcount), NULL)
@@ -96,10 +94,61 @@
    )
 
 #define mulle_flexarray_done( name)                                        \
-   _mulle__structarray_done( &name ## __array, NULL)
+   do                                                                      \
+   {                                                                       \
+      _mulle__structarray_done( &name ## __array, NULL);                   \
+      name = NULL;                                                         \
+   }                                                                       \
+   while( 0)
 
 #define mulle_flexarray_define( name, type, stackcount, count)             \
    mulle_flexarray( name, type, stackcount);                               \
    type *name = mulle_flexarray_alloc( name, count)
+
+
+#define mulle_flexarray_return( name, value)                               \
+   do                                                                      \
+   {                                                                       \
+      __typeof__( *name) name ## __tmp = (value);                          \
+      mulle_flexarray_done( name);                                         \
+      return( name ## __tmp);                                              \
+   }                                                                       \
+   while( 0)
+
+#define mulle_flexarray_return_void( name)                                 \
+   do                                                                      \
+   {                                                                       \
+      mulle_flexarray_done( name);                                         \
+      return;                                                              \
+   }                                                                       \
+   while( 0)
+
+
+//
+// we have to keep storage out of the for loop, but we can zero the
+// pointer, so that a "too late" access is catchable
+//
+#define mulle_flexarray_do( name, type, stackcount, count)                   \
+   type   name ## __storage[ stackcount];                                    \
+   type   *name;                                                             \
+   for( struct mulle__structarray                                            \
+           name ## __array =                                                 \
+              MULLE__STRUCTARRAY_INIT( name ## __storage, type, stackcount), \
+           name ## __i =                                                     \
+           {                                                                 \
+              ( name = mulle_flexarray_alloc( name, count), (void *) 0 )     \
+           };                                                                \
+        ! name ## __i._storage;                                              \
+        name = NULL,                                                         \
+        name ## __i._storage =                                               \
+        (                                                                    \
+           _mulle__structarray_done( &name ## __array, NULL),                \
+           (void *) 0x1                                                      \
+        )                                                                    \
+      )                                                                      \
+                                                                             \
+      for( int  name ## __j = 0;    /* break protection */                   \
+           name ## __j < 1;                                                  \
+           name ## __j++)
 
 #endif
