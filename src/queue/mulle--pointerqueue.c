@@ -75,9 +75,6 @@ void
                                     struct mulle__pointerqueuebucket  *q,
                                     struct mulle_allocator *allocator)
 {
-   struct mulle__pointerqueuebucket   *p;
-   size_t                             space;
-
    if( queue->_spare_allowance)
    {
       q->_next       = queue->_spares;
@@ -95,7 +92,6 @@ void   _mulle__pointerqueue_grow( struct mulle__pointerqueue *queue,
 {
    struct mulle__pointerqueuebucket   *p;
    struct mulle__pointerqueuebucket   *q;
-   size_t                             space;
 
    p = _mulle__pointerqueue_new_bucket( queue, allocator);
    q = queue->_write;

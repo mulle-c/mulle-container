@@ -24,6 +24,18 @@ struct mulle_structarray
 };
 
 
+#define MULLE_STRUCTARRAY_INIT( storage, type, count, allocator)   \
+   ((struct mulle_structarray)                                     \
+   {                                                               \
+      storage,                                                     \
+      storage,                                                     \
+      &((char *) storage)[ count],                                 \
+      storage,                                                     \
+      (size_t) (sizeof( type) + (sizeof( type) % alignof( type))), \
+      allocator                                                    \
+   })
+
+
 static inline struct mulle_structarray  *
    mulle_structarray_alloc( struct mulle_allocator *allocator)
 {
@@ -205,11 +217,50 @@ static inline unsigned int
 }
 
 
+static inline unsigned int
+   mulle_structarray_get_size( struct mulle_structarray *array)
+{
+   if( ! array)
+      return( 0);
+
+   return( _mulle__structarray_get_size( (struct mulle__structarray *) array));
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_structarray_get_size_as_length( struct mulle_structarray *array)
 {
    return( _mulle__structarray_get_size_as_length( (struct mulle__structarray *) array));
+}
+
+
+static inline size_t
+   mulle_structarray_get_size_as_length( struct mulle_structarray *array)
+{
+   if( ! array)
+      return( 0);
+
+   return( _mulle__structarray_get_size_as_length( (struct mulle__structarray *) array));
+}
+
+
+
+MULLE_C_NONNULL_FIRST
+static inline size_t
+   _mulle_structarray_get_element_size( struct mulle_structarray *array)
+{
+   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
+}
+
+
+static inline size_t
+   mulle_structarray_get_element_size( struct mulle_structarray *array)
+{
+   if( ! array)
+      return( 0);
+
+   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
 }
 
 
@@ -235,27 +286,32 @@ static inline void
 
 
 
+// guarantee ensures that you can add up to length items without a realloc
 MULLE_C_NONNULL_FIRST
 static inline void   *_mulle_structarray_guarantee( struct mulle_structarray *array,
-                                                    unsigned int length)
+                                                    unsigned int count)
 {
    return( _mulle__structarray_guarantee( (struct mulle__structarray *) array,
-                                          length,
+                                          count,
                                           array->allocator));
 }
 
 
+// reserve, returns storage for multiple items, but it will be already counted
+// as used. copy data in and your good
 MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_advance( struct mulle_structarray *array,
-                               unsigned int length)
+                               unsigned int count)
 {
    return( _mulle__structarray_advance( (struct mulle__structarray *) array,
-                                        length,
+                                        count,
                                         array->allocator));
 }
 
 
+// _mulle_structarray_reserve is like _mulle_structarray_advance but just for
+// one item
 MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_reserve( struct mulle_structarray *array)
@@ -511,7 +567,7 @@ static inline void
 }
 
 
-#define mulle_structarray_for( array, item)                                                        \
+#define mulle_structarray_for( array, item)                                                       \
    for( struct mulle_structarrayenumerator rover__ ## item = mulle_structarray_enumerate( array); \
         _mulle_structarrayenumerator_next( &rover__ ## item, (void **) &item);)
 
