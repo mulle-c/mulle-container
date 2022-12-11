@@ -17,25 +17,27 @@ jobs:
     - name: Set MULLE_HOSTNAME
       run: |
         name="${GITHUB_REF##*/}"
-        MULLE_HOSTNAME="ci-${name##*-}"
+        MULLE_HOSTNAME="${MULLE_HOSTNAME:-ci-${name##*-}}"
         echo "MULLE_HOSTNAME=${MULLE_HOSTNAME}" >> $GITHUB_ENV
 
     - name: Add to path
       run:  echo "$HOME/bin" >> $GITHUB_PATH
 
     - name: Dump Environment
-      run:  env | sort
+      run:  |
+        env | sort
 
     - uses: actions/checkout@v2
-      if: ${{ ! env.ACT }}
 
     - uses: mulle-sde/github-ci@v1
-      if: ${{ ! env.ACT }}
 
     - name: Dump Project Environment
       run:  |
+        pwd
+        ls
         [ ! -d .mulle/etc/env ] || ls -l .mulle/etc/env/environment*.sh
-        mulle-sde environment
+        mulle-bashfunctions version
+        TRACE=YES mulle-sde -vvv -ld -lx environment
 
     - name: Mulle-SDE Fetch
       run: mulle-sde fetch
