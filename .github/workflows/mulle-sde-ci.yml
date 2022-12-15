@@ -37,7 +37,7 @@ jobs:
         ls
         [ ! -d .mulle/etc/env ] || ls -l .mulle/etc/env/environment*.sh
         mulle-bashfunctions version
-        TRACE=YES mulle-sde -vvv -ld -lx environment
+        mulle-sde -vvv -ld -lx environment
 
     - name: Mulle-SDE Fetch
       run: mulle-sde fetch
