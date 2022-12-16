@@ -1,6 +1,6 @@
 {
    "name" : "mulle-container",
-   "version" : "4.0.0",
+   "version" : "6.1.0",
    "description" : "🛄 Arrays, hashtables and a queue",
    "homepage" : "https://github.com/mulle-c/mulle-container",
    "bugs" : "https://github.com/mulle-c/mulle-container/issues",
@@ -11,7 +11,9 @@
       "url" : "mulle-c/mulle-container"
    },
    "dependencies" : {
-      "mulle-allocator" : "mulle-c/mulle-allocator",
-      "mulle-data" : "mulle-c/mulle-data"
+      "mulle-allocator" : "git://github.com/mulle-c/mulle-allocator",
+      "mulle-c11" : "git://github.com/mulle-c/mulle-c11",
+      "mulle-data" : "git://github.com/mulle-c/mulle-data",
+      "farmhash-c" : "git://github.com/mulle-c/farmhash-c"
    }
 }
