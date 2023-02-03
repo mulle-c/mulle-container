@@ -250,18 +250,18 @@ leak unless you issue `mulle_flexarray_done` before the return or use
 work though).
 
 ``` c
-   mulle_flexarray_do( copy, int, 32, n)
+mulle_flexarray_do( copy, int, 32, n)
+{
+   memset( copy, 0, sizeof( int) * n);
+   if( n == 1)
+      mulle_flexarray_return( copy, copy[ 0]);
+   if( n == 2)
    {
-      memset( copy, 0, sizeof( int) * n);
-      if( n == 1)
-         mulle_flexarray_return( copy, copy[ 0]);
-      if( n == 2)
-      {
-         tmp = copy[ 0];                // rescue return value
-         mulle_flexarray_done( copy);   // "copy" is invalid after done
-         return( tmp);   // possible!
-      }
+      tmp = copy[ 0];                // rescue return value
+      mulle_flexarray_done( copy);   // "copy" is invalid after done
+      return( tmp);   // possible!
    }
+}
 ```
 
 Using `break` to break out of `mulle_flexarray_do` is not a problem. A
@@ -270,13 +270,13 @@ Using `break` to break out of `mulle_flexarray_do` is not a problem. A
 
 
 ``` c
-   for( n = 0; n < 2; n++)
+for( n = 0; n < 2; n++)
+{
+   mulle_flexarray_do( copy, int, 16, n)
    {
-      mulle_flexarray_do( copy, int, 16, n)
-      {
-         continue;  // affects mulle_flexarray_do, not for
-      }
+      continue;  // affects mulle_flexarray_do, not for
    }
+}
 ```
 
 > #### Note
@@ -460,16 +460,16 @@ As used by `mulle_array`, `mulle_map`, `mulle_set`. Each callback name is to
 be prefixed with `mulle_container_keycallback_`, which has been elided for
 brevity:
 
-Name                        | Type       | Notakey      | Equality | Copies | Frees
-----------------------------|------------|--------------|----------|--------|-------
-`_int`                      | `int`      | `INTPTR_MIN` | `==`     | NO     | NO
-`_intptr`                   | `intptr_t` | `INTPTR_MIN` | `==`     | NO     | NO
-`_nonowned_pointer_or_null` | `void *`   | `INTPTR_MIN` | `==`     | NO     | NO
-`_nonowned_pointer`         | `void *`   | `NULL`       | `==`     | NO     | NO
-`_owned_pointer`            | `void *`   | `NULL`       | `==`     | NO     | YES
-`_copied_cstring`           | `char *`   | `NULL`       | `strcmp` | YES    | YES
-`_nonowned_cstring`         | `char *`   | `NULL`       | `strcmp` | NO     | NO
-`_owned_cstring`            | `char *`   | `NULL`       | `strcmp` | NO     | YES
+| Name                        | Type       | Notakey      | Equality | Copies | Frees
+|-----------------------------|------------|--------------|----------|--------|-------
+| `_int`                      | `int`      | `INTPTR_MIN` | `==`     | NO     | NO
+| `_intptr`                   | `intptr_t` | `INTPTR_MIN` | `==`     | NO     | NO
+| `_nonowned_pointer_or_null` | `void *`   | `INTPTR_MIN` | `==`     | NO     | NO
+| `_nonowned_pointer`         | `void *`   | `NULL`       | `==`     | NO     | NO
+| `_owned_pointer`            | `void *`   | `NULL`       | `==`     | NO     | YES
+| `_copied_cstring`           | `char *`   | `NULL`       | `strcmp` | YES    | YES
+| `_nonowned_cstring`         | `char *`   | `NULL`       | `strcmp` | NO     | NO
+| `_owned_cstring`            | `char *`   | `NULL`       | `strcmp` | NO     | YES
 
 ### Value Callbacks
 
@@ -478,15 +478,15 @@ equality. Each callback name is to be prefixed with
 `mulle_container_valuecallback`, which has been elided for brevity.
 
 
-Name                | Type       | Copies | Frees
---------------------|------------|--------|-------
-`_int`              | `int`      | NO     | NO
-`_intptr`           | `intptr_t` | NO     | NO
-`_nonowned_pointer` | `void *`   | NO     | NO
-`_owned_pointer`    | `void *`   | NO     | YES
-`_copied_cstring`   | `char *`   | YES    | YES
-`_nonowned_cstring` | `char *`   | NO     | NO
-`_owned_cstring`    | `char *`   | NO     | YES
+| Name                | Type       | Copies | Frees
+|---------------------|------------|--------|-------
+| `_int`              | `int`      | NO     | NO
+| `_intptr`           | `intptr_t` | NO     | NO
+| `_nonowned_pointer` | `void *`   | NO     | NO
+| `_owned_pointer`    | `void *`   | NO     | YES
+| `_copied_cstring`   | `char *`   | YES    | YES
+| `_nonowned_cstring` | `char *`   | NO     | NO
+| `_owned_cstring`    | `char *`   | NO     | YES
 
 
 ## Efficiency
@@ -552,26 +552,31 @@ _mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keyc
 
 ## Add
 
-### Either: link library
-
-Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
+You can use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your
+project:
 
 ``` sh
-mulle-sde dependency add --c --github mulle-c mulle-container
+mulle-sde add github:mulle-c/mulle-container
 ```
 
-### Or: add Sources
+Or add only the sources and headers of mulle-container and it's dependencies
+with [clib](https://github.com/clibs/clib):
 
-Alternatively you can read [STEAL.md](//github.com/mulle-c11/dox/STEAL.md) on
-how to add mulle-c source code into your own projects.
 
+``` sh
+clib install --out src/mulle-c mulle-c/mulle-container
+```
+
+Add  `-isystem src/mulle-c` to your `CFLAGS` and compile all the sources that
+were downloaded with your project.
 
 
 ## Install
 
 ### mulle-sde
 
-Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container and all dependencies:
+Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container
+and all dependencies:
 
 ```
 mulle-sde install --prefix /usr/local \
@@ -583,10 +588,10 @@ mulle-sde install --prefix /usr/local \
 
 Install the requirements:
 
-Requirements                                             | Description
----------------------------------------------------------|-----------------------
-[mulle-allocator](//github.com/mulle-c/mulle-allocator)  | Memory allocation wrapper
-[mulle-data](//github.com/mulle-c/mulle-data)            | Hash code
+| Requirements                                             | Description
+|----------------------------------------------------------|-----------------------
+| [mulle-allocator](//github.com/mulle-c/mulle-allocator)  | Memory allocation wrapper
+| [mulle-data](//github.com/mulle-c/mulle-data)            | Hash code
 
 Install into `/usr/local`:
 
