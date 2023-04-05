@@ -171,7 +171,8 @@ struct mulle__pointersetenumerator
 };
 
 
-extern struct mulle__pointersetenumerator   mulle__pointersetenumerator_empty;
+#define mulle__pointersetenumerator_empty \
+   ((struct mulle__pointersetenumerator) { 0 })
 
 
 MULLE_C_NONNULL_FIRST

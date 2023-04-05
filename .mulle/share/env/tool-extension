@@ -1,5 +1,14 @@
 mulle-cmake-graphviz-include
 mulle-create-build-motd
+clib
+clib-configure
+clib-install
+clib-uninstall
+clib-upgrade
+clib-build
+clib-init
+clib-search
+clib-update
 git
 gzip
 id

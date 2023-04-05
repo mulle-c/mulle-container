@@ -50,9 +50,9 @@
 //
 
 // callback and allocator can be public
-#define MULLE_SET_BASE                                \
-   MULLE__SET_BASE;                                   \
-   struct mulle_container_keycallback   *callback;    \
+#define MULLE_SET_BASE                             \
+   MULLE__SET_BASE;                                \
+   struct mulle_container_keycallback   *callback; \
    struct mulle_allocator               *allocator
 
 
@@ -243,17 +243,20 @@ struct  mulle_setenumerator
 };
 
 
-extern struct mulle_setenumerator   mulle_setenumerator_empty;
+#define mulle_setenumerator_empty  \
+   ((struct mulle_setenumerator) { 0 })
 
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_setenumerator
    _mulle_set_enumerate( struct mulle_set *set)
 {
-   struct mulle__setenumerator  rover;
+   struct mulle_setenumerator    rover;
+   struct mulle__setenumerator   tmp;
 
-   rover = _mulle__set_enumerate( (struct mulle__set *) set, set->callback);
-   return( *(struct mulle_setenumerator *) &rover);
+   tmp = _mulle__set_enumerate( (struct mulle__set *) set, set->callback);
+   memcpy( &rover, &tmp, sizeof( struct mulle__setenumerator));
+   return( rover);
 }
 
 

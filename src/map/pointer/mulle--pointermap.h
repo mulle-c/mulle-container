@@ -40,8 +40,8 @@
 
 MULLE_C_NONNULL_FIRST_SECOND
 static inline void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
-                                                 struct mulle_pointerpair *pair,
-                                                 struct mulle_allocator *allocator)
+                                                  struct mulle_pointerpair *pair,
+                                                  struct mulle_allocator *allocator)
 {
    _mulle__pointermap_set_pair_generic( map, pair, &mulle__pointermap_keyvaluecallback, allocator);
 }

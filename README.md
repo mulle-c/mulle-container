@@ -12,140 +12,10 @@ simplify memory management.
 Some data structures utilize callbacks that are compatible to OS X's
 [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
 
-| Release Version
-|-----------------------------------
-| [![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release)](//github.com/mulle-c/mulle-container/tree/release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)
+| Release Version                                       | Release Notes
+|-------------------------------------------------------|--------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)| [RELEASENOTES](RELEASENOTES.md) |
 
-
-## Aspects
-
-### Algorithms
-
-There are three basic algorithms employed by the data structures in
-mulle-container. The hashtable, the array and the queue.
-
-Both the array and the hashtable use a contiguous block of memory.
-An array reallocates on growth. A hashtable copies on growth. The queue is a
-linked list of smaller memory blocks.
-
-
-### Embedded allocator
-
-For many data structures there exist two variants. One that keeps a reference
-to the memory allocator, and one that doesn't. The data structure without an
-allocator, is obviously a bit smaller than the one with.
-If you are managing millions of hashtables, as may be the case when doing
-database fetches, this can be significant. On the other hand, embedding the
-allocator makes the API simpler and less susceptible to allocator mix ups.
-You also get "convenient enumeration" (see below)
-
-### Uniform and convenient enumeration
-
-Looping over the data structure contents is done with enumerators. The
-enumerator holds the state of the loop. The enumeration loop over any
-data structure, if unform. You setup an enumerator with `_enumerate`,
-use the enumerator with `_next` and end the loop with `_done`. It looks like
-this:
-
-``` c
-struct mulle_arrayenumerator  rover;
-char                          *item;
-
-rover = mulle_array_enumerate( &array);
-while( _mulle_arrayenumerator_next( &rover, &item))
-{
-   printf( "%s\n", item);
-}
-mulle_arrayenumerator_done( &rover);
-```
-
-With a convenience macro, the enumerator setup is hidden and the code
-simplifies to:
-
-``` c
-char   *item;
-
-mulle_array_for( &array, item)
-{
-   printf( "%s\n", item);
-}
-```
-
-### NULL leniency
-
-Each data structure supplies rigid functions and lenient functions, with
-respect to NULL parameters. The rigid functions are prefixed with '`_`' and
-do not check for NULL pointers. The lenient functions do nothing, if NULL is
-passed. This is like Objective-C where you can call methods with 'nil'.
-
-> #### Caveat
->
-> A NULL map will have always return NULL in an enumeration for the (failed)
-> key value.
->
-
-### Pointers or Objects
-
-A data structure may merely handle pointer equality as a way of comparing
-members. These data structures conventionally contain the word "pointer" in
-their name. They are very efficient and sometimes all you need. Other data
-structures use a number of callbacks, to test for equality and to handle memory
-management and to create hash codes.
-
-
-## Example
-
-Here is an example using `mulle_map` to associate c-strings with each other.
-All the necessary memory management (copying of keys and values) is performed
-by `mulle_map` using the callbacks contained in a
-`mulle_container_keyvaluecallback` struct. The on-stack version is commented
-out:
-
-
-``` c
-#include <mulle-container/mulle-container.h>
-
-static struct mulle_container_keyvaluecallback   callback;
-
-static void  test( void)
-{
-//   struct mulle_map              auto_map;
-   struct mulle_map   *map;
-   char               *key;
-   char               *value;
-
-//   mulle_map_init( &auto_map, 0, &callback, NULL);
-//   map = &auto_map;
-   map = mulle_map_create( 0, &callback, NULL);
-
-   mulle_map( map, "VfL", "VFL");
-   mulle_map( map, "Bochum", "BOCHUM");
-   mulle_map( map, "1848", "1848");
-
-   if( ! mulle_map_get( map, "1849"))
-   {
-      mulle_map_for( map, key, value)
-      {
-         printf( "%s : %s\n", key, value);
-      }
-   }
-   mulle_map_remove( map, "1848");
-
-//   mulle_map_done( map);
-   mulle_map_destroy( map);
-}
-
-
-int   main( void)
-{
-   // use predefined structs to compose our custom callback
-   callback.keycallback   = mulle_container_keycallback_copied_cstring;
-   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
-
-   test();
-   return( 0);
-}
-```
 
 
 ## Data Structures
@@ -155,13 +25,15 @@ that is prefixed with the name of the data structure it handles. So for example
 the `get` function for `mulle_array` is `mulle_array_get`. The first parameter,
 - except for creation functions - is always the container itself.
 
-Check out [SYNTAX.md](//github.come/mulle-c/mulle-c11/dox/SYNTAX.md) for a somewhat
-formal explanation and [VERBS.md](dox/VERBS.md) for a list of common verbs
-being employed.
+Check out [SYNTAX.md](//github.come/mulle-c/mulle-c11/dox/SYNTAX.md) for a
+somewhat formal explanation and [VERBS.md](dox/VERBS.md) for a list of common
+verbs being employed.
 
-The various functions `assert` their parameters, but when compiled for release
-there are no runtime checks. For development it is wise to use a debug version
-of the library.
+The various underscore prefixed functions may `assert` their parameters, but
+when compiled for "Release" there will be no runtime checks. The non
+underscore functions protect themselves against NULL pointers.
+For development it is wise, to use a debug version of the library.
+
 
 ### Arrays
 
@@ -452,6 +324,7 @@ by `mulle__pointerset`.
 ![](pix/mulle--pointerset.svg)
 
 
+
 ## Predefined Callbacks
 
 ### Key Callbacks
@@ -544,56 +417,55 @@ _mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keyc
 ```
 
 
+
 ### You are here
 
 ![Overview](overview.dot.svg)
 
 
 
+
+
 ## Add
 
-You can use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your
-project:
+Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
 
 ``` sh
 mulle-sde add github:mulle-c/mulle-container
 ```
 
-Or add only the sources and headers of mulle-container and it's dependencies
-with [clib](https://github.com/clibs/clib):
+To only add the sources of mulle-container with dependency
+sources use [clib](https://github.com/clibs/clib):
 
 
 ``` sh
 clib install --out src/mulle-c mulle-c/mulle-container
 ```
 
-Add  `-isystem src/mulle-c` to your `CFLAGS` and compile all the sources that
-were downloaded with your project.
+Add `-isystem src/mulle-c` to your `CFLAGS` and compile all the sources that were downloaded with your project.
 
 
 ## Install
 
-### mulle-sde
+### Install with mulle-sde
 
-Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container
-and all dependencies:
+Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container and all dependencies:
 
-```
+``` sh
 mulle-sde install --prefix /usr/local \
    https://github.com/mulle-c/mulle-container/archive/latest.tar.gz
 ```
 
 ### Manual Installation
 
-
 Install the requirements:
 
-| Requirements                                             | Description
-|----------------------------------------------------------|-----------------------
-| [mulle-allocator](//github.com/mulle-c/mulle-allocator)  | Memory allocation wrapper
-| [mulle-data](//github.com/mulle-c/mulle-data)            | Hash code
+| Requirements                                 | Description
+|----------------------------------------------|-----------------------
+| [mulle-allocator](https://github.com/mulle-c/mulle-allocator)             | 🔄 Flexible C memory allocation scheme
+| [mulle-data](https://github.com/mulle-c/mulle-data)             | #️⃣ A collection of hash functions
 
-Install into `/usr/local`:
+Install **mulle-container** into `/usr/local` with [cmake](https://cmake.org):
 
 ``` sh
 cmake -B build \
@@ -605,14 +477,9 @@ cmake --install build --config Release
 ```
 
 
-## Platforms and Compilers
-
-All platforms and compilers supported by
-[mulle-c11](//github.com/mulle-c/mulle-c11).
-
-
 ## Author
-
 [Nat!](//www.mulle-kybernetik.com/weblog) for
 [Mulle kybernetiK](//www.mulle-kybernetik.com) and
 [Codeon GmbH](//www.codeon.de)
+
+

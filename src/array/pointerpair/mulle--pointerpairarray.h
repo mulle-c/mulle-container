@@ -311,7 +311,9 @@ struct mulle__pointerpairarrayenumerator
    MULLE__POINTERPAIRARRAYENUMERATOR_BASE;
 };
 
-extern struct mulle__pointerpairarrayenumerator   mulle__pointerpairarrayenumerator_empty;
+#define mulle__pointerpairarrayenumerator_empty  \
+   ((struct mulle__pointerpairarrayenumerator) { 0 })
+
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle__pointerpairarrayenumerator

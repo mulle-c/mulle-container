@@ -41,8 +41,6 @@
 #include <string.h>
 
 
-struct mulle__genericpointersetenumerator   mulle__genericpointersetenumerator_empty;
-
 # pragma mark - generic operations
 
 // suitable for sue by mulle--set and mulle--pointerset

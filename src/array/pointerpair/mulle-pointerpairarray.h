@@ -257,20 +257,25 @@ MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpairarrayenumerator
 	_mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
-   struct mulle__pointerpairarrayenumerator   rover;
+   struct mulle_pointerpairarrayenumerator    rover;
+   struct mulle__pointerpairarrayenumerator   tmp;
 
-   rover = _mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
-   return( *(struct mulle_pointerpairarrayenumerator *) &rover);
+   tmp = _mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
+   // idiocy for overzealous C compilers, should optimize away to nothing
+   memcpy( &rover, &tmp, sizeof( struct mulle__pointerpairarrayenumerator));
+   return( rover);
 }
 
 
 static inline struct mulle_pointerpairarrayenumerator
 	mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
-   struct mulle__pointerpairarrayenumerator   rover;
+   struct mulle_pointerpairarrayenumerator    rover;
+   struct mulle__pointerpairarrayenumerator   tmp;
 
-   rover = mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
-   return( *(struct mulle_pointerpairarrayenumerator *) &rover);
+   tmp = mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
+   memcpy( &rover, &tmp, sizeof( struct mulle__pointerpairarrayenumerator));
+   return( rover);
 }
 
 

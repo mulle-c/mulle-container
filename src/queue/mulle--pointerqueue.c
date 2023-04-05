@@ -35,9 +35,6 @@
 #include "include-private.h"
 
 
-const struct mulle__pointerqueueenumerator   mulle__pointerqueueenumerator_empty;
-
-
 int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover,
                                             void **item);
 

@@ -30,9 +30,6 @@ struct mulle_map
 };
 
 
-extern struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
-
-
 #pragma mark - setup and teardown
 
 MULLE_CONTAINER_GLOBAL
@@ -414,19 +411,17 @@ struct mulle_mapenumerator
 };
 
 
-extern struct mulle_mapenumerator   mulle_mapenumerator_empty;
-
-
 static inline struct mulle_mapenumerator
    mulle_map_enumerate( struct mulle_map *map)
 {
-   struct mulle__mapenumerator   rover;
+   struct mulle_mapenumerator    rover;
+   struct mulle__mapenumerator   tmp;
 
-   if( ! map)
-      return( mulle_mapenumerator_empty);
-
-   rover = mulle__map_enumerate( (struct mulle__map *) map, map->callback);
-   return( *(struct mulle_mapenumerator *) &rover);
+   tmp = map
+         ? mulle__map_enumerate( (struct mulle__map *) map, map->callback)
+         : (struct mulle__mapenumerator) { 0 };
+   memcpy( &rover, &tmp, sizeof( struct mulle_mapenumerator));
+   return( rover);
 }
 
 
@@ -505,10 +500,12 @@ struct mulle_maptinyenumerator
 static inline struct mulle_maptinyenumerator
    mulle_map_tinyenumerate_nil( struct mulle_map *map)
 {
-   struct mulle__maptinyenumerator  rover;
+   struct mulle_maptinyenumerator    rover;
+   struct mulle__maptinyenumerator   tmp;
 
-   rover = mulle__map_tinyenumerate_nil( (struct mulle__map *) map);
-   return( *(struct mulle_maptinyenumerator *) &rover);
+   tmp = mulle__map_tinyenumerate_nil( (struct mulle__map *) map);
+   memcpy( &rover, &tmp, sizeof( struct mulle__maptinyenumerator));
+   return( rover);
 }
 
 

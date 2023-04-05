@@ -454,20 +454,24 @@ MULLE_C_NONNULL_FIRST
 static inline struct mulle_structarrayenumerator
    _mulle_structarray_enumerate( struct mulle_structarray *array)
 {
-   struct mulle__structarrayenumerator   rover;
+   struct mulle_structarrayenumerator    rover;
+   struct mulle__structarrayenumerator   tmp;
 
-   rover = _mulle__structarray_enumerate( (struct mulle__structarray *) array);
-   return( *(struct mulle_structarrayenumerator *) &rover);
+   tmp = _mulle__structarray_enumerate( (struct mulle__structarray *) array);
+   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayenumerator));
+   return( rover);
 }
 
 
 static inline struct mulle_structarrayenumerator
    mulle_structarray_enumerate( struct mulle_structarray *array)
 {
-   struct mulle__structarrayenumerator   rover;
+   struct mulle_structarrayenumerator    rover;
+   struct mulle__structarrayenumerator   tmp;
 
-   rover = mulle__structarray_enumerate( (struct mulle__structarray *) array);
-   return( *(struct mulle_structarrayenumerator *) &rover);
+   tmp = mulle__structarray_enumerate( (struct mulle__structarray *) array);
+   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayenumerator));
+   return( rover);
 }
 
 
@@ -519,20 +523,24 @@ MULLE_C_NONNULL_FIRST
 static inline struct mulle_structarrayreverseenumerator
    _mulle_structarray_reverseenumerate( struct mulle_structarray *array)
 {
-   struct mulle__structarrayreverseenumerator   rover;
+   struct mulle_structarrayreverseenumerator    rover;
+   struct mulle__structarrayreverseenumerator   tmp;
 
-   rover = _mulle__structarray_reverseenumerate( (struct mulle__structarray *) array);
-   return( *(struct mulle_structarrayreverseenumerator *) &rover);
+   tmp = _mulle__structarray_reverseenumerate( (struct mulle__structarray *) array);
+   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayreverseenumerator));
+   return( rover);
 }
 
 
 static inline struct mulle_structarrayreverseenumerator
    mulle_structarray_reverseenumerate( struct mulle_structarray *array)
 {
-   struct mulle__structarrayreverseenumerator   rover;
+   struct mulle_structarrayreverseenumerator    rover;
+   struct mulle__structarrayreverseenumerator   tmp;
 
-   rover = mulle__structarray_reverseenumerate( (struct mulle__structarray *) array);
-   return( *(struct mulle_structarrayreverseenumerator *) &rover);
+   tmp = mulle__structarray_reverseenumerate( (struct mulle__structarray *) array);
+   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayreverseenumerator));
+   return( rover);
 }
 
 MULLE_C_NONNULL_FIRST_SECOND

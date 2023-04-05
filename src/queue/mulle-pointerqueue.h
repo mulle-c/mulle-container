@@ -334,10 +334,12 @@ struct mulle_pointerqueueenumerator
 static inline struct mulle_pointerqueueenumerator
    mulle_pointerqueue_enumerate( struct mulle_pointerqueue *queue)
 {
-   struct mulle__pointerqueueenumerator   rover;
+   struct mulle_pointerqueueenumerator    rover;
+   struct mulle__pointerqueueenumerator   tmp;
 
-   rover = mulle__pointerqueue_enumerate( (struct mulle__pointerqueue *) queue);
-   return( *(struct mulle_pointerqueueenumerator *) &rover);
+   tmp = mulle__pointerqueue_enumerate( (struct mulle__pointerqueue *) queue);
+   memcpy( &rover, &tmp, sizeof( struct mulle_pointerqueueenumerator));
+   return( rover);
 }
 
 

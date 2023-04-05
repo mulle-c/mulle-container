@@ -412,7 +412,7 @@ struct mulle__arrayenumerator
    MULLE__ARRAYENUMERATOR_BASE;
 };
 
-extern const struct mulle__arrayenumerator   mulle__arrayenumerator_empty;
+#define mulle__arrayenumerator_empty   ((struct mulle__arrayenumerator) { 0})
 
 
 MULLE_C_NONNULL_FIRST
@@ -505,7 +505,8 @@ struct mulle__arrayreverseenumerator
    MULLE__ARRAYREVERSEENUMERATOR_BASE;
 };
 
-extern const struct mulle__arrayreverseenumerator   mulle__arrayreverseenumerator_empty;
+#define mulle__arrayreverseenumerator_empty \
+   ((struct mulle__arrayreverseenumerator) { 0 })
 
 
 MULLE_C_NONNULL_FIRST
@@ -513,11 +514,11 @@ static inline struct  mulle__arrayreverseenumerator
    _mulle__array_reverseenumerate( struct mulle__array *array,
                                    struct mulle_container_keycallback *callback)
 {
-   struct mulle__arrayreverseenumerator         rover;
+   struct mulle__arrayreverseenumerator   rover;
 
    rover.base    = _mulle__pointerarray_reverseenumerate( (struct mulle__pointerarray *) array);
    rover.notakey = callback->notakey;
-   return( *(struct mulle__arrayreverseenumerator *) &rover);
+   return( rover);
 }
 
 

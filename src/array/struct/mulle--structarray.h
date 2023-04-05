@@ -368,8 +368,8 @@ struct mulle__structarrayenumerator
    MULLE__STRUCTARRAYENUMERATOR_BASE;
 };
 
-extern struct mulle__structarrayenumerator   mulle__structarrayenumerator_empty;
-
+#define mulle__structarrayenumerator_empty  \
+   ((struct mulle__structarrayenumerator) { 0 })
 
 
 MULLE_C_NONNULL_FIRST
@@ -452,7 +452,10 @@ struct mulle__structarrayreverseenumerator
    MULLE__STRUCTARRAYREVERSEENUMERATOR_BASE;
 };
 
-extern struct mulle__structarrayreverseenumerator   mulle__structarrayreverseenumerator_empty;
+
+#define mulle__structarrayreverseenumerator_empty  \
+   ((struct mulle__structarrayreverseenumerator) { 0 })
+
 
 static inline struct mulle__structarrayreverseenumerator
    _mulle__structarray_reverseenumerate( struct mulle__structarray *array)

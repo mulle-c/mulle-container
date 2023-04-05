@@ -1,0 +1,9 @@
+A collection of C (C11) data structures to store integers, strings, pointers,
+structs.
+
+All data structures can live (temporarily) on the stack, or permanently in the
+heap. None of them are thread-safe.
+[mulle-allocator](//github.com/mulle-c/mulle-allocator) is used pervasively to
+simplify memory management.
+Some data structures utilize callbacks that are compatible to OS X's
+[`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
