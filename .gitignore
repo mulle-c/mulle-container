@@ -61,3 +61,6 @@ src/farmhash
 version.old
 README.html
 .ackrc
+wilted/
+mulle-template-composer-*
+mulle-markdown-preview-*.html

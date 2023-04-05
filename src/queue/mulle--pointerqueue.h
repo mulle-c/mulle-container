@@ -204,8 +204,8 @@ struct mulle__pointerqueueenumerator
 };
 
 
-MULLE_CONTAINER_GLOBAL
-const struct mulle__pointerqueueenumerator   mulle__pointerqueueenumerator_empty;
+#define mulle__pointerqueueenumerator_empty  \
+   ((struct mulle__pointerqueueenumerator) { 0 })
 
 
 static inline struct mulle__pointerqueueenumerator

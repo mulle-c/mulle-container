@@ -41,8 +41,6 @@
 #include <string.h>
 
 
-struct mulle__setenumerator   mulle__setenumerator_empty;
-
 /**
   * Bit twiddling code from
   * https://www.exploringbinary.com/ten-ways-to-check-if-an-integer-is-a-power-of-two-in-c/

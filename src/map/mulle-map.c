@@ -15,10 +15,6 @@
 #include <string.h>
 
 
-struct mulle_mapenumerator       mulle_mapenumerator_empty;
-struct mulle_maptinyenumerator   mulle_maptinyenumerator_empty;
-
-
 void   _mulle_map_init( struct mulle_map *map,
                         unsigned int capacity,
                         struct mulle_container_keyvaluecallback *callback,

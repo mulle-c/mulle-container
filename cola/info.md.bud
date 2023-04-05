@@ -1,0 +1,92 @@
+## Predefined Callbacks
+
+### Key Callbacks
+
+As used by `mulle_array`, `mulle_map`, `mulle_set`. Each callback name is to
+be prefixed with `mulle_container_keycallback_`, which has been elided for
+brevity:
+
+| Name                        | Type       | Notakey      | Equality | Copies | Frees
+|-----------------------------|------------|--------------|----------|--------|-------
+| `_int`                      | `int`      | `INTPTR_MIN` | `==`     | NO     | NO
+| `_intptr`                   | `intptr_t` | `INTPTR_MIN` | `==`     | NO     | NO
+| `_nonowned_pointer_or_null` | `void *`   | `INTPTR_MIN` | `==`     | NO     | NO
+| `_nonowned_pointer`         | `void *`   | `NULL`       | `==`     | NO     | NO
+| `_owned_pointer`            | `void *`   | `NULL`       | `==`     | NO     | YES
+| `_copied_cstring`           | `char *`   | `NULL`       | `strcmp` | YES    | YES
+| `_nonowned_cstring`         | `char *`   | `NULL`       | `strcmp` | NO     | NO
+| `_owned_cstring`            | `char *`   | `NULL`       | `strcmp` | NO     | YES
+
+### Value Callbacks
+
+As used by `mulle_map`. Value callbacks don't need to hash and check for
+equality. Each callback name is to be prefixed with
+`mulle_container_valuecallback`, which has been elided for brevity.
+
+
+| Name                | Type       | Copies | Frees
+|---------------------|------------|--------|-------
+| `_int`              | `int`      | NO     | NO
+| `_intptr`           | `intptr_t` | NO     | NO
+| `_nonowned_pointer` | `void *`   | NO     | NO
+| `_owned_pointer`    | `void *`   | NO     | YES
+| `_copied_cstring`   | `char *`   | YES    | YES
+| `_nonowned_cstring` | `char *`   | NO     | NO
+| `_owned_cstring`    | `char *`   | NO     | YES
+
+
+## Efficiency
+
+As time critical sections are all inlined, the performance of the
+library code is as good as your compiler (within the runtime limitations of the
+algorithm.
+
+Here is an example of mulle-container code, compiled with -Os:
+
+``` c
+int   _mulle__pointerset_count_zeroes_generic( struct mulle__pointerset *src,
+                                               struct mulle_container_keycallback *callback,
+                                               struct mulle_allocator *allocator)
+{
+   struct mulle__genericpointersetenumerator  rover;
+   void                                       *item;
+   int                                        rval;
+
+   rval  = 0;
+   rover = _mulle__pointerset_enumerate_generic( src, callback);
+   while( _mulle__genericpointersetenumerator_next( &rover, &item))
+   {
+       if( item == 0)
+           ++rval;
+   }
+   mulle__genericpointersetenumerator_done( &rover);
+   return( rval);
+}
+```
+
+produces:
+
+``` nasm
+_mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keycallback*, mulle_allocator*): # @_mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keycallback*, mulle_allocator*)
+        mov     rcx, qword ptr [rdi + 8]
+        test    rcx, rcx
+        je      .LBB0_1
+        mov     rdx, qword ptr [rsi + 40]
+        mov     rsi, qword ptr [rdi]
+        xor     eax, eax
+.LBB0_3:                                # =>This Inner Loop Header: Depth=1
+        mov     rdi, qword ptr [rsi]
+        add     rsi, 8
+        cmp     rdi, rdx
+        je      .LBB0_3
+        cmp     rdi, 1
+        adc     eax, 0
+        dec     rcx
+        jne     .LBB0_3
+        ret
+.LBB0_1:
+        xor     eax, eax
+        ret
+```
+
+

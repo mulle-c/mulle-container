@@ -33,6 +33,8 @@
 #include "mulle--pointerset.h"
 #include "mulle-container-callback.h"
 
+#include <string.h>
+
 
 #define MULLE__SET_BASE   MULLE__POINTERSET_BASE
 
@@ -256,10 +258,11 @@ static inline struct mulle__setenumerator
    _mulle__set_enumerate( struct mulle__set *set,
                           struct mulle_container_keycallback *callback)
 {
-   struct mulle__setenumerator   rover;
+   struct mulle__setenumerator                 rover;
+   struct mulle__genericpointersetenumerator   tmp;
 
-   *((struct mulle__genericpointersetenumerator *) &rover) = _mulle__pointerset_enumerate_generic( (struct mulle__pointerset *) set, callback);
-
+   tmp = _mulle__pointerset_enumerate_generic( (struct mulle__pointerset *) set, callback);
+   memcpy( &rover, &tmp, sizeof( struct mulle__genericpointersetenumerator));
    return( rover);
 }
 

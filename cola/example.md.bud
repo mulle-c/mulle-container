@@ -1,0 +1,55 @@
+## Example
+
+Here is an example using `mulle_map` to associate c-strings with each other.
+All the necessary memory management (copying of keys and values) is performed
+by `mulle_map` using the callbacks contained in a
+`mulle_container_keyvaluecallback` struct. The on-stack version is commented
+out:
+
+
+``` c
+#include <mulle-container/mulle-container.h>
+
+static struct mulle_container_keyvaluecallback   callback;
+
+static void  test( void)
+{
+//   struct mulle_map              auto_map;
+   struct mulle_map   *map;
+   char               *key;
+   char               *value;
+
+//   mulle_map_init( &auto_map, 0, &callback, NULL);
+//   map = &auto_map;
+   map = mulle_map_create( 0, &callback, NULL);
+
+   mulle_map( map, "VfL", "VFL");
+   mulle_map( map, "Bochum", "BOCHUM");
+   mulle_map( map, "1848", "1848");
+
+   if( ! mulle_map_get( map, "1849"))
+   {
+      mulle_map_for( map, key, value)
+      {
+         printf( "%s : %s\n", key, value);
+      }
+   }
+   mulle_map_remove( map, "1848");
+
+//   mulle_map_done( map);
+   mulle_map_destroy( map);
+}
+
+
+int   main( void)
+{
+   // use predefined structs to compose our custom callback
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+
+   test();
+   return( 0);
+}
+```
+
+

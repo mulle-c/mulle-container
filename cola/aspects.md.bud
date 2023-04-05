@@ -1,0 +1,76 @@
+## Aspects
+
+### Algorithms
+
+There are three basic algorithms employed by the data structures in
+mulle-container. The hashtable, the array and the queue.
+
+Both the array and the hashtable use a contiguous block of memory.
+An array reallocates on growth. A hashtable copies on growth. The queue is a
+linked list of smaller memory blocks.
+
+
+### Embedded allocator
+
+For many data structures there exist two variants. One that keeps a reference
+to the memory allocator, and one that doesn't. The data structure without an
+allocator, is obviously a bit smaller than the one with.
+If you are managing millions of hashtables, as may be the case when doing
+database fetches, this can be significant. On the other hand, embedding the
+allocator makes the API simpler and less susceptible to allocator mix ups.
+You also get "convenient enumeration" (see below)
+
+### Uniform and convenient enumeration
+
+Looping over the data structure contents is done with enumerators. The
+enumerator holds the state of the loop. The enumeration loop over any
+data structure, if unform. You setup an enumerator with `_enumerate`,
+use the enumerator with `_next` and end the loop with `_done`. It looks like
+this:
+
+``` c
+struct mulle_arrayenumerator  rover;
+char                          *item;
+
+rover = mulle_array_enumerate( &array);
+while( _mulle_arrayenumerator_next( &rover, &item))
+{
+   printf( "%s\n", item);
+}
+mulle_arrayenumerator_done( &rover);
+```
+
+With a convenience macro, the enumerator setup is hidden and the code
+simplifies to:
+
+``` c
+char   *item;
+
+mulle_array_for( &array, item)
+{
+   printf( "%s\n", item);
+}
+```
+
+### NULL leniency
+
+Each data structure supplies rigid functions and lenient functions, with
+respect to NULL parameters. The rigid functions are prefixed with '`_`' and
+do not check for NULL pointers. The lenient functions do nothing, if NULL is
+passed. This is like Objective-C where you can call methods with 'nil'.
+
+> #### Caveat
+>
+> A NULL map will have always return NULL in an enumeration for the (failed)
+> key value.
+>
+
+### Pointers or Objects
+
+A data structure may merely handle pointer equality as a way of comparing
+members. These data structures conventionally contain the word "pointer" in
+their name. They are very efficient and sometimes all you need. Other data
+structures use a number of callbacks, to test for equality and to handle memory
+management and to create hash codes.
+
+

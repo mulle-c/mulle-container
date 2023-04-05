@@ -40,8 +40,6 @@
 # pragma mark - allocation
 
 
-struct mulle__pointerpairarrayenumerator   mulle__pointerpairarrayenumerator_empty;
-
 // intentionally not static inline
 static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *array,
                                                 unsigned int new_size,

@@ -127,7 +127,8 @@ struct mulle__genericpointersetenumerator
 };
 
 
-extern struct mulle__genericpointersetenumerator   mulle__genericpointersetenumerator_empty;
+#define mulle__genericpointersetenumerator_empty  \
+   ((struct mulle__genericpointersetenumerator) { 0 })
 
 
 MULLE_C_NONNULL_FIRST
