@@ -13,9 +13,6 @@
 #include <assert.h>
 
 
-struct mulle_setenumerator   mulle_setenumerator_empty;
-
-
 void   mulle_set_init( struct mulle_set *set,
                        unsigned int capacity,
                        struct mulle_container_keycallback *callback,

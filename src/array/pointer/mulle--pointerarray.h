@@ -584,7 +584,9 @@ struct mulle__pointerarrayenumerator
    MULLE__POINTERARRAYENUMERATOR_BASE;
 };
 
-extern const struct mulle__pointerarrayenumerator   mulle__pointerarrayenumerator_empty;
+
+#define mulle__pointerarrayenumerator_empty  \
+   ((struct mulle__pointerarrayenumerator) { 0 })
 
 
 MULLE_C_NONNULL_FIRST
@@ -681,8 +683,9 @@ struct mulle__pointerarrayreverseenumerator
    MULLE__POINTERARRAYREVERSEENUMERATOR_BASE;
 };
 
-const extern struct mulle__pointerarrayreverseenumerator
-   mulle__pointerarrayreverseenumerator_empty;
+
+#define mulle__pointerarrayreverseenumerator_empty  \
+   ((struct mulle__pointerarrayreverseenumerator) { 0 })
 
 
 MULLE_C_NONNULL_FIRST

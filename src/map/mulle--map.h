@@ -38,6 +38,7 @@
 #include "mulle-container-callback.h"
 #include "mulle-pointerpair.h"
 #include <stdarg.h>
+#include <string.h>
 
 
 // NSMapTable/NSDictionary/NSMutableDictionary
@@ -55,6 +56,10 @@ struct mulle__map
 {
    MULLE__MAP_BASE;
 };
+
+
+#define mulle__mapenumerator_empty  \
+   ((struct mulle__mapenumerator) { 0 })
 
 
 #pragma mark - setup and takedown
@@ -518,10 +523,12 @@ static inline struct mulle__mapenumerator
    mulle__map_enumerate( struct mulle__map *map,
                          struct mulle_container_keyvaluecallback *callback)
 {
-   struct mulle__genericpointermapenumerator   rover;
+   struct mulle__mapenumerator                 rover;
+   struct mulle__genericpointermapenumerator   tmp;
 
-   rover = mulle__pointermap_enumerate_generic( (struct mulle__pointermap *) map, callback);
-   return( *(struct mulle__mapenumerator *) &rover);
+   tmp = mulle__pointermap_enumerate_generic( (struct mulle__pointermap *) map, callback);
+   memcpy( &rover, &tmp, sizeof( struct mulle__genericpointermapenumerator));
+   return( rover);
 }
 
 

@@ -277,7 +277,7 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
       void     **storage;  // only valid in this no-grow block
       unsigned int   hole_index;
 
-      storage   = map->_storage;
+      storage    = map->_storage;
       size       = map->_size;
 
       hole_index = 0xfeedface;  // for the analyzer
@@ -772,7 +772,7 @@ unsigned int
       perfects = &dummy;
    *perfects  = 0;
 
-   for( i = 0 ;rover._curr < sentinel; ++rover._curr, i++)
+   for( i = 0; rover._curr < sentinel; ++rover._curr, i++)
    {
       key = *rover._curr;
       if( key == rover._notakey)

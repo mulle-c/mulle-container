@@ -39,9 +39,6 @@
 #include <stdio.h>  // debug
 
 
-const struct mulle__arrayenumerator          mulle__arrayenumerator_empty;
-const struct mulle__arrayreverseenumerator   mulle__arrayreverseenumerator_empty;
-
 #pragma mark - _mulle_arrayrange internal helper
 
 MULLE_C_NONNULL_FIRST_THIRD

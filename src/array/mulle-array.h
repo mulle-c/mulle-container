@@ -513,27 +513,35 @@ struct mulle_arrayenumerator
 };
 
 
+//
+// lots of shit code, because C compilers are broken and we want to
+// have one '_' less in our type, yet can't alias struct x = struct y...
+// (without typedef), but we also want to avoid base.base.base.base..
+//
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_arrayenumerator
    _mulle_array_enumerate( struct mulle_array *array)
 {
+   struct mulle_arrayenumerator    rval;
    struct mulle__arrayenumerator   tmp;
 
    tmp = _mulle__array_enumerate( (struct mulle__array *) array, array->callback);
-   return( *(struct mulle_arrayenumerator *) &tmp);
+   memcpy( &rval, &tmp, sizeof( struct mulle__arrayenumerator));
+   return( rval);
 }
 
 
 static inline struct mulle_arrayenumerator
    mulle_array_enumerate( struct mulle_array *array)
 {
+   struct mulle_arrayenumerator    rval;
    struct mulle__arrayenumerator   tmp;
 
-   if( ! array)
-      tmp = mulle__arrayenumerator_empty;
-   else
-      tmp = mulle__array_enumerate( (struct mulle__array *) array, array->callback);
-   return( *(struct mulle_arrayenumerator *) &tmp);
+   tmp = array
+         ? mulle__array_enumerate( (struct mulle__array *) array, array->callback)
+         : mulle__arrayenumerator_empty;
+   memcpy( &rval, &tmp, sizeof( struct mulle__arrayenumerator));
+   return( rval);
 }
 
 
@@ -590,6 +598,7 @@ static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *r
  */
 #define MULLE_ARRAYREVERSENUMERATOR_BASE   MULLE__ARRAYREVERSEENUMERATOR_BASE
 
+
 struct mulle_arrayreverseenumerator
 {
    MULLE_ARRAYREVERSENUMERATOR_BASE;
@@ -601,9 +610,11 @@ static inline struct mulle_arrayreverseenumerator
    _mulle_array_reverseenumerate( struct mulle_array *array)
 {
    struct mulle__arrayreverseenumerator   tmp;
+   struct mulle_arrayreverseenumerator    rval;
 
    tmp = _mulle__array_reverseenumerate( (struct mulle__array *) array, array->callback);
-   return( *(struct mulle_arrayreverseenumerator *) &tmp);
+   memcpy( &rval, &tmp, sizeof( struct mulle__arrayreverseenumerator));
+   return( rval);
 }
 
 
@@ -611,9 +622,13 @@ static inline struct mulle_arrayreverseenumerator
    mulle_array_reverseenumerate( struct mulle_array *array)
 {
    struct mulle__arrayreverseenumerator   tmp;
+   struct mulle_arrayreverseenumerator    rval;
 
-   tmp = mulle__array_reverseenumerate( (struct mulle__array *) array, array->callback);
-   return( *(struct mulle_arrayreverseenumerator *) &tmp);
+   tmp = array
+         ? mulle__array_reverseenumerate( (struct mulle__array *) array, array->callback)
+         : mulle__arrayreverseenumerator_empty;
+   memcpy( &rval, &tmp, sizeof( struct mulle__arrayreverseenumerator));
+   return( rval);
 }
 
 

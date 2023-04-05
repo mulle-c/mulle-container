@@ -18,8 +18,8 @@ include( Files)
 
 if( HEADERS_PHASE)
    install( FILES ${INSTALL_PUBLIC_HEADERS}  DESTINATION "include/mulle-container")
-   install( FILES ${INSTALL_PRIVATE_HEADERS} DESTINATION "include/mulle-container/private")
-   install( FILES ${CMAKE_INCLUDES}          DESTINATION "include/mulle-container/cmake")
+   install( FILES ${INSTALL_PRIVATE_HEADERS} DESTINATION "include/mulle-container")
+   install( FILES ${INSTALL_CMAKE_INCLUDES}          DESTINATION "include/mulle-container/cmake")
 
    # short cut out
    if( NOT COMPILE_PHASE AND NOT LINK_PHASE)

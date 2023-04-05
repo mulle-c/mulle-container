@@ -26,6 +26,7 @@
 struct mulle__rangeset
 {
    struct mulle_range   *_ranges;
+   struct mulle_range   *_initial_storage; // for use with static storage
    unsigned int         _length;
    unsigned int         _size;
 };
@@ -45,11 +46,26 @@ static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
 }
 
 
+MULLE_C_NONNULL_FIRST_SECOND
+static inline void   _mulle__rangeset_init_with_static_ranges( struct mulle__rangeset *p,
+                                                               struct mulle_range *storage,
+                                                               unsigned int capacity)
+{
+   memset( p, 0, sizeof( *p));
+   p->_size            = capacity;
+   p->_ranges          = storage;
+   p->_initial_storage = storage;
+}
+
+
+
+
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_done( struct mulle__rangeset *p,
                                             struct mulle_allocator *allocator)
 {
-   mulle_allocator_free( allocator, p->_ranges);
+   if( p->_ranges != p->_initial_storage)
+      mulle_allocator_free( allocator, p->_ranges);
 }
 
 
@@ -66,6 +82,14 @@ static inline uintptr_t   _mulle__rangeset_get_first( struct mulle__rangeset *p)
 {
    return( p->_length ? p->_ranges[ 0].location : mulle_not_found_e);
 }
+
+MULLE_C_NONNULL_FIRST
+static inline struct mulle_range   _mulle__rangeset_get( struct mulle__rangeset *p,
+                                                         unsigned int i)
+{
+   return( i < p->_length ? p->_ranges[ i] : mulle_range_make_invalid());
+}
+
 
 
 MULLE_C_NONNULL_FIRST
@@ -131,7 +155,7 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_shrink_to_fit( struct mulle__rangeset *p,
                                                      struct mulle_allocator *allocator)
 {
-   if( p->_length > p->_size)
+   if( p->_length > p->_size && p->_ranges != p->_initial_storage)
    {
       p->_ranges = mulle_allocator_realloc_strict( allocator,
                                                    p->_ranges,
@@ -249,20 +273,66 @@ void  _mulle__rangeset_shift( struct mulle__rangeset *p,
                               intptr_t delta,
                               struct mulle_allocator *allocator);
 
+
 enum mulle_rangeset_searchoperation
 {
-   mulle_rangeset_less_than,
-   mulle_rangeset_less_than_or_equal,
-   mulle_rangeset_equal,
-   mulle_rangeset_greater_than_or_equal,
-   mulle_rangeset_greater_than
+   mulle_rangeset_equal                 = 0x1, // equal bit
+   mulle_rangeset_less_than             = 0x2, // < bit
+   mulle_rangeset_less_than_or_equal    = 0x3, // eq bit + < bit
+   mulle_rangeset_greater_than          = 0x4, // > bit
+   mulle_rangeset_greater_than_or_equal = 0x5  // eq bit + > bit
 };
+
+static inline char  *
+   mulle_rangeset_searchoperation_utf8_string( enum mulle_rangeset_searchoperation mode)
+{
+   switch( mode)
+   {
+   case mulle_rangeset_less_than             : return( "<");
+   case mulle_rangeset_less_than_or_equal    : return( "<=");
+   default                                   : return( "==");
+   case mulle_rangeset_greater_than_or_equal : return( ">=");
+   case mulle_rangeset_greater_than          : return( ">");
+   }
+}
+
+
+//
+// Find the closest location in the rangeset relative to location
+// where the location result has to satisfy the search operation.
+//
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+uintptr_t   _mulle__rangeset_search_location( struct mulle__rangeset *p,
+                                              uintptr_t location,
+                                              enum mulle_rangeset_searchoperation searchOp);
+
+
+//
+// Find the closest range in the rangeset relative to location
+// where the range has to satisfy the search operation.
+// A range of 2,3,4 is <= location 2, 3, 4, 5, ... and >= location 0, 1, 2 also
+//                      < location 5,6... and > location 0,1 also
+//                     == 2, 3, 4
+
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+struct mulle_range
+   _mulle__rangeset_search_range( struct mulle__rangeset *p,
+                                  uintptr_t location,
+                                 enum mulle_rangeset_searchoperation searchOp);
+
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+struct mulle_range
+   _mulle__rangeset_search_nearest( struct mulle__rangeset *p,
+                                                 uintptr_t location);
 
 
 MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
-uintptr_t   _mulle__rangeset_search( struct mulle__rangeset *p,
-                                     uintptr_t location,
-                                     enum mulle_rangeset_searchoperation searchOp);
+struct mulle_range
+   _mulle__rangeset_search_exact( struct mulle__rangeset *p,
+                                  uintptr_t location);
 
 #endif
