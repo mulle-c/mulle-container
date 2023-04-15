@@ -1,3 +1,15 @@
+# 7.0.0
+
+* remove package.json as it conflicts with clib.json
+* the various "empty" structs are now just defines, which produces better code
+* `mulle__rangeset` can now be intialized with static storage
+* `_mulle__rangeset_get` added
+* **BREAKING** `_mulle__rangeset_search` renamed to `_mulle__rangeset_search_location`
+* make empty const structs #defined for { 0}, not really API breaking IMO, but will give problems if you do `&mulle__pointersetenumerator_empty` (but why would you ?
+* more dumbing down of perfectly fine code for adversarial compiler writers
+* add clib.json to project
+
+
 ## 6.1.0
 
 * GLOBAL declaration changes for Windows
