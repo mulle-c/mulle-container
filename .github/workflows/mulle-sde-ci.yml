@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: [push,workflow_dispatch]
 
 env:
   BUILD_TYPE: release
@@ -24,20 +24,16 @@ jobs:
       run:  echo "$HOME/bin" >> $GITHUB_PATH
 
     - name: Dump Environment
-      run:  |
-        env | sort
+      run:  env | sort
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - uses: mulle-sde/github-ci@v1
 
     - name: Dump Project Environment
       run:  |
-        pwd
-        ls
         [ ! -d .mulle/etc/env ] || ls -l .mulle/etc/env/environment*.sh
-        mulle-bashfunctions version
-        mulle-sde -vvv -ld -lx environment
+        mulle-sde environment
 
     - name: Mulle-SDE Fetch
       run: mulle-sde fetch
