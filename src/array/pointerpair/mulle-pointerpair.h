@@ -37,6 +37,7 @@
 #define mulle_pointerpair_h__
 
 #include "mulle-container-callback.h"
+#include "mulle-qsort.h"
 
 #define mulle_pointerpair_notakey    mulle_not_a_pointer
 
@@ -63,8 +64,7 @@ static inline struct mulle_pointerpair
 }
 
 
-static inline struct mulle_pointerpair
-   mulle_pointerpair_make_invalid( void)
+static inline struct mulle_pointerpair   mulle_pointerpair_make_invalid( void)
 {
    struct mulle_pointerpair   result;
 
@@ -79,5 +79,142 @@ static inline int   mulle_pointerpair_is_invalid( struct mulle_pointerpair pair)
 {
    return( pair.key == mulle_not_a_pointer);
 }
+
+
+MULLE_C_NONNULL_SECOND
+static inline struct mulle_pointerpair
+   mulle_pointerpair_retain( struct mulle_pointerpair pair,
+                             struct mulle_container_keyvaluecallback *callback,
+                             struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   new_pair;
+
+   assert( pair.key != callback->keycallback.notakey);
+
+   new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair.key, allocator);
+   new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair.value, allocator);
+
+   return( new_pair);
+}
+
+
+
+MULLE_C_NONNULL_SECOND
+static inline
+void  mulle_pointerpair_release( struct mulle_pointerpair pair,
+                                 struct mulle_container_keyvaluecallback *callback,
+                                 struct mulle_allocator *allocator)
+{
+   (*callback->keycallback.release)( &callback->keycallback, pair.key, allocator);
+   (*callback->valuecallback.release)( &callback->valuecallback, pair.value, allocator);
+}
+
+
+typedef int    mulle_pointerpair_compare_t( struct mulle_pointerpair *,
+                                            struct mulle_pointerpair *,
+                                            void *);
+//
+// for bsearch and sort
+//
+// Memo: checked with godbolt. If the comparison routine for besarch is
+// known the compiler can inline the check. The actual bsearch code is not
+// that large.
+//
+static inline int   _mulle_pointerpair_compare_pointer_key( struct mulle_pointerpair *a,
+                                                            struct mulle_pointerpair *b,
+                                                            void *userinfo)
+{
+   if( (char *) a->key < (char *) b->key)
+      return( -1);
+   return( a->key != b->key);
+}
+
+
+static inline int   _mulle_pointerpair_compare_string_key( struct mulle_pointerpair *a,
+                                                           struct mulle_pointerpair *b,
+                                                           void *userinfo)
+{
+   char  *a_s = a->key;
+   char  *b_s = b->key;
+
+   while (*a_s)
+   {
+      if (*a_s != *b_s)
+         break;
+      a_s++;
+      b_s++;
+   }
+
+   return (int) *(unsigned char*) a_s - (int) *(unsigned char*) b_s;
+}
+
+
+//
+// Buf must have been sorted with "compare" before for the bsearch to work.
+//
+// return -1 if not found, otherwise the index in buf (0-(n-1))
+//
+static inline int   _mulle_pointerpair_bsearch( struct mulle_pointerpair *buf,
+                                                unsigned int n,
+                                                struct mulle_pointerpair search,
+                                                mulle_pointerpair_compare_t *compare,
+                                                void *userinfo)
+{
+   struct mulle_pointerpair    *p;
+   int                         first;
+   int                         last;
+   int                         middle;
+   int                         rc;
+
+   first  = 0;
+   last   = n - 1;
+   middle = (first + last) / 2;
+
+   while( first <= last)
+   {
+      p = &buf[ middle];
+
+      rc = (*compare)( p, &search, userinfo);
+      if( rc <= 0)
+      {
+         if( rc == 0)
+            return( middle);
+
+         first = middle + 1;
+      }
+      else
+         last = middle - 1;
+
+      middle = (first + last) / 2;
+   }
+
+   return( -1);
+}
+
+
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FOURTH
+void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,
+                                  unsigned int n,
+                                  mulle_pointerpair_compare_t *compare,
+                                  void *userinfo);
+
+
+
+// callback can be empty, in which case pointer equality is seatched
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+uintptr_t
+   _mulle_pointerpair_find_in_range_callback( struct mulle_pointerpair *buf,
+                                              struct mulle_pointerpair search,
+                                              struct mulle_range range,
+                                              struct mulle_container_keyvaluecallback *callback);
+
+uintptr_t
+   _mulle_pointerpair_find_in_range_compare( struct mulle_pointerpair *buf,
+                                             struct mulle_pointerpair search,
+                                             struct mulle_range range,
+                                             mulle_pointerpair_compare_t *compare,
+                                             void *userinfo);
 
 #endif

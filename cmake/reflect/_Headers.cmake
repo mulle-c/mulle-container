@@ -63,6 +63,8 @@ src/generic/include.h
 set( PUBLIC_HEADERS
 src/array/mulle--array.h
 src/array/mulle-array.h
+src/array/mulle--assoc.h
+src/array/mulle-assoc.h
 src/array/mulle-flexarray.h
 src/array/pointer/mulle--pointerarray.h
 src/array/pointer/mulle-pointerarray.h
@@ -84,6 +86,7 @@ src/mulle-container-compiler-attributes.h
 src/mulle-container.h
 src/mulle-container-math.h
 src/mulle-container-operation.h
+src/mulle-qsort.h
 src/queue/mulle--pointerqueue.h
 src/queue/mulle-pointerqueue.h
 src/rangeset/mulle--rangeset.h
