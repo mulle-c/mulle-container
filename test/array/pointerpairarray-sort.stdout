@@ -1,0 +1,12 @@
+Initial:
+	{ VfL, Bochum }
+	{ WSV, Wuppertal }
+	{ MSV, Duisburg }
+	{ KSC, Karlsruhe }
+Sorted:
+	{ KSC, Karlsruhe }
+	{ MSV, Duisburg }
+	{ VfL, Bochum }
+	{ WSV, Wuppertal }
+Found:
+	{ VfL, Bochum }

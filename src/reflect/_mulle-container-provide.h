@@ -11,6 +11,8 @@
  */
 #include "mulle--array.h"
 #include "mulle-array.h"
+#include "mulle--assoc.h"
+#include "mulle-assoc.h"
 #include "mulle-flexarray.h"
 #include "mulle--pointerarray.h"
 #include "mulle-pointerarray.h"
@@ -31,6 +33,7 @@
 #include "mulle-container-compiler-attributes.h"
 #include "mulle-container-math.h"
 #include "mulle-container-operation.h"
+#include "mulle-qsort.h"
 #include "mulle--pointerqueue.h"
 #include "mulle-pointerqueue.h"
 #include "mulle--rangeset.h"

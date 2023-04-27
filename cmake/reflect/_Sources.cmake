@@ -13,10 +13,13 @@ endif()
 set( SOURCES
 src/array/mulle--array.c
 src/array/mulle-array.c
+src/array/mulle--assoc.c
+src/array/mulle-assoc.c
 src/array/pointer/mulle--pointerarray.c
 src/array/pointer/mulle-pointerarray.c
 src/array/pointerpair/mulle--pointerpairarray.c
 src/array/pointerpair/mulle-pointerpairarray.c
+src/array/pointerpair/mulle-pointerpair.c
 src/array/struct/mulle--structarray.c
 src/array/struct/mulle-structarray.c
 src/array/uniquepointer/mulle--uniquepointerarray.c
@@ -26,6 +29,7 @@ src/map/mulle-map.c
 src/map/pointer/mulle--pointermap-generic.c
 src/map/pointer/mulle--pointermap-struct.c
 src/mulle-container-callback.c
+src/mulle-qsort.c
 src/queue/mulle--pointerqueue.c
 src/queue/mulle-pointerqueue.c
 src/rangeset/mulle--rangeset.c

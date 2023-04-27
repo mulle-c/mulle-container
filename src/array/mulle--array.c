@@ -163,7 +163,7 @@ void   _mulle__array_remove( struct mulle__array *array,
                              struct mulle_allocator *allocator)
 {
    unsigned int  i;
-   unsigned int  *item;
+   void          *item;
 
    //
    // Removal back to front is cool, as long as we are the only one

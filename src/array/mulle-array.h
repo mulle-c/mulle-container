@@ -43,7 +43,8 @@
 #include <assert.h>
 
 //
-// mulle-array is a mulle--array with the allocator and callback embedded
+// mulle-array is a mulle--array with the allocator and callback embedded.
+//
 // You can not insert callback->notakey and you will get back callback->notakey
 // if a value doesn't exist.
 //
