@@ -91,41 +91,33 @@ struct mulle_pointerpair  *
 
 # pragma mark - searching
 
-
-// need to find "compacted" index here
-
 uintptr_t
-   _mulle__pointerpairarray_find( struct mulle__pointerpairarray *array,
-                                  void *key)
+   _mulle__pointerpairarray_find_in_range( struct mulle__pointerpairarray *array,
+                                           struct mulle_pointerpair search,
+                                           struct mulle_range range)
 {
-   struct mulle_pointerpair   *p;
-   struct mulle_pointerpair   *sentinel;
-
-   assert( key != mulle_pointerpair_notakey);
-
-   p        = array->_storage;
-   sentinel = array->_curr;
-   while( p < sentinel)
-   {
-      if( p->key == key)
-         return( p - array->_storage);
-
-      p++;
-   }
-   return( mulle_not_found_e);
+   range = mulle_range_validate_against_length( range,
+                                                _mulle__pointerpairarray_get_count( array));
+   return( _mulle_pointerpair_find_in_range_callback( array->_storage,
+                                                      search,
+                                                      range,
+                                                      NULL));
 }
-
 
 
 void
    _mulle__pointerpairarray_remove_in_range( struct mulle__pointerpairarray *array,
                                              struct mulle_range range)
 {
-   range = mulle_range_validate_against_length( range,
-                                                _mulle__pointerpairarray_get_count( array));
+   unsigned int   n;
+   unsigned int   i;
+
+   n     = _mulle__pointerpairarray_get_count( array);
+   range = mulle_range_validate_against_length( range, n);
+   i     = range.location + range.length;
    memmove( &array->_storage[ range.location],
-            &array->_storage[ range.location + range.length],
-            range.length * sizeof( struct mulle_pointerpair));
+            &array->_storage[ i],
+            (n - i) * sizeof( struct mulle_pointerpair));
 
    array->_curr -= range.length;
 }
@@ -135,10 +127,11 @@ void
 unsigned int
    _mulle__pointerpairarray_get_in_range( struct mulle__pointerpairarray *array,
                                           struct mulle_range range,
-                                          void *buf)
+                                          struct mulle_pointerpair *buf)
 {
    range = mulle_range_validate_against_length( range,
                                                 mulle__pointerpairarray_get_count( array));
    memcpy( buf, &array->_storage[ range.location], range.length * sizeof( struct mulle_pointerpair));
    return( range.length);
 }
+
