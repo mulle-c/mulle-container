@@ -226,13 +226,15 @@ static inline void
 
 
 MULLE_CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_FOURTH
-void    _mulle__assoc_set( struct mulle__assoc *assoc,
-                           unsigned int i,
-                           void *key,
-                           void *value,
-                           struct mulle_container_keyvaluecallback *callback,
-                           struct mulle_allocator *allocator);
+MULLE_C_NONNULL_FIRST_FIFTH
+void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
+                                    unsigned int i,
+                                    void *key,
+                                    void *value,
+                                    struct mulle_container_keyvaluecallback *callback,
+                                    struct mulle_allocator *allocator);
+
+
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair
@@ -363,17 +365,30 @@ void   _mulle__assoc_reset( struct mulle__assoc *assoc,
 #pragma mark - sort and search
 
 
-uintptr_t
-   mulle__assoc_find( struct mulle__assoc *assoc,
-                      void *key,
-                      struct mulle_container_keyvaluecallback *callback);
-
+//
+// you can pass NULL for callback, and it will just compare pointer equality
+// TODO: make this uniform across library for find ? also for search ?
+//
+MULLE_CONTAINER_GLOBAL
 uintptr_t
    mulle__assoc_find_in_range( struct mulle__assoc *assoc,
                                void *key,
                                struct mulle_range range,
                                struct mulle_container_keyvaluecallback *callback);
 
+static inline uintptr_t
+   mulle__assoc_find( struct mulle__assoc *assoc,
+                      void *key,
+                      struct mulle_container_keyvaluecallback *callback)
+{
+   return( mulle__assoc_find_in_range( assoc,
+                                       key,
+                                       mulle_range_make_all(),
+                                       callback));
+}
+
+
+MULLE_C_NONNULL_THIRD
 static inline void *
    mulle__assoc_get( struct mulle__assoc *assoc,
                      void *key,
@@ -560,7 +575,7 @@ static inline int
 {
    void   *dummy;
 
-   key   = key ? key : &dummy;
+   key   = key   ? key   : &dummy;
    value = value ? value : &dummy;
    if( rover)
       return( _mulle__assocenumerator_next( rover, key, value));

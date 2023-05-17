@@ -208,13 +208,13 @@ void    _mulle__assoc_add( struct mulle__assoc *assoc,
 }
 
 
-MULLE_C_NONNULL_FIRST_FOURTH
-void    _mulle__assoc_set( struct mulle__assoc *assoc,
-                           unsigned int i,
-                           void *key,
-                           void *value,
-                           struct mulle_container_keyvaluecallback *callback,
-                           struct mulle_allocator *allocator)
+MULLE_C_NONNULL_FIRST_FIFTH
+void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
+                                    unsigned int i,
+                                    void *key,
+                                    void *value,
+                                    struct mulle_container_keyvaluecallback *callback,
+                                    struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair  retained;
    struct mulle_pointerpair  pair;
@@ -229,7 +229,6 @@ void    _mulle__assoc_set( struct mulle__assoc *assoc,
                                             retained);
    mulle_pointerpair_release( old, callback, allocator);
 }
-
 
 
 void
@@ -399,12 +398,18 @@ uintptr_t
    p        = &assoc->_storage[ range.location];
    sentinel = &p[ range.length];
 
-   while( p < sentinel)
+   // NULL check needed for remap
+   if( ! callback || callback->keycallback.is_equal == mulle_container_keycallback_pointer_is_equal)
    {
-      if( (*callback->keycallback.is_equal)( &callback->keycallback, p->key, key))
-         return( p - assoc->_storage);
-
-      p++;
+      for( ; p < sentinel; p++)
+         if( p->key == key)
+            return( p - assoc->_storage);
+   }
+   else
+   {
+      for( ; p < sentinel; p++)
+         if( (*callback->keycallback.is_equal)( &callback->keycallback, p->key, key))
+            return( p - assoc->_storage);
    }
    return( mulle_not_found_e);
 }

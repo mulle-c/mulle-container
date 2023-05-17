@@ -178,7 +178,7 @@ MULLE_C_NONNULL_FIRST
 static inline int
    _mulle_assoc_is_sorted( struct mulle_assoc *assoc)
 {
-   return( _mulle_assoc_get_count( assoc) < 2 || assoc->_is_sorted);
+   return( assoc->_is_sorted || _mulle_assoc_get_count( assoc) < 2);
 }
 
 
@@ -186,6 +186,13 @@ static inline int
    mulle_assoc_is_sorted( struct mulle_assoc *assoc)
 {
    return( assoc ? _mulle_assoc_is_sorted( assoc) : 1); // NULL is always sorted
+}
+
+
+static inline void
+   _mulle_assoc_set_unsorted( struct mulle_assoc *assoc)
+{
+   assoc->_is_sorted = 0;
 }
 
 
@@ -237,7 +244,7 @@ static inline struct mulle_allocator *
 
 
 MULLE_C_NONNULL_FIRST
-static inline mulle_pointerpair_compare_t *
+static inline void
    _mulle_assoc_set_compare( struct mulle_assoc *assoc,
                              mulle_pointerpair_compare_t *compare)
 {
@@ -247,7 +254,7 @@ static inline mulle_pointerpair_compare_t *
 }
 
 
-static inline mulle_pointerpair_compare_t *
+static inline void
    mulle_assoc_set_compare( struct mulle_assoc *assoc,
                              mulle_pointerpair_compare_t *compare)
 {
@@ -303,6 +310,49 @@ static inline void
 }
 
 
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+void   _mulle_assoc_remap_intptr_key_range( struct mulle_assoc *assoc,
+                                            struct mulle_range range,
+                                            intptr_t offset);
+
+static inline void
+   mulle_assoc_remap_intptr_key_range( struct mulle_assoc *assoc,
+                                       struct mulle_range range,
+                                       intptr_t offset)
+{
+   if( ! assoc)
+      return;
+
+   _mulle_assoc_remap_intptr_key_range( assoc, range, offset);
+}
+
+
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+void   _mulle_assoc_move_intptr_key_range( struct mulle_assoc *assoc,
+                                           struct mulle_range range,
+                                           intptr_t index);
+
+static inline void
+   mulle_assoc_move_intptr_key_range( struct mulle_assoc *assoc,
+                                      struct mulle_range range,
+                                      intptr_t offset)
+{
+   if( ! assoc)
+      return;
+
+   _mulle_assoc_move_intptr_key_range( assoc, range, offset);
+}
+
+
+static inline void
+   mulle_assoc_assert_no_intptr_key_dupes( struct mulle_assoc *assoc)
+{
+   mulle__pointerpairarray_assert_no_dupes( (struct mulle__pointerpairarray *) assoc);
+}
+
+
 // add assumes that pair is not already present
 // in debug, mode it will assert this
 // add assumes that pair is not already present
@@ -323,7 +373,6 @@ static inline void   _mulle_assoc_add( struct mulle_assoc *assoc, void *key, voi
                       assoc->callback,
                       assoc->allocator);
 }
-
 
 
 static inline void
@@ -403,7 +452,6 @@ static inline int   mulle_assoc_is_equal( struct mulle_assoc *assoc,
                                    (struct mulle__assoc *) other,
                                    assoc->callback));
 }
-
 
 
 static inline
@@ -567,6 +615,8 @@ struct mulle_assocenumerator
    MULLE_ASSOCENUMERATOR_BASE;
 };
 
+#define mulle_assocenumerator_empty   ((struct mulle_assocenumerator) { 0})
+
 
 //
 // lots of shit code, because C compilers are broken and we want to
@@ -581,6 +631,7 @@ static inline struct mulle_assocenumerator
    struct mulle__assocenumerator   tmp;
 
    mulle_assoc_qsort_if_needed( assoc);
+
    tmp = _mulle__assoc_enumerate( (struct mulle__assoc *) assoc, assoc->callback);
    memcpy( &rval, &tmp, sizeof( struct mulle__assocenumerator));
    return( rval);
@@ -590,14 +641,9 @@ static inline struct mulle_assocenumerator
 static inline struct mulle_assocenumerator
    mulle_assoc_enumerate( struct mulle_assoc *assoc)
 {
-   struct mulle_assocenumerator    rval;
-   struct mulle__assocenumerator   tmp;
-
-   tmp = assoc
-         ? mulle__assoc_enumerate( (struct mulle__assoc *) assoc, assoc->callback)
-         : mulle__assocenumerator_empty;
-   memcpy( &rval, &tmp, sizeof( struct mulle__assocenumerator));
-   return( rval);
+   return( assoc
+           ? _mulle_assoc_enumerate( assoc)
+           : mulle_assocenumerator_empty);
 }
 
 
@@ -632,8 +678,12 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
 // sizeof( item) must be sizeof( void *)
 //
 #define mulle_assoc_for( assoc, key, value)                                           \
+   assert( sizeof( key) == sizeof( void *));                                          \
+   assert( sizeof( value) == sizeof( void *));                                        \
    for( struct mulle_assocenumerator rover__ ## item = mulle_assoc_enumerate( assoc); \
-        _mulle_assocenumerator_next( &rover__ ## item, (void **) &key, (void **) &value);)
+        _mulle_assocenumerator_next( &rover__ ## item,                                \
+                                     (void **) &key,                                  \
+                                     (void **) &value);)
 
 
 #endif /* mulle_assoc_h */

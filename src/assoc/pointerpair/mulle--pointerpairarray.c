@@ -36,6 +36,9 @@
 #include "mulle-container-math.h"
 #include "mulle-container-operation.h"
 
+#ifndef NDEBUG 
+# include "mulle--pointerset.h"
+#endif
 
 # pragma mark - allocation
 
@@ -134,4 +137,31 @@ unsigned int
    memcpy( buf, &array->_storage[ range.location], range.length * sizeof( struct mulle_pointerpair));
    return( range.length);
 }
+
+
+#ifndef NDEBUG 
+void   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *array)
+{
+   struct mulle__pointerset   set;
+   unsigned int               n;
+   unsigned int               m;
+   struct mulle_pointerpair   *p;
+   struct mulle_pointerpair   *sentinel;
+
+   n = mulle__pointerpairarray_get_count( array);
+   if( ! n)
+      return;
+
+   _mulle__pointerset_init( &set, n, NULL);
+   p        = array->_storage;
+   sentinel = array->_curr;
+   for( ; p < sentinel; *p++)
+      _mulle__pointerset_set( &set, p->key, NULL);
+
+   m = _mulle__pointerset_get_count( &set);
+   _mulle__pointerset_done( &set, NULL);
+
+   assert( n == m);
+}
+#endif 
 

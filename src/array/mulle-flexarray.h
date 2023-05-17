@@ -76,21 +76,24 @@
 
 #define mulle_flexarray( name, type, stackcount)                           \
    type                        name ## __storage[ (stackcount)];           \
+   type                        *name;                                      \
    struct mulle__structarray   name ## __array =                           \
                                MULLE__STRUCTARRAY_INIT( name ## __storage, \
                                                         type,              \
                                                         (stackcount))
 
 #define mulle_flexarray_alloc( name, actualcount)                          \
-      _mulle__structarray_guarantee( &name ## __array, (actualcount), NULL)
+      name = _mulle__structarray_guarantee( &name ## __array,              \
+                                            (actualcount),                 \
+                                            NULL)
 
 #define mulle_flexarray_realloc( name, count)                              \
-   (                                                                       \
-      _mulle__structarray_sizeto_length(                                   \
+   name = (                                                                \
+      _mulle__structarray_set_count(                                       \
          &name ## __array,                                                 \
-         (count) * sizeof( name ## __storage[ 0]),                         \
+         (count),                                                          \
          NULL),                                                            \
-      name ## __array.storage                                              \
+      name ## __array._storage                                             \
    )
 
 #define mulle_flexarray_done( name)                                        \
@@ -100,11 +103,6 @@
       name = NULL;                                                         \
    }                                                                       \
    while( 0)
-
-#define mulle_flexarray_define( name, type, stackcount, count)             \
-   mulle_flexarray( name, type, stackcount);                               \
-   type *name = mulle_flexarray_alloc( name, count)
-
 
 #define mulle_flexarray_return( name, value)                               \
    do                                                                      \
@@ -136,7 +134,7 @@
               MULLE__STRUCTARRAY_INIT( name ## __storage, type, stackcount), \
            name ## __i =                                                     \
            {                                                                 \
-              ( name = mulle_flexarray_alloc( name, count), (void *) 0 )     \
+              ( mulle_flexarray_alloc( name, count), (void *) 0 )            \
            };                                                                \
         ! name ## __i._storage;                                              \
         name = NULL,                                                         \

@@ -95,7 +95,9 @@ static inline struct mulle_range   _mulle__rangeset_get( struct mulle__rangeset 
 MULLE_C_NONNULL_FIRST
 static inline uintptr_t   _mulle__rangeset_get_last( struct mulle__rangeset *p)
 {
-   return( p->_length ? mulle_range_get_end( p->_ranges[ p->_length - 1 ]) - 1 : mulle_not_found_e);
+   return( p->_length
+           ? mulle_range_get_max( p->_ranges[ p->_length - 1]) - 1
+           : mulle_not_found_e);
 }
 
 

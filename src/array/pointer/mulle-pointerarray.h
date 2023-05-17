@@ -475,6 +475,67 @@ static inline void   *mulle_pointerarray_set( struct mulle_pointerarray *array,
 }
 
 
+#pragma mark - random access set/get
+
+//
+// you can random/access with "set" here, if the pointerarray is too small
+// it's grown and the new space is zeroed
+//
+MULLE_C_NONNULL_FIRST
+static inline void   _mulle_pointerarray_set_zeroing( struct mulle_pointerarray *array,
+                                                      unsigned int i,
+                                                      void *value)
+{
+   _mulle__pointerarray_set_zeroing( (struct mulle__pointerarray *) array,
+                                     i,
+                                     value,
+                                     array->allocator);
+}
+
+
+static inline void   mulle_pointerarray_set_zeroing( struct mulle_pointerarray *array,
+                                                     unsigned int i,
+                                                     void *value)
+{
+   if( ! array)
+      return;
+   _mulle_pointerarray_set_zeroing( array, i, value);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   *_mulle_pointerarray_get_zeroing( struct mulle_pointerarray *array,
+                                                       unsigned int i)
+{
+   return( _mulle__pointerarray_get_zeroing( (struct mulle__pointerarray *) array,
+                                             i));
+}
+
+
+static inline void   *mulle_pointerarray_get_zeroing( struct mulle_pointerarray *array,
+                                                      unsigned int i)
+{
+   if( ! array)
+      return( NULL);
+   return( _mulle_pointerarray_get_zeroing( array, i));
+}
+
+
+// makes no sense if array is nil
+MULLE_C_NONNULL_FIRST
+static inline void
+   **_mulle_pointerarray_get_zeroing_address( struct mulle_pointerarray *array,
+                                              unsigned int i)
+{
+   return( _mulle__pointerarray_get_zeroing_address( (struct mulle__pointerarray *) array,
+                                                      i,
+                                                      array->allocator));
+}
+
+
+
+#pragma mark - reset
+
 MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_pointerarray_reset( struct mulle_pointerarray *array)

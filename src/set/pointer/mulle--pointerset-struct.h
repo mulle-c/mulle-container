@@ -78,30 +78,29 @@ struct mulle__pointerset
 
 #pragma mark - setup and takedown
 
-MULLE_C_NONNULL_THIRD
 struct mulle__pointerset   *_mulle__pointerset_create( unsigned int capacity,
                                                        size_t extra,
                                                        struct mulle_allocator *allocator);
 
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
                                     struct mulle_allocator *allocator);
 
 
 // if capacity is 0, this just does a memset 0
-MULLE_C_NONNULL_FIRST_THIRD
+MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_init( struct mulle__pointerset *set,
                                  unsigned int capacity,
                                  struct mulle_allocator *allocator);
 
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_done( struct mulle__pointerset *set,
                                  struct mulle_allocator *allocator);
 
 
 #pragma mark - copying
 
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST
 struct mulle__pointerset   *_mulle__pointerset_copy( struct mulle__pointerset *set,
                                                      struct mulle_allocator *allocator);
 
@@ -161,7 +160,7 @@ void   *_mulle__pointerset_get( struct mulle__pointerset *set,
 #pragma mark - enumeration
 
 #define MULLE__POINTERSETENUMERATOR_BASE  \
-   void     **_curr;                      \
+   void           **_curr;                \
    unsigned int   _left
 
 
@@ -199,8 +198,9 @@ static inline struct mulle__pointersetenumerator
 
 
 MULLE_C_NONNULL_FIRST
-static inline int   _mulle__pointersetenumerator_next( struct mulle__pointersetenumerator *rover,
-                                                       void **item)
+static inline int   
+   _mulle__pointersetenumerator_next( struct mulle__pointersetenumerator *rover,
+                                      void **item)
 {
    void   *p;
 

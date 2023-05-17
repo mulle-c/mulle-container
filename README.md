@@ -12,6 +12,7 @@ simplify memory management.
 Some data structures utilize callbacks that are compatible to OS X's
 [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
 
+
 | Release Version                                       | Release Notes
 |-------------------------------------------------------|--------------
 | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)| [RELEASENOTES](RELEASENOTES.md) |
@@ -427,6 +428,13 @@ _mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keyc
 
 
 ## Add
+
+**This project is a component of the [mulle-core](//github.com/mulle-core/mulle-core) library. As such you usually will *not* add or install it
+individually, unless you specifically do not want to link against
+`mulle-core`.**
+
+
+### Add as an individual component
 
 Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
 

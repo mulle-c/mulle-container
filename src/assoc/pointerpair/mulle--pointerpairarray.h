@@ -421,6 +421,22 @@ static inline struct mulle_pointerpair
 }
 
 
+#ifndef NDEBUG
+
+MULLE_CONTAINER_GLOBAL
+void   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *array);
+
+#else
+
+static inline void
+   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *array)
+{
+
+}
+
+#endif
+
+
 
 #pragma mark - enumerator
 
@@ -480,16 +496,12 @@ static inline int
    mulle__pointerpairarrayenumerator_next( struct mulle__pointerpairarrayenumerator *rover,
                                            struct mulle_pointerpair *pair)
 {
-   if( rover)
-      while( rover->_curr < rover->_sentinel)
-      {
-         if( pair)
-            *pair = *rover->_curr++;
-         return( 1);
-      }
+   struct mulle_pointerpair   dummy;
 
-   if( pair)
-      *pair = mulle_pointerpair_make( NULL, NULL);
+   pair = pair ? pair : &dummy;
+   if( rover)
+      return( _mulle__pointerpairarrayenumerator_next( rover, pair));
+   *pair = mulle_pointerpair_make( NULL, NULL);
    return( 0);
 }
 

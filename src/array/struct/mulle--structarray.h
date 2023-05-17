@@ -335,6 +335,20 @@ static inline void
 }
 
 
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+unsigned int   _mulle__structarray_set_count( struct mulle__structarray *array,
+                                              unsigned int count,
+                                              struct mulle_allocator *allocator);
+
+MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
+                                          unsigned int count,
+                                          struct mulle_allocator *allocator);
+
+#pragma mark - extract
+
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_data

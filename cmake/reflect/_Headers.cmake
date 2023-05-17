@@ -14,9 +14,10 @@ set( INCLUDE_DIRS
 src
 src/array
 src/array/pointer
-src/array/pointerpair
 src/array/struct
 src/array/uniquepointer
+src/assoc
+src/assoc/pointerpair
 src/generic
 src/map
 src/map/pointer
@@ -63,18 +64,18 @@ src/generic/include.h
 set( PUBLIC_HEADERS
 src/array/mulle--array.h
 src/array/mulle-array.h
-src/array/mulle--assoc.h
-src/array/mulle-assoc.h
 src/array/mulle-flexarray.h
 src/array/pointer/mulle--pointerarray.h
 src/array/pointer/mulle-pointerarray.h
-src/array/pointerpair/mulle--pointerpairarray.h
-src/array/pointerpair/mulle-pointerpairarray.h
-src/array/pointerpair/mulle-pointerpair.h
 src/array/struct/mulle--structarray.h
 src/array/struct/mulle-structarray.h
 src/array/uniquepointer/mulle--uniquepointerarray.h
 src/array/uniquepointer/mulle-uniquepointerarray.h
+src/assoc/mulle--assoc.h
+src/assoc/mulle-assoc.h
+src/assoc/pointerpair/mulle--pointerpairarray.h
+src/assoc/pointerpair/mulle-pointerpairarray.h
+src/assoc/pointerpair/mulle-pointerpair.h
 src/map/mulle--map.h
 src/map/mulle-map.h
 src/map/pointer/mulle--pointermap-generic.h

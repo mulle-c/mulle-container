@@ -4,7 +4,7 @@
 
 static void   print_range( struct mulle_range   range)
 {
-   if( ! range.length || range.length > mulle_range_max)
+   if( ! range.length || range.length > mulle_range_location_max)
       printf( "[%ld,%ld]",
          (long) range.location, (long) range.length);
    else

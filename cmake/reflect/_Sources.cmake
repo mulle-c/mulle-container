@@ -13,17 +13,17 @@ endif()
 set( SOURCES
 src/array/mulle--array.c
 src/array/mulle-array.c
-src/array/mulle--assoc.c
-src/array/mulle-assoc.c
 src/array/pointer/mulle--pointerarray.c
 src/array/pointer/mulle-pointerarray.c
-src/array/pointerpair/mulle--pointerpairarray.c
-src/array/pointerpair/mulle-pointerpairarray.c
-src/array/pointerpair/mulle-pointerpair.c
 src/array/struct/mulle--structarray.c
 src/array/struct/mulle-structarray.c
 src/array/uniquepointer/mulle--uniquepointerarray.c
 src/array/uniquepointer/mulle-uniquepointerarray.c
+src/assoc/mulle--assoc.c
+src/assoc/mulle-assoc.c
+src/assoc/pointerpair/mulle--pointerpairarray.c
+src/assoc/pointerpair/mulle-pointerpairarray.c
+src/assoc/pointerpair/mulle-pointerpair.c
 src/map/mulle--map.c
 src/map/mulle-map.c
 src/map/pointer/mulle--pointermap-generic.c

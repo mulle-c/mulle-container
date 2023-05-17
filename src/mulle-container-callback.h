@@ -131,6 +131,9 @@ static inline void
 }
 
 MULLE_CONTAINER_GLOBAL
+int         mulle_container_keycallback_intptr_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
+
+MULLE_CONTAINER_GLOBAL
 uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
 
 MULLE_CONTAINER_GLOBAL
