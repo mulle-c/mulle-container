@@ -23,8 +23,8 @@ int   main( int argc, char *argv[])
    _mulle__rangeset_shift( &set, 0, -3, NULL);
    _mulle__rangeset_print( &set);
 
-//   printf( "\nShift mulle_range_max -3 up\n");
-//   _mulle__rangeset_shift( &set, 0, mulle_range_max - 3, NULL);
+//   printf( "\nShift mulle_range_location_max -3 up\n");
+//   _mulle__rangeset_shift( &set, 0, mulle_range_location_max - 3, NULL);
 //   _mulle__rangeset_print( &set);
  
    _mulle__rangeset_done( &set, NULL);
