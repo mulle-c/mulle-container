@@ -192,6 +192,54 @@ static inline int   _mulle_pointerpair_bsearch( struct mulle_pointerpair *buf,
 }
 
 
+
+//
+// Buf must have been sorted with "compare" before for the bsearch to work.
+//
+// return -1 if not found, otherwise the index in buf (0-(n-1))
+//
+static inline int   _mulle_pointerpair_bsearch_or_less( struct mulle_pointerpair *buf,
+                                                        unsigned int n,
+                                                        struct mulle_pointerpair search,
+                                                        mulle_pointerpair_compare_t *compare,
+                                                        void *userinfo)
+{
+   struct mulle_pointerpair    *p;
+   int                         first;
+   int                         last;
+   int                         middle;
+   int                         closest;
+   int                         rc;
+
+   first   = 0;
+   last    = n - 1;
+   middle  = (first + last) / 2;
+   closest = -1;
+
+   while( first <= last)
+   {
+      p = &buf[ middle];
+
+      rc = (*compare)( p, &search, userinfo);
+      if( rc <= 0)
+      {
+         if( rc == 0)
+            return( middle);
+         if( middle > closest)
+            closest = middle;
+         
+         first = middle + 1;
+      }
+      else
+         last = middle - 1;
+
+      middle = (first + last) / 2;
+   }
+
+   return( middle);
+}
+
+
 MULLE_CONTAINER_GLOBAL
 MULLE_C_NONNULL_FOURTH
 void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,

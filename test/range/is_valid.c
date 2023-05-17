@@ -7,7 +7,7 @@ static uintptr_t   values[6] =
    0,
    1,
    2,
-   mulle_range_max,
+   mulle_range_location_max,
    mulle_not_found_e,
    -1
 };
@@ -15,8 +15,8 @@ static uintptr_t   values[6] =
 
 static void   print_value( uintptr_t value)
 {
-   if( value == mulle_range_max)
-      printf( "mulle_range_max");
+   if( value == mulle_range_location_max)
+      printf( "mulle_range_location_max");
    else
       if( value == mulle_not_found_e)
          printf( "mulle_not_found_e");

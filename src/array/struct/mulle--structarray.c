@@ -92,3 +92,33 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
    return( array->_curr);
 }
 
+
+unsigned int  _mulle__structarray_set_count( struct mulle__structarray *array,
+                                             unsigned int count,
+                                             struct mulle_allocator *allocator)
+{
+   long   diff;
+
+   diff = (long) count - (long) _mulle__structarray_get_count( array);
+   if( diff <= 0)
+   {
+      array->_curr =  &((char *) array->_curr)[ diff * array->_sizeof_struct];
+      _mulle__structarray_size_to_fit( array, allocator);
+      return( 0);
+   }
+
+   _mulle__structarray_advance( array, (unsigned int) diff, allocator);
+   return( (unsigned int) diff);
+}
+
+
+
+void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
+                                          unsigned int count,
+                                          struct mulle_allocator *allocator)
+{
+   long   diff;
+
+   diff = _mulle__structarray_set_count( array, count, allocator);
+   memset( &((char *) array->_curr)[ -diff * array->_sizeof_struct], 0, (unsigned int) diff * array->_sizeof_struct);
+}

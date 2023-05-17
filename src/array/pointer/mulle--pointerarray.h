@@ -409,6 +409,18 @@ static inline void   *
 }
 
 
+MULLE_C_NONNULL_FIRST
+static inline void   **
+   _mulle__pointerarray_get_address( struct mulle__pointerarray *array, unsigned int i)
+{
+   assert( array);
+   assert( &array->_storage[ i] >= array->_storage);
+   assert( &array->_storage[ i] < array->_curr);
+
+   return( &array->_storage[ i]);
+}
+
+
 /*
  *  Loop over all items. This works as long as you don't remove
  *  anything from the array. It will not retrieve newly added elements.
@@ -548,6 +560,93 @@ static inline void   *
       return( NULL);
    return( _mulle__pointerarray_set( array, i, p));
 }
+
+
+#pragma mark - random access set/get
+
+
+//
+// you can random/access with "set" here, if the pointerarray is too small
+// it's grown and the new space is zeroed
+//
+MULLE_C_NONNULL_FIRST
+static inline void   _mulle__pointerarray_set_zeroing( struct mulle__pointerarray *array,
+                                                       unsigned int i,
+                                                       void *value,
+                                                       struct mulle_allocator *allocator)
+{
+   void           **space;
+   unsigned int   n;
+   unsigned int   zeroes;
+
+   n = _mulle__pointerarray_get_count( array);
+   if( i < n)
+   {
+      _mulle__pointerarray_set( array, i, value);
+      return;
+   }
+
+   zeroes = i - n;
+   space  = _mulle__pointerarray_advance( array, zeroes + 1, allocator);
+   memset( space, 0, zeroes * sizeof( void *));
+   space[ zeroes] = value;
+}
+
+static inline void   mulle__pointerarray_set_zeroing( struct mulle__pointerarray *array,
+                                                      unsigned int i,
+                                                      void *value,
+                                                      struct mulle_allocator *allocator)
+{
+   if( ! array)
+      return;
+   _mulle__pointerarray_set_zeroing( array, i, value, allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   *_mulle__pointerarray_get_zeroing( struct mulle__pointerarray *array,
+                                                        unsigned int i)
+{
+   unsigned int   n;
+
+   n = _mulle__pointerarray_get_count( array);
+   if( i < n)
+      return( _mulle__pointerarray_get( array, i));
+   return( NULL);
+}
+
+
+static inline void   *mulle__pointerarray_get_zeroing( struct mulle__pointerarray *array,
+                                                       unsigned int i)
+
+{
+   if( ! array)
+      return( NULL);
+   return( _mulle__pointerarray_get_zeroing( array, i));
+}
+
+
+// makes no sense if array is nil
+MULLE_C_NONNULL_FIRST
+static inline void
+   **_mulle__pointerarray_get_zeroing_address( struct mulle__pointerarray *array,
+                                               unsigned int i,
+                                               struct mulle_allocator *allocator)
+{
+   void           **space;
+   unsigned int   n;
+   unsigned int   zeroes;
+
+   n = _mulle__pointerarray_get_count( array);
+   if( i >= n)
+   {
+      zeroes = i - n + 1;
+      space  = _mulle__pointerarray_advance( array, zeroes, allocator);
+      memset( space, 0, zeroes * sizeof( void *));
+   }
+   return( _mulle__pointerarray_get_address( array, i));
+}
+
 
 
 MULLE_CONTAINER_GLOBAL

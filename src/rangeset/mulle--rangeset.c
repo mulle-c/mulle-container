@@ -29,7 +29,7 @@ static void   _mulle__rangeset_assert( struct mulle__rangeset *set)
       assert( curr->length);
       mulle_range_is_valid( *curr);
       if( old)
-         assert( mulle_range_get_end( *old) <= curr->location);
+         assert( mulle_range_get_max( *old) <= curr->location);
 
       old = curr;
       ++curr;
@@ -219,7 +219,7 @@ static void   __mulle__rangeset_insert_known_absent( struct mulle__rangeset *p,
       if( index)
       {
          prev = &p->_ranges[ index - 1];
-         if( mulle_range_get_end( *prev) == range.location)
+         if( mulle_range_get_max( *prev) == range.location)
             prev->length += range.length;
          else
             prev = NULL;
@@ -228,9 +228,9 @@ static void   __mulle__rangeset_insert_known_absent( struct mulle__rangeset *p,
       if( index < p->_length)
       {
          next = &p->_ranges[ index];
-         if( mulle_range_get_end( range) == next->location)
+         if( mulle_range_get_max( range) == next->location)
          {
-            if( prev && mulle_range_get_end( *prev) == next->location)
+            if( prev && mulle_range_get_max( *prev) == next->location)
             {
                prev->length += next->length;
                __mulle__rangeset_move_down_pointer( p, prev + 1, allocator);
@@ -316,7 +316,7 @@ loop_2:
 
       // prev extends over curr, and remove curr
       // add length of hole and then curr->length
-      prev->length  += curr->location - mulle_range_get_end( *prev) + curr->length;
+      prev->length  += curr->location - mulle_range_get_max( *prev) + curr->length;
       __mulle__rangeset_move_down_pointer( p, curr, allocator);
       curr           = prev;
       found          = prev;  // found is now really prev
@@ -324,7 +324,7 @@ loop_2:
    }
 
  _3:
-   if( mulle_range_get_end( range) > mulle_range_get_end( *found))
+   if( mulle_range_get_max( range) > mulle_range_get_max( *found))
    {
       curr     = found;
 loop_3:
@@ -333,14 +333,14 @@ loop_3:
       if( next >= sentinel || ! mulle_range_intersect( *next, range).length)
       {
          // easy, just change current end
-         length = mulle_range_get_end( range) - curr->location;
+         length = mulle_range_get_max( range) - curr->location;
          if( length > curr->length)
             curr->length = length;
          goto _4;
       }
 
       // make found gobble up next
-      curr->length = mulle_range_get_end( *next) - curr->location;
+      curr->length = mulle_range_get_max( *next) - curr->location;
       __mulle__rangeset_move_down_pointer( p, next, allocator);
       // curr         = next;
 
@@ -394,8 +394,8 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
          continue;
       }
 
-      found_end = mulle_range_get_end( *found);
-      range_end = mulle_range_get_end( range);
+      found_end = mulle_range_get_max( *found);
+      range_end = mulle_range_get_max( range);
 
       // 2. make a hole, we shrink what we have
       //    and insert a new piece with the  trailing bit
@@ -582,12 +582,12 @@ uintptr_t   _mulle__rangeset_search_location( struct mulle__rangeset *p,
       {
          if( mulle_range_contains_location( range, location - 1))
             return( location - 1);
-         return( mulle_range_get_max( range));
+         return( mulle_range_get_last_location( range));
       }
       break;
 
    case mulle_rangeset_greater_than :
-      if( location < mulle_range_max)
+      if( location <= mulle_range_location_max)
       {
          if( mulle_range_contains_location( range, location + 1))
             return( location + 1);
@@ -635,7 +635,7 @@ uintptr_t   _mulle__rangeset_search_location( struct mulle__rangeset *p,
       break;
 
    case mulle_rangeset_greater_than :
-      if( location < mulle_range_max)
+      if( location <= mulle_range_location_max)
       {
          // we have the nearest range already,
          // but it could be the below location, which makes it useless
@@ -697,7 +697,7 @@ struct mulle_range
       break;
 
    case mulle_rangeset_greater_than :
-      if( location < mulle_range_max)
+      if( location <= mulle_range_location_max)
       {
          // we have the nearest range already,
          // but it could be the below location, which makes it useless
@@ -752,7 +752,7 @@ void   _mulle__rangeset_shift( struct mulle__rangeset *p,
    if( ! p->_length  || ! delta)
       return;
 
-   assert( location <= mulle_range_max);
+   assert( location <= mulle_range_location_max);
 
    /* check that we are not creating negatives or mulle_not_found_e.
     * We are shifting, so negative locations "disappear"
@@ -774,11 +774,11 @@ void   _mulle__rangeset_shift( struct mulle__rangeset *p,
    }
    else
    {
-      if( (uintptr_t) delta > mulle_range_max)
-         delta = mulle_range_max;
+      if( (uintptr_t) delta > mulle_range_location_max + 1)
+         delta = mulle_range_location_max + 1;
 
       __mulle__rangeset_remove( p,
-                                mulle_range_make( mulle_range_max - delta, delta),
+                                mulle_range_make( mulle_range_location_max + 1 - delta, delta),
                                 allocator);
    }
 
@@ -792,7 +792,7 @@ void   _mulle__rangeset_shift( struct mulle__rangeset *p,
       // if we don't match exactly, we have a part that will be unaffected
       // and the rest will be affected. So split this off
       //
-      found_end     = mulle_range_get_end( *found);
+      found_end     = mulle_range_get_max( *found);
       found->length = location - found->location;
 
       // we need to add delta to this block immediately to avoid
@@ -811,7 +811,7 @@ void   _mulle__rangeset_shift( struct mulle__rangeset *p,
       prev = found - 1;
       if( prev >= p->_ranges)
       {
-         if( mulle_range_get_end( *prev) == found->location)
+         if( mulle_range_get_max( *prev) == found->location)
          {
             prev->length += found->length;
             __mulle__rangeset_move_down_pointer( p, found, allocator);
