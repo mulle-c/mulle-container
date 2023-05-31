@@ -25,18 +25,20 @@
 struct mulle__structarray
 {
    MULLE__STRUCTARRAY_BASE;
-   struct mulle_allocator   *allocator;
 };
 
 
-#define MULLE__STRUCTARRAY_INIT( storage, type, count)              \
-   ((struct mulle__structarray)                                     \
-   {                                                                \
-      storage,                                                      \
-      storage,                                                      \
-      &((char *) storage)[ count],                                  \
-      storage,                                                      \
-      (size_t) (sizeof( type) + (sizeof( type) % alignof( type)))   \
+#define MULLE__STRUCTARRAY_ALIGNED_SIZE( type)  \
+   (size_t) (sizeof( type) + (sizeof( type) % alignof( type)))
+
+#define MULLE__STRUCTARRAY_INIT( storage, type, count)                      \
+   ((struct mulle__structarray)                                             \
+   {                                                                        \
+      storage,                                                              \
+      storage,                                                              \
+      &((char *) storage)[ count * MULLE__STRUCTARRAY_ALIGNED_SIZE( type)], \
+      storage,                                                              \
+      MULLE__STRUCTARRAY_ALIGNED_SIZE( type)                                \
    })
 
 
@@ -57,7 +59,7 @@ static inline void   _mulle__structarray_init( struct mulle__structarray *array,
                                                unsigned int capacity,
                                                struct mulle_allocator *allocator)
 {
-   MULLE_CONTAINER_GLOBAL
+   MULLE__CONTAINER_GLOBAL
    void   _mulle__structarray_sizeto( struct mulle__structarray *array,
                                       unsigned int new_size,
                                       struct mulle_allocator *allocator);
@@ -115,6 +117,9 @@ static inline void  _mulle__structarray_done( struct mulle__structarray *array,
 {
    if( ! array->_initial_storage)
       mulle_allocator_free( allocator, array->_storage);
+#ifdef DEBUG
+   memset( array, 0xFD, sizeof( struct mulle__structarray));
+#endif
 }
 
 
@@ -258,7 +263,7 @@ static inline void *
 {
    if( ! array)
       return( NULL);
-   return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
+   return( _mulle__structarray_get_last( array));
 }
 
 
@@ -271,7 +276,7 @@ static inline void
                             void *item,
                             struct mulle_allocator *allocator)
 {
-   MULLE_CONTAINER_GLOBAL
+   MULLE__CONTAINER_GLOBAL
    void   _mulle__structarray_grow( struct mulle__structarray *array,
                                     struct mulle_allocator *allocator);
 
@@ -285,7 +290,20 @@ static inline void
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST_SECOND
+static inline void
+   _mulle__structarray_add_guaranteed( struct mulle__structarray *array,
+                                       void *item)
+{
+   assert( array->_sizeof_struct);
+   assert( array->_curr < array->_sentinel);
+
+   memcpy( array->_curr, item, array->_sizeof_struct);
+   array->_curr = &((char *) array->_curr)[ array->_sizeof_struct];
+}
+
+
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__structarray_guarantee( struct mulle__structarray *array,
                                        unsigned int count,
@@ -307,6 +325,24 @@ static inline void *
 }
 
 
+MULLE_C_NONNULL_FIRST_SECOND
+static inline void
+   _mulle__structarray_assert_pointer( struct mulle__structarray *array,
+                                       void *pointer)
+{
+   assert( (char *) pointer >= (char *) array->_storage &&
+           (char *) pointer < (char *) array->_curr);
+   assert( ((char *) pointer - (char *) array->_storage) % array->_sizeof_struct == 0);
+}
+
+
+
+void
+   mulle__structarray_add_array( struct mulle__structarray *array,
+                                 struct mulle__structarray *other,
+                                 struct mulle_range range,
+                                 struct mulle_allocator *allocator);
+
 MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle__structarray_reserve( struct mulle__structarray *array,
@@ -326,7 +362,7 @@ static inline void
    _mulle__structarray_size_to_fit( struct mulle__structarray *array,
                                     struct mulle_allocator *allocator)
 {
-   MULLE_CONTAINER_GLOBAL
+   MULLE__CONTAINER_GLOBAL
    void   _mulle__structarray_sizeto( struct mulle__structarray *array,
                                       unsigned int new_size,
                                       struct mulle_allocator *allocator);
@@ -335,13 +371,13 @@ static inline void
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 unsigned int   _mulle__structarray_set_count( struct mulle__structarray *array,
                                               unsigned int count,
                                               struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
                                           unsigned int count,

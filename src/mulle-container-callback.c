@@ -51,8 +51,8 @@ uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_key
 
 // just here so that we can distinguish between this and pointer types
 int   mulle_container_keycallback_intptr_is_equal( struct mulle_container_keycallback *callback,
-                                                    void *a,
-                                                    void *b)
+                                                   void *a,
+                                                   void *b)
 {
    return( (intptr_t) a == (intptr_t) b);
 }

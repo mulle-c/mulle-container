@@ -120,7 +120,7 @@ void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__assoc_remove( struct mulle__assoc *assoc,
                              void *key,
@@ -135,7 +135,7 @@ void   _mulle__assoc_remove( struct mulle__assoc *assoc,
    // modifying the assoc. We don't use an enumerator here, but an index is
    // safe...
    //
-   if( callback->keycallback.is_equal == mulle_container_keycallback_pointer_is_equal)
+   if( _mulle_container_keycallback_isbitequals( &callback->keycallback))
    {
       for( i = mulle__assoc_get_count( assoc); i;)
       {
@@ -175,7 +175,7 @@ int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
    if( n != _mulle__assoc_get_count( other))
       return( 0);
 
-   if( callback->keycallback.is_equal == mulle_container_keycallback_pointer_is_equal)
+   if( _mulle_container_keycallback_isbitequals( &callback->keycallback))
       return( ! memcmp( assoc->_storage, other->_storage, n * sizeof( struct mulle_pointerpair)));
 
    p = assoc->_storage;
@@ -220,7 +220,7 @@ void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
    struct mulle_pointerpair  pair;
    struct mulle_pointerpair  old;
 
-   assert( pair.key != callback->keycallback.notakey);
+   assert( key != callback->keycallback.notakey);
 
    pair     = mulle_pointerpair_make( key, value);
    retained = mulle_pointerpair_retain( pair, callback, allocator);
@@ -239,7 +239,6 @@ void
                                  struct mulle_allocator *allocator)
 {
    unsigned int               count;
-   struct mulle_pointerpair   search;
    struct mulle_pointerpair   *q;
    struct mulle_pointerpair   *sentinel;
    uintptr_t                  i;
@@ -333,16 +332,23 @@ char   *_mulle__assoc_describe( struct mulle__assoc *set,
    {
       key_allocator  = allocator ? allocator : &mulle_default_allocator;
 
-      key        = (*callback->keycallback.describe)( &callback->keycallback, item.key, &key_allocator);
+      key        = (*callback->keycallback.describe)( &callback->keycallback,
+                                                      item.key,
+                                                      &key_allocator);
       key_len    = strlen( key);
       separate   = result != NULL;
 
       key_allocator  = allocator ? allocator : &mulle_default_allocator;
 
-      value      = (*callback->valuecallback.describe)( &callback->valuecallback, item.value, &key_allocator);
+      value      = (*callback->valuecallback.describe)( &callback->valuecallback,
+                                                        item.value,
+                                                        &key_allocator);
       value_len  = strlen( value);
 
-      result = mulle_allocator_realloc( allocator, result, len + (separate * 2) + 2 + key_len + 1 + 2 + value_len + 1 + 1);
+      result = mulle_allocator_realloc( allocator,
+                                        result,
+                                        len + (separate * 2) + 2 + key_len + 1 \
+                                            + 2 + value_len + 1 + 1);
 
       if( separate)
       {
@@ -399,7 +405,7 @@ uintptr_t
    sentinel = &p[ range.length];
 
    // NULL check needed for remap
-   if( ! callback || callback->keycallback.is_equal == mulle_container_keycallback_pointer_is_equal)
+   if( ! callback || _mulle_container_keycallback_isbitequals( &callback->keycallback))
    {
       for( ; p < sentinel; p++)
          if( p->key == key)

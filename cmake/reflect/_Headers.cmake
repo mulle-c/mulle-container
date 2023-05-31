@@ -22,6 +22,7 @@ src/generic
 src/map
 src/map/pointer
 src/queue
+src/queue/struct
 src/rangeset
 src/reflect
 src/set
@@ -90,6 +91,8 @@ src/mulle-container-operation.h
 src/mulle-qsort.h
 src/queue/mulle--pointerqueue.h
 src/queue/mulle-pointerqueue.h
+src/queue/struct/mulle--structqueue.h
+src/queue/struct/mulle-structqueue.h
 src/rangeset/mulle--rangeset.h
 src/set/mulle--set.h
 src/set/mulle-set.h

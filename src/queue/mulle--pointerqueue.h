@@ -116,34 +116,34 @@ static inline void
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 struct mulle__pointerqueue   *mulle__pointerqueue_create( unsigned short bucket_size,
                                                           unsigned short spare_allowance,
                                                           struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_destroy( struct mulle__pointerqueue *queue,
                                      struct mulle_allocator *allocator);
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_done( struct mulle__pointerqueue *queue,
                                   struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_grow( struct mulle__pointerqueue *queue,
                                   struct mulle_allocator *allocator);
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_shrink( struct mulle__pointerqueue *queue,
                                     struct mulle_allocator *allocator);
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
                                    struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerqueue_removeall( struct mulle__pointerqueue *queue,
                                        struct mulle_allocator *allocator);  // keeps spares
@@ -166,7 +166,7 @@ static inline void  _mulle__pointerqueue_push( struct mulle__pointerqueue *queue
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void  *_mulle__pointerqueue_pop( struct mulle__pointerqueue *queue,
                                  struct mulle_allocator *allocator);
