@@ -155,7 +155,7 @@ void   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *
    _mulle__pointerset_init( &set, n, NULL);
    p        = array->_storage;
    sentinel = array->_curr;
-   for( ; p < sentinel; *p++)
+   for( ; p < sentinel; p++)
       _mulle__pointerset_set( &set, p->key, NULL);
 
    m = _mulle__pointerset_get_count( &set);

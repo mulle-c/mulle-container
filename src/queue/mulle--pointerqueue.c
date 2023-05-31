@@ -57,7 +57,7 @@ struct mulle__pointerqueuebucket *
    {
       space = (sizeof( struct mulle__pointerqueuebucket) -
                sizeof( struct mulle__pointerqueuebucket *)) +
-               queue->_bucket_size * sizeof( struct mulle__pointerqueuebucket *);
+               queue->_bucket_size * sizeof( void *);
 
       p = mulle_allocator_malloc( allocator, space);
    }
@@ -262,6 +262,9 @@ void   _mulle__pointerqueue_done( struct mulle__pointerqueue *queue,
 {
    free_chained_buckets( queue->_read, allocator);
    free_chained_buckets( queue->_spares, allocator);
+#ifdef DEBUG
+   memset( queue, 0xFD, sizeof( struct mulle__pointerqueue));
+#endif
 }
 
 

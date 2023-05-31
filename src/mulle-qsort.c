@@ -8,6 +8,6 @@
 
 void   mulle_qsort_r( void *a, size_t n, size_t es, mulle_qsort_cmp_t *cmp, void *thunk)
 {
-   if( a && cmp)
+   if( a)
       _mulle_qsort_r_inline( a, n, es, cmp, thunk);
 }

@@ -19,7 +19,7 @@ void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
    if( array->_initial_storage)
    {
       // and we would still fit, ignore request
-      if( new_size <= _mulle__structarray_get_size( array))
+      if( new_size <= _mulle__structarray_get_size_as_length( array))
          return;
 
       // otherwise we need to malloc, now
@@ -76,8 +76,8 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
    size_t         needed_size;
    size_t         old_size;
 
-   _size     = _mulle__structarray_get_size( array);
-   _used     = _mulle__structarray_get_count( array);
+   _size = _mulle__structarray_get_size( array);
+   _used = _mulle__structarray_get_count( array);
    available = _size - _used;
    if( available < length)
    {
@@ -121,4 +121,34 @@ void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
 
    diff = _mulle__structarray_set_count( array, count, allocator);
    memset( &((char *) array->_curr)[ -diff * array->_sizeof_struct], 0, (unsigned int) diff * array->_sizeof_struct);
+}
+
+
+void
+   mulle__structarray_add_array( struct mulle__structarray *array,
+                                 struct mulle__structarray *other,
+                                 struct mulle_range range,
+                                 struct mulle_allocator *allocator)
+{
+   unsigned int   count;
+   void           *buf;
+
+   if( ! array)
+      return;
+
+   count = mulle__structarray_get_count( other);
+   range = mulle_range_validate_against_length( range, count);
+   if( ! range.length)
+      return;
+
+   if( other->_sizeof_struct != array->_sizeof_struct)
+      abort();
+
+   buf  = _mulle__structarray_advance( (struct mulle__structarray *) array, 
+                                       range.length, 
+                                       allocator);
+   memcpy( buf, 
+           &((char *) other->_storage)[ range.location * array->_sizeof_struct], 
+           range.length * array->_sizeof_struct);
+
 }

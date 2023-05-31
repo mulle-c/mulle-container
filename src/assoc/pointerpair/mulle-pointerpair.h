@@ -240,7 +240,7 @@ static inline int   _mulle_pointerpair_bsearch_or_less( struct mulle_pointerpair
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FOURTH
 void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,
                                   unsigned int n,
@@ -250,7 +250,7 @@ void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,
 
 
 // callback can be empty, in which case pointer equality is seatched
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t
    _mulle_pointerpair_find_in_range_callback( struct mulle_pointerpair *buf,

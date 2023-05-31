@@ -119,6 +119,9 @@ void   _mulle__map_done( struct mulle__map *map,
 {
    _mulle__map_release_all( map, callback, allocator);
    _mulle__map_free_storage( map, allocator);
+#ifdef DEBUG   
+   memset( map, 0xFD, sizeof( struct mulle__map));
+#endif    
 }
 
 

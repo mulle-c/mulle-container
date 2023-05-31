@@ -65,34 +65,34 @@ struct mulle__map
 #pragma mark - setup and takedown
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_THIRD
 struct mulle__map   *_mulle__map_create( unsigned int capacity,
                                          size_t extra,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__map_destroy( struct mulle__map *map,
                             struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__map_init( struct mulle__map *map,
                          unsigned int capacity,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__map_done( struct mulle__map *map,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__map_reset( struct mulle__map *map,
                           struct mulle_container_keyvaluecallback *callback,
@@ -450,7 +450,7 @@ static inline void
 // fairly efficient, but its untested.
 //
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_FIFTH
 void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
                                             void *firstvalue,
@@ -462,7 +462,7 @@ void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
 
 # pragma mark - copy
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 struct mulle__map   *_mulle__map_copy( struct mulle__map *map,
                                        struct mulle_container_keyvaluecallback *callback,
@@ -471,7 +471,7 @@ struct mulle__map   *_mulle__map_copy( struct mulle__map *map,
 
 # pragma mark - debugging
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 char   *_mulle__map_describe( struct mulle__map *map,
                               struct mulle_container_keyvaluecallback *callback,

@@ -113,11 +113,11 @@ static void  run_test( void (*f)( int), char *name, int n)
 
 int main(int argc, const char * argv[])
 {
-   run_test( simple, "simple", 1);
-   run_test( simple, "simple", 4);
-   run_test( simple, "simple", 16);
+   int   i;
+
+   for( i = 0; i < 16; i++)
+      run_test( simple, "simple", i);
    run_test( simple, "simple", 100000);
-   run_test( simple, "simple", 0);
 
    run_test( (void (*)( int)) flex_return,  "flex_return", 0);
    run_test( (void (*)( int)) flex_explicit, "flex_explicit", 8);

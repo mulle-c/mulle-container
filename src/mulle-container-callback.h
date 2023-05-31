@@ -45,7 +45,7 @@
 #include <assert.h>
 
 
-#if MULLE_ALLOCATOR_VERSION < ((2 << 20) | (1 << 8) | 0)
+#if MULLE__ALLOCATOR_VERSION < ((2 << 20) | (1 << 8) | 0)
 # error "mulle_allocator is too old"
 #endif
 
@@ -130,24 +130,24 @@ static inline void
    assert( callback->describe);
 }
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 int         mulle_container_keycallback_intptr_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 int         mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 void        _mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 uintptr_t
    mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *ignore,
                                              void *s);
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 int
    mulle_container_keycallback_cstring_is_equal( struct mulle_container_keycallback *ignore,
                                                  void *a,
@@ -198,13 +198,13 @@ static inline void   assert_mulle_container_valuecallback( struct mulle_containe
 
 
 // define a few functions conveniently with the typedef
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 mulle_container_valuecallback_retain_t      mulle_container_valuecallback_self;
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 mulle_container_valuecallback_release_t     mulle_container_valuecallback_nop;
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t    mulle_container_valuecallback_no_description;
 
 /*
@@ -213,26 +213,26 @@ void   mulle_container_valuecallback_nop( struct mulle_container_valuecallback *
 char   *mulle_container_valuecallback_no_description( struct mulle_container_valuecallback *callback, void *p, struct mulle_allocator **p_allocator);
 */
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 void   mulle_container_valuecallback_pointer_free( struct mulle_container_valuecallback *callback,
                                                    void *p,
                                                    struct mulle_allocator *allocator);
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_int_describe;
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_intptr_describe;
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_pointer_describe;
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 mulle_container_valuecallback_describe_t   mulle_container_callback_cstring_describe;
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 char *
    mulle_container_callback_cstring_copy( struct mulle_container_valuecallback  *callback,
                                           void *s,
@@ -270,6 +270,13 @@ static inline void
 #define mulle_container_keycallback_no_description \
    ((mulle_container_keycallback_describe_t *)  mulle_container_valuecallback_no_description)
 
+
+static inline int
+   _mulle_container_keycallback_isbitequals( struct mulle_container_keycallback *callback)
+{
+   return( callback->is_equal == mulle_container_keycallback_pointer_is_equal  ||
+           callback->is_equal == mulle_container_keycallback_intptr_is_equal);
+}
 
 static inline int
    _mulle_container_keycallback_retains( struct mulle_container_keycallback *callback)

@@ -155,8 +155,8 @@ void   _mulle_assoc_move_intptr_key_range( struct mulle_assoc *assoc,
    struct mulle_pointerpair   *p;
    struct mulle_pointerpair   *sentinel;
    struct mulle_range         move_away_range;
-   unsigned int               start;
-   unsigned int               end;
+   uintptr_t                  start;
+   uintptr_t                  end;
    uintptr_t                  range_end;
    intptr_t                   value;
    intptr_t                   move_away_offset;

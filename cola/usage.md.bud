@@ -163,8 +163,14 @@ additions pretty much as fast as possible.
 > chained into the linked list and the `_write` pointer is set to it, resetting
 > the `_write_index`.
 
-
 It is the basis for the `NSAutoreleasePool` implementation.
+
+
+#### `mulle__structqueue` stores structs instead of pointers
+
+A key difference to `mulle_structarray` is, that maintaining pointers to
+`mulle__structqueue` elements are possible, whereas `mulle_structarray`
+elements may get reorganised.
 
 
 ### Hashtables

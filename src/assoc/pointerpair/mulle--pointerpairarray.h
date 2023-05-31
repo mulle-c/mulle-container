@@ -92,6 +92,9 @@ static inline void
                                   struct mulle_allocator *allocator)
 {
    mulle_allocator_free( allocator, array->_storage);
+#ifdef DEBUG   
+   memset( array, 0xFD, sizeof( struct mulle__pointerpairarray));
+#endif   
 }
 
 
@@ -186,19 +189,19 @@ static inline int
 # pragma mark - operations
 
 // intentionally not static inline
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle_pointerpair  *
    _mulle__pointerpairarray_guarantee( struct mulle__pointerpairarray *array,
                                        unsigned int length,
                                        struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerpairarray_grow( struct mulle__pointerpairarray *array,
                                       struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 void
    _mulle__pointerpairarray_remove_in_range( struct mulle__pointerpairarray *array,
                                              struct mulle_range range);
@@ -222,6 +225,7 @@ static inline
 void   _mulle__pointerpairarray_add_guaranteed( struct mulle__pointerpairarray *array,
                                                 struct mulle_pointerpair pair)
 {
+   assert( array->_curr < array->_sentinel);
    *array->_curr++ = pair;
 }
 
@@ -329,7 +333,7 @@ static inline struct mulle_pointerpair
 
 #pragma mark - sort and search
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t
    _mulle__pointerpairarray_find_in_range( struct mulle__pointerpairarray *array,
@@ -423,7 +427,7 @@ static inline struct mulle_pointerpair
 
 #ifndef NDEBUG
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 void   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *array);
 
 #else

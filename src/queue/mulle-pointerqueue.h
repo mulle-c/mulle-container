@@ -109,7 +109,7 @@ static inline void  mulle_pointerqueue_init_default( struct mulle_pointerqueue *
 
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 struct mulle_pointerqueue *
    mulle_pointerqueue_create( unsigned short bucket_size,
                               unsigned short spare_allowance,

@@ -238,3 +238,17 @@ void  _mulle__pointerarray_absorb( struct mulle__pointerarray *array,
    // clean out victim
    _mulle__pointerarray_reset( victim);
 }
+
+
+
+static inline 
+   void   _mulle_pointerarray_qsort_r_inline( struct mulle__pointerarray *array,
+                                              mulle_qsort_cmp_t *compare,
+                                              void *userinfo)
+{
+   _mulle_qsort_r_inline( array->_storage,
+                          _mulle__pointerarray_get_count( array),
+                          sizeof( void *),
+                          (int (*)(void *, void *, void *)) compare,
+                          userinfo);
+}

@@ -36,6 +36,7 @@
 
 #include "include.h"
 #include "mulle-container-operation.h"
+#include "mulle-qsort.h"
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>
@@ -52,6 +53,8 @@ struct mulle_pointers
 // mulle__pointerarray is a growing array of pointers, it just reallocs.
 // You can remove the last item via "pop", but there is no random access
 // removal. You would create a copy for this.
+// (Actually there is now a remove operation:
+//   mulle__pointerarray_remove_in_range, but it's very slow)
 //
 #define MULLE__POINTERARRAY_BASE    \
    void      **_storage;            \
@@ -64,6 +67,16 @@ struct mulle__pointerarray
 {
    MULLE__POINTERARRAY_BASE;
 };
+
+
+#define MULLE__POINTERARRAY_INIT( storage, count) \
+   ((struct mulle_structarray)                    \
+   {                                              \
+      storage,                                    \
+      storage,                                    \
+      &storage[ count],                           \
+      storage                                     \
+   })
 
 
 static inline struct mulle__pointerarray  *
@@ -119,6 +132,9 @@ static inline void  _mulle__pointerarray_done( struct mulle__pointerarray *array
 {
    if( array->_storage != array->_initial_storage)
       mulle_allocator_free( allocator, array->_storage);
+#ifdef DEBUG
+   memset( array, 0xFD, sizeof( struct mulle__pointerarray));
+#endif
 }
 
 
@@ -246,7 +262,7 @@ static inline int
 
 # pragma mark - memory operations
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void **  _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
                                          unsigned int length,
@@ -263,7 +279,7 @@ static inline void **
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_grow( struct mulle__pointerarray *array,
                                   struct mulle_allocator *allocator);
@@ -277,7 +293,7 @@ void   mulle__pointerarray_grow( struct mulle__pointerarray *array,
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_compact( struct mulle__pointerarray *array,
                                      void *notakey);
@@ -319,6 +335,7 @@ static inline
 void   _mulle__pointerarray_add_guaranteed( struct mulle__pointerarray *array,
                                             void *pointer)
 {
+   assert( array->_curr < array->_sentinel);
    *array->_curr++ = pointer;
 }
 
@@ -381,7 +398,7 @@ static inline void
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
                                              struct mulle_range range);
@@ -478,7 +495,7 @@ static inline unsigned int
 // return value is the index of a compacted array, but it doesn't compact
 // yet
 //
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 uintptr_t   _mulle__pointerarray_find_in_range( struct mulle__pointerarray *array,
                                                 void *p,
@@ -514,6 +531,32 @@ static inline uintptr_t
 }
 
 
+typedef int   mulle_pointerarray_cmp_t( void **, void **, void *);
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle__pointerarray_qsort_r_inline( struct mulle__pointerarray *array,
+                                        mulle_pointerarray_cmp_t *compare,
+                                        void *userinfo)
+{
+   _mulle_qsort_r_inline( array->_storage,
+                          _mulle__pointerarray_get_count( array),
+                          sizeof( void *),
+                          (mulle_qsort_cmp_t *) compare,
+                          userinfo);
+}
+
+
+static inline void
+   mulle__pointerarray_qsort_r_inline( struct mulle__pointerarray *array,
+                                       mulle_pointerarray_cmp_t *compare,
+                                       void *userinfo)
+{
+   if( array)
+      _mulle__pointerarray_qsort_r_inline( array, compare, userinfo);
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline void  *
    _mulle__pointerarray_get_last( struct mulle__pointerarray *array)
@@ -527,7 +570,7 @@ static inline void  *
 static inline void  *
    mulle__pointerarray_get_last( struct mulle__pointerarray *array)
 {
-   if( array)
+   if( ! array)
       return( NULL);
    return( _mulle__pointerarray_get_last( array));
 }
@@ -649,7 +692,7 @@ static inline void
 
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle_pointers
    _mulle__pointerarray_extract_pointers( struct mulle__pointerarray *buffer,

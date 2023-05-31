@@ -32,6 +32,8 @@ src/mulle-container-callback.c
 src/mulle-qsort.c
 src/queue/mulle--pointerqueue.c
 src/queue/mulle-pointerqueue.c
+src/queue/struct/mulle--structqueue.c
+src/queue/struct/mulle-structqueue.c
 src/rangeset/mulle--rangeset.c
 src/set/mulle--set.c
 src/set/mulle-set.c
