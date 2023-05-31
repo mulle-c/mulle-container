@@ -41,7 +41,7 @@
 
 
 //
-// mulle_pointerarray adds _storage of allocator to
+// mulle_pointerarray adds 'allocator' to the struct of
 // mulle__pointerarray, otherwise its the same
 //
 #define MULLE_POINTERARRAY_BASE          \
@@ -53,6 +53,17 @@ struct mulle_pointerarray
 {
    MULLE_POINTERARRAY_BASE;
 };
+
+
+#define MULLE_POINTERARRAY_INIT( storage, count, allocator) \
+   ((struct mulle_structarray)                              \
+   {                                                        \
+      storage,                                              \
+      storage,                                              \
+      &storage[ count],                                     \
+      storage,                                              \
+      allocator                                             \
+   })
 
 
 MULLE_C_NONNULL_FIRST
@@ -451,6 +462,30 @@ static inline uintptr_t
 {
    return( mulle__pointerarray_find( (struct mulle__pointerarray *) array, p));
 }
+
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_pointerarray_qsort_r_inline( struct mulle_pointerarray *array,
+                                       mulle_pointerarray_cmp_t *compare,
+                                       void *userinfo)
+{
+   _mulle__pointerarray_qsort_r_inline( (struct mulle__pointerarray *) array,
+                                         compare, 
+                                         userinfo);
+}
+
+
+static inline void
+   mulle_pointerarray_qsort_r_inline( struct mulle_pointerarray *array,
+                                      mulle_pointerarray_cmp_t *compare,
+                                      void *userinfo)
+{
+   if( array)
+      _mulle_pointerarray_qsort_r_inline( array, compare, userinfo);
+}
+
 
 
 MULLE_C_NONNULL_FIRST

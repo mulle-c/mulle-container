@@ -36,6 +36,8 @@
 #include "mulle-qsort.h"
 #include "mulle--pointerqueue.h"
 #include "mulle-pointerqueue.h"
+#include "mulle--structqueue.h"
+#include "mulle-structqueue.h"
 #include "mulle--rangeset.h"
 #include "mulle--set.h"
 #include "mulle-set.h"

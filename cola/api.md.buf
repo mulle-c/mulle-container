@@ -1,0 +1,19 @@
+{% 
+   allFiles = [[[NSFileManager defaultManager] enumeratorAtPath:@"dox"] allObjects]; 
+%}
+{{ allFiles }}
+{% 
+   if [allFiles count] > 0
+%}
+| File                         | Description
+|------------------------------|-------------------------------------
+{%
+   endif
+   for( file in allFiles) 
+      if( [file hasPrefix:@"API"] && [file hasSuffix:@".md"]) 
+ %}
+ | [{{ file }}](dox/{{ file }}) | {{ description }}
+         [files addObject:[directory stringByAppendingPathComponent:file]];
+
+      }
+{% endfor %}

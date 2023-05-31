@@ -90,6 +90,9 @@ void   _mulle__pointerset_done( struct mulle__pointerset *set,
                                 struct mulle_allocator *allocator)
 {
    mulle_allocator_free( allocator, set->_storage);
+#ifdef DEBUG   
+   memset( set, 0xFD, sizeof( struct mulle__pointerset));
+#endif   
 }
 
 
@@ -141,7 +144,7 @@ void   *_mulle__pointerset_get( struct mulle__pointerset *set,
       return( NULL);
 
    value = _mulle__pointerset__get( set, key);
-   return( value);
+   return( value == mulle_not_a_pointer ? NULL : value);
 }
 
 

@@ -114,6 +114,9 @@ void   _mulle__pointermap_done( struct mulle__pointermap *map,
                                 struct mulle_allocator *allocator)
 {
    _mulle__pointermap_free_storage( map, allocator);
+#ifdef DEBUG   
+   memset( map, 0xFD, sizeof( struct mulle__pointermap));
+#endif 
 }
 
 

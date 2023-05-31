@@ -21,7 +21,7 @@ struct demo_struct
 };
 
 
-#define LOOPS   2
+#define LOOPS   1000
 
 static void  null( void)
 {

@@ -93,7 +93,7 @@ static inline void   mulle_assoc_done( struct mulle_assoc *assoc)
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 struct mulle_assoc    *
    mulle_assoc_create( unsigned int capacity,
                        struct mulle_container_keyvaluecallback *callback,
@@ -294,11 +294,11 @@ static inline void   mulle_assoc_qsort_if_needed( struct mulle_assoc *assoc)
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 void   *mulle_assoc_get( struct mulle_assoc *assoc, void *key);
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle_assoc_set( struct mulle_assoc *assoc, void *key, void *value);
 
@@ -310,7 +310,7 @@ static inline void
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle_assoc_remap_intptr_key_range( struct mulle_assoc *assoc,
                                             struct mulle_range range,
@@ -328,7 +328,7 @@ static inline void
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle_assoc_move_intptr_key_range( struct mulle_assoc *assoc,
                                            struct mulle_range range,
@@ -360,8 +360,6 @@ static inline void
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_assoc_add( struct mulle_assoc *assoc, void *key, void *value)
 {
-   struct mulle_pointerpair  pair;
-
    assert( mulle_pointerpair_is_invalid(
                _mulle__assoc_search_callback( (struct mulle__assoc *) assoc, key, assoc->callback)));
 

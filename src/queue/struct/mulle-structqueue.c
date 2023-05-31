@@ -1,11 +1,9 @@
 //
-//  mulle-container.h
+//  mulle-structqueue.h
 //  mulle-container
 //
-//  Created by Nat! on 02/11/15.
-//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2015 Codeon GmbH.
-//  All rights reserved.
+//  Created by Nat! on 13.02.2021
+//  Copyright (c) 2021 Mulle kybernetiK. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -33,19 +31,27 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
+#include "mulle-structqueue.h"
 
-#define MULLE__CONTAINER_VERSION  ((7 << 20) | (0 << 8) | 0)
+#include "include-private.h"
 
-#include "include.h"
 
-#include "_mulle-container-provide.h"
+struct mulle_structqueue   *
+   mulle_structqueue_create( unsigned int sizeof_struct,
+                             unsigned int alignof_struct,
+                             unsigned short bucket_size,
+                             unsigned short spare_allowance,
+                             struct mulle_allocator *allocator)
+{
+   struct mulle_structqueue  *queue;
 
-#ifdef __has_include
-# if __has_include( "_mulle-container-versioncheck.h")
-#  include "_mulle-container-versioncheck.h"
-# endif
-#endif
+   queue = mulle_structqueue_alloc( allocator);
+   _mulle_structqueue_init( queue,
+                            sizeof_struct,
+                            alignof_struct,
+                            bucket_size,
+                            spare_allowance,
+                            allocator);
+   return( queue);
+}
 
-#endif /* mulle_container_h */

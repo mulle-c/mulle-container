@@ -170,16 +170,16 @@ static void   __mulle__rangeset_move_down_pointer( struct mulle__rangeset *p,
 
 static inline void
    __mulle__rangeset_move_down( struct mulle__rangeset *p,
-                                       uintptr_t index,
-                                       struct mulle_allocator *allocator)
+                                uintptr_t index,
+                                struct mulle_allocator *allocator)
 {
    __mulle__rangeset_move_down_pointer( p, &p->_ranges[ index], allocator);
 }
 
 
 static void   __mulle__rangeset_move_up( struct mulle__rangeset *p,
-                                        uintptr_t index,
-                                        struct mulle_allocator *allocator)
+                                         uintptr_t index,
+                                         struct mulle_allocator *allocator)
 {
    uintptr_t            n;
    struct mulle_range   *curr;
@@ -665,7 +665,6 @@ struct mulle_range
                                   enum mulle_rangeset_searchoperation op)
 {
    struct mulle_range   *curr;
-   uintptr_t            closest;
 
    curr  = _mulle__rangeset_search_nearest_p( p, location);
    if( ! curr)

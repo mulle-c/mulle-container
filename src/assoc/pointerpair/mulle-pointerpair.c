@@ -58,9 +58,6 @@ uintptr_t
    struct mulle_pointerpair   *p;
    struct mulle_pointerpair   *sentinel;
 
-   if( ! buf)
-      return( mulle_not_found_e);
-
    // pointerpair can't use it
    if( range.length == (uintptr_t) -1)
       abort();
@@ -70,7 +67,7 @@ uintptr_t
    p        = &buf[ range.location];
    sentinel = &p[ range.length];
 
-   if( ! callback || callback->keycallback.is_equal == mulle_container_keycallback_pointer_is_equal)
+   if( ! callback || _mulle_container_keycallback_isbitequals( &callback->keycallback))
    {
       while( p < sentinel)
       {

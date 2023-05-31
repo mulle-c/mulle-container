@@ -155,7 +155,7 @@ void   _mulle__array_remove_in_range( struct mulle__array *array,
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__array_remove( struct mulle__array *array,
                              void *p,

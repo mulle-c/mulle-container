@@ -92,7 +92,7 @@ static inline void   mulle_array_done( struct mulle_array *array)
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 struct mulle_array    *
    mulle_array_create( unsigned int capacity,
                        struct mulle_container_keycallback *callback,
@@ -458,6 +458,29 @@ static inline uintptr_t
                                         range,
                                         array->callback));
 }
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_array_qsort_r_inline( struct mulle_array *array,
+                                mulle_pointerarray_cmp_t *compare,
+                                void *userinfo)
+{
+   _mulle__array_qsort_r_inline( (struct mulle__array *) array,
+                                 compare,
+                                 userinfo);
+}
+
+
+static inline void
+   mulle_array_qsort_r_inline( struct mulle_array *array,
+                               mulle_pointerarray_cmp_t *compare,
+                               void *userinfo)
+{
+   if( array)
+      _mulle_array_qsort_r_inline( array, compare, userinfo);
+}
+
 
 # pragma mark - debugging
 

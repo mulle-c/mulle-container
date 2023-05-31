@@ -64,7 +64,7 @@ struct mulle__assoc
 };
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 struct mulle__assoc    *mulle__assoc_create( struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST
@@ -78,13 +78,13 @@ static inline void    _mulle__assoc_init( struct mulle__assoc *assoc,
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__assoc_destroy( struct mulle__assoc *assoc,
                               struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__assoc_done( struct mulle__assoc *assoc,
                            struct mulle_container_keyvaluecallback *callback,
@@ -157,7 +157,7 @@ static inline int
 
 # pragma mark - operations
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
                                       struct mulle_range range,
@@ -165,14 +165,14 @@ void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
                                       struct mulle_allocator *allocator);
 
 // convenience, that uses find in range and then remove in range
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__assoc_remove( struct mulle__assoc *assoc,
                              void *key,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__assoc_reset( struct mulle__assoc *assoc,
                             struct mulle_container_keyvaluecallback *callback,
@@ -181,7 +181,7 @@ void   _mulle__assoc_reset( struct mulle__assoc *assoc,
 
 
 // other may be NULL
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
                                struct mulle__assoc *other,
@@ -225,7 +225,7 @@ static inline void
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_FIFTH
 void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
                                     unsigned int i,
@@ -326,7 +326,7 @@ void  _mulle__assoc_remove_last( struct mulle__assoc *assoc,
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 void   mulle__assoc_add_assoc_range( struct mulle__assoc *assoc,
                                      struct mulle__assoc *other,
                                      struct mulle_range range,
@@ -347,14 +347,14 @@ void   mulle__assoc_add_assoc( struct mulle__assoc *assoc,
 }
 
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 void _mulle__assoc_copy_items( struct mulle__assoc *dst,
                                struct mulle__assoc *src,
                                struct mulle_container_keyvaluecallback *callback,
                                struct mulle_allocator *allocator);
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__assoc_reset( struct mulle__assoc *assoc,
                             struct mulle_container_keyvaluecallback *callback,
@@ -369,7 +369,7 @@ void   _mulle__assoc_reset( struct mulle__assoc *assoc,
 // you can pass NULL for callback, and it will just compare pointer equality
 // TODO: make this uniform across library for find ? also for search ?
 //
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 uintptr_t
    mulle__assoc_find_in_range( struct mulle__assoc *assoc,
                                void *key,
@@ -479,7 +479,7 @@ static inline void   mulle__assoc_qsort_r( struct mulle__assoc *assoc,
 
 # pragma mark - debugging
 
-MULLE_CONTAINER_GLOBAL
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 char   *_mulle__assoc_describe( struct mulle__assoc *assoc,
                                 struct mulle_container_keyvaluecallback *callback,

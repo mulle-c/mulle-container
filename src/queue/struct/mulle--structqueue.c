@@ -1,5 +1,5 @@
 //
-//  mulle-pointerqueue.h
+//  mulle-structqueue.h
 //  mulle-container
 //
 //  Copyright (c) 2011 Mulle kybernetiK. All rights reserved.
@@ -30,21 +30,39 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#include "mulle--pointerqueue.h"
+#include "mulle--structqueue.h"
 
 #include "include-private.h"
 
 
-int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover,
-                                            void **item);
+int   __mulle__structqueueenumerator_next( struct mulle__structqueueenumerator *rover,
+                                          void **item);
 
 
-
-struct mulle__pointerqueuebucket *
-   _mulle__pointerqueue_new_bucket( struct mulle__pointerqueue *queue,
-                                    struct mulle_allocator *allocator)
+struct mulle__structqueue   *
+   mulle__structqueue_create( unsigned int sizeof_struct,
+                              unsigned int alignof_struct,
+                              unsigned short bucket_size,
+                              unsigned short spare_allowance,
+                              struct mulle_allocator *allocator)
 {
-   struct mulle__pointerqueuebucket   *p;
+   struct mulle__structqueue  *queue;
+
+   queue = mulle__structqueue_alloc( allocator);
+   _mulle__structqueue_init( queue,
+                             sizeof_struct,
+                             alignof_struct,
+                             bucket_size,
+                             spare_allowance);
+   return( queue);
+}
+
+
+struct mulle__structqueuebucket *
+   _mulle__structqueue_new_bucket( struct mulle__structqueue *queue,
+                                   struct mulle_allocator *allocator)
+{
+   struct mulle__structqueuebucket   *p;
    size_t                             space;
 
    p = queue->_spares;
@@ -55,22 +73,22 @@ struct mulle__pointerqueuebucket *
    }
    else
    {
-      space = (sizeof( struct mulle__pointerqueuebucket) -
-               sizeof( struct mulle__pointerqueuebucket *)) +
-               queue->_bucket_size * sizeof( void *);
+      space = (sizeof( struct mulle__structqueuebucket) -
+               sizeof( struct mulle__structqueuebucket *)) +
+               queue->_bucket_size * queue->_sizeof_struct;
 
       p = mulle_allocator_malloc( allocator, space);
    }
-   // _storage may be garbage, but _next pointer must be clear
+   // _storage may be garbage, but _next struct must be clear
    p->_next = NULL;
    return( p);
 }
 
 
 void
-   mulle__pointerqueue_free_bucket( struct mulle__pointerqueue *queue,
-                                    struct mulle__pointerqueuebucket  *q,
-                                    struct mulle_allocator *allocator)
+   mulle__structqueue_free_bucket( struct mulle__structqueue *queue,
+                                   struct mulle__structqueuebucket  *q,
+                                   struct mulle_allocator *allocator)
 {
    if( queue->_spare_allowance)
    {
@@ -84,13 +102,13 @@ void
 }
 
 
-void   _mulle__pointerqueue_grow( struct mulle__pointerqueue *queue,
+void   _mulle__structqueue_grow( struct mulle__structqueue *queue,
                                   struct mulle_allocator *allocator)
 {
-   struct mulle__pointerqueuebucket   *p;
-   struct mulle__pointerqueuebucket   *q;
+   struct mulle__structqueuebucket   *p;
+   struct mulle__structqueuebucket   *q;
 
-   p = _mulle__pointerqueue_new_bucket( queue, allocator);
+   p = _mulle__structqueue_new_bucket( queue, allocator);
    q = queue->_write;
    if( q)
       q->_next = p;
@@ -107,10 +125,10 @@ void   _mulle__pointerqueue_grow( struct mulle__pointerqueue *queue,
 }
 
 
-void   _mulle__pointerqueue_shrink( struct mulle__pointerqueue *queue,
+void   _mulle__structqueue_shrink( struct mulle__structqueue *queue,
                                    struct mulle_allocator *allocator)
 {
-   struct mulle__pointerqueuebucket   *q;
+   struct mulle__structqueuebucket   *q;
 
    q = queue->_read;
    if( ! q)
@@ -135,14 +153,31 @@ void   _mulle__pointerqueue_shrink( struct mulle__pointerqueue *queue,
       queue->_read_index = 0;
    }
 
-   mulle__pointerqueue_free_bucket( queue, q, allocator);
+   mulle__structqueue_free_bucket( queue, q, allocator);
 }
 
 
-static void   free_chained_buckets( struct mulle__pointerqueuebucket *p,
+
+void  *_mulle__structqueue_reserve( struct mulle__structqueue *queue,
                                     struct mulle_allocator *allocator)
 {
-   struct mulle__pointerqueuebucket   *q;
+   unsigned int   offset;
+
+   if( queue->_write_index >= queue->_bucket_size)
+      _mulle__structqueue_grow( queue, allocator);
+
+   assert( queue->_write_index < queue->_bucket_size);
+
+   queue->_count++;
+   offset = queue->_write_index++ * queue->_sizeof_struct;
+   return( &queue->_write->_storage[ offset]);
+}
+
+
+static void   free_chained_buckets( struct mulle__structqueuebucket *p,
+                                    struct mulle_allocator *allocator)
+{
+   struct mulle__structqueuebucket   *q;
 
    for(; p; p = q)
    {
@@ -152,8 +187,8 @@ static void   free_chained_buckets( struct mulle__pointerqueuebucket *p,
 }
 
 
-int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover,
-                                            void **item)
+int   __mulle__structqueueenumerator_next( struct mulle__structqueueenumerator *rover,
+                                           void **item)
 {
    if( rover->_index != rover->_queue->_bucket_size)
    {
@@ -174,61 +209,57 @@ int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator
    }
 
    rover->_index = 0;
-   return( _mulle__pointerqueueenumerator_next( rover, item));
+   return( _mulle__structqueueenumerator_next( rover, item));
 }
 
 
-struct mulle__pointerqueue   *
-   mulle__pointerqueue_create( unsigned short bucket_size,
-                               unsigned short spare_allowance,
-                               struct mulle_allocator *allocator)
+static inline int
+  _mulle__structqueue_pop_noshrink( struct mulle__structqueue *queue,
+                                    void *dst)
 {
-   struct mulle__pointerqueue  *queue;
+   unsigned int   offset;
 
-   queue = mulle__pointerqueue_alloc( allocator);
-   _mulle__pointerqueue_init( queue, bucket_size, spare_allowance);
-   return( queue);
-}
-
-
-static inline void  *
-  _mulle__pointerqueue_pop_noshrink( struct mulle__pointerqueue *queue)
-{
-   void   *p;
-
-   // if nothing to read, read pointer points at write
+   // if nothing to read, read struct points at write
    if( queue->_read == queue->_write)
       if( queue->_read_index == queue->_write_index)
-         return( NULL);
+         return( 0);
 
    assert( queue->_count);
    queue->_count--;
+
    //
    // now if "release" truely releases, p is pointing to a zombie.
    // not so, if release is autorelease or nop
    // check one case with an assert
    //
    assert( queue->_read_index < queue->_bucket_size);
-   p = queue->_read->_storage[ queue->_read_index++];
-   return( p);
+   offset = queue->_read_index * queue->_sizeof_struct;
+   if( dst)
+   {
+      memcpy( dst, &queue->_read->_storage[ offset], queue->_sizeof_struct);
+   }
+   queue->_read_index++;
+
+   return( 1);
 }
 
 
 
-void  *_mulle__pointerqueue_pop( struct mulle__pointerqueue *queue,
-                                struct mulle_allocator *allocator)
+int   _mulle__structqueue_pop( struct mulle__structqueue *queue,
+                               struct mulle_allocator *allocator,
+                               void *dst)
 {
    if( queue->_read_index >= queue->_bucket_size)
-      _mulle__pointerqueue_shrink( queue, allocator);
+      _mulle__structqueue_shrink( queue, allocator);
 
-   return( _mulle__pointerqueue_pop_noshrink( queue));
+   return( _mulle__structqueue_pop_noshrink( queue, dst));
 }
 
 
-void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
+void   _mulle__structqueue_reset( struct mulle__structqueue *queue,
                                   struct mulle_allocator *allocator)
 {
-   struct mulle__pointerqueuebucket  *p;
+   struct mulle__structqueuebucket  *p;
 
 
    // transfer buffer over to spares if possible
@@ -257,22 +288,22 @@ void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
 
 
 
-void   _mulle__pointerqueue_done( struct mulle__pointerqueue *queue,
+void   _mulle__structqueue_done( struct mulle__structqueue *queue,
                           struct mulle_allocator *allocator)
 {
    free_chained_buckets( queue->_read, allocator);
    free_chained_buckets( queue->_spares, allocator);
 #ifdef DEBUG
-   memset( queue, 0xFD, sizeof( struct mulle__pointerqueue));
+   memset( queue, 0xFD, sizeof( struct mulle__structqueue));
 #endif
 }
 
 
-void   _mulle__pointerqueue_destroy( struct mulle__pointerqueue *queue,
+void   _mulle__structqueue_destroy( struct mulle__structqueue *queue,
                                     struct mulle_allocator *allocator)
 {
-   _mulle__pointerqueue_done( queue, allocator);
-   mulle__pointerqueue_free( queue, allocator);
+   _mulle__structqueue_done( queue, allocator);
+   mulle__structqueue_free( queue, allocator);
 }
 
 
