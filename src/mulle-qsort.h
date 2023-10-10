@@ -38,7 +38,8 @@
 #include <stddef.h>
 
 
-typedef int   mulle_qsort_cmp_t( void *, void *, void *);
+
+typedef int   mulle_qsort_cmp_t( void *a, void *b, void *thunk);
 
 #define MULLE_QSORT_MIN( a, b)   ((a) < (b) ? a : b)
 
