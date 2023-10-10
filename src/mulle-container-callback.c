@@ -42,26 +42,29 @@
 #include <stdio.h>
 
 
-uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback,
-                                                      void *p)
+uintptr_t
+   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback,
+                                             void *p)
 {
    return( mulle_pointer_hash( p));
 }
 
 
 // just here so that we can distinguish between this and pointer types
-int   mulle_container_keycallback_intptr_is_equal( struct mulle_container_keycallback *callback,
-                                                   void *a,
-                                                   void *b)
+int
+   mulle_container_keycallback_intptr_is_equal( struct mulle_container_keycallback *callback,
+                                                void *a,
+                                                void *b)
 {
    return( (intptr_t) a == (intptr_t) b);
 }
 
 
 
-int   mulle_container_keycallback_pointer_is_equal( struct mulle_container_keycallback *callback,
-                                                    void *a,
-                                                    void *b)
+int
+   mulle_container_keycallback_pointer_is_equal( struct mulle_container_keycallback *callback,
+                                                 void *a,
+                                                 void *b)
 {
    return( a == b);
 }

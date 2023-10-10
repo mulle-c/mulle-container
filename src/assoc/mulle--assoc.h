@@ -85,7 +85,7 @@ void   _mulle__assoc_destroy( struct mulle__assoc *assoc,
                               struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST  // _SECOND
 void   _mulle__assoc_done( struct mulle__assoc *assoc,
                            struct mulle_container_keyvaluecallback *callback,
                            struct mulle_allocator *allocator);
@@ -173,7 +173,7 @@ void   _mulle__assoc_remove( struct mulle__assoc *assoc,
                              struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST
 void   _mulle__assoc_reset( struct mulle__assoc *assoc,
                             struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator);
@@ -353,13 +353,6 @@ void _mulle__assoc_copy_items( struct mulle__assoc *dst,
                                struct mulle__assoc *src,
                                struct mulle_container_keyvaluecallback *callback,
                                struct mulle_allocator *allocator);
-
-MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
-void   _mulle__assoc_reset( struct mulle__assoc *assoc,
-                            struct mulle_container_keyvaluecallback *callback,
-                            struct mulle_allocator *allocator);
-
 
 
 #pragma mark - sort and search

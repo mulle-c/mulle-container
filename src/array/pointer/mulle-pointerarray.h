@@ -87,6 +87,22 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
 }
 
 
+static inline void
+   mulle_pointerarray_init_with_static_pointer( struct mulle_pointerarray *array,
+                                                void **pointers,
+                                                unsigned int capacity,
+                                                struct mulle_allocator *allocator)
+{
+   if( array)
+   {
+      _mulle__pointerarray_init_with_static_pointers( (struct mulle__pointerarray *) array,
+                                                      pointers,
+                                                      capacity);
+      array->allocator = allocator;
+   }
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_pointerarray_done( struct mulle_pointerarray *array)
 {

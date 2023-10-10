@@ -178,6 +178,27 @@ void   *_mulle__pointermap_get( struct mulle__pointermap *map,
 }
 
 
+//
+// returns NULL if nothing found. There is no way to distinguish with
+// get, if a key/value pair exists, if NULL is a valid value!
+//
+struct mulle_pointerpair
+   mulle__pointermap_find_by_value( struct mulle__pointermap *map, void *value)
+{
+   struct mulle__pointermapenumerator  rover;
+   struct mulle_pointerpair            item;
+
+   rover = mulle__pointermap_enumerate( map);
+   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
+   {
+      if( item.value == value)
+         break;
+   }
+   mulle__pointermapenumerator_done( &rover);
+   return( item);
+}
+
+
 void   _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
                                             struct mulle_allocator *allocator)
 {
@@ -209,14 +230,14 @@ void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map
 
 #pragma mark - copying
 
-struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *set,
+struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *map,
                                                      struct mulle_allocator *allocator)
 {
    struct mulle__pointermap   *other;
 
-   other = mulle__pointermap_create( _mulle__pointermap_get_count( set), 0, allocator);
+   other = mulle__pointermap_create( _mulle__pointermap_get_count( map), 0, allocator);
    if( _mulle__pointermap_copy_items_generic( other,
-                                              set,
+                                              map,
                                               &mulle__pointermap_keyvaluecallback,
                                               allocator))
    {
@@ -228,8 +249,8 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 
 
 // use this only for debugging
-char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
-                                    struct mulle_allocator *allocator)
+char   *_mulle__pointermap_describe( struct mulle__pointermap *map,
+                                     struct mulle_allocator *allocator)
 {
    char                                *result;
    char                                *key;
@@ -239,28 +260,28 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
    size_t                              key_len;
    size_t                              value_len;
    struct mulle__pointermapenumerator  rover;
-   struct mulle_pointerpair            *item;
+   struct mulle_pointerpair            item;
    struct mulle_allocator              *key_allocator;
    struct mulle_allocator              *value_allocator;
 
    result = NULL;
    len    = 0;
-   rover  = mulle__pointermap_enumerate( set);
-   while( item = _mulle__pointermapenumerator_next_pair( &rover))
+   rover  = mulle__pointermap_enumerate( map);
+   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
       value_allocator = key_allocator;
 
-      key        = item->key;
-      key_len    = strlen( key);
-      value      = item->value;
-      value_len  = strlen( value);
+      key       = item.key;
+      key_len   = strlen( key);
+      value     = item.value;
+      value_len = strlen( value);
 
-      separate = result != NULL;
+      separate  = result != NULL;
 
-      result = mulle_allocator_realloc( allocator,
-                                        result,
-                                        len + (separate * 2) + key_len + 3 + value_len + 1);
+      result    = mulle_allocator_realloc( allocator,
+                                           result,
+                                           len + (separate * 2) + key_len + 3 + value_len + 1);
 
       if( separate)
       {

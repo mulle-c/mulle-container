@@ -393,8 +393,8 @@ static inline struct mulle_data
 {
    struct mulle_data   data;
 
-   data.bytes  = buffer->_storage;
-   data.length = _mulle__structarray_get_used_as_length( buffer);
+   data = mulle_data_make( buffer->_storage,
+                           _mulle__structarray_get_used_as_length( buffer));
 
    buffer->_storage          =
    buffer->_curr             =

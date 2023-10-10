@@ -76,8 +76,9 @@ void   _mulle__array_destroy( struct mulle__array *array,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator);
 
+// function should work for not properly initialized with mulle__array_init
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST // MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_done( struct mulle__array *array,
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator);

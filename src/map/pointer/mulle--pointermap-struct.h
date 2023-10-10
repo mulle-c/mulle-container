@@ -211,6 +211,11 @@ static inline void   *mulle__pointermap_get( struct mulle__pointermap *map,
 }
 
 
+// check for mulle_pointerpair_is_invalid if found or not
+MULLE__CONTAINER_GLOBAL
+struct mulle_pointerpair
+   mulle__pointermap_find_by_value( struct mulle__pointermap *map, void *value);
+
 
 // Experimental!
 // You need to provide zeroed space on the initial call for the return value.
@@ -257,10 +262,9 @@ char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
 # pragma mark - enumeration
 
 #define MULLE__POINTERMAPENUMERATOR_BASE  \
-   struct mulle_pointerpair   _space;     \
-   void                       **_curr;    \
-   unsigned int               _left;      \
-   unsigned int               _offset
+   void           **_curr;                \
+   unsigned int   _left;                  \
+   unsigned int   _offset
 
 
 struct mulle__pointermapenumerator
@@ -301,13 +305,18 @@ static inline struct mulle__pointermapenumerator
 // efficient, therefore it's important to shrink after lots of removes
 //
 MULLE_C_NONNULL_FIRST
-static inline struct mulle_pointerpair *
-   _mulle__pointermapenumerator_next_pair( struct mulle__pointermapenumerator *rover)
+static inline int
+   _mulle__pointermapenumerator_next_pair( struct mulle__pointermapenumerator *rover,
+                                           struct mulle_pointerpair *pair)
 {
    void   **p;
 
    if( ! rover->_left)
-      return( NULL);
+   {
+      if( pair)
+         *pair = mulle_pointerpair_make_invalid();
+      return( 0);
+   }
 
    rover->_left--;
    for(;;)
@@ -315,9 +324,12 @@ static inline struct mulle_pointerpair *
       p = rover->_curr++;
       if( *p != mulle_not_a_pointer)
       {
-         rover->_space.key   = *p;
-         rover->_space.value = p[ rover->_offset];
-         return( &rover->_space);
+         if( pair)
+         {
+            pair->key   = *p;
+            pair->value = p[ rover->_offset];
+         }
+         return( 1);
       }
    }
 }

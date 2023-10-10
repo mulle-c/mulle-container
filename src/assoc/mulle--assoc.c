@@ -41,7 +41,7 @@
 
 #pragma mark - _mulle_assocrange internal helper
 
-MULLE_C_NONNULL_FIRST_THIRD
+MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__assoc_release( struct mulle__assoc *assoc,
                           struct mulle_range range,
@@ -51,7 +51,7 @@ static inline void
    struct mulle_pointerpair   *p;
    struct mulle_pointerpair   *sentinel;
 
-   if( ! mulle_container_keyvaluecallback_releases( callback))
+   if( ! callback || ! mulle_container_keyvaluecallback_releases( callback))
       return;
 
    p        = &assoc->_storage[ range.location];
@@ -72,7 +72,7 @@ struct mulle__assoc   *mulle__assoc_create( struct mulle_allocator *allocator)
    return( assoc);
 }
 
-MULLE_C_NONNULL_FIRST_SECOND
+
 void   _mulle__assoc_done( struct mulle__assoc *assoc,
                            struct mulle_container_keyvaluecallback *callback,
                            struct mulle_allocator *allocator)
@@ -81,7 +81,8 @@ void   _mulle__assoc_done( struct mulle__assoc *assoc,
    _mulle__pointerpairarray_done( (struct mulle__pointerpairarray *) assoc, allocator);
 }
 
-MULLE_C_NONNULL_FIRST_SECOND
+
+
 void   _mulle__assoc_destroy( struct mulle__assoc *assoc,
                               struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator)
@@ -92,10 +93,8 @@ void   _mulle__assoc_destroy( struct mulle__assoc *assoc,
 
 
 
-
 #pragma mark - removal
 
-MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__assoc_reset( struct mulle__assoc *assoc,
                             struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator)
@@ -106,7 +105,6 @@ void   _mulle__assoc_reset( struct mulle__assoc *assoc,
 }
 
 
-MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
                                       struct mulle_range range,
                                       struct mulle_container_keyvaluecallback *callback,
@@ -120,8 +118,6 @@ void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
 }
 
 
-MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__assoc_remove( struct mulle__assoc *assoc,
                              void *key,
                              struct mulle_container_keyvaluecallback *callback,
@@ -162,7 +158,6 @@ void   _mulle__assoc_remove( struct mulle__assoc *assoc,
 }
 
 
-MULLE_C_NONNULL_FIRST_SECOND_THIRD
 int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
                                struct mulle__assoc *other,
                                struct mulle_container_keyvaluecallback *callback)
@@ -190,7 +185,6 @@ int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
 }
 
 
-MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__assoc_add( struct mulle__assoc *assoc,
                            void *key,
                            void *value,
@@ -208,7 +202,6 @@ void    _mulle__assoc_add( struct mulle__assoc *assoc,
 }
 
 
-MULLE_C_NONNULL_FIRST_FIFTH
 void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
                                     unsigned int i,
                                     void *key,
@@ -272,7 +265,6 @@ void
 }
 
 
-MULLE_C_NONNULL_FIRST_SECOND_THIRD
 void _mulle__assoc_copy_items( struct mulle__assoc *dst,
                                struct mulle__assoc *src,
                                struct mulle_container_keyvaluecallback *callback,

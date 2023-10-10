@@ -114,7 +114,7 @@ void   _mulle__set_reset( struct mulle__set *set,
 {
    _mulle__set_release_all( set, callback, allocator);
    _mulle__pointerset_reset_generic( (struct mulle__pointerset *) set,
-                                     callback->notakey);
+                                     callback ? callback->notakey : NULL);
 }
 
 

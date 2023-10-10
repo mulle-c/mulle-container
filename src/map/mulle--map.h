@@ -86,14 +86,14 @@ void   _mulle__map_init( struct mulle__map *map,
                          struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST //_SECOND
 void   _mulle__map_done( struct mulle__map *map,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator);
 
 
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST // _SECOND
 void   _mulle__map_reset( struct mulle__map *map,
                           struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator);
