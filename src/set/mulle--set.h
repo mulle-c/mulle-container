@@ -70,15 +70,17 @@ void    _mulle__set_init( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
 
+// function should work for not properly initialized _mulle__set_init
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST   // not MULLE_C_NONNULL_FIRST_SECOND
 void    _mulle__set_done( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);
 
 
+// function should work for not properly initialized _mulle__set_init
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_SECOND
+MULLE_C_NONNULL_FIRST  // not MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__set_reset( struct mulle__set *set,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator);

@@ -100,7 +100,7 @@ void   _mulle__map_release_all( struct mulle__map *map,
    //
    // if keycallback and valuecallback are nop, we can just skip this
    //
-   if( mulle_container_keyvaluecallback_releases( callback))
+   if( callback && mulle_container_keyvaluecallback_releases( callback))
    {
       rover = mulle__map_enumerate( map, callback);
       while( pair = _mulle__mapenumerator_next_pair( &rover))
