@@ -107,57 +107,6 @@ Example:
 }
 ```
 
-A `int *` named "copy" is created. "copy" either points to stack memory or to
-a malloced area. `mulle_flexarray_do` defines the basic type
-of the array (`int`) and the maximum elements to be stored on the stack. In this
-case its `int[ 32]`. The actual amount used is determined by `n`. The flexarray
-will be valid in the scope of the `mulle_flexarray_do` only.
-
-> `mulle_flexarray` is actually a macro for `mulle_structarray`.
-> Due to a C language limitations, the symbol "copy" will be available outside
-> the block, but set to NULL.
-
-If you use a `return` statement in a `mulle_flexarray_do` block you risk a
-leak unless you issue `mulle_flexarray_done` before the return or use
-`mulle_flexarray_return` (which needs the compiler extension `__typeof__` to
-work though).
-
-``` c
-mulle_flexarray_do( copy, int, 32, n)
-{
-   memset( copy, 0, sizeof( int) * n);
-   if( n == 1)
-      mulle_flexarray_return( copy, copy[ 0]);
-   if( n == 2)
-   {
-      tmp = copy[ 0];                // rescue return value
-      mulle_flexarray_done( copy);   // "copy" is invalid after done
-      return( tmp);   // possible!
-   }
-}
-```
-
-Using `break` to break out of `mulle_flexarray_do` is not a problem. A
-`continue` statement in `mulle_flexarray_do` will do the same thing as
-`break` though and is therefore only confusing:
-
-
-``` c
-for( n = 0; n < 2; n++)
-{
-   mulle_flexarray_do( copy, int, 16, n)
-   {
-      continue;  // affects mulle_flexarray_do, not for
-   }
-}
-```
-
-> #### Note
->
-> In general it's preferable and safer to use a `mulle_structarray` as it does
-> bounds checking (when built with DEBUG) and it can also be initially used
-> with stack memory.
-
 
 #### Special Arrays
 
@@ -235,8 +184,14 @@ additions pretty much as fast as possible.
 > chained into the linked list and the `_write` pointer is set to it, resetting
 > the `_write_index`.
 
-
 It is the basis for the `NSAutoreleasePool` implementation.
+
+
+#### `mulle__structqueue` stores structs instead of pointers
+
+A key difference to `mulle_structarray` is, that maintaining pointers to
+`mulle__structqueue` elements are possible, whereas `mulle_structarray`
+elements may get reorganised.
 
 
 ### Hashtables
@@ -472,6 +427,8 @@ Install the requirements:
 |----------------------------------------------|-----------------------
 | [mulle-allocator](https://github.com/mulle-c/mulle-allocator)             | 🔄 Flexible C memory allocation scheme
 | [mulle-data](https://github.com/mulle-c/mulle-data)             | #️⃣ A collection of hash functions
+
+Download the latest [tar](https://github.com/mulle-c/mulle-container/archive/refs/tags/latest.tar.gz) or [zip](https://github.com/mulle-c/mulle-container/archive/refs/tags/latest.zip) archive and unpack it.
 
 Install **mulle-container** into `/usr/local` with [cmake](https://cmake.org):
 

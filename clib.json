@@ -1,7 +1,7 @@
 {
    "name" : "mulle-container",
-   "version" : "7.0.0",
-   "description" : "Arrays, hashtables and a queue",
+   "version" : "8.0.0",
+   "description" : "🛄 Arrays, hashtables and a queue",
    "keywords" : [],
    "license" : "BSD-3-Clause",
    "repo" : "mulle-c/mulle-container",

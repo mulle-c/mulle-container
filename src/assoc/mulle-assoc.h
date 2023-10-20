@@ -46,7 +46,9 @@
 // mulle-assoc is a autosorting. You add a compare operation and then
 // your associative array is always sorted. You can not add duplicate values
 // though. The API tries to be very similiar to mulle_map so you can
-// swap between both implementations more easily.
+// swap between both implementations more easily. The advantage of mulle-assoc
+// over mulle_map is, that it does not need "holes", therefore will use less
+// memory in most cases (except when very, very few items are present)
 //
 // The userinfo for the compare will be the assoc itself.
 //
