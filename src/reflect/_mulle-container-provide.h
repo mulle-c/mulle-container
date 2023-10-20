@@ -9,6 +9,10 @@
  *
  *      mulle-sde environment set MULLE_MATCH_TO_C_RUN DISABLE
  */
+#ifndef mulle_container_provide_h__
+#define mulle_container_provide_h__
+
+
 #include "mulle--array.h"
 #include "mulle-array.h"
 #include "mulle-flexarray.h"
@@ -44,3 +48,6 @@
 #include "mulle--pointerset-generic.h"
 #include "mulle--pointerset.h"
 #include "mulle--pointerset-struct.h"
+
+
+#endif

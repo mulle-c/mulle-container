@@ -53,6 +53,7 @@ static struct demo_struct   flex_return( int n)
             mulle_flexarray_return( array, array[ i]);
       }
    }
+   return( (struct demo_struct) { 0});
 }
 
 
