@@ -36,7 +36,7 @@
 #ifndef mulle_container__h__
 #define mulle_container__h__
 
-#define MULLE__CONTAINER_VERSION  ((7 << 20) | (0 << 8) | 0)
+#define MULLE__CONTAINER_VERSION  ((8 << 20) | (0 << 8) | 0)
 
 #include "include.h"
 
