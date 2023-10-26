@@ -82,22 +82,21 @@ static void  simple( void)
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
-   map = mulle_map_create( 0, &callback, NULL);
+   mulle_map_do( map, &callback)
+   {
+      assert( mulle_map_get_count( map) == 0);
+      assert( ! mulle_map_get( map, "VfL"));
 
-   assert( mulle_map_get_count( map) == 0);
-   assert( ! mulle_map_get( map, "VfL"));
+      mulle_map_set( map, "VfL", "VFL");
+      assert( ! mulle_map_get( map, "VFL"));
+      assert( ! strcmp( "VFL", mulle_map_get( map, "VfL")));
 
-   mulle_map_set( map, "VfL", "VFL");
-   assert( ! mulle_map_get( map, "VFL"));
-   assert( ! strcmp( "VFL", mulle_map_get( map, "VfL")));
+      mulle_map_set( map, "VfL", "BOCHUM");
+      assert( ! strcmp( "BOCHUM", mulle_map_get( map, "VfL")));
 
-   mulle_map_set( map, "VfL", "BOCHUM");
-   assert( ! strcmp( "BOCHUM", mulle_map_get( map, "VfL")));
-
-   mulle_map_remove( map, onstack);
-   assert( ! mulle_map_get( map, "VfL"));
-
-   mulle_map_destroy( map);
+      mulle_map_remove( map, onstack);
+      assert( ! mulle_map_get( map, "VfL"));
+   }
 }
 
 

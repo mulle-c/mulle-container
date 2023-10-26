@@ -31,6 +31,15 @@ struct mulle__rangeset
    unsigned int         _size;
 };
 
+#define MULLE__RANGESET_INIT( storage, size)  \
+   ((struct mulle__rangeset)                  \
+   {                                          \
+      ._ranges          = (storage),          \
+      ._initial_storage = (storage),          \
+      ._size            = (size)              \
+   })
+
+
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
@@ -56,8 +65,6 @@ static inline void   _mulle__rangeset_init_with_static_ranges( struct mulle__ran
    p->_ranges          = storage;
    p->_initial_storage = storage;
 }
-
-
 
 
 MULLE_C_NONNULL_FIRST
@@ -339,5 +346,46 @@ MULLE_C_NONNULL_FIRST
 struct mulle_range
    _mulle__rangeset_search_exact( struct mulle__rangeset *p,
                                   uintptr_t location);
+
+
+
+// created by make-container-do.sh --no-callback --type struct mulle_range    --flexible mulle-rangeset
+
+// created by make-container-do.sh --no-callback --type struct mulle_range    --flexible mulle--rangeset.c
+
+#define mulle__rangeset_do( name)                              \
+   for( struct mulle__rangeset                                 \
+           name ## __container = { 0 },                        \
+           *name = &name ## __container,                       \
+           *name ## __i = NULL;                                \
+        ! name ## __i;                                         \
+        name ## __i =                                          \
+        (                                                      \
+           _mulle__rangeset_done( &name ## __container, NULL), \
+           (void *) 0x1                                        \
+        )                                                      \
+      )                                                        \
+      for( int  name ## __j = 0;    /* break protection */     \
+           name ## __j < 1;                                    \
+           name ## __j++)
+
+#define mulle__rangeset_do_flexible( name, stackcount)              \
+   struct mulle_range      name ## __storage[ stackcount];          \
+   for( struct mulle__rangeset                                      \
+           name ## __container =                                    \
+              MULLE__RANGESET_INIT( name ## __storage, stackcount), \
+           *name = &name ## __container,                            \
+           *name ## __i = NULL;                                     \
+        ! name ## __i;                                              \
+        name ## __i =                                               \
+        (                                                           \
+           _mulle__rangeset_done( &name ## __container, NULL),      \
+           (void *) 0x1                                             \
+        )                                                           \
+      )                                                             \
+      for( int  name ## __j = 0;    /* break protection */          \
+           name ## __j < 1;                                         \
+           name ## __j++)
+
 
 #endif

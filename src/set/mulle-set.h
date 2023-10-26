@@ -61,6 +61,14 @@ struct mulle_set
    MULLE_SET_BASE;
 };
 
+#define MULLE_SET_INIT( xcallback, xallocator) \
+   ((struct mulle_set)                         \
+   {                                           \
+      .callback  = (xcallback),                \
+      .allocator = (xallocator)                \
+   })
+
+
 MULLE__CONTAINER_GLOBAL
 struct mulle_set   *mulle_set_create( unsigned int capacity,
                                       struct mulle_container_keycallback *callback,
@@ -71,6 +79,12 @@ void   mulle_set_init( struct mulle_set *set,
                        unsigned int capacity,
                        struct mulle_container_keycallback *callback,
                        struct mulle_allocator *allocator);
+
+
+static inline void   _mulle_set_done( struct mulle_set *set)
+{
+   _mulle__set_done( (struct mulle__set *) set, set->callback, set->allocator);
+}
 
 
 static inline void   mulle_set_done( struct mulle_set *set)
@@ -298,6 +312,25 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
 #define mulle_set_for( set, item)                                               \
    for( struct mulle_setenumerator rover__ ## item = mulle_set_enumerate( set); \
         _mulle_setenumerator_next( &rover__ ## item, (void **) &item);)
+
+// created by make-container-do.sh mulle-set.c
+
+#define mulle_set_do( name, callback)                             \
+   for( struct mulle_set                                          \
+           name ## __container = MULLE_SET_INIT( callback, NULL), \
+           *name = &name ## __container,                          \
+           *name ## __i = NULL;                                   \
+        ! name ## __i;                                            \
+        name ## __i =                                             \
+        (                                                         \
+           _mulle_set_done( &name ## __container),                \
+           (void *) 0x1                                           \
+        )                                                         \
+      )                                                           \
+      for( int  name ## __j = 0;    /* break protection */        \
+           name ## __j < 1;                                       \
+           name ## __j++)
+
 
 #endif
 

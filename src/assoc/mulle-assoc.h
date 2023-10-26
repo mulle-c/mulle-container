@@ -55,8 +55,8 @@
 #define MULLE_ASSOC_BASE                                  \
    MULLE__ASSOC_BASE;                                     \
    struct mulle_container_keyvaluecallback   *callback;   \
-   struct mulle_allocator                    *allocator;  \
    mulle_pointerpair_compare_t               *compare;    \
+   struct mulle_allocator                    *allocator;  \
    int                                       _is_sorted
 
 
@@ -65,6 +65,14 @@ struct mulle_assoc
    MULLE_ASSOC_BASE;
 };
 
+
+#define MULLE_ASSOC_INIT( xcallback, xcompare, xallocator) \
+   ((struct mulle_assoc)                                   \
+   {                                                       \
+      .callback         = (xcallback),                     \
+      .allocator        = (xallocator),                    \
+      .compare          = (xcompare),                      \
+   })
 
 MULLE_C_NONNULL_THIRD
 static inline void    mulle_assoc_init( struct mulle_assoc *assoc,
@@ -82,6 +90,13 @@ static inline void    mulle_assoc_init( struct mulle_assoc *assoc,
    assoc->allocator  = allocator;
    assoc->compare    = compare ? compare : _mulle_pointerpair_compare_pointer_key;
    assoc->_is_sorted = 0;
+}
+
+static inline void   _mulle_assoc_done( struct mulle_assoc *assoc)
+{
+   _mulle__assoc_done( (struct mulle__assoc *) assoc,
+                       assoc->callback,
+                       assoc->allocator);
 }
 
 
@@ -684,6 +699,26 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
         _mulle_assocenumerator_next( &rover__ ## item,                                \
                                      (void **) &key,                                  \
                                      (void **) &value);)
+
+
+// created by make-container-do.sh -ls --compare --type struct mulle_pointerpair    mulle-assoc.c
+
+#define mulle_assoc_do( name, callback, compare)                             \
+   for( struct mulle_assoc                                                   \
+           name ## __container = MULLE_ASSOC_INIT( callback, compare, NULL), \
+           *name = &name ## __container,                                     \
+           *name ## __i = NULL;                                              \
+        ! name ## __i;                                                       \
+        name ## __i =                                                        \
+        (                                                                    \
+           _mulle_assoc_done( &name ## __container),                         \
+           (void *) 0x1                                                      \
+        )                                                                    \
+      )                                                                      \
+      for( int  name ## __j = 0;    /* break protection */                   \
+           name ## __j < 1;                                                  \
+           name ## __j++)
+
 
 
 #endif /* mulle_assoc_h */

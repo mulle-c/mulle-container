@@ -27,6 +27,17 @@ struct mulle_uniquepointerarray
 };
 
 
+#define MULLE_UNIQUEPOINTERARRAY_INIT( storage, count, xallocator) \
+   ((struct mulle_uniquepointerarray)                              \
+   {                                                               \
+      ._storage         = (storage),                               \
+      ._curr            = (storage),                               \
+      ._sentinel        = &(storage)[ count],                      \
+      ._initial_storage = (storage),                               \
+      .allocator        = (xallocator)                             \
+   })
+
+
 MULLE_C_NONNULL_FIRST
 static inline void    _mulle_uniquepointerarray_init( struct mulle_uniquepointerarray *set,
                                               struct mulle_allocator *allocator)
@@ -155,5 +166,41 @@ static inline int   _mulle_uniquepointerarray_member( struct mulle_uniquepointer
 {
    return( _mulle__uniquepointerarray_member( (struct mulle__uniquepointerarray *) set, p));
 }
+
+
+#define mulle_uniquepointerarray_do( name)                        \
+   for( struct mulle_uniquepointerarray                           \
+           name ## __container = { 0 },                           \
+           *name = &name ## __container,                          \
+           *name ## __i = NULL;                                   \
+        ! name ## __i;                                            \
+        name ## __i =                                             \
+        (                                                         \
+           _mulle_uniquepointerarray_done( &name ## __container), \
+           (void *) 0x1                                           \
+        )                                                         \
+      )                                                           \
+      for( int  name ## __j = 0;    /* break protection */        \
+           name ## __j < 1;                                       \
+           name ## __j++)
+
+#define mulle_uniquepointerarray_do_flexible( name, stackcount)             \
+   void   *name ## __storage[ stackcount];                                  \
+   for( struct mulle_uniquepointerarray                                     \
+           name ## __container =                                            \
+              MULLE_UNIQUEPOINTERARRAY_INIT( name ## __storage, stackcount), \
+           *name = &name ## __container,                                    \
+           *name ## __i = NULL;                                             \
+        ! name ## __i;                                                      \
+        name ## __i =                                                       \
+        (                                                                   \
+           _mulle_uniquepointerarray_done( &name ## __container),           \
+           (void *) 0x1                                                     \
+        )                                                                   \
+      )                                                                     \
+      for( int  name ## __j = 0;    /* break protection */                  \
+           name ## __j < 1;                                                 \
+           name ## __j++)
+
 
 #endif
