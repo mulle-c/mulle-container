@@ -64,6 +64,7 @@ struct mulle__assoc
 };
 
 
+#define MULLE__ASSOC_INIT( )     MULLE__POINTERPAIRARRAY_INIT( )
 MULLE__CONTAINER_GLOBAL
 struct mulle__assoc    *mulle__assoc_create( struct mulle_allocator *allocator);
 
@@ -597,6 +598,25 @@ static inline void
 int   mulle__assoc_member( struct mulle__assoc *assoc,
                            void *key,
                            struct mulle_container_keyvaluecallback *callback);
+
+// created by make-container-do.sh -ls --compare --type struct mulle_pointerpair    mulle--assoc.c
+
+#define mulle__assoc_do( name, callback)                              \
+   for( struct mulle__assoc                                           \
+           name ## __container = { 0 },                               \
+           *name = &name ## __container,                              \
+           *name ## __i = NULL;                                       \
+        ! name ## __i;                                                \
+        name ## __i =                                                 \
+        (                                                             \
+           _mulle__assoc_done( &name ## __container, callback, NULL), \
+           (void *) 0x1                                               \
+        )                                                             \
+      )                                                               \
+      for( int  name ## __j = 0;    /* break protection */            \
+           name ## __j < 1;                                           \
+           name ## __j++)
+
 
 #endif
 

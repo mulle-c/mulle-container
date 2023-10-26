@@ -48,32 +48,25 @@ static void   set_null( void)
 
 static void  simple( void)
 {
-   struct mulle_set                    *set;
-   struct mulle_setenumerator          rover;
-   void                                *key;
-   int                                 rval;
-   int                                 i;
-   int                                 state;
    struct mulle_container_keycallback  callback;
    char                                onstack[] = { 'V', 'f', 'L', 0 };
 
    callback = mulle_container_keycallback_copied_cstring;
 
-   set = mulle_set_create( 0, &callback, NULL);
+   mulle_set_do( set, &callback)
+   {
+      assert( mulle_set_get_count( set) == 0);
+      assert( ! mulle_set_get( set, "VfL"));
 
-   assert( mulle_set_get_count( set) == 0);
-   assert( ! mulle_set_get( set, "VfL"));
+      mulle_set_set( set, "VfL");
+      assert( ! strcmp( "VfL", mulle_set_get( set, "VfL")));
 
-   mulle_set_set( set, "VfL");
-   assert( ! strcmp( "VfL", mulle_set_get( set, "VfL")));
+      mulle_set_set( set, "VfL");
+      assert( ! strcmp( "VfL", mulle_set_get( set, "VfL")));
 
-   mulle_set_set( set, "VfL");
-   assert( ! strcmp( "VfL", mulle_set_get( set, "VfL")));
-
-   mulle_set_remove( set, onstack);
-   assert( ! mulle_set_get( set, "VfL"));
-
-   mulle_set_destroy( set);
+      mulle_set_remove( set, onstack);
+      assert( ! mulle_set_get( set, "VfL"));
+   }
 }
 
 

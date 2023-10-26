@@ -306,4 +306,22 @@ static inline void   mulle__setenumerator_done( struct mulle__setenumerator *rov
 {
 }
 
+// created by make-container-do.sh mulle--set.c
+
+#define mulle__set_do( name, callback)                              \
+   for( struct mulle__set                                           \
+           name ## __container = { 0 },                             \
+           *name = &name ## __container,                            \
+           *name ## __i = NULL;                                     \
+        ! name ## __i;                                              \
+        name ## __i =                                               \
+        (                                                           \
+           _mulle__set_done( &name ## __container, callback, NULL), \
+           (void *) 0x1                                             \
+        )                                                           \
+      )                                                             \
+      for( int  name ## __j = 0;    /* break protection */          \
+           name ## __j < 1;                                         \
+           name ## __j++)
+
 #endif

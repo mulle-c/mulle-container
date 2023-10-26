@@ -29,6 +29,13 @@ struct mulle_map
    MULLE_MAP_BASE;
 };
 
+#define MULLE_MAP_INIT( xcallback, xallocator) \
+   ((struct mulle_map)                         \
+   {                                           \
+      .callback  = (xcallback),                \
+      .allocator = (xallocator)                \
+   })
+
 
 #pragma mark - setup and teardown
 
@@ -536,6 +543,25 @@ static inline void
 {
    mulle__maptinyenumerator_done( (struct mulle__maptinyenumerator *) rover);
 }
+
+
+// created by make-container-do.sh mulle-map.c
+
+#define mulle_map_do( name, callback)                             \
+   for( struct mulle_map                                          \
+           name ## __container = MULLE_MAP_INIT( callback, NULL), \
+           *name = &name ## __container,                          \
+           *name ## __i = NULL;                                   \
+        ! name ## __i;                                            \
+        name ## __i =                                             \
+        (                                                         \
+           _mulle_map_done( &name ## __container),                \
+           (void *) 0x1                                           \
+        )                                                         \
+      )                                                           \
+      for( int  name ## __j = 0;    /* break protection */        \
+           name ## __j < 1;                                       \
+           name ## __j++)
 
 
 #endif

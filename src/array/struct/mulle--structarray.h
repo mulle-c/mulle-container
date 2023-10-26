@@ -31,14 +31,14 @@ struct mulle__structarray
 #define MULLE__STRUCTARRAY_ALIGNED_SIZE( type)  \
    (size_t) (sizeof( type) + (sizeof( type) % alignof( type)))
 
-#define MULLE__STRUCTARRAY_INIT( storage, type, count)                      \
-   ((struct mulle__structarray)                                             \
-   {                                                                        \
-      storage,                                                              \
-      storage,                                                              \
-      &((char *) storage)[ count * MULLE__STRUCTARRAY_ALIGNED_SIZE( type)], \
-      storage,                                                              \
-      MULLE__STRUCTARRAY_ALIGNED_SIZE( type)                                \
+#define MULLE__STRUCTARRAY_INIT( storage, type, count)                        \
+   ((struct mulle__structarray)                                               \
+   {                                                                          \
+      ._storage         = (storage),                                          \
+      ._curr            = (storage),                                          \
+      ._sentinel        = &((char *) (storage))[ (count) * MULLE__STRUCTARRAY_ALIGNED_SIZE( type)], \
+      ._initial_storage = (storage),                                          \
+      ._sizeof_struct   = MULLE__STRUCTARRAY_ALIGNED_SIZE( type)              \
    })
 
 
@@ -396,9 +396,9 @@ static inline struct mulle_data
    data = mulle_data_make( buffer->_storage,
                            _mulle__structarray_get_used_as_length( buffer));
 
-   buffer->_storage          =
-   buffer->_curr             =
-   buffer->_sentinel         = NULL;
+   buffer->_storage  =
+   buffer->_curr     =
+   buffer->_sentinel = NULL;
 
    return( data);
 }
@@ -579,13 +579,56 @@ static inline void
 }
 
 
-#define mulle__structarray_for( array, item)                                                       \
+#define mulle__structarray_for( array, item)                                                        \
    for( struct mulle__structarrayenumerator rover__ ## item = mulle__structarray_enumerate( array); \
         _mulle__structarrayenumerator_next( &rover__ ## item, (void **) &item);)
 
 #define mulle__structarray_for_reverse( array, item)                                                              \
    for( struct mulle_structarrayreverseenumerator rover__ ## item = mulle__structarray_reverseenumerate( array); \
         _mulle__structarrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
+
+
+//
+// we have to keep storage out of the for loop
+//
+#define mulle__structarray_do( name, type)                                    \
+   for( struct mulle__structarray                                             \
+           name ## __array = MULLE__STRUCTARRAY_INIT( NULL, type, 0),         \
+           *name = &name ## __array,                                          \
+           *name ## __i = NULL;                                               \
+        ! name ## __i;                                                        \
+        name ## __i =                                                         \
+        (                                                                     \
+           _mulle__structarray_done( &name ## __array, NULL),                 \
+           (void *) 0x1                                                       \
+        )                                                                     \
+      )                                                                       \
+                                                                              \
+      for( int  name ## __j = 0;    /* break protection */                    \
+           name ## __j < 1;                                                   \
+           name ## __j++)
+
+
+#define mulle__structarray_do_flexible( name, type, stackcount)               \
+   type   name ## __storage[ stackcount];                                     \
+   for( struct mulle__structarray                                             \
+           name ## __array =                                                  \
+              MULLE__STRUCTARRAY_INIT( name ## __storage, type, stackcount),  \
+           *name = &name ## __array,                                          \
+           *name ## __i = NULL;                                               \
+        ! name ## __i;                                                        \
+        name ## __i =                                                         \
+        (                                                                     \
+           _mulle__structarray_done( &name ## __array, NULL),                 \
+           (void *) 0x1                                                       \
+        )                                                                     \
+      )                                                                       \
+                                                                              \
+      for( int  name ## __j = 0;    /* break protection */                    \
+           name ## __j < 1;                                                   \
+           name ## __j++)
+
+
 
 #endif
 

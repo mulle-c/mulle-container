@@ -74,7 +74,7 @@ static inline void
                                   unsigned int  capacity,
                                   struct mulle_allocator *allocator)
 {
-   memset( array, 0, sizeof( *array));
+   *array = (struct mulle__pointerpairarray) { 0 };
 
    if( capacity)
    {
@@ -100,7 +100,7 @@ static inline void
 
 static inline void
    _mulle__pointerpairarray_destroy( struct mulle__pointerpairarray *array,
-                                    struct mulle_allocator *allocator)
+                                     struct mulle_allocator *allocator)
 {
    _mulle__pointerpairarray_done( array, allocator);
    mulle_allocator_free( allocator, array);
@@ -526,6 +526,25 @@ static inline void
 #define mulle__pointerpairarray_for( array, pair)                                                             \
    for( struct mulle__pointerpairarrayenumerator rover__ ## pair = mulle__pointerpairarray_enumerate( array); \
         _mulle__pointerpairarrayenumerator_next( &rover__ ## pair, (void **) &pair);)
+
+
+// created by make-container-do.sh -v -ls --type struct mulle_pointerpair    mulle--pointerpairarray.c
+
+#define mulle__pointerpairarray_do( name)                              \
+   for( struct mulle__pointerpairarray                                 \
+           name ## __container = { 0 },                                \
+           *name = &name ## __container,                               \
+           *name ## __i = NULL;                                        \
+        ! name ## __i;                                                 \
+        name ## __i =                                                  \
+        (                                                              \
+           _mulle__pointerpairarray_done( &name ## __container, NULL), \
+           (void *) 0x1                                                \
+        )                                                              \
+      )                                                                \
+      for( int  name ## __j = 0;    /* break protection */             \
+           name ## __j < 1;                                            \
+           name ## __j++)
 
 
 #endif
