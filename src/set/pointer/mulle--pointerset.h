@@ -108,4 +108,22 @@ struct mulle__pointerset  *
    _mulle__pointerset_copy( struct mulle__pointerset *set,
                             struct mulle_allocator *allocator);
 
+// created by make-container-do.sh mulle--pointerset.c
+
+#define mulle__pointerset_do( name)                              \
+   for( struct mulle__pointerset                                 \
+           name ## __container = { 0 },                          \
+           *name = &name ## __container,                         \
+           *name ## __i = NULL;                                  \
+        ! name ## __i;                                           \
+        name ## __i =                                            \
+        (                                                        \
+           _mulle__pointerset_done( &name ## __container, NULL), \
+           (void *) 0x1                                          \
+        )                                                        \
+      )                                                          \
+      for( int  name ## __j = 0;    /* break protection */       \
+           name ## __j < 1;                                      \
+           name ## __j++)
+
 #endif

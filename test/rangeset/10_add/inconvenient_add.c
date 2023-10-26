@@ -5,24 +5,20 @@
 
 int   main( int argc, char *argv[])
 {
-   struct mulle__rangeset   set;
+   mulle__rangeset_do_flexible( set, 2)
+   {
+      _mulle__rangeset_insert( set, mulle_range_make( 10, 2), NULL);
 
-   _mulle__rangeset_init( &set, 0, NULL);
+      _mulle__rangeset_insert( set, mulle_range_make( 0, 2), NULL);
 
-   _mulle__rangeset_insert( &set, mulle_range_make( 10, 2), NULL);
+      _mulle__rangeset_insert( set, mulle_range_make( 4, 2), NULL);
 
-   _mulle__rangeset_insert( &set, mulle_range_make( 0, 2), NULL);
+      _mulle__rangeset_insert( set, mulle_range_make( 14, 2), NULL);
 
-   _mulle__rangeset_insert( &set, mulle_range_make( 4, 2), NULL);
+      _mulle__rangeset_insert( set, mulle_range_make( 7, 2), NULL);
 
-   _mulle__rangeset_insert( &set, mulle_range_make( 14, 2), NULL);
-
-   _mulle__rangeset_insert( &set, mulle_range_make( 7, 2), NULL);
-
-
-   _mulle__rangeset_print( &set);
-
-   _mulle__rangeset_done( &set, NULL);
+      _mulle__rangeset_print( set);
+   }
 
    return( 0);
 }

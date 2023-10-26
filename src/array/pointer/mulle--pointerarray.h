@@ -70,12 +70,12 @@ struct mulle__pointerarray
 
 
 #define MULLE__POINTERARRAY_INIT( storage, count) \
-   ((struct mulle_structarray)                    \
+   ((struct mulle__pointerarray)                  \
    {                                              \
-      storage,                                    \
-      storage,                                    \
-      &storage[ count],                           \
-      storage                                     \
+      ._storage         = (storage),              \
+      ._curr            = (storage),              \
+      ._sentinel        = &(storage)[ count],     \
+      ._initial_storage = (storage)               \
    })
 
 
@@ -193,8 +193,16 @@ static inline void   mulle__pointerarray_absorb( struct mulle__pointerarray *arr
 
 // there can be no useful "lenient" variant (used by MulleJS)
 MULLE_C_NONNULL_FIRST
-static inline void **
+static inline void **  // deprecated name
    _mulle__pointerarray_get_pointers( struct mulle__pointerarray *array)
+{
+   return( array->_storage);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void **
+   _mulle__pointerarray_get_storage( struct mulle__pointerarray *array)
 {
    return( array->_storage);
 }
@@ -919,5 +927,43 @@ static inline int   mulle__pointerarray_member( struct mulle__pointerarray *arra
 
    return( q == p);
 }
+
+
+// created by make-container-do.sh --flexible mulle--pointerarray.c
+
+#define mulle__pointerarray_do( name)                              \
+   for( struct mulle__pointerarray                                 \
+           name ## __container = { 0 },                            \
+           *name = &name ## __container,                           \
+           *name ## __i = NULL;                                    \
+        ! name ## __i;                                             \
+        name ## __i =                                              \
+        (                                                          \
+           _mulle__pointerarray_done( &name ## __container, NULL), \
+           (void *) 0x1                                            \
+        )                                                          \
+      )                                                            \
+      for( int  name ## __j = 0;    /* break protection */         \
+           name ## __j < 1;                                        \
+           name ## __j++)
+
+#define mulle__pointerarray_do_flexible( name, stackcount)             \
+   void   *name ## __storage[ stackcount];                             \
+   for( struct mulle__pointerarray                                     \
+           name ## __container =                                       \
+              MULLE__POINTERARRAY_INIT( name ## __storage, stackcount), \
+           *name = &name ## __container,                               \
+           *name ## __i = NULL;                                        \
+        ! name ## __i;                                                 \
+        name ## __i =                                                  \
+        (                                                              \
+           _mulle__pointerarray_done( &name ## __container, NULL),     \
+           (void *) 0x1                                                \
+        )                                                              \
+      )                                                                \
+      for( int  name ## __j = 0;    /* break protection */             \
+           name ## __j < 1;                                            \
+           name ## __j++)
+
 
 #endif

@@ -55,14 +55,14 @@ struct mulle_pointerarray
 };
 
 
-#define MULLE_POINTERARRAY_INIT( storage, count, allocator) \
-   ((struct mulle_structarray)                              \
-   {                                                        \
-      storage,                                              \
-      storage,                                              \
-      &storage[ count],                                     \
-      storage,                                              \
-      allocator                                             \
+#define MULLE_POINTERARRAY_INIT( storage, count, xallocator) \
+   ((struct mulle_pointerarray)                              \
+   {                                                         \
+      ._storage         = (storage),                         \
+      ._curr            = (storage),                         \
+      ._sentinel        = &(storage)[ count],                \
+      ._initial_storage = (storage),                         \
+      .allocator        = (xallocator)                       \
    })
 
 
@@ -170,6 +170,15 @@ static inline void   mulle_pointerarray_absorb( struct mulle_pointerarray *array
 
 
 # pragma mark - petty accessors
+
+
+MULLE_C_NONNULL_FIRST
+static inline void **
+   _mulle_pointerarray_get_storage( struct mulle_pointerarray *array)
+{
+   return( _mulle__pointerarray_get_storage( (struct mulle__pointerarray *) array));
+}
+
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int
@@ -804,6 +813,48 @@ static inline int
 #define mulle_pointerarray_for_reverse( array, item)                                                              \
    for( struct mulle_pointerarrayreverseenumerator rover__ ## item = mulle_pointerarray_reverseenumerate( array); \
         _mulle_pointerarrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
+
+
+
+//
+// we have to keep storage out of the for loop
+//
+
+// created by make-container-do.sh -ls --flexible mulle-pointerarray.c
+
+#define mulle_pointerarray_do( name)                        \
+   for( struct mulle_pointerarray                           \
+           name ## __container = { 0 },                     \
+           *name = &name ## __container,                    \
+           *name ## __i = NULL;                             \
+        ! name ## __i;                                      \
+        name ## __i =                                       \
+        (                                                   \
+           _mulle_pointerarray_done( &name ## __container), \
+           (void *) 0x1                                     \
+        )                                                   \
+      )                                                     \
+      for( int  name ## __j = 0;    /* break protection */  \
+           name ## __j < 1;                                 \
+           name ## __j++)
+
+#define mulle_pointerarray_do_flexible( name, stackcount)                    \
+   void   *name ## __storage[ stackcount];                                   \
+   for( struct mulle_pointerarray                                            \
+           name ## __container =                                             \
+              MULLE_POINTERARRAY_INIT( name ## __storage, stackcount, NULL), \
+           *name = &name ## __container,                                     \
+           *name ## __i = NULL;                                              \
+        ! name ## __i;                                                       \
+        name ## __i =                                                        \
+        (                                                                    \
+           _mulle_pointerarray_done( &name ## __container),                  \
+           (void *) 0x1                                                      \
+        )                                                                    \
+      )                                                                      \
+      for( int  name ## __j = 0;    /* break protection */                   \
+           name ## __j < 1;                                                  \
+           name ## __j++)
 
 
 #endif

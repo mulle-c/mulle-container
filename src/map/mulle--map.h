@@ -678,4 +678,26 @@ static inline void
 }
 
 
+// created by make-container-do.sh --flexible mulle--map.c
+
+// created by make-container-do.sh mulle--map.c
+
+#define mulle__map_do( name, callback)                              \
+   for( struct mulle__map                                           \
+           name ## __container = { 0 },                             \
+           *name = &name ## __container,                            \
+           *name ## __i = NULL;                                     \
+        ! name ## __i;                                              \
+        name ## __i =                                               \
+        (                                                           \
+           _mulle__map_done( &name ## __container, callback, NULL), \
+           (void *) 0x1                                             \
+        )                                                           \
+      )                                                             \
+      for( int  name ## __j = 0;    /* break protection */          \
+           name ## __j < 1;                                         \
+           name ## __j++)
+
+
+
 #endif

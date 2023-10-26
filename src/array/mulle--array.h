@@ -56,6 +56,10 @@ struct mulle__array
 };
 
 
+#define MULLE__ARRAY_INIT( storage, count)  \
+   MULLE__POINTERARRAY_INIT( storage, count)
+
+
 MULLE__CONTAINER_GLOBAL
 struct mulle__array    *mulle__array_create( struct mulle_allocator *allocator);
 
@@ -86,6 +90,14 @@ void   _mulle__array_done( struct mulle__array *array,
 
 
 # pragma mark - petty accessors
+
+MULLE_C_NONNULL_FIRST
+static inline void **
+   _mulle__array_get_storage( struct mulle__array *array)
+{
+   return( _mulle__pointerarray_get_storage( (struct mulle__pointerarray *) array));
+}
+
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int
@@ -606,6 +618,43 @@ static inline void
 int   mulle__array_member( struct mulle__array *array,
                            void *p,
                            struct mulle_container_keycallback *callback);
+
+// created by make-container-do.sh --flexible mulle--array.c
+
+#define mulle__array_do( name, callback)                              \
+   for( struct mulle__array                                           \
+           name ## __container = { 0 },                               \
+           *name = &name ## __container,                              \
+           *name ## __i = NULL;                                       \
+        ! name ## __i;                                                \
+        name ## __i =                                                 \
+        (                                                             \
+           _mulle__array_done( &name ## __container, callback, NULL), \
+           (void *) 0x1                                               \
+        )                                                             \
+      )                                                               \
+      for( int  name ## __j = 0;    /* break protection */            \
+           name ## __j < 1;                                           \
+           name ## __j++)
+
+#define mulle__array_do_flexible( name, stackcount, callback)         \
+   void   *name ## __storage[ stackcount];                            \
+   for( struct mulle__array                                           \
+           name ## __container =                                      \
+              MULLE__ARRAY_INIT( name ## __storage, stackcount),       \
+           *name = &name ## __container,                              \
+           *name ## __i = NULL;                                       \
+        ! name ## __i;                                                \
+        name ## __i =                                                 \
+        (                                                             \
+           _mulle__array_done( &name ## __container, callback, NULL), \
+           (void *) 0x1                                               \
+        )                                                             \
+      )                                                               \
+      for( int  name ## __j = 0;    /* break protection */            \
+           name ## __j < 1;                                           \
+           name ## __j++)
+
 
 #endif
 

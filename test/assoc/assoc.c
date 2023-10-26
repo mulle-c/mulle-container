@@ -69,35 +69,27 @@ static void   assoc_null( void)
 
 static void  simple( void)
 {
-   struct mulle_assoc              *assoc;
-   struct mulle_assocenumerator    rover;
-   void                          *key;
-   void                          *value;
-   int                           rval;
-   int                           i;
-   int                           state;
-   struct mulle_container_keyvaluecallback      callback;
-   char                          onstack[] = { 'V', 'f', 'L', 0 };
+   struct mulle_container_keyvaluecallback   callback;
+   char   onstack[] = { 'V', 'f', 'L', 0 };
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
-   assoc = mulle_assoc_create( 0, &callback, _mulle_pointerpair_compare_string_key, NULL);
+   mulle_assoc_do( assoc, &callback, _mulle_pointerpair_compare_string_key)
+   {
+      assert( mulle_assoc_get_count( assoc) == 0);
+      assert( ! mulle_assoc_get( assoc, "VfL"));
 
-   assert( mulle_assoc_get_count( assoc) == 0);
-   assert( ! mulle_assoc_get( assoc, "VfL"));
+      mulle_assoc_set( assoc, "VfL", "VFL");
+      assert( ! mulle_assoc_get( assoc, "VFL"));
+      assert( ! strcmp( "VFL", mulle_assoc_get( assoc, "VfL")));
 
-   mulle_assoc_set( assoc, "VfL", "VFL");
-   assert( ! mulle_assoc_get( assoc, "VFL"));
-   assert( ! strcmp( "VFL", mulle_assoc_get( assoc, "VfL")));
+      mulle_assoc_set( assoc, "VfL", "BOCHUM");
+      assert( ! strcmp( "BOCHUM", mulle_assoc_get( assoc, "VfL")));
 
-   mulle_assoc_set( assoc, "VfL", "BOCHUM");
-   assert( ! strcmp( "BOCHUM", mulle_assoc_get( assoc, "VfL")));
-
-   mulle_assoc_remove( assoc, onstack);
-   assert( ! mulle_assoc_get( assoc, "VfL"));
-
-   mulle_assoc_destroy( assoc);
+      mulle_assoc_remove( assoc, onstack);
+      assert( ! mulle_assoc_get( assoc, "VfL"));
+   }
 }
 
 

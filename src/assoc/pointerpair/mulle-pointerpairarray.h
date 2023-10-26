@@ -472,4 +472,23 @@ static inline void
         _mulle_pointerpairarrayenumerator_next( &rover__ ## pair, (void **) &pair);)
 
 
+// created by make-container-do.sh -v -ls --type struct mulle_pointerpair    mulle-pointerpairarray.c
+
+#define mulle_pointerpairarray_do( name)                        \
+   for( struct mulle_pointerpairarray                           \
+           name ## __container = { 0 },                         \
+           *name = &name ## __container,                        \
+           *name ## __i = NULL;                                 \
+        ! name ## __i;                                          \
+        name ## __i =                                           \
+        (                                                       \
+           _mulle_pointerpairarray_done( &name ## __container), \
+           (void *) 0x1                                         \
+        )                                                       \
+      )                                                         \
+      for( int  name ## __j = 0;    /* break protection */      \
+           name ## __j < 1;                                     \
+           name ## __j++)
+
+
 #endif

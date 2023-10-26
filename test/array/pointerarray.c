@@ -45,74 +45,72 @@ static void  null( void)
 
 static void  simple( void)
 {
-   struct mulle_pointerarray                    *array;
    struct mulle_pointerarrayenumerator           rover;
    struct mulle_pointerarrayreverseenumerator    rerover;
    void                                          *item;
    char                                          *s;
    int                                           i;
 
-   array = mulle_pointerarray_create( NULL);
-
-   s     = "VfL";
-   mulle_pointerarray_add( array, s);
-   assert( s == _mulle_pointerarray_get( array, 0)); // must have been copied
-
-   mulle_pointerarray_add( array, "Bochum");
-   mulle_pointerarray_add( array, "1848");
-
-   assert( mulle_pointerarray_get_count( array) == 3);
-
-   assert( ! strcmp( "VfL", _mulle_pointerarray_get( array, 0)));
-   assert( ! strcmp( "Bochum", _mulle_pointerarray_get( array, 1)));
-   assert( ! strcmp( "1848", _mulle_pointerarray_get( array, 2)));
-
-   rover = mulle_pointerarray_enumerate( array);
-   _mulle_pointerarrayenumerator_next( &rover, &item);
-   assert( item);
-   assert( ! strcmp( "VfL", item));
-   _mulle_pointerarrayenumerator_next( &rover, &item);
-   assert( item);
-   assert( ! strcmp( "Bochum", item));
-   _mulle_pointerarrayenumerator_next( &rover, &item);
-   assert( item);
-   assert( ! strcmp( "1848", item));
-   assert( ! _mulle_pointerarrayenumerator_next( &rover, &item));
-   mulle_pointerarrayenumerator_done( &rover);
-
-   // more or less just a syntax check
-   i = 0;
-   mulle_pointerarray_for( array, item)
+   mulle_pointerarray_do( array)
    {
+      s     = "VfL";
+      mulle_pointerarray_add( array, s);
+      assert( s == _mulle_pointerarray_get( array, 0)); // must have been copied
+
+      mulle_pointerarray_add( array, "Bochum");
+      mulle_pointerarray_add( array, "1848");
+
+      assert( mulle_pointerarray_get_count( array) == 3);
+
+      assert( ! strcmp( "VfL", _mulle_pointerarray_get( array, 0)));
+      assert( ! strcmp( "Bochum", _mulle_pointerarray_get( array, 1)));
+      assert( ! strcmp( "1848", _mulle_pointerarray_get( array, 2)));
+
+      rover = mulle_pointerarray_enumerate( array);
+      _mulle_pointerarrayenumerator_next( &rover, &item);
       assert( item);
-      ++i;
-   }
-   assert( i == 3);
-
-   rerover = mulle_pointerarray_reverseenumerate( array);
-   _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
-   assert( item);
-   assert( ! strcmp( "1848", item));
-   _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
-   assert( item);
-   assert( ! strcmp( "Bochum", item));
-   _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
-   assert( item);
-   assert( ! strcmp( "VfL", item));
-   assert( ! _mulle_pointerarrayreverseenumerator_next( &rerover, &item));
-   mulle_pointerarrayreverseenumerator_done( &rerover);
-
-
-   // more or less just a syntax check
-   i = 0;
-   mulle_pointerarray_for_reverse( array, item)
-   {
+      assert( ! strcmp( "VfL", item));
+      _mulle_pointerarrayenumerator_next( &rover, &item);
       assert( item);
-      ++i;
-   }
-   assert( i == 3);
+      assert( ! strcmp( "Bochum", item));
+      _mulle_pointerarrayenumerator_next( &rover, &item);
+      assert( item);
+      assert( ! strcmp( "1848", item));
+      assert( ! _mulle_pointerarrayenumerator_next( &rover, &item));
+      mulle_pointerarrayenumerator_done( &rover);
 
-   mulle_pointerarray_destroy( array);
+      // more or less just a syntax check
+      i = 0;
+      mulle_pointerarray_for( array, item)
+      {
+         assert( item);
+         ++i;
+      }
+      assert( i == 3);
+
+      rerover = mulle_pointerarray_reverseenumerate( array);
+      _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
+      assert( item);
+      assert( ! strcmp( "1848", item));
+      _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
+      assert( item);
+      assert( ! strcmp( "Bochum", item));
+      _mulle_pointerarrayreverseenumerator_next( &rerover, &item);
+      assert( item);
+      assert( ! strcmp( "VfL", item));
+      assert( ! _mulle_pointerarrayreverseenumerator_next( &rerover, &item));
+      mulle_pointerarrayreverseenumerator_done( &rerover);
+
+
+      // more or less just a syntax check
+      i = 0;
+      mulle_pointerarray_for_reverse( array, item)
+      {
+         assert( item);
+         ++i;
+      }
+      assert( i == 3);
+   }
 }
 
 

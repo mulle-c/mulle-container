@@ -65,6 +65,18 @@ struct mulle_array
 };
 
 
+#define MULLE_ARRAY_INIT( storage, count, xcallback, xallocator) \
+   ((struct mulle_pointerarray)                                  \
+   {                                                             \
+      ._storage         = (storage),                             \
+      ._curr            = (storage),                             \
+      ._sentinel        = &(storage)[ count],                    \
+      ._initial_storage = (storage),                             \
+      .callback         = (xcallback),                           \
+      .allocator        = (xallocator)                           \
+   })
+
+
 
 MULLE_C_NONNULL_THIRD
 static inline void    mulle_array_init( struct mulle_array *array,
@@ -79,6 +91,14 @@ static inline void    mulle_array_init( struct mulle_array *array,
 
    array->callback  = callback;
    array->allocator = allocator;
+}
+
+
+static inline void   _mulle_array_done( struct mulle_array *array)
+{
+   _mulle__array_done( (struct mulle__array *) array,
+                       array->callback,
+                       array->allocator);
 }
 
 
@@ -111,6 +131,15 @@ static inline void   mulle_array_destroy( struct mulle_array *array)
 
 
 # pragma mark - petty accessors
+
+MULLE_C_NONNULL_FIRST
+static inline void **
+   _mulle_array_get_storage( struct mulle_array *array)
+{
+   return( _mulle__array_get_storage( (struct mulle__array *) array));
+}
+
+
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int
@@ -700,6 +729,45 @@ static inline void
 #define mulle_array_for_reverse( array, item)                                                       \
    for( struct mulle_arrayreverseenumerator rover__ ## item = mulle_array_reverseenumerate( array); \
         _mulle_arrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
+
+
+
+// created by make-container-do.sh --flexible mulle-array.c
+// handtweaked initializer
+
+#define mulle_array_do( name, xcallback)                                     \
+   for( struct mulle_array                                                   \
+           name ## __container = { .callback = xcallback },                  \
+           *name = &name ## __container,                                     \
+           *name ## __i = NULL;                                              \
+        ! name ## __i;                                                       \
+        name ## __i =                                                        \
+        (                                                                    \
+           _mulle_array_done( &name ## __container),                         \
+           (void *) 0x1                                                      \
+        )                                                                    \
+      )                                                                      \
+      for( int  name ## __j = 0;    /* break protection */                   \
+           name ## __j < 1;                                                  \
+           name ## __j++)
+
+#define mulle_array_do_flexible( name, stackcount, callback)                    \
+   void   *name ## __storage[ stackcount];                                      \
+   for( struct mulle_array                                                      \
+           name ## __container =                                                \
+              MULLE_ARRAY_INIT( name ## __storage, stackcount, callback, NULL), \
+           *name = &name ## __container,                                        \
+           *name ## __i = NULL;                                                 \
+        ! name ## __i;                                                          \
+        name ## __i =                                                           \
+        (                                                                       \
+           _mulle_array_done( &name ## __container),                            \
+           (void *) 0x1                                                         \
+        )                                                                       \
+      )                                                                         \
+      for( int  name ## __j = 0;    /* break protection */                      \
+           name ## __j < 1;                                                     \
+           name ## __j++)
 
 
 #endif /* mulle_array_h */

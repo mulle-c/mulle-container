@@ -148,54 +148,53 @@ static void   null( void)
 
 static void   simple( void)
 {
-   struct mulle_array              *array;
    struct mulle_arrayenumerator    rover;
    void                            *item;
    int                             i;
 
-   array = mulle_array_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
-   mulle_array_add( array, "VfL");
-   assert("VfL" != mulle_array_get( array, 0)); // must have been copied
-
-   mulle_array_add( array, "Bochum");
-   mulle_array_add( array, "1848");
-
-   assert( mulle_array_get_count( array) == 3);
-
-   assert( ! strcmp( "VfL", mulle_array_get( array, 0)));
-   assert( ! strcmp( "Bochum", mulle_array_get( array, 1)));
-   assert( ! strcmp( "1848", mulle_array_get( array, 2)));
-
-   rover = mulle_array_enumerate( array);
-   mulle_arrayenumerator_next( &rover, &item);
-   assert( item != NULL);
-   assert( ! strcmp( "VfL", item));
-   mulle_arrayenumerator_next( &rover, &item);
-   assert( item != NULL);
-   assert( ! strcmp( "Bochum", item));
-   mulle_arrayenumerator_next( &rover, &item);
-   assert( item != NULL);
-   assert( ! strcmp( "1848", item));
-   assert( ! mulle_arrayenumerator_next( &rover, &item));
-   mulle_arrayenumerator_done( &rover);
-
-   // more or less just a syntax check
-   i = 0;
-   mulle_array_for( array, item)
+   mulle_array_do( array, &mulle_container_keycallback_copied_cstring)
    {
-      assert( item);
-      ++i;
+      mulle_array_add( array, "VfL");
+      assert("VfL" != mulle_array_get( array, 0)); // must have been copied
+
+      mulle_array_add( array, "Bochum");
+      mulle_array_add( array, "1848");
+
+      assert( mulle_array_get_count( array) == 3);
+
+      assert( ! strcmp( "VfL", mulle_array_get( array, 0)));
+      assert( ! strcmp( "Bochum", mulle_array_get( array, 1)));
+      assert( ! strcmp( "1848", mulle_array_get( array, 2)));
+
+      rover = mulle_array_enumerate( array);
+      mulle_arrayenumerator_next( &rover, &item);
+      assert( item != NULL);
+      assert( ! strcmp( "VfL", item));
+      mulle_arrayenumerator_next( &rover, &item);
+      assert( item != NULL);
+      assert( ! strcmp( "Bochum", item));
+      mulle_arrayenumerator_next( &rover, &item);
+      assert( item != NULL);
+      assert( ! strcmp( "1848", item));
+      assert( ! mulle_arrayenumerator_next( &rover, &item));
+      mulle_arrayenumerator_done( &rover);
+
+      // more or less just a syntax check
+      i = 0;
+      mulle_array_for( array, item)
+      {
+         assert( item);
+         ++i;
+      }
+      assert( i == 3);
+
+      mulle_array_remove_last( array);
+      assert( mulle_array_get_count( array) == 2);
+      mulle_array_remove_last( array);
+      assert( mulle_array_get_count( array) == 1);
+      mulle_array_remove_last( array);
+      assert( mulle_array_get_count( array) == 0);
    }
-   assert( i == 3);
-
-   mulle_array_remove_last( array);
-   assert( mulle_array_get_count( array) == 2);
-   mulle_array_remove_last( array);
-   assert( mulle_array_get_count( array) == 1);
-   mulle_array_remove_last( array);
-   assert( mulle_array_get_count( array) == 0);
-
-   mulle_array_destroy( array);
 }
 
 

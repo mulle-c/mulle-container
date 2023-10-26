@@ -62,6 +62,15 @@ struct mulle__pointerqueue
 };
 
 
+#define MULLE__POINTERQUEUE_INIT( xbucket_size, xspare_allowance) \
+   ((struct mulle__pointerqueue)                                  \
+   {                                                              \
+      ._bucket_size     = xbucket_size,                           \
+      ._read_index      = xbucket_size,                           \
+      ._write_index     = xbucket_size,                           \
+      ._spare_allowance = xspare_allowance                        \
+   })
+
 struct mulle__pointerqueuebucket
 {
    struct mulle__pointerqueuebucket  *_next;
@@ -272,5 +281,24 @@ static inline void   mulle__pointerqueueenumerator_done( struct mulle__pointerqu
 #define mulle__pointerqueue_for( queue, item)                                                         \
    for( struct mulle__pointerqueueenumerator rover__ ## item = mulle__pointerqueue_enumerate( queue); \
         _mulle__pointerqueueenumerator_next( &rover__ ## item, (void **) &item);)
+
+
+// created by make-container-do.sh mulle--pointerqueue.c
+// and then hand edited
+#define mulle__pointerqueue_do( name)                              \
+   for( struct mulle__pointerqueue                                 \
+           name ## __container = MULLE__POINTERQUEUE_INIT( 64, 0), \
+           *name = &name ## __container,                           \
+           *name ## __i = NULL;                                    \
+        ! name ## __i;                                             \
+        name ## __i =                                              \
+        (                                                          \
+           _mulle__pointerqueue_done( &name ## __container, NULL), \
+           (void *) 0x1                                            \
+        )                                                          \
+      )                                                            \
+      for( int  name ## __j = 0;    /* break protection */         \
+           name ## __j < 1;                                        \
+           name ## __j++)
 
 #endif
