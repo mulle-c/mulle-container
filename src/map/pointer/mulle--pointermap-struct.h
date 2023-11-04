@@ -228,35 +228,19 @@ MULLE_C_NONNULL_FIRST_SECOND
 struct mulle_pointerpair   *_mulle__pointermap_get_any_pair( struct mulle__pointermap *map,
                                                              struct mulle_pointerpair *space);
 
-MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST
-void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map,
-                                                   void *firstvalue,
-                                                   void *firstkey,
-                                                   va_list args,
-                                                   struct mulle_allocator *allocator);
-
 
 # pragma mark - copy
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
-int   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
-                                     struct mulle__pointermap *src,
-                                     struct mulle_allocator *allocator);
+void   _mulle__pointermap_copy_items( struct mulle__pointermap *dst,
+                                      struct mulle__pointermap *src,
+                                      struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *set,
                                                      struct mulle_allocator *allocator);
-
-
-# pragma mark - debugging
-
-MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST
-char   *_mulle__pointermap_describe( struct mulle__pointermap *set,
-                                     struct mulle_allocator *allocator);
 
 
 # pragma mark - enumeration

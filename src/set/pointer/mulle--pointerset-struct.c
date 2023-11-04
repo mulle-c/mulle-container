@@ -155,13 +155,9 @@ struct mulle__pointerset  *
    struct mulle__pointerset   *other;
 
    other = _mulle__pointerset_create( _mulle__pointerset_get_count( set), 0, allocator);
-   if( _mulle__pointerset_copy_items_generic( other,
-                                              set,
-                                              &mulle_container_keycallback_nonowned_pointer_or_null,
-                                              allocator))
-   {
-      _mulle__pointerset_destroy( other, allocator);
-      other = NULL;
-   }
+   _mulle__pointerset_copy_items_generic( other,
+                                          set,
+                                          &mulle_container_keycallback_nonowned_pointer_or_null,
+                                          allocator);
    return( other);
 }

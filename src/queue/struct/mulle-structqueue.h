@@ -53,6 +53,17 @@ struct mulle_structqueue
 };
 
 
+#define MULLE_STRUCTQUEUE_INIT( type, xallocator)                     \
+   ((struct mulle_structqueue)                                        \
+   {                                                                  \
+      ._read_index         = 64,                                      \
+      ._write_index        = 64,                                      \
+      ._sizeof_struct      = MULLE__STRUCTQUEUE_ALIGNED_SIZE( type),  \
+      ._copy_sizeof_struct = sizeof( type),                           \
+      ._bucket_size        = 64,                                      \
+      .allocator           = xallocator                               \
+   })
+
 // does not set the allocator, init does
 static inline struct mulle_structqueue *
   mulle_structqueue_alloc( struct mulle_allocator *allocator)
@@ -428,5 +439,21 @@ static inline void
    for( struct mulle_structqueueenumerator rover__ ## item = mulle_structqueue_enumerate( queue); \
         _mulle_structqueueenumerator_next( &rover__ ## item, (void **) &item);)
 
+
+#define mulle_structqueue_do( name, type)                              \
+   for( struct mulle_structqueue                                       \
+           name ## __container = MULLE_STRUCTQUEUE_INIT( type, NULL),  \
+           *name = &name ## __container,                               \
+           *name ## __i = NULL;                                        \
+        ! name ## __i;                                                 \
+        name ## __i =                                                  \
+        (                                                              \
+           _mulle_structqueue_done( &name ## __container),             \
+           (void *) 0x1                                                \
+        )                                                              \
+      )                                                                \
+      for( int  name ## __j = 0;    /* break protection */             \
+           name ## __j < 1;                                            \
+           name ## __j++)
 
 #endif

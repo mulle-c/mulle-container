@@ -160,10 +160,10 @@ void   _mulle__pointermap_shrink_generic( struct mulle__pointermap *map,
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
-int   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
-                                             struct mulle__pointermap *src,
-                                             struct mulle_container_keyvaluecallback *callback,
-                                             struct mulle_allocator *allocator);
+void   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
+                                              struct mulle__pointermap *src,
+                                              struct mulle_container_keyvaluecallback *callback,
+                                              struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND

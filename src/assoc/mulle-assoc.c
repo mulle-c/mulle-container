@@ -117,9 +117,11 @@ void   _mulle_assoc_remap_intptr_key_range( struct mulle_assoc *assoc,
 
    assert( assoc->callback->keycallback.is_equal == mulle_container_keycallback_intptr_is_equal);
 
-   // shabby hack to determin if these are integer callbacks
+   // shabby hack to determine if these are integer callbacks
    if( ! range.length)
       return;
+
+   range = mulle_range_validate_against_length( range, _mulle_assoc_get_count( assoc));
 
    // need stable start end points, so sort if unsorted
    mulle_assoc_qsort_if_needed( assoc);

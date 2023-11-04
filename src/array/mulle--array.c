@@ -60,15 +60,6 @@ static inline void
 
 #pragma mark - creation and destruction
 
-struct mulle__array   *mulle__array_create( struct mulle_allocator *allocator)
-{
-   struct mulle__array  *array;
-
-   array = mulle_allocator_malloc( allocator, sizeof( struct mulle__array));
-   _mulle__array_init( array, 0, allocator);
-   return( array);
-}
-
 void   _mulle__array_done( struct mulle__array *array,
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator)
@@ -213,6 +204,8 @@ int    _mulle__array_is_equal( struct mulle__array *array,
    {
       if( ! (callback->is_equal)( callback, *p, *q))
          return( 0);
+      p++;
+      q++;
    }
 
    return( 1);
@@ -225,9 +218,7 @@ void    _mulle__array_add( struct mulle__array *array,
                            struct mulle_allocator *allocator)
 {
    assert( callback);
-
-   if( p == callback->notakey)
-      abort();                    // what else ?
+   assert( p != callback->notakey);
 
    p = (*callback->retain)( callback, p, allocator);
    _mulle__pointerarray_add( (struct mulle__pointerarray *)  array,
@@ -244,6 +235,7 @@ void    _mulle__array_set( struct mulle__array *array,
 {
    void   *old;
 
+   assert( callback);
    assert( p != callback->notakey);
 
    p = (*callback->retain)( callback, p, allocator);
@@ -255,19 +247,18 @@ void    _mulle__array_set( struct mulle__array *array,
 
 
 
-void   mulle__array_add_array( struct mulle__array *array,
-                               struct mulle__array *other,
-                               struct mulle_range range,
-                               struct mulle_container_keycallback *callback,
-                               struct mulle_allocator *allocator)
+void   _mulle__array_add_array( struct mulle__array *array,
+                                struct mulle__array *other,
+                                struct mulle_range range,
+                                struct mulle_container_keycallback *callback,
+                                struct mulle_allocator *allocator)
 {
    unsigned int   count;
    void     **q;
    void     **sentinel;
 
    assert( callback);
-   if( ! array || ! callback)
-      return;
+   assert( array);
 
    count = mulle__array_get_count( other);
    range = mulle_range_validate_against_length( range, count);
@@ -316,33 +307,33 @@ void _mulle__array_copy_items( struct mulle__array *dst,
 }
 
 
-
+// we don't have mulle-buffer here
 // use this only for debugging
-char   *_mulle__array_describe( struct mulle__array *set,
+char   *_mulle__array_describe( struct mulle__array *array,
                                 struct mulle_container_keycallback *callback,
                                 struct mulle_allocator *allocator)
 {
-   char                            *result;
-   char                            *key;
-   int                             separate;
-   size_t                          len;
-   size_t                          key_len;
-   struct mulle__arrayenumerator   rover;
-   void                            *item;
-   struct mulle_allocator          *key_allocator;
+   char                     *result;
+   char                     *key;
+   int                      separate;
+   size_t                   len;
+   size_t                   key_len;
+   void                     *item;
+   struct mulle_allocator   *key_allocator;
 
    result = NULL;
    len    = 0;
-   rover = mulle__array_enumerate( set, callback);
-   while( _mulle__arrayenumerator_next( &rover, &item))
+   mulle__array_for( array, callback, item)
    {
       key_allocator  = allocator ? allocator : &mulle_default_allocator;
 
+      // key_allocator will be overwritten if returned key needs to be
+      // freed
       key        = (*callback->describe)( callback, item, &key_allocator);
       key_len    = strlen( key);
       separate   = result != NULL;
 
-      result = mulle_allocator_realloc( allocator, result, len + (separate * 2) + key_len + 1);
+      result     = mulle_allocator_realloc( allocator, result, len + (separate * 2) + key_len + 1);
 
       if( separate)
       {
@@ -356,7 +347,6 @@ char   *_mulle__array_describe( struct mulle__array *set,
       if( allocator)
          mulle_allocator_free( key_allocator, key);
    }
-   mulle__arrayenumerator_done( &rover);
 
    if( ! result)
       return( mulle_allocator_strdup( allocator, "*empty*"));
@@ -370,20 +360,17 @@ int   mulle__array_member( struct mulle__array *array,
                            void *p,
                            struct mulle_container_keycallback *callback)
 {
-   struct mulle__arrayenumerator   rover;
-   void                            *q;
-   int                             rval;
+   void   *q;
+   int    rval;
 
    rval  = 0;
-   rover = mulle__array_enumerate( array, callback);
+   mulle__array_for( array, callback, q)
    {
-      while( _mulle__arrayenumerator_next( &rover, &q))
-         if( callback->is_equal( callback, q, p))
-         {
-            rval = 1;
-            break;
-         }
+      if( callback->is_equal( callback, q, p))
+      {
+         rval = 1;
+         break;
+      }
    }
-   mulle__arrayenumerator_done( &rover);
    return( rval);
 }

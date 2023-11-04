@@ -230,7 +230,6 @@ void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
 { 
    struct mulle__pointerqueuebucket  *p;
 
-
    // transfer buffer over to spares if possible
    while( queue->_spare_allowance)
    {

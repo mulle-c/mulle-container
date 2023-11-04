@@ -394,16 +394,16 @@ static inline void
 
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
-static inline int
+static inline void
    _mulle__map_copy_items( struct mulle__map *dst,
                            struct mulle__map *src,
                            struct mulle_container_keyvaluecallback *callback,
                            struct mulle_allocator *allocator)
 {
-   return( _mulle__pointermap_copy_items_generic( (struct mulle__pointermap *) dst,
-                                                  (struct mulle__pointermap *) src,
-                                                  callback,
-                                                  allocator));
+   _mulle__pointermap_copy_items_generic( (struct mulle__pointermap *) dst,
+                                          (struct mulle__pointermap *) src,
+                                          callback,
+                                          allocator);
 }
 
 
@@ -451,13 +451,12 @@ static inline void
 //
 
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_FIFTH
-void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
-                                            void *firstvalue,
-                                            void *firstkey,
-                                            va_list args,
-                                            struct mulle_container_keyvaluecallback *callback,
-                                            struct mulle_allocator *allocator);
+MULLE_C_NONNULL_FIRST_FOURTH
+void   _mulle__map_insert_key_valuesv( struct mulle__map *map,
+                                       void *firstkey,
+                                       va_list args,
+                                       struct mulle_container_keyvaluecallback *callback,
+                                       struct mulle_allocator *allocator);
 
 
 # pragma mark - copy

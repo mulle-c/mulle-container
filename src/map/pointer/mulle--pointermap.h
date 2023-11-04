@@ -82,9 +82,9 @@ static inline void   mulle__pointermap_set( struct mulle__pointermap *map,
 
 MULLE_C_NONNULL_FIRST_SECOND
 static inline
-void    *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
-                                         struct mulle_pointerpair *pair,
-                                         struct mulle_allocator *allocator)
+void   *_mulle__pointermap_insert_pair( struct mulle__pointermap *map,
+                                        struct mulle_pointerpair *pair,
+                                        struct mulle_allocator *allocator)
 {
    return( _mulle__pointermap_insert_pair_generic( map,
                                                    pair,
