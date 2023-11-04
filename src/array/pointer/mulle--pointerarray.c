@@ -47,7 +47,7 @@ static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
 
    used     = _mulle__pointerarray_get_count( array);
    new_size = mulle_pow2round( new_size);
-   if( new_size == 0)
+   if( new_size < 4)
       new_size = 4;
 
    if( array->_storage == array->_initial_storage)
@@ -83,8 +83,8 @@ void **   _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
    unsigned int   _size;
    unsigned int   _used;
 
-   _size      = _mulle__pointerarray_get_size( array);
-   _used      = _mulle__pointerarray_get_count( array);
+   _size     = _mulle__pointerarray_get_size( array);
+   _used     = _mulle__pointerarray_get_count( array);
    available = _size - _used;
    if( available < length)
       _mulle__pointerarray_realloc( array,
@@ -179,12 +179,12 @@ struct mulle_pointers
 {
    struct mulle_pointers   data;
 
-   data.pointers = buffer->_storage;
-   data.count    = _mulle__pointerarray_get_count( buffer);
+   data = mulle_pointers_make( buffer->_storage,
+                               _mulle__pointerarray_get_count( buffer));
 
    if( data.pointers && data.pointers == buffer->_initial_storage)
    {
-      data.pointers = _mulle_allocator_malloc( allocator, data.count * sizeof( void *));
+      data.pointers = mulle_allocator_malloc( allocator, data.count * sizeof( void *));
       memcpy( data.pointers, buffer->_storage, data.count * sizeof( void *));
 
       buffer->_curr    =
@@ -203,19 +203,20 @@ struct mulle_pointers
 
 
 
-void  _mulle__pointerarray_absorb( struct mulle__pointerarray *array,
-                                   struct mulle_allocator *allocator,
-                                   struct mulle__pointerarray *victim,
-                                   struct mulle_allocator *victim_allocator)
+void  _mulle__pointerarray_absorb_array( struct mulle__pointerarray *array,
+                                         struct mulle_allocator *allocator,
+                                         struct mulle__pointerarray *victim,
+                                         struct mulle_allocator *victim_allocator)
 {
    void           **reserved;
    unsigned int   n;
+
+   assert( array != victim);
 
    if( ! allocator)
       allocator = &mulle_default_allocator;
    if( ! victim_allocator)
       victim_allocator = &mulle_default_allocator;
-
    if( ! array->_storage && allocator == victim_allocator)
    {
       array->_initial_storage = NULL;

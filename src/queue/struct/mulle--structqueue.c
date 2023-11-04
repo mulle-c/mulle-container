@@ -236,7 +236,7 @@ static inline int
    offset = queue->_read_index * queue->_sizeof_struct;
    if( dst)
    {
-      memcpy( dst, &queue->_read->_storage[ offset], queue->_sizeof_struct);
+      memcpy( dst, &queue->_read->_storage[ offset], queue->_copy_sizeof_struct);
    }
    queue->_read_index++;
 

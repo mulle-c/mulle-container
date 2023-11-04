@@ -166,14 +166,21 @@ static inline void   mulle_set_remove( struct mulle_set *set, void *p)
 
 
 
+MULLE_C_NONNULL_FIRST
+static inline void   *_mulle_set_insert( struct mulle_set *set, void *p)
+{
+   return( _mulle__set_insert( (struct mulle__set *) set, p, set->callback, set->allocator));
+}
+
 static inline void   *mulle_set_insert( struct mulle_set *set, void *p)
 {
    if( ! set)
       return( NULL);
-   return( _mulle__set_insert( (struct mulle__set *) set, p, set->callback, set->allocator));
+   return( _mulle_set_insert( set, p));
 }
 
 
+MULLE_C_NONNULL_FIRST
 static inline void   _mulle_set_set( struct mulle_set *set, void *p)
 {
    _mulle__set_set( (struct mulle__set *) set, p, set->callback, set->allocator);
@@ -187,17 +194,17 @@ static inline void   mulle_set_set( struct mulle_set *set, void *p)
 }
 
 
+
 #pragma mark - copy
 
 
-static inline int   mulle_set_copy_items( struct mulle_set *dst, struct mulle_set *src)
+static inline void   mulle_set_copy_items( struct mulle_set *dst, struct mulle_set *src)
 {
    if( dst)
-      return( _mulle__set_copy_items( (struct mulle__set *) dst,
-                                     (struct mulle__set *) src,
-                                      dst->callback,
-                                      dst->allocator));
-   return( -1);
+      _mulle__set_copy_items( (struct mulle__set *) dst,
+                              (struct mulle__set *) src,
+                              dst->callback,
+                              dst->allocator);
 }
 
 
@@ -225,9 +232,7 @@ void   mulle_set_add_set( struct mulle_set *set, struct mulle_set *other);
 #pragma mark - debugging
 
 // in C, expect a strdup()ed string, in ObjC an autorelease NSString *
-static inline void   *mulle_set_describe( struct mulle_set *set,
-                                          struct mulle_container_keycallback *callback,
-                                          struct mulle_allocator *allocator)
+static inline void   *mulle_set_describe( struct mulle_set *set)
 {
    if( ! set)
       return( NULL);

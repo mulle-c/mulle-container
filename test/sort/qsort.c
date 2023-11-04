@@ -59,6 +59,42 @@ static void  unsorted()
 
 
 
+int   int_compare( void *_a, void *_b, void *thunk)
+{
+   int  *a = _a;
+   int  *b = _b;
+
+   return( *a - *b);
+}
+
+
+static void  large()
+{
+   int   *tmp;
+   int   prev;
+   unsigned int  i;
+   unsigned int  n;
+
+   n = 100000;
+   tmp = mulle_calloc( n, sizeof( int));
+   for( i = 0; i < n; i++)
+      tmp[ i] = rand();
+
+   mulle_qsort_r( tmp, n, sizeof( int), int_compare, NULL);
+
+   prev = tmp[ 0];
+   for( i = 1; i < n; i++)
+   {
+      if( tmp[ i] < prev)
+         printf( "fail");
+      prev = tmp[ i];
+   }
+
+   mulle_free( tmp);
+}
+
+
+
 // the mulle_testallocator detects and aborts on leaks
 static void  run_test( void (*f)( void), char *name)
 {
@@ -75,5 +111,6 @@ int main(int argc, const char * argv[])
    run_test( empty, "empty");
    run_test( sorted, "sorted");
    run_test( unsorted, "unsorted");
+   run_test( large, "large");
    return( 0);
 }

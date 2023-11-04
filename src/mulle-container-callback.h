@@ -70,6 +70,12 @@ typedef void
    mulle_container_keycallback_release_t( struct mulle_container_keycallback *callback,
                                           void *p,
                                           struct mulle_allocator *allocator);
+
+//
+// If the returned value is a static string, p_allocator will be NULL.
+// Otherwise the value will have been allocated with *p_allocator. It is an
+// error to pass NULL as p_allocator or to have p_allocator point to NULL
+//
 typedef char *
    mulle_container_keycallback_describe_t( struct mulle_container_keycallback *callback,
                                            void *p,
@@ -131,7 +137,7 @@ static inline void
 }
 
 MULLE__CONTAINER_GLOBAL
-int         mulle_container_keycallback_intptr_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
+int         mulle_container_keycallback_intptr_is_equal( struct mulle_container_keycallback *callback, void *a, void *b);
 
 MULLE__CONTAINER_GLOBAL
 uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);

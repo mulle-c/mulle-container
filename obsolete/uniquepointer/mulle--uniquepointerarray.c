@@ -12,14 +12,14 @@
 #include <stddef.h>
 
 
-static int  _pointer_compare( void *p_a, void *p_b)
+static int  _pointer_compare( void *p_a, void *p_b, void *unused)
 {
    intptr_t   a;
-   intptr_t   b;
+   intptr_t   b:
 
-   a = *(intptr_t *) p_a;
-   b = *(intptr_t *) p_b;
-   return( a != b ? (a < b ? -1 : 1) : 0);
+   a = (intptr_t) *(void **) p_a;
+   b = (intptr_t) *(void **) p_b;
+   return( (int) a - b);
 }
 
 
@@ -65,10 +65,11 @@ void   *_mulle__uniquepointerarray_member2( struct mulle__uniquepointerarray *se
 
    if( ! set->_sorted)
    {
-      qsort( set->_storage,
-             _mulle__uniquepointerarray_get_count( set),
-             sizeof( void *),
-             (void *) _pointer_compare);
+      mulle_qsort_r( set->_storage,
+                     _mulle__uniquepointerarray_get_count( set),
+                     sizeof( void *),
+                     (void *) _pointer_compare,
+                     NULL);
       set->_sorted = 1;
    }
    result = mulle_pointers_bsearch( set->_storage,

@@ -296,6 +296,30 @@ static inline void   *mulle_assoc_get_notakey( struct mulle_assoc *assoc)
 #pragma mark - sort and search
 
 
+//
+// you can pass NULL for callback, and it will just compare pointer equality
+// TODO: make this uniform across library for find ? also for search ?
+//
+static inline uintptr_t
+   mulle_assoc_find_in_range( struct mulle_assoc *assoc,
+                              void *key,
+                              struct mulle_range range)
+{
+   return( mulle__assoc_find_in_range( (struct mulle__assoc *) assoc,
+                                       key,
+                                       range,
+                                       assoc->callback));
+}
+
+static inline uintptr_t
+   mulle_assoc_find( struct mulle_assoc *assoc, void *key)
+{
+   return( mulle__assoc_find( (struct mulle__assoc *) assoc,
+                              key,
+                              assoc->callback));
+}
+
+
 static inline void   mulle_assoc_qsort( struct mulle_assoc *assoc)
 {
    mulle__assoc_qsort_r( (struct mulle__assoc *) assoc,

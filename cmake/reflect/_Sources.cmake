@@ -17,8 +17,6 @@ src/array/pointer/mulle--pointerarray.c
 src/array/pointer/mulle-pointerarray.c
 src/array/struct/mulle--structarray.c
 src/array/struct/mulle-structarray.c
-src/array/uniquepointer/mulle--uniquepointerarray.c
-src/array/uniquepointer/mulle-uniquepointerarray.c
 src/assoc/mulle--assoc.c
 src/assoc/mulle-assoc.c
 src/assoc/pointerpair/mulle--pointerpairarray.c
@@ -37,6 +35,7 @@ src/queue/struct/mulle-structqueue.c
 src/rangeset/mulle--rangeset.c
 src/set/mulle--set.c
 src/set/mulle-set.c
+src/set/pointer/mulle-pointerset.c
 src/set/pointer/mulle--pointerset-generic.c
 src/set/pointer/mulle--pointerset-struct.c
 )

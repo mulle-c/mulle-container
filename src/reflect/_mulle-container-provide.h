@@ -20,8 +20,6 @@
 #include "mulle-pointerarray.h"
 #include "mulle--structarray.h"
 #include "mulle-structarray.h"
-#include "mulle--uniquepointerarray.h"
-#include "mulle-uniquepointerarray.h"
 #include "mulle--assoc.h"
 #include "mulle-assoc.h"
 #include "mulle--pointerpairarray.h"
@@ -47,6 +45,7 @@
 #include "mulle-set.h"
 #include "mulle--pointerset-generic.h"
 #include "mulle--pointerset.h"
+#include "mulle-pointerset.h"
 #include "mulle--pointerset-struct.h"
 
 

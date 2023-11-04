@@ -148,24 +148,24 @@ static inline void   mulle_pointerarray_destroy( struct mulle_pointerarray *arra
 }
 
 
-static inline void  _mulle_pointerarray_absorb( struct mulle_pointerarray *array,
-                                                struct mulle_pointerarray *victim)
+static inline void  _mulle_pointerarray_absorb_array( struct mulle_pointerarray *array,
+                                                     struct mulle_pointerarray *victim)
 {
-   _mulle__pointerarray_absorb( (struct mulle__pointerarray *) array,
-                                array->allocator,
-                                (struct mulle__pointerarray *) victim,
-                                victim->allocator);
+   _mulle__pointerarray_absorb_array( (struct mulle__pointerarray *) array,
+                                      array->allocator,
+                                      (struct mulle__pointerarray *) victim,
+                                      victim->allocator);
 }
 
 
 // the victim is empty afterwards, owner ship of contents has transferred to
 // array...
 
-static inline void   mulle_pointerarray_absorb( struct mulle_pointerarray *array,
-                                                struct mulle_pointerarray *victim)
+static inline void   mulle_pointerarray_absorb_array( struct mulle_pointerarray *array,
+                                                      struct mulle_pointerarray *victim)
 {
    if( array && victim)
-      _mulle_pointerarray_absorb( array, victim);
+      _mulle_pointerarray_absorb_array( array, victim);
 }
 
 
@@ -510,6 +510,29 @@ static inline void
    if( array)
       _mulle_pointerarray_qsort_r_inline( array, compare, userinfo);
 }
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_pointerarray_qsort_r( struct mulle_pointerarray *array,
+                                mulle_pointerarray_cmp_t *compare,
+                                void *userinfo)
+{
+   _mulle__pointerarray_qsort_r( (struct mulle__pointerarray *) array,
+                                 compare,
+                                 userinfo);
+}
+
+
+static inline void
+   mulle_pointerarray_qsort_r( struct mulle_pointerarray *array,
+                               mulle_pointerarray_cmp_t *compare,
+                               void *userinfo)
+{
+   if( array)
+      _mulle_pointerarray_qsort_r( array, compare, userinfo);
+}
+
 
 
 

@@ -69,15 +69,8 @@ static void   map_null( void)
 
 static void  simple( void)
 {
-   struct mulle_map              *map;
-   struct mulle_mapenumerator    rover;
-   void                          *key;
-   void                          *value;
-   int                           rval;
-   int                           i;
-   int                           state;
-   struct mulle_container_keyvaluecallback      callback;
-   char                          onstack[] = { 'V', 'f', 'L', 0 };
+   struct mulle_container_keyvaluecallback   callback;
+   char                                      onstack[] = { 'V', 'f', 'L', 0 };
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
@@ -94,8 +87,28 @@ static void  simple( void)
       mulle_map_set( map, "VfL", "BOCHUM");
       assert( ! strcmp( "BOCHUM", mulle_map_get( map, "VfL")));
 
+      // should remove
       mulle_map_remove( map, onstack);
       assert( ! mulle_map_get( map, "VfL"));
+   }
+}
+
+
+static void  insert_argv( void)
+{
+   struct mulle_container_keyvaluecallback      callback;
+
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+
+   mulle_map_do( map, &callback)
+   {
+      mulle_map_insert_key_values( map, "city", "Bochum",
+                                        "animal", "Beetle",
+                                         NULL);
+      assert( ! mulle_map_get( map, "Bochum"));
+      assert( ! strcmp( "Bochum", mulle_map_get( map, "city")));
+      assert( ! strcmp( "Beetle", mulle_map_get( map, "animal")));
    }
 }
 
@@ -161,6 +174,7 @@ static void   map_add_map( void)
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
+
    map = mulle_map_create( 0, &callback, NULL);
 
    mulle_map_set( map, "VfL", "VFL");
@@ -176,6 +190,12 @@ static void   map_add_map( void)
    assert( mulle_map_get_count( map) == 4);
    assert( mulle_map_get_count( add) == 2);
 
+   mulle_map_add_map( map, NULL);
+   assert( mulle_map_get_count( map) == 4);
+
+   mulle_map_add_map( map, map);
+   assert( mulle_map_get_count( map) == 4);
+
    mulle_map_destroy( map);
    mulle_map_destroy( add);
 }
@@ -185,6 +205,7 @@ static void   map_copy( void)
 {
    struct mulle_map                          *map;
    struct mulle_map                          *copy;
+   struct mulle__map                         *copy2;
    struct mulle_container_keyvaluecallback   callback;
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
@@ -199,9 +220,17 @@ static void   map_copy( void)
    copy = mulle_map_copy( map);
 
    assert( mulle_map_get_count( copy) == 3);
+   mulle_map_destroy( copy);
+
+   copy2 = _mulle__map_copy( (struct mulle__map *) map,
+                             &callback,
+                             NULL);
+   assert( _mulle__map_get_count( copy2) == 3);
+   _mulle__map_destroy( copy2,
+                        &callback,
+                        NULL);
 
    mulle_map_destroy( map);
-   mulle_map_destroy( copy);
 }
 
 
@@ -272,6 +301,31 @@ static void  enumerate( void)
 }
 
 
+static void   describe( void)
+{
+   char   *s;
+   struct mulle_container_keyvaluecallback   callback;
+
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+
+   mulle_map_do( map, &callback)
+   {
+      s = mulle_map_describe( map);
+      printf( "%s\n", s);
+      mulle_free( s);
+
+      mulle_map_set( map, "Club", "VfL Bochum 1848");
+      mulle_map_set( map, "Car", "VW Beetle");
+
+      s = mulle_map_describe( map);
+      printf( "%s\n", s);
+      mulle_free( s);
+   }
+}
+
+
+
 // the mulle_testallocator detects and aborts on leaks
 static void   run_test( void (*f)( void), char *name)
 {
@@ -289,11 +343,13 @@ int   main( int argc, char * argv[])
    run_test( map_null, "map_null");
    run_test( create, "create");
    run_test( simple, "simple");
+   run_test( insert_argv, "insert_argv");
    run_test( enumerate, "enumerate");
    run_test( map_reset, "reset");
    run_test( map_remove, "remove");
    run_test( map_copy, "copy");
    run_test( map_add_map, "add_map");
+   run_test( describe, "describe");
 
    return( 0);
 }

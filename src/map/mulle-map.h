@@ -247,51 +247,36 @@ static inline void   mulle_map_shrink_if_needed( struct mulle_map *map)
 
 MULLE_C_NONNULL_FIRST
 static inline void
-   _mulle_map_insert_values_for_keysv( struct mulle_map *map,
-                                       void *firstvalue,
-                                       void *firstkey,
-                                       va_list args)
+   _mulle_map_insert_key_valuesv( struct mulle_map *map,
+                                  void *firstkey,
+                                  va_list args)
 {
-   _mulle__map_insert_values_for_keysv( (struct mulle__map *) map,
-                                        firstvalue,
-                                        firstkey,
-                                        args,
-                                        map->callback,
-                                        map->allocator);
+   _mulle__map_insert_key_valuesv( (struct mulle__map *) map,
+                                   firstkey,
+                                   args,
+                                   map->callback,
+                                   map->allocator);
 }
 
 
 static inline void
-   mulle_map_insert_values_for_keysv( struct mulle_map *map,
-                                      void *firstvalue,
-                                      void *firstkey,
-                                      va_list args)
+   mulle_map_insert_key_valuesv( struct mulle_map *map,
+                                 void *firstkey,
+                                 va_list args)
 {
    if( map)
-      _mulle__map_insert_values_for_keysv( (struct mulle__map *) map,
-                                           firstvalue,
-                                           firstkey,
-                                           args,
-                                           map->callback,
-                                           map->allocator);
+      _mulle_map_insert_key_valuesv( map, firstkey, args);
 }
 
 
 static inline void
-   mulle_map_insert_values_for_keys( struct mulle_map *map,
-                                     void *firstvalue,
-                                     void *firstkey, ...)
+   mulle_map_insert_key_values( struct mulle_map *map,
+                                void *firstkey, ...)
 {
    va_list   args;
 
    va_start( args, firstkey);
-   if( map)
-      _mulle__map_insert_values_for_keysv( (struct mulle__map *) map,
-                                           firstvalue,
-                                           firstkey,
-                                           args,
-                                           map->callback,
-                                           map->allocator);
+   mulle_map_insert_key_valuesv( map, firstkey, args);
    va_end( args);
 }
 
@@ -339,17 +324,17 @@ static inline void   *
 #pragma mark - copy
 
 MULLE_C_NONNULL_FIRST_SECOND
-static inline  int
+static inline  void
    _mulle_map_copy_items( struct mulle_map *dst,
                           struct mulle_map *src,
                           struct mulle_allocator *allocator)
 {
    assert( dst->callback == src->callback);
 
-   return( _mulle__map_copy_items( (struct mulle__map *) dst,
-                                   (struct mulle__map *) src,
-                                   dst->callback,
-                                   allocator));
+   _mulle__map_copy_items( (struct mulle__map *) dst,
+                           (struct mulle__map *) src,
+                           dst->callback,
+                           allocator);
 }
 
 
@@ -376,9 +361,7 @@ void   mulle_map_add_map( struct mulle_map *map, struct mulle_map *other);
 #pragma mark - debugging
 
 static inline char *
-   _mulle_map_describe( struct mulle_map *map,
-                        struct mulle_container_keyvaluecallback *callback,
-                        struct mulle_allocator *allocator)
+   _mulle_map_describe( struct mulle_map *map)
 {
    return( _mulle__map_describe( (struct mulle__map *) map,
                                   map->callback,
@@ -387,13 +370,10 @@ static inline char *
 
 
 static inline char *
-   mulle_map_describe( struct mulle_map *map,
-                       struct mulle_container_keyvaluecallback *callback,
-                       struct mulle_allocator *allocator)
+   mulle_map_describe( struct mulle_map *map)
 {
-   return( mulle__map_describe( (struct mulle__map *) map,
-                                 map->callback,
-                                 map->allocator));
+   if( map)
+      return( _mulle_map_describe( map));
 }
 
 

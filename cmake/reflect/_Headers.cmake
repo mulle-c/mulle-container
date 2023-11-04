@@ -15,7 +15,6 @@ src
 src/array
 src/array/pointer
 src/array/struct
-src/array/uniquepointer
 src/assoc
 src/assoc/pointerpair
 src/generic
@@ -70,8 +69,6 @@ src/array/pointer/mulle--pointerarray.h
 src/array/pointer/mulle-pointerarray.h
 src/array/struct/mulle--structarray.h
 src/array/struct/mulle-structarray.h
-src/array/uniquepointer/mulle--uniquepointerarray.h
-src/array/uniquepointer/mulle-uniquepointerarray.h
 src/assoc/mulle--assoc.h
 src/assoc/mulle-assoc.h
 src/assoc/pointerpair/mulle--pointerpairarray.h
@@ -98,6 +95,7 @@ src/set/mulle--set.h
 src/set/mulle-set.h
 src/set/pointer/mulle--pointerset-generic.h
 src/set/pointer/mulle--pointerset.h
+src/set/pointer/mulle-pointerset.h
 src/set/pointer/mulle--pointerset-struct.h
 )
 

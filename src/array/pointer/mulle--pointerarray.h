@@ -49,6 +49,22 @@ struct mulle_pointers
 };
 
 
+static inline struct mulle_pointers   mulle_pointers_make( void **pointers,
+                                                           unsigned int count)
+{
+   return( (struct mulle_pointers) { .pointers = pointers, .count = count });
+}
+
+
+// just frees the struct, does not free individual pointers
+// is done the right verb ?
+static inline void   mulle_pointers_done( struct mulle_pointers p,
+                                          struct mulle_allocator *allocator)
+{
+   mulle_allocator_free( allocator, p.pointers);
+}
+
+
 //
 // mulle__pointerarray is a growing array of pointers, it just reallocs.
 // You can remove the last item via "pop", but there is no random access
@@ -172,19 +188,19 @@ static inline void  mulle__pointerarray_destroy( struct mulle__pointerarray *arr
 // of array.
 // TODO: rename to eviscarate ?
 //
-void   _mulle__pointerarray_absorb( struct mulle__pointerarray *array,
+void   _mulle__pointerarray_absorb_array( struct mulle__pointerarray *array,
                                     struct mulle_allocator *allocator,
                                     struct mulle__pointerarray *victim,
                                     struct mulle_allocator *victim_allocator);
 
 
-static inline void   mulle__pointerarray_absorb( struct mulle__pointerarray *array,
+static inline void   mulle__pointerarray_absorb_array( struct mulle__pointerarray *array,
                                                  struct mulle_allocator *allocator,
                                                  struct mulle__pointerarray *victim,
                                                  struct mulle_allocator *victim_allocator)
 {
    if( array && victim)
-      _mulle__pointerarray_absorb( array, allocator, victim, victim_allocator);
+      _mulle__pointerarray_absorb_array( array, allocator, victim, victim_allocator);
 }
 
 
@@ -562,6 +578,30 @@ static inline void
 {
    if( array)
       _mulle__pointerarray_qsort_r_inline( array, compare, userinfo);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle__pointerarray_qsort_r( struct mulle__pointerarray *array,
+                                 mulle_pointerarray_cmp_t *compare,
+                                 void *userinfo)
+{
+   mulle_qsort_r( array->_storage,
+                  _mulle__pointerarray_get_count( array),
+                  sizeof( void *),
+                  (mulle_qsort_cmp_t *) compare,
+                  userinfo);
+}
+
+
+static inline void
+   mulle__pointerarray_qsort_r( struct mulle__pointerarray *array,
+                                       mulle_pointerarray_cmp_t *compare,
+                                       void *userinfo)
+{
+   if( array)
+      _mulle__pointerarray_qsort_r( array, compare, userinfo);
 }
 
 
@@ -947,22 +987,22 @@ static inline int   mulle__pointerarray_member( struct mulle__pointerarray *arra
            name ## __j < 1;                                        \
            name ## __j++)
 
-#define mulle__pointerarray_do_flexible( name, stackcount)             \
-   void   *name ## __storage[ stackcount];                             \
-   for( struct mulle__pointerarray                                     \
-           name ## __container =                                       \
+#define mulle__pointerarray_do_flexible( name, stackcount)              \
+   void   *name ## __storage[ stackcount];                              \
+   for( struct mulle__pointerarray                                      \
+           name ## __container =                                        \
               MULLE__POINTERARRAY_INIT( name ## __storage, stackcount), \
-           *name = &name ## __container,                               \
-           *name ## __i = NULL;                                        \
-        ! name ## __i;                                                 \
-        name ## __i =                                                  \
-        (                                                              \
-           _mulle__pointerarray_done( &name ## __container, NULL),     \
-           (void *) 0x1                                                \
-        )                                                              \
-      )                                                                \
-      for( int  name ## __j = 0;    /* break protection */             \
-           name ## __j < 1;                                            \
+           *name = &name ## __container,                                \
+           *name ## __i = NULL;                                         \
+        ! name ## __i;                                                  \
+        name ## __i =                                                   \
+        (                                                               \
+           _mulle__pointerarray_done( &name ## __container, NULL),      \
+           (void *) 0x1                                                 \
+        )                                                               \
+      )                                                                 \
+      for( int  name ## __j = 0;    /* break protection */              \
+           name ## __j < 1;                                             \
            name ## __j++)
 
 

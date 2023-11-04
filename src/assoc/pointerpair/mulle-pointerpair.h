@@ -110,6 +110,11 @@ void  mulle_pointerpair_release( struct mulle_pointerpair pair,
 }
 
 
+//
+// a < b  -1  descending
+// a = b  0   equal
+// a > 0  1    ascending
+//
 typedef int    mulle_pointerpair_compare_t( struct mulle_pointerpair *,
                                             struct mulle_pointerpair *,
                                             void *);
@@ -124,10 +129,23 @@ static inline int   _mulle_pointerpair_compare_pointer_key( struct mulle_pointer
                                                             struct mulle_pointerpair *b,
                                                             void *userinfo)
 {
-   if( (char *) a->key < (char *) b->key)
-      return( -1);
-   return( a->key != b->key);
+   char   *s_a = a->key;
+   char   *s_b = b->key;
+
+   return( (int) (s_a - s_b));
 }
+
+
+static inline int   _mulle_pointerpair_compare_intptr_key( struct mulle_pointerpair *a,
+                                                           struct mulle_pointerpair *b,
+                                                           void *userinfo)
+{
+   intptr_t  v_a = (intptr_t) a->key;
+   intptr_t  v_b = (intptr_t) b->key;
+
+   return( (int) (v_a - v_b));
+}
+
 
 
 static inline int   _mulle_pointerpair_compare_string_key( struct mulle_pointerpair *a,
@@ -137,7 +155,7 @@ static inline int   _mulle_pointerpair_compare_string_key( struct mulle_pointerp
    char  *a_s = a->key;
    char  *b_s = b->key;
 
-   while (*a_s)
+   while( *a_s)
    {
       if (*a_s != *b_s)
          break;

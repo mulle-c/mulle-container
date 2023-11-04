@@ -540,25 +540,18 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
 }
 
 
-int   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
+void  _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
                                              struct mulle__pointerset *src,
                                              struct mulle_container_keycallback *callback,
                                              struct mulle_allocator *allocator)
 {
    struct mulle__genericpointersetenumerator  rover;
-   void                                        *item;
-   int                                         rval;
+   void                                       *item;
 
-   rval  = 0;
    rover = _mulle__pointerset_enumerate_generic( src, callback);
    while( _mulle__genericpointersetenumerator_next( &rover, &item))
    {
-      if( _mulle__pointerset_insert_generic( dst, item, callback, allocator))
-      {
-         rval = -1;
-         break;
-      }
+      _mulle__pointerset_set_generic( dst, item, callback, allocator);
    }
    mulle__genericpointersetenumerator_done( &rover);
-   return( rval);
 }

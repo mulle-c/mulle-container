@@ -183,11 +183,11 @@ static void   set_remove( void)
 }
 
 
-
 static void   set_copy( void)
 {
    struct mulle_set                          *set;
    struct mulle_set                          *copy;
+   struct mulle__set                         *copy2;
    struct mulle_container_keyvaluecallback   callback;
 
    set = mulle_set_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
@@ -197,11 +197,63 @@ static void   set_copy( void)
    mulle_set_set( set, "1848");
 
    copy = mulle_set_copy( set);
-
    assert( mulle_set_get_count( copy) == 3);
+   mulle_set_destroy( copy);
+
+   copy2 = _mulle__set_copy( (struct mulle__set *) set,
+                             &mulle_container_keycallback_copied_cstring,
+                             NULL);
+   assert( _mulle__set_get_count( copy2) == 3);
+   _mulle__set_destroy( copy2,
+                        &mulle_container_keycallback_copied_cstring,
+                        NULL);
 
    mulle_set_destroy( set);
-   mulle_set_destroy( copy);
+}
+
+
+static void   describe( void)
+{
+   char   *s;
+
+   mulle_set_do( set, &mulle_container_keycallback_copied_cstring)
+   {
+      s = mulle_set_describe( set);
+      printf( "%s\n", s);
+      mulle_free( s);
+
+      mulle_set_insert( set, "VfL");
+      mulle_set_insert( set, "Bochum");
+      s = mulle_set_describe( set);
+      printf( "%s\n", s);
+      mulle_free( s);
+   }
+}
+
+
+static void   set_add( void)
+{
+   struct mulle_set   *set;
+   struct mulle_set   *other;
+
+   set = mulle_set_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
+
+   mulle_set_set( set, "VfL");
+
+   other = mulle_set_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
+
+   mulle_set_set( other, "Bochum");
+   mulle_set_set( other, "1848");
+
+   mulle_set_add_set( set, NULL);
+   mulle_set_add_set( set, set);
+
+   assert( mulle_set_get_count( set) == 1);
+   mulle_set_add_set( set, other);
+   assert( mulle_set_get_count( set) == 3);
+
+   mulle_set_destroy( other);
+   mulle_set_destroy( set);
 }
 
 
@@ -228,6 +280,8 @@ int main(int argc, const char * argv[])
    run_test( set_reset, "reset");
    run_test( set_remove, "remove");
    run_test( set_copy, "copy");
+   run_test( describe, "describe");
+   run_test( set_add, "set_add");
 
    return( 0);
 }

@@ -1,3 +1,4 @@
+#define NO_MULLE_THREAD_UNPLEASANT_RACE_YIELD
 //
 //  main.c
 //  test-set

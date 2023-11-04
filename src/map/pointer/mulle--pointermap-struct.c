@@ -207,27 +207,6 @@ void   _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
 }
 
 
-void   _mulle__pointermap_insert_values_for_keysv( struct mulle__pointermap *map,
-                                                  void *firstvalue,
-                                                  void *firstkey,
-                                                  va_list args,
-                                                  struct mulle_allocator *allocator)
-{
-   struct mulle_pointerpair   pair;
-
-   pair.value = firstvalue;
-   pair.key   = firstkey;
-
-   while( pair.key != mulle__pointermap_keyvaluecallback.keycallback.notakey)
-   {
-      _mulle__pointermap_insert_pair_generic( map, &pair, &mulle__pointermap_keyvaluecallback, allocator);
-
-      pair.value = va_arg( args, void *);
-      pair.key   = va_arg( args, void *);
-   }
-}
-
-
 #pragma mark - copying
 
 struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *map,
@@ -236,79 +215,10 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *m
    struct mulle__pointermap   *other;
 
    other = mulle__pointermap_create( _mulle__pointermap_get_count( map), 0, allocator);
-   if( _mulle__pointermap_copy_items_generic( other,
-                                              map,
-                                              &mulle__pointermap_keyvaluecallback,
-                                              allocator))
-   {
-      _mulle__pointermap_destroy( other, allocator);
-      other = NULL;
-   }
+   _mulle__pointermap_copy_items_generic( other,
+                                          map,
+                                          &mulle__pointermap_keyvaluecallback,
+                                          allocator);
    return( other);
-}
-
-
-// use this only for debugging
-char   *_mulle__pointermap_describe( struct mulle__pointermap *map,
-                                     struct mulle_allocator *allocator)
-{
-   char                                *result;
-   char                                *key;
-   char                                *value;
-   int                                 separate;
-   unsigned int                        len;
-   size_t                              key_len;
-   size_t                              value_len;
-   struct mulle__pointermapenumerator  rover;
-   struct mulle_pointerpair            item;
-   struct mulle_allocator              *key_allocator;
-   struct mulle_allocator              *value_allocator;
-
-   result = NULL;
-   len    = 0;
-   rover  = mulle__pointermap_enumerate( map);
-   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
-   {
-      key_allocator   = allocator ? allocator : &mulle_default_allocator;
-      value_allocator = key_allocator;
-
-      key       = item.key;
-      key_len   = strlen( key);
-      value     = item.value;
-      value_len = strlen( value);
-
-      separate  = result != NULL;
-
-      result    = mulle_allocator_realloc( allocator,
-                                           result,
-                                           len + (separate * 2) + key_len + 3 + value_len + 1);
-
-      if( separate)
-      {
-         memcpy( &result[ len], ", ", 2);
-         len   += 2;
-      }
-
-      memcpy( &result[ len], key, key_len);
-      len += key_len;
-
-      memcpy( &result[ len], " = ", 3);
-      len += 3;
-
-      memcpy( &result[ len], value, value_len);
-      len += value_len;
-
-      if( key_allocator)
-         mulle_allocator_free( key_allocator, key);
-      if( value_allocator)
-         mulle_allocator_free( value_allocator, value);
-   }
-   mulle__pointermapenumerator_done( &rover);
-
-   if( ! result)
-      return( mulle_allocator_strdup( allocator, "*empty*"));
-
-   result[ len] = 0;
-   return( result);
 }
 

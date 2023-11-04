@@ -352,6 +352,28 @@ static inline void    mulle_array_add( struct mulle_array *array,
 }
 
 
+MULLE_C_NONNULL_FIRST_THIRD
+static inline void    _mulle_array_set( struct mulle_array *array,
+                                        unsigned int i,
+                                        void  *p)
+{
+   _mulle__array_set( (struct mulle__array *) array,
+                      i,
+                      p,
+                      array->callback,
+                      array->allocator);
+}
+
+
+MULLE_C_NONNULL_THIRD
+static inline void    mulle_array_set( struct mulle_array *array,
+                                       unsigned int i,
+                                       void  *p)
+{
+   if( array)
+      _mulle_array_set( array, i, p);
+}
+
 /*
  *  Loop over all items. This works as long as you don't remove
  *  anything from the array. It will not retrieve newly added elements.
@@ -428,17 +450,27 @@ static inline void   mulle_array_remove_last( struct mulle_array *array)
                                  array->allocator);
 }
 
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_array_add_array( struct mulle_array *array,
+                           struct mulle_array *other,
+                           struct mulle_range range)
+{
+   _mulle__array_add_array( (struct mulle__array *) array,
+                            (struct mulle__array *) other,
+                            range,
+                            array->callback,
+                            array->allocator);
+}
+
 static inline void
    mulle_array_add_array( struct mulle_array *array,
                           struct mulle_array *other,
                           struct mulle_range range)
 {
-   assert( ! array || ! other || array->callback == other->callback);
-   mulle__array_add_array( (struct mulle__array *) array,
-                           (struct mulle__array *) other,
-                           range,
-                           array->callback,
-                           array->allocator);
+   if( array)
+      _mulle_array_add_array( array, other, range);
 }
 
 

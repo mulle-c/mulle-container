@@ -17,8 +17,8 @@
 
 
 //
-// A really simple kind of set, that just stores pointers with pointer
-// quality and uses bsearch for lookup. Useful for small sets ( < 100 entries)
+// A really simple kind of array, that just stores pointers with pointer
+// equality and uses bsearch for lookup. Useful for small sets ( < 100 entries)
 // You can't store NULL.  It grows and never shrinks.
 //
 #define MULLE__UNIQUEPOINTERARRAY_BASE   \
@@ -36,17 +36,17 @@ struct mulle__uniquepointerarray
 
 
 MULLE_C_NONNULL_FIRST
-static inline void    _mulle__uniquepointerarray_init( struct mulle__uniquepointerarray *set)
+static inline void    _mulle__uniquepointerarray_init( struct mulle__uniquepointerarray *array)
 {
-   memset( set, 0, sizeof( *set));
+   memset( array, 0, sizeof( *array));
 }
 
 
 MULLE_C_NONNULL_FIRST
-static inline void    _mulle__uniquepointerarray_done( struct mulle__uniquepointerarray *set,
+static inline void    _mulle__uniquepointerarray_done( struct mulle__uniquepointerarray *array,
                                                        struct mulle_allocator *allocator)
 {
-   _mulle__pointerarray_done( (struct mulle__pointerarray *) set, allocator);
+   _mulle__pointerarray_done( (struct mulle__pointerarray *) array, allocator);
 }
 
 
@@ -116,28 +116,28 @@ static inline int
 
 
 MULLE_C_NONNULL_FIRST_SECOND
-static inline void    _mulle__uniquepointerarray_insert( struct mulle__uniquepointerarray *set,
+static inline void    _mulle__uniquepointerarray_insert( struct mulle__uniquepointerarray *array,
                                                          void *p,
                                                          struct mulle_allocator *allocator)
 {
-   _mulle__pointerarray_add( (struct mulle__pointerarray *) set, p, allocator);
-   set->_sorted = 0;
+   _mulle__pointerarray_add( (struct mulle__pointerarray *) array, p, allocator);
+   array->_sorted = 0;
 }
 
 
 MULLE_C_NONNULL_FIRST_SECOND
-static inline void   *_mulle__uniquepointerarray_get( struct mulle__uniquepointerarray *set, void *p)
+static inline void   *_mulle__uniquepointerarray_get( struct mulle__uniquepointerarray *array, void *p)
 {
    MULLE_C_NONNULL_FIRST_SECOND
-   extern void   *_mulle__uniquepointerarray_member2( struct mulle__uniquepointerarray *set, void *p);
+   extern void   *_mulle__uniquepointerarray_member2( struct mulle__uniquepointerarray *array, void *p);
    void          **q;
    void          **sentinel;
 
-   if( _mulle__uniquepointerarray_get_count( set) >= 12)
-      return( _mulle__uniquepointerarray_member2( set, p));
+   if( _mulle__uniquepointerarray_get_count( array) >= 12)
+      return( _mulle__uniquepointerarray_member2( array, p));
 
-   q        = set->_storage;
-   sentinel = set->_curr;
+   q        = array->_storage;
+   sentinel = array->_curr;
 
    while( q < sentinel)
       if( *q++ == p)
@@ -148,10 +148,10 @@ static inline void   *_mulle__uniquepointerarray_get( struct mulle__uniquepointe
 
 
 MULLE_C_NONNULL_FIRST_SECOND
-static inline int   _mulle__uniquepointerarray_member( struct mulle__uniquepointerarray *set,
+static inline int   _mulle__uniquepointerarray_member( struct mulle__uniquepointerarray *array,
                                                        void *p)
 {
-   return( _mulle__uniquepointerarray_get( set, p) != NULL);
+   return( _mulle__uniquepointerarray_get( array, p) != NULL);
 }
 
 
@@ -173,22 +173,22 @@ static inline int   _mulle__uniquepointerarray_member( struct mulle__uniquepoint
            name ## __j < 1;                                              \
            name ## __j++)
 
-#define mulle__uniquepointerarray_do_flexible( name, stackcount)             \
-   void   *name ## __storage[ stackcount];                                   \
-   for( struct mulle__uniquepointerarray                                     \
-           name ## __container =                                             \
+#define mulle__uniquepointerarray_do_flexible( name, stackcount)              \
+   void   *name ## __storage[ stackcount];                                    \
+   for( struct mulle__uniquepointerarray                                      \
+           name ## __container =                                              \
               MULLE__UNIQUEPOINTERARRAY_INIT( name ## __storage, stackcount), \
-           *name = &name ## __container,                                     \
-           *name ## __i = NULL;                                              \
-        ! name ## __i;                                                       \
-        name ## __i =                                                        \
-        (                                                                    \
-           _mulle__uniquepointerarray_done( &name ## __container, NULL),     \
-           (void *) 0x1                                                      \
-        )                                                                    \
-      )                                                                      \
-      for( int  name ## __j = 0;    /* break protection */                   \
-           name ## __j < 1;                                                  \
+           *name = &name ## __container,                                      \
+           *name ## __i = NULL;                                               \
+        ! name ## __i;                                                        \
+        name ## __i =                                                         \
+        (                                                                     \
+           _mulle__uniquepointerarray_done( &name ## __container, NULL),      \
+           (void *) 0x1                                                       \
+        )                                                                     \
+      )                                                                       \
+      for( int  name ## __j = 0;    /* break protection */                    \
+           name ## __j < 1;                                                   \
            name ## __j++)
 
 

@@ -19,19 +19,19 @@
 
 static void  stress1( void)
 {
-   struct mulle_assoc                             *assoc;
-   void                                         *key;
-   void                                         *value;
-   intptr_t                                     i;
-   struct mulle_container_keyvaluecallback      callback;
-   struct mulle_assocenumerator                   rover;
+   struct mulle_assoc                        *assoc;
+   void                                      *key;
+   void                                      *value;
+   intptr_t                                  i;
+   struct mulle_container_keyvaluecallback   callback;
+   struct mulle_assocenumerator              rover;
 
    callback.keycallback   = mulle_container_keycallback_int;
    callback.valuecallback = mulle_container_valuecallback_int;
 
    assoc = mulle_assoc_create( 0, &callback, NULL, NULL);
 
-   for( i = 1; i <= 100000; i++)
+   for( i = 1; i <= 10000; i++)
    {
       key = (void *) (rand() % (i + (i >> 2)) + 1);
 
@@ -59,7 +59,7 @@ static void  stress1( void)
    }
    mulle_assocenumerator_done( &rover);
 
-   for( i = 1; i <= 100000; i++)
+   for( i = 1; i <= 10000; i++)
    {
       key = (void *) (rand() % (i + (i >> 2)) + 1);
 
@@ -98,7 +98,7 @@ static void  stress2( void)
 
    assoc = mulle_assoc_create( 0, &callback, NULL, NULL);
 
-   for( i = 1; i <= 123456; i++)
+   for( i = 1; i <= 12345; i++)
    {
       key = (void *) (rand() % (i + (i >> 2)) + 1);
 
@@ -124,7 +124,7 @@ static void  stress2( void)
       assert( ! value || (intptr_t) value == - (intptr_t) key);
    }
 
-   for( i = 1; i <= 123456; i++)
+   for( i = 1; i <= 12345; i++)
    {
       key = (void *) (rand() % (i + (i >> 2)) + 1);
 

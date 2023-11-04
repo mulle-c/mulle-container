@@ -61,7 +61,7 @@ struct mulle_pointerqueue
       ._write_index     = xbucket_size,                                      \
       ._spare_allowance = xspare_allowance,                                  \
       .allocator        = xallocator                                         \
-   }
+   })
 
 
 // does not set the allocator, init does
@@ -381,20 +381,20 @@ static inline void   mulle_pointerqueueenumerator_done( struct mulle_pointerqueu
 
 // created by make-container-do.sh mulle-pointerqueue.c
 
-#define mulle_pointerqueue_do( name)                                  \
-   for( struct mulle_pointerqueue                                     \
-           name ## __container = MULLE_POINTERMAP_INIT( 64, 0, NULL), \
-           *name = &name ## __container,                              \
-           *name ## __i = NULL;                                       \
-        ! name ## __i;                                                \
-        name ## __i =                                                 \
-        (                                                             \
-           _mulle_pointerqueue_done( &name ## __container),           \
-           (void *) 0x1                                               \
-        )                                                             \
-      )                                                               \
-      for( int  name ## __j = 0;    /* break protection */            \
-           name ## __j < 1;                                           \
+#define mulle_pointerqueue_do( name)                                    \
+   for( struct mulle_pointerqueue                                       \
+           name ## __container = MULLE_POINTERQUEUE_INIT( 64, 0, NULL), \
+           *name = &name ## __container,                                \
+           *name ## __i = NULL;                                         \
+        ! name ## __i;                                                  \
+        name ## __i =                                                   \
+        (                                                               \
+           _mulle_pointerqueue_done( &name ## __container),             \
+           (void *) 0x1                                                 \
+        )                                                               \
+      )                                                                 \
+      for( int  name ## __j = 0;    /* break protection */              \
+           name ## __j < 1;                                             \
            name ## __j++)
 
 #endif

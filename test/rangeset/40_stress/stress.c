@@ -1,3 +1,4 @@
+#define NO_MULLE_THREAD_UNPLEASANT_RACE_YIELD
 #include <mulle-container/mulle-container.h>
 
 #include <stdio.h>
