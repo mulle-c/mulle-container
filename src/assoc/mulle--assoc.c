@@ -63,15 +63,6 @@ static inline void
 
 #pragma mark - creation and destruction
 
-struct mulle__assoc   *mulle__assoc_create( struct mulle_allocator *allocator)
-{
-   struct mulle__assoc  *assoc;
-
-   assoc = mulle_allocator_malloc( allocator, sizeof( struct mulle__assoc));
-   _mulle__assoc_init( assoc, 0, allocator);
-   return( assoc);
-}
-
 
 void   _mulle__assoc_done( struct mulle__assoc *assoc,
                            struct mulle_container_keyvaluecallback *callback,
@@ -316,31 +307,31 @@ char   *_mulle__assoc_describe( struct mulle__assoc *set,
    struct mulle__assocenumerator   rover;
    struct mulle_pointerpair        item;
    struct mulle_allocator          *key_allocator;
+   struct mulle_allocator          *value_allocator;
 
    result = NULL;
    len    = 0;
    rover = mulle__assoc_enumerate( set, callback);
    while( _mulle__assocenumerator_next( &rover, &item.key, &item.value))
    {
-      key_allocator  = allocator ? allocator : &mulle_default_allocator;
+      key_allocator   = allocator ? allocator : &mulle_default_allocator;
+      value_allocator = key_allocator;
 
-      key        = (*callback->keycallback.describe)( &callback->keycallback,
-                                                      item.key,
-                                                      &key_allocator);
-      key_len    = strlen( key);
-      separate   = result != NULL;
+      key       = (*callback->keycallback.describe)( &callback->keycallback,
+                                                     item.key,
+                                                     &key_allocator);
+      key_len   = strlen( key);
 
-      key_allocator  = allocator ? allocator : &mulle_default_allocator;
+      value     = (*callback->valuecallback.describe)( &callback->valuecallback,
+                                                       item.value,
+                                                       &value_allocator);
+      value_len = strlen( value);
 
-      value      = (*callback->valuecallback.describe)( &callback->valuecallback,
-                                                        item.value,
-                                                        &key_allocator);
-      value_len  = strlen( value);
-
-      result = mulle_allocator_realloc( allocator,
-                                        result,
-                                        len + (separate * 2) + 2 + key_len + 1 \
-                                            + 2 + value_len + 1 + 1);
+      separate  = result != NULL;
+      result    = mulle_allocator_realloc( allocator,
+                                           result,
+                                           len + (separate * 2) + 2 + key_len + 1 \
+                                            + 2 + value_len + 2 + 1);
 
       if( separate)
       {
@@ -360,10 +351,13 @@ char   *_mulle__assoc_describe( struct mulle__assoc *set,
       memcpy( &result[ len], value, value_len);
       len += value_len;
 
-      memcpy( &result[ len], "}", 1);
-      len   += 1;
+      memcpy( &result[ len], " }", 2);
+      len   += 2;
 
-      if( allocator)
+      if( value_allocator)
+         mulle_allocator_free( value_allocator, value);
+
+      if( key_allocator)
          mulle_allocator_free( key_allocator, key);
    }
    mulle__assocenumerator_done( &rover);

@@ -59,8 +59,7 @@ struct mulle__pointerpairarray
 
 
 static inline struct mulle__pointerpairarray  *
-   mulle__pointerpairarray_alloc( void *notakey,
-                                  struct mulle_allocator *allocator)
+   mulle__pointerpairarray_alloc( struct mulle_allocator *allocator)
 {
    struct mulle__pointerpairarray   *array;
 
@@ -95,6 +94,17 @@ static inline void
 #ifdef DEBUG   
    memset( array, 0xFD, sizeof( struct mulle__pointerpairarray));
 #endif   
+}
+
+
+static inline struct mulle__pointerpairarray  *
+   mulle__pointerpairarray_create( struct mulle_allocator *allocator)
+{
+   struct mulle__pointerpairarray   *array;
+
+   array = mulle__pointerpairarray_alloc( allocator);
+   _mulle__pointerpairarray_init( array, 0, allocator);
+   return( array);
 }
 
 

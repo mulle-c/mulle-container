@@ -134,11 +134,7 @@ struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
    struct mulle__set   *other;
 
    other = _mulle__set_create( _mulle__set_get_count( set), 0, callback, allocator);
-   if( _mulle__set_copy_items( other, set, callback, allocator))
-   {
-      _mulle__set_destroy( other, callback, allocator);
-      other = NULL;
-   }
+   _mulle__set_copy_items( other, set, callback, allocator);
    return( other);
 }
 

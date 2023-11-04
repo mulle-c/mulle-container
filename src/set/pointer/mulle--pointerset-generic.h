@@ -108,10 +108,10 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator);
 
-int   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
-                                             struct mulle__pointerset *src,
-                                             struct mulle_container_keycallback *callback,
-                                             struct mulle_allocator *allocator);
+void   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
+                                              struct mulle__pointerset *src,
+                                              struct mulle_container_keycallback *callback,
+                                              struct mulle_allocator *allocator);
 
 
 #pragma mark - enumeration

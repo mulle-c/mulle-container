@@ -24,15 +24,16 @@ struct mulle_structarray
 };
 
 
-#define MULLE_STRUCTARRAY_INIT( storage, type, count, xallocator)  \
-   ((struct mulle_structarray)                                     \
-   {                                                               \
-      ._storage         = (storage),                               \
-      ._curr            = (storage),                               \
-      ._sentinel        = &((char *) (storage))[ (count) * MULLE__STRUCTARRAY_ALIGNED_SIZE( type)], \
-      ._initial_storage = (storage),                               \
-      ._sizeof_struct   = MULLE__STRUCTARRAY_ALIGNED_SIZE( type),  \
-      .allocator        = (xallocator)                             \
+#define MULLE_STRUCTARRAY_INIT( storage, type, count, xallocator)     \
+   ((struct mulle_structarray)                                        \
+   {                                                                  \
+      ._storage            = (storage),                               \
+      ._curr               = (storage),                               \
+      ._sentinel           = &((char *) (storage))[ (count) * MULLE__STRUCTARRAY_ALIGNED_SIZE( type)], \
+      ._initial_storage    = (storage),                               \
+      ._sizeof_struct      = MULLE__STRUCTARRAY_ALIGNED_SIZE( type),  \
+      ._copy_sizeof_struct = sizeof( type),                           \
+      .allocator           = (xallocator)                             \
    })
 
 
@@ -193,6 +194,14 @@ static inline void   mulle_structarray_reset( struct mulle_structarray *array)
 
 
 # pragma mark - petty accessors
+
+MULLE_C_NONNULL_FIRST
+static inline void **
+   _mulle_structarray_get_storage( struct mulle_structarray *array)
+{
+   return( _mulle__structarray_get_storage( (struct mulle__structarray *) array));
+}
+
 
 MULLE_C_NONNULL_FIRST
 static inline unsigned int
@@ -381,6 +390,8 @@ static inline void   _mulle_structarray_zero_to_count( struct mulle_structarray 
                                       count,
                                       array->allocator);
 }
+
+
 
 
 

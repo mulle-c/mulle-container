@@ -133,6 +133,9 @@ void   _mulle__set_set( struct mulle__set *set,
                                    allocator);
 }
 
+
+
+
 MULLE_C_NONNULL_FIRST_THIRD
 static inline
 void    *_mulle__set_insert( struct mulle__set *set,
@@ -218,15 +221,15 @@ static inline void  _mulle__set_shrink_if_needed( struct mulle__set *set,
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
-int   _mulle__set_copy_items( struct mulle__set *dst,
+void   _mulle__set_copy_items( struct mulle__set *dst,
                               struct mulle__set *src,
                               struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator)
 {
-   return( _mulle__pointerset_copy_items_generic( (struct mulle__pointerset *) dst,
-                                                  (struct mulle__pointerset *) src,
-                                                  callback,
-                                                  allocator));
+   _mulle__pointerset_copy_items_generic( (struct mulle__pointerset *) dst,
+                                          (struct mulle__pointerset *) src,
+                                          callback,
+                                          allocator);
 }
 
 

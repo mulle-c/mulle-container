@@ -48,7 +48,7 @@ void    _mulle__pointerset_set( struct mulle__pointerset *set,
                                 void *p,
                                 struct mulle_allocator *allocator)
 {
-   return( _mulle__pointerset_set_generic( set, p, &mulle_container_keycallback_nonowned_pointer_or_null, allocator));
+   _mulle__pointerset_set_generic( set, p, &mulle_container_keycallback_nonowned_pointer_or_null, allocator);
 }
 
 MULLE_C_NONNULL_FIRST
@@ -92,15 +92,15 @@ int  _mulle__pointerset_remove( struct mulle__pointerset *set,
 }
 
 MULLE_C_NONNULL_FIRST
-static inline int
+static inline void
    _mulle__pointerset_copy_items( struct mulle__pointerset *dst,
                                   struct mulle__pointerset *src,
                                   struct mulle_allocator *allocator)
 {
-   return( _mulle__pointerset_copy_items_generic( dst,
-                                                  src,
-                                                  &mulle_container_keycallback_nonowned_pointer_or_null,
-                                                  allocator));
+   _mulle__pointerset_copy_items_generic( dst,
+                                          src,
+                                          &mulle_container_keycallback_nonowned_pointer_or_null,
+                                          allocator);
 }
 
 

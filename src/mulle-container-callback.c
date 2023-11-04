@@ -89,6 +89,8 @@ char   *mulle_container_valuecallback_no_description( struct mulle_container_val
                                                       void *p,
                                                       struct mulle_allocator **p_allocator)
 {
+   assert( p_allocator && *p_allocator);
+
    *p_allocator = NULL;
    return( "???");
 }
@@ -120,7 +122,9 @@ char   *
 {
    char   buf[ 64];
 
-   sprintf( buf, "%d", (int) (intptr_t) p);
+   assert( p_allocator && *p_allocator);
+
+   snprintf( buf, sizeof( buf), "%d", (int) (intptr_t) p);
    return( mulle_allocator_strdup( *p_allocator, buf));
 }
 
@@ -132,7 +136,9 @@ char   *
 {
    char   buf[ 64];
 
-   sprintf( buf, "%lld", (long long) (intptr_t) p);
+   assert( p_allocator && *p_allocator);
+
+   snprintf( buf, sizeof( buf), "%lld", (long long) (intptr_t) p);
    return( mulle_allocator_strdup( *p_allocator, buf));
 }
 
@@ -144,7 +150,9 @@ char *
 {
    char   buf[ 64];
 
-   sprintf( buf, "%p", p);
+   assert( p_allocator && *p_allocator);
+
+   snprintf( buf, sizeof( buf), "%p", p);
    return( mulle_allocator_strdup( *p_allocator, buf));
 }
 
@@ -169,6 +177,8 @@ char
                                                void *p,
                                                struct mulle_allocator **p_allocator)
 {
+   assert( p_allocator && *p_allocator);
+
    *p_allocator = NULL;
    return( p);
 }

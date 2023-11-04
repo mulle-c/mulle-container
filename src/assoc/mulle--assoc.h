@@ -64,10 +64,6 @@ struct mulle__assoc
 };
 
 
-#define MULLE__ASSOC_INIT( )     MULLE__POINTERPAIRARRAY_INIT( )
-MULLE__CONTAINER_GLOBAL
-struct mulle__assoc    *mulle__assoc_create( struct mulle_allocator *allocator);
-
 MULLE_C_NONNULL_FIRST
 static inline void    _mulle__assoc_init( struct mulle__assoc *assoc,
                                           unsigned int capacity,
@@ -77,6 +73,14 @@ static inline void    _mulle__assoc_init( struct mulle__assoc *assoc,
                                   capacity,
                                   allocator);
 }
+
+
+static inline struct mulle__assoc   *
+   mulle__assoc_create( struct mulle_allocator *allocator)
+{
+   return( (struct mulle__assoc *) mulle__pointerpairarray_create( allocator));
+}
+
 
 
 MULLE__CONTAINER_GLOBAL

@@ -149,22 +149,20 @@ void   _mulle__map_reset( struct mulle__map *map,
 
 
 
-void   _mulle__map_insert_values_for_keysv( struct mulle__map *map,
-                                            void *firstvalue,
-                                            void *firstkey,
-                                            va_list args,
-                                            struct mulle_container_keyvaluecallback *callback,
-                                            struct mulle_allocator *allocator)
+void   _mulle__map_insert_key_valuesv( struct mulle__map *map,
+                                       void *firstkey,
+                                       va_list args,
+                                       struct mulle_container_keyvaluecallback *callback,
+                                       struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   pair;
 
-   pair.value = firstvalue;
-   pair.key   = firstkey;
+   pair.key = firstkey;
    while( pair.key != callback->keycallback.notakey)
    {
+      pair.value = va_arg( args, void *);
       _mulle__map_insert_pair( map, &pair, callback, allocator);
 
-      pair.value = va_arg( args, void *);
       pair.key   = va_arg( args, void *);
    }
 }
@@ -180,11 +178,7 @@ struct mulle__map   *_mulle__map_copy( struct mulle__map *set,
    struct mulle__map   *other;
 
    other = _mulle__map_create( _mulle__map_get_count( set), 0, callback, allocator);
-   if( _mulle__map_copy_items( other, set, callback, allocator))
-   {
-      _mulle__map_destroy( other, callback, allocator);
-      other = NULL;
-   }
+   _mulle__map_copy_items( other, set, callback, allocator);
    return( other);
 }
 

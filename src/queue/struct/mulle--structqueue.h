@@ -44,17 +44,22 @@
 
 struct mulle__structqueuebucket;
 
-#define MULLE__STRUCTQUEUE_BASE                          \
-   struct mulle__structqueuebucket    *_spares;          \
-   struct mulle__structqueuebucket    *_read;            \
-   struct mulle__structqueuebucket    *_write;           \
-   unsigned int                       _count;            \
-   unsigned int                       _read_index;       \
-   unsigned int                       _write_index;      \
-                                                         \
-   unsigned int                       _sizeof_struct;    \
-   unsigned short                     _bucket_size;      \
+#define MULLE__STRUCTQUEUE_BASE                            \
+   struct mulle__structqueuebucket    *_spares;            \
+   struct mulle__structqueuebucket    *_read;              \
+   struct mulle__structqueuebucket    *_write;             \
+   unsigned int                       _count;              \
+   unsigned int                       _read_index;         \
+   unsigned int                       _write_index;        \
+                                                           \
+   unsigned int                       _sizeof_struct;      \
+   unsigned int                       _copy_sizeof_struct; \
+   unsigned short                     _bucket_size;        \
    unsigned short                     _spare_allowance
+
+
+#define MULLE__STRUCTQUEUE_ALIGNED_SIZE( type)  \
+   (size_t) (sizeof( type) + (sizeof( type) % alignof( type)))
 
 
 struct mulle__structqueue
@@ -86,7 +91,7 @@ static inline struct mulle__structqueue *
 
 static inline void
   mulle__structqueue_free( struct mulle__structqueue *queue,
-                            struct mulle_allocator *allocator)
+                           struct mulle_allocator *allocator)
 {
    mulle_allocator_free( allocator, queue);
 }
@@ -119,11 +124,12 @@ static inline void
    queue->_read_index  =
    queue->_write_index = bucket_size >= 4 ? bucket_size : 4;
 
+   assert( sizeof_struct == (unsigned int) sizeof_struct);
    assert( alignof_struct <= alignof( double));
 
-   queue->_sizeof_struct   = (unsigned int) (sizeof_struct + (sizeof_struct % alignof_struct));
-
-   queue->_spare_allowance = spare_allowance;
+   queue->_sizeof_struct       = (unsigned int) (sizeof_struct + (sizeof_struct % alignof_struct));
+   queue->_copy_sizeof_struct  = (unsigned int) sizeof_struct;
+   queue->_spare_allowance     = spare_allowance;
 }
 
 
@@ -177,7 +183,7 @@ static inline void  _mulle__structqueue_push( struct mulle__structqueue *queue,
    void   *q;
 
    q = _mulle__structqueue_reserve( queue, allocator);
-   memcpy( q, p, queue->_sizeof_struct);
+   memcpy( q, p, queue->_copy_sizeof_struct);
 }
 
 
