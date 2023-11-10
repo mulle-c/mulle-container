@@ -228,6 +228,22 @@ static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 void   mulle_set_add_set( struct mulle_set *set, struct mulle_set *other);
 
 
+#pragma mark - management
+
+static inline void   _mulle_set_shrink_if_needed( struct mulle_set *set)
+{
+   _mulle__set_shrink_if_needed( (struct mulle__set *) set,
+                                 set->callback,
+                                 set->allocator);
+}
+
+
+static inline void   mulle_set_shrink_if_needed( struct mulle_set *set)
+{
+   if( set)
+      _mulle_set_shrink_if_needed( set);
+}
+
 
 #pragma mark - debugging
 

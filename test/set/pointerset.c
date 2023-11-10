@@ -50,6 +50,8 @@ static void  simple( void)
 {
    char   onstack[] = { 'V', 'f', 'L', 0 };
 
+   assert( mulle_pointerset_get_count( NULL) == 0);
+
    mulle_pointerset_do( set)
    {
       assert( mulle_pointerset_get_count( set) == 0);
@@ -60,6 +62,8 @@ static void  simple( void)
 
       mulle_pointerset_set( set, "VfL");
       assert( ! strcmp( "VfL", mulle_pointerset_get( set, "VfL")));
+
+      assert( ! mulle_pointerset_get( set, "Whatever"));
 
       mulle_pointerset_remove( set, onstack);  // can't match
       assert( ! strcmp( "VfL", mulle_pointerset_get( set, "VfL")));
@@ -101,6 +105,14 @@ static void   set_copy( void)
 
    set = mulle_pointerset_create( NULL);
 
+   // NULL
+   copy = mulle_pointerset_copy( NULL);
+   mulle_pointerset_destroy( copy);
+
+   // empty
+   copy = mulle_pointerset_copy( set);
+   mulle_pointerset_destroy( copy);
+
    mulle_pointerset_set( set, "VfL");
    mulle_pointerset_set( set, "Bochum");
    mulle_pointerset_set( set, "1848");
@@ -112,6 +124,23 @@ static void   set_copy( void)
    mulle_pointerset_destroy( set);
 }
 
+
+static void   misc( void)
+{
+   struct mulle__pointerset  *set;
+   struct mulle__pointerset  *copy;
+
+   set = _mulle__pointerset_create( 0, 0, NULL);
+   _mulle__pointerset_destroy( set, NULL);
+
+   set   = _mulle__pointerset_create( 1000, 0, NULL);
+   assert( _mulle__pointerset_get( set , NULL) == NULL);
+
+   copy = _mulle__pointerset_copy( set, NULL);
+
+   _mulle__pointerset_destroy( copy, NULL);
+   _mulle__pointerset_destroy( set, NULL);
+}
 
 
 // the mulle_testallocator detects and aborts on leaks
@@ -134,6 +163,7 @@ int main(int argc, const char * argv[])
    run_test( simple, "simple");
    run_test( set_remove, "remove");
    run_test( set_copy, "copy");
+   run_test( misc, "misc");
 
    return( 0);
 }

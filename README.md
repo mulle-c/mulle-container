@@ -18,7 +18,7 @@ Some data structures utilize callbacks that are compatible to OS X's
 | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)| [RELEASENOTES](RELEASENOTES.md) |
 
 
-
+/home/src/srcO/mulle-c/mulle-container()
 ## Data Structures
 
 The names of the functions are consistent. Each function is a **verb**
@@ -443,9 +443,8 @@ cmake --install build --config Release
 
 
 ## Author
-[Nat!](//www.mulle-kybernetik.com/weblog) for
-[Mulle kybernetiK](//www.mulle-kybernetik.com) and
-[Codeon GmbH](//www.codeon.de)
+
+[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK
 
 
 

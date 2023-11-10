@@ -85,8 +85,8 @@ void   _mulle__rangeset_reserve( struct mulle__rangeset *p,
 }
 
 
-void   _mulle__rangeset_shrink( struct mulle__rangeset *p,
-                                struct mulle_allocator *allocator)
+static void   _mulle__rangeset_shrink( struct mulle__rangeset *p,
+                                       struct mulle_allocator *allocator)
 {
    uintptr_t   new_size;
    uintptr_t   size;

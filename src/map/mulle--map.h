@@ -108,7 +108,7 @@ static inline int   _mulle__map_is_full( struct mulle__map *map)
 
 static inline int   mulle__map_is_full( struct mulle__map *map)
 {
-   return( mulle__pointermap_is_full( (struct mulle__pointermap *) map));
+   return( map ? _mulle__map_is_full( map) : 1);
 }
 
 
@@ -120,7 +120,7 @@ static inline int   _mulle__map_is_sparse( struct mulle__map *map)
 
 static inline int   mulle__map_is_sparse( struct mulle__map *map)
 {
-   return( mulle__pointermap_is_sparse( (struct mulle__pointermap *) map));
+   return( map ? _mulle__map_is_sparse( map) : 0);
 }
 
 
@@ -133,7 +133,7 @@ static inline unsigned int   _mulle__map_get_count( struct mulle__map *map)
 
 static inline unsigned int   mulle__map_get_count( struct mulle__map *map)
 {
-   return( mulle__pointermap_get_count( (struct mulle__pointermap *) map));
+   return( map ? _mulle__map_get_count( map) : 0);
 }
 
 
@@ -146,7 +146,7 @@ static inline unsigned int   _mulle__map_get_size( struct mulle__map *map)
 
 static inline unsigned int   mulle__map_get_size( struct mulle__map *map)
 {
-   return( mulle__pointermap_get_size( (struct mulle__pointermap *) map));
+   return( map ? _mulle__map_get_size( map) : 0);
 }
 
 
@@ -494,11 +494,11 @@ static inline char   *
 //
 MULLE_C_NONNULL_FIRST_SECOND
 static inline unsigned int
-   _mulle__map_count_collisions( struct mulle__map *set,
+   _mulle__map_count_collisions( struct mulle__map *map,
                                  struct mulle_container_keyvaluecallback *callback,
                                  unsigned int *perfects)
 {
-   return( _mulle__pointermap_count_collisions_generic( (struct mulle__pointermap *) set,
+   return( _mulle__pointermap_count_collisions_generic( (struct mulle__pointermap *) map,
                                                          callback,
                                                          perfects));
 }

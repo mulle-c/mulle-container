@@ -403,64 +403,59 @@ static inline void *
 
 
 MULLE_C_NONNULL_FIRST
-static inline struct mulle_pointerpair
-   _mulle__assoc_search_callback( struct mulle__assoc *assoc,
-                                  void *key,
-                                  struct mulle_container_keyvaluecallback *callback)
+static inline uintptr_t
+   _mulle__assoc_find_callback( struct mulle__assoc *assoc,
+                                void *key,
+                                struct mulle_container_keyvaluecallback *callback)
 {
    struct mulle_pointerpair   search;
 
    search = mulle_pointerpair_make( key, NULL);
-   return( _mulle__pointerpairarray_search_callback( (struct mulle__pointerpairarray *) assoc,
-                                                     search,
-                                                     callback));
+   return( _mulle__pointerpairarray_find_callback( (struct mulle__pointerpairarray *) assoc,
+                                                   search,
+                                                   callback));
 }
 
 
-static inline struct mulle_pointerpair
-   mulle__assoc_search_callback( struct mulle__assoc *assoc,
-                                 void *key,
-                                 struct mulle_container_keyvaluecallback *callback)
+static inline uintptr_t
+   mulle__assoc_find_callback( struct mulle__assoc *assoc,
+                               void *key,
+                               struct mulle_container_keyvaluecallback *callback)
 {
-   struct mulle_pointerpair   search;
+   if( ! assoc)
+      return( mulle_not_found_e);
 
-   search = mulle_pointerpair_make( key, NULL);
-   return( mulle__pointerpairarray_search_callback( (struct mulle__pointerpairarray *) assoc,
-                                                    search,
-                                                    callback));
+   return( _mulle__assoc_find_callback( assoc, key, callback));
 }
 
 
 MULLE_C_NONNULL_FIRST
-static inline struct mulle_pointerpair
-   _mulle__assoc_search_compare( struct mulle__assoc *assoc,
-                                 void *key,
-                                 mulle_pointerpair_compare_t *compare,
-                                 void *userinfo)
+static inline uintptr_t
+   _mulle__assoc_find_compare( struct mulle__assoc *assoc,
+                               void *key,
+                               mulle_pointerpair_compare_t *compare,
+                               void *userinfo)
 {
    struct mulle_pointerpair   search;
 
    search = mulle_pointerpair_make( key, NULL);
-   return( _mulle__pointerpairarray_search_compare( (struct mulle__pointerpairarray *) assoc,
-                                                     search,
-                                                     compare,
-                                                     userinfo));
+   return( _mulle__pointerpairarray_find_compare( (struct mulle__pointerpairarray *) assoc,
+                                                  search,
+                                                  compare,
+                                                  userinfo));
 }
 
 
-static inline struct mulle_pointerpair
-   mulle__assoc_search_compare( struct mulle__assoc *assoc,
-                                void *key,
-                                mulle_pointerpair_compare_t *compare,
-                                void *userinfo)
+static inline uintptr_t
+   mulle__assoc_find_compare( struct mulle__assoc *assoc,
+                              void *key,
+                              mulle_pointerpair_compare_t *compare,
+                              void *userinfo)
 {
-   struct mulle_pointerpair   search;
+   if( ! assoc)
+      return( mulle_not_found_e);
 
-   search = mulle_pointerpair_make( key, NULL);
-   return( mulle__pointerpairarray_search_compare( (struct mulle__pointerpairarray *) assoc,
-                                                    search,
-                                                    compare,
-                                                    userinfo));
+   return( _mulle__assoc_find_compare( assoc, key, compare, userinfo));
 }
 
 

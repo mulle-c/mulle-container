@@ -20,6 +20,7 @@ static void  simple( void)
    struct mulle_pointerpairarray             *array;
    struct mulle_pointerpairarrayenumerator   rover;
    struct mulle_pointerpair                  item;
+   uintptr_t                                 result;
 
    array = mulle_pointerpairarray_create( NULL);
 
@@ -44,13 +45,16 @@ static void  simple( void)
       printf( "\t{ %s, %s }\n", (char *) item.key, (char *) item.value);
    mulle_pointerpairarrayenumerator_done( &rover);
 
-   item = mulle_pointerpairarray_search_compare( array,
+   result = mulle_pointerpairarray_find_compare( array,
                                                  mulle_pointerpair_make( "VfL", NULL),
                                                  _mulle_pointerpair_compare_string_key,
                                                  NULL);
-   printf( "Found:\n");
-   printf( "\t{ %s, %s }\n", (char *) item.key, (char *) item.value);
-
+   if( result != mulle_not_found_e)
+   {
+      item = mulle_pointerpairarray_get( array, (unsigned int) result);
+      printf( "Found:\n");
+      printf( "\t{ %s, %s }\n", (char *) item.key, (char *) item.value);
+   }
 
    mulle_pointerpairarray_destroy( array);
 }

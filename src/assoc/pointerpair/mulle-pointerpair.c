@@ -2,9 +2,9 @@
 
 
 MULLE_C_NEVER_INLINE
-static void   mulle_pointerpair_qsort_compare_pointer_key( struct mulle_pointerpair *buf,
-                                                           unsigned int n,
-                                                           void *userinfo)
+static void   _mulle_pointerpair_qsort_compare_pointer_key( struct mulle_pointerpair *buf,
+                                                            unsigned int n,
+                                                            void *userinfo)
 {
    _mulle_qsort_r_inline( buf,
                           n,
@@ -15,9 +15,9 @@ static void   mulle_pointerpair_qsort_compare_pointer_key( struct mulle_pointerp
 
 
 MULLE_C_NEVER_INLINE
-static void   mulle_pointerpair_qsort_compare_string_key( struct mulle_pointerpair *buf,
-                                                          unsigned int n,
-                                                          void *userinfo)
+static void   _mulle_pointerpair_qsort_compare_string_key( struct mulle_pointerpair *buf,
+                                                           unsigned int n,
+                                                           void *userinfo)
 {
    _mulle_qsort_r_inline( buf,
                           n,
@@ -36,10 +36,10 @@ void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,
       return;
 
    if( compare == _mulle_pointerpair_compare_pointer_key)
-      mulle_pointerpair_qsort_compare_pointer_key( buf, n, userinfo);
+      _mulle_pointerpair_qsort_compare_string_key( buf, n, userinfo);
    else
       if( compare == _mulle_pointerpair_compare_string_key)
-         mulle_pointerpair_qsort_compare_string_key( buf, n, userinfo);
+         _mulle_pointerpair_qsort_compare_pointer_key( buf, n, userinfo);
       else
          _mulle_qsort_r_inline( buf,
                                 n,

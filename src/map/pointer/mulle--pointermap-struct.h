@@ -107,6 +107,15 @@ MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
                                    struct mulle_allocator *allocator);
 
+static inline void
+   mulle__pointermap_destroy( struct mulle__pointermap *map,
+                              struct mulle_allocator *allocator)
+{
+   if( map)
+      _mulle__pointermap_destroy( map, allocator);
+}
+
+
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_init( struct mulle__pointermap *map,
@@ -122,6 +131,14 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                  struct mulle_allocator *allocator);
+
+static inline
+void   mulle__pointermap_reset( struct mulle__pointermap *map,
+                                struct mulle_allocator *allocator)
+{
+   if( map)
+      _mulle__pointermap_reset( map, allocator);
+}
 
 
 #pragma mark - petty accessors
@@ -143,13 +160,18 @@ static inline int   mulle__pointermap_is_full( struct mulle__pointermap *map)
 
 
 MULLE_C_NONNULL_FIRST
+static inline unsigned int   _mulle__pointermap_is_sparse_size( struct mulle__pointermap *map, unsigned int size)
+{
+   size = size / 2;
+   size = (size - (size >> MULLE__POINTERMAP_FILL_SHIFT));
+   return( map->_count < size);
+}
+
+
+MULLE_C_NONNULL_FIRST
 static inline int   _mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 {
-   unsigned int    _size;
-
-   _size = map->_size / 2;
-   _size = (_size - (_size >> MULLE__POINTERMAP_FILL_SHIFT));  // sparse if 50% of it wouldn't be full
-   return( map->_count < _size);
+   return( _mulle__pointermap_is_sparse_size( map, map->_size));
 }
 
 
@@ -212,9 +234,11 @@ static inline void   *mulle__pointermap_get( struct mulle__pointermap *map,
 
 
 // check for mulle_pointerpair_is_invalid if found or not
-MULLE__CONTAINER_GLOBAL
-struct mulle_pointerpair
-   mulle__pointermap_find_by_value( struct mulle__pointermap *map, void *value);
+// this was just stupid idea, as value are not unique, just use an enumerator
+// yourself...
+// MULLE__CONTAINER_GLOBAL
+// struct mulle_pointerpair
+//    mulle__pointermap_find_by_value( struct mulle__pointermap *map, void *value);
 
 
 // Experimental!
