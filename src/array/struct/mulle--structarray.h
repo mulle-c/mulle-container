@@ -310,6 +310,19 @@ static inline void
 }
 
 
+static inline void
+   _mulle__structarray_set( struct mulle__structarray *array,
+                            unsigned int i,
+                            void *item)
+{
+   void  *address;
+
+   address = _mulle__structarray_get( array, i);
+   memcpy( address, item, array->_copy_sizeof_struct);
+}
+
+
+
 MULLE_C_NONNULL_FIRST_SECOND
 static inline void
    _mulle__structarray_add_guaranteed( struct mulle__structarray *array,

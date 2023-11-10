@@ -68,6 +68,31 @@ static void  simple_queue( void)
 
 
 
+static void  misc_coverage( void)
+{
+   struct mulle__structqueue    *queue;
+   char                         c;
+   unsigned int                 i;
+   char                         *p;
+
+   queue = mulle__structqueue_create( sizeof( char), alignof( char), 32, 32, NULL);
+   for( i = 0; i < 1000; i++)
+      _mulle__structqueue_push( queue, (c = '0' + i % 10, &c), NULL);
+   for( i = 0; i < 900; i++)
+      _mulle__structqueue_pop( queue, NULL, &c);
+
+   i = 0;
+   mulle__structqueue_for( queue, p)
+   {
+      i++;
+   }
+   assert( i == 100);
+
+   _mulle__structqueue_reset( queue, NULL);
+   _mulle__structqueue_destroy( queue, NULL);
+}
+
+
 
 // the mulle_testallocator detects and aborts on leaks
 static void  run_test( void (*f)( void))
@@ -84,6 +109,7 @@ int main(int argc, const char * argv[])
    run_test( no_leak_one_queue);
    run_test( no_leak_filled_queue);
    run_test( simple_queue);
+   run_test( misc_coverage);
 
    return( 0);
 }

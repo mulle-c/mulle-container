@@ -165,16 +165,15 @@ static inline void  mulle_structarray_done( struct mulle_structarray *array)
 }
 
 
+MULLE_C_NONNULL_FIRST
+MULLE__CONTAINER_GLOBAL
+void  _mulle_structarray_destroy( struct mulle_structarray *array);
+
+
 static inline void  mulle_structarray_destroy( struct mulle_structarray *array)
 {
-   struct mulle_allocator   *allocator;
-
    if( array)
-   {
-      allocator = array->allocator;
-      _mulle_structarray_done( array);
-      mulle_allocator_free( allocator, array);
-   }
+      _mulle_structarray_destroy( array);
 }
 
 
@@ -296,7 +295,7 @@ static inline size_t
 
 # pragma mark - array operations
 
-MULLE_C_NONNULL_FIRST
+MULLE_C_NONNULL_FIRST_SECOND
 static inline void
    _mulle_structarray_add( struct mulle_structarray *array, void *item)
 {
@@ -312,6 +311,24 @@ static inline void
    if( array && item)
       _mulle_structarray_add( array, item);
 }
+
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline void
+   _mulle_structarray_set( struct mulle_structarray *array, unsigned int i, void *item)
+{
+   _mulle__structarray_set( (struct mulle__structarray *) array, i, item);
+}
+
+
+static inline void
+   mulle_structarray_set( struct mulle_structarray *array, unsigned int i, void *item)
+{
+   if( array && item)
+      _mulle_structarray_set( array, i, item);
+}
+
 
 
 

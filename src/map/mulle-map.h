@@ -372,8 +372,9 @@ static inline char *
 static inline char *
    mulle_map_describe( struct mulle_map *map)
 {
-   if( map)
-      return( _mulle_map_describe( map));
+   if( ! map)
+      return( "(null)");
+   return( _mulle_map_describe( map));
 }
 
 

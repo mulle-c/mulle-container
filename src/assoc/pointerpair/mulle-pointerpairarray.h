@@ -301,7 +301,7 @@ static inline void
 }
 
 
-#pragma mark - sort and search
+#pragma mark - sort and find
 
 
 MULLE_C_NONNULL_FIRST
@@ -316,6 +316,17 @@ static inline uintptr_t
 }
 
 
+static inline uintptr_t
+   mulle_pointerpairarray_find_in_range( struct mulle_pointerpairarray *array,
+                                         struct mulle_pointerpair search,
+                                         struct mulle_range range)
+{
+   if( ! array)
+      return( mulle_not_found_e);
+   return( _mulle_pointerpairarray_find_in_range( array, search, range));
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline uintptr_t
    _mulle_pointerpairarray_find( struct mulle_pointerpairarray *array,
@@ -326,54 +337,66 @@ static inline uintptr_t
 }
 
 
-MULLE_C_NONNULL_FIRST
-static inline struct mulle_pointerpair
-   _mulle_pointerpairarray_search_callback( struct mulle_pointerpairarray *array,
-                                            struct mulle_pointerpair search,
-                                            struct mulle_container_keyvaluecallback *callback)
+static inline uintptr_t
+   mulle_pointerpairarray_find( struct mulle_pointerpairarray *array,
+                                struct mulle_pointerpair search)
 {
-   return( _mulle__pointerpairarray_search_callback( (struct mulle__pointerpairarray *) array,
-                                                     search,
-                                                     callback));
+   if( ! array)
+      return( mulle_not_found_e);
+   return( _mulle_pointerpairarray_find( array, search));
 }
-
-
-static inline struct mulle_pointerpair
-   mulle_pointerpairarray_search_callback( struct mulle_pointerpairarray *array,
-                                           struct mulle_pointerpair search,
-                                           struct mulle_container_keyvaluecallback *callback)
-{
-   return( mulle__pointerpairarray_search_callback( (struct mulle__pointerpairarray *) array,
-                                                    search,
-                                                    callback));
-}
-
 
 
 MULLE_C_NONNULL_FIRST
-static inline struct mulle_pointerpair
-   _mulle_pointerpairarray_search_compare( struct mulle_pointerpairarray *array,
-                                           struct mulle_pointerpair search,
-                                           mulle_pointerpair_compare_t *compare,
-                                           void *userinfo)
-{
-   return( _mulle__pointerpairarray_search_compare( (struct mulle__pointerpairarray *) array,
-                                                    search,
-                                                    compare,
-                                                    userinfo));
-}
-
-
-static inline struct mulle_pointerpair
-   mulle_pointerpairarray_search_compare( struct mulle_pointerpairarray *array,
+static inline uintptr_t
+   _mulle_pointerpairarray_find_callback( struct mulle_pointerpairarray *array,
                                           struct mulle_pointerpair search,
-                                          mulle_pointerpair_compare_t *compare,
-                                          void *userinfo)
+                                          struct mulle_container_keyvaluecallback *callback)
 {
-   return( mulle__pointerpairarray_search_compare( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_find_callback( (struct mulle__pointerpairarray *) array,
                                                    search,
-                                                   compare,
-                                                   userinfo));
+                                                   callback));
+}
+
+
+static inline uintptr_t
+   mulle_pointerpairarray_find_callback( struct mulle_pointerpairarray *array,
+                                         struct mulle_pointerpair search,
+                                         struct mulle_container_keyvaluecallback *callback)
+{
+   if( ! array)
+      return( mulle_not_found_e);
+   return( _mulle_pointerpairarray_find_callback( array, search, callback));
+}
+
+
+
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t
+   _mulle_pointerpairarray_find_compare( struct mulle_pointerpairarray *array,
+                                         struct mulle_pointerpair search,
+                                         mulle_pointerpair_compare_t *compare,
+                                         void *userinfo)
+{
+   return( _mulle__pointerpairarray_find_compare( (struct mulle__pointerpairarray *) array,
+                                                  search,
+                                                  compare,
+                                                  userinfo));
+}
+
+
+static inline uintptr_t
+   mulle_pointerpairarray_find_compare( struct mulle_pointerpairarray *array,
+                                        struct mulle_pointerpair search,
+                                        mulle_pointerpair_compare_t *compare,
+                                        void *userinfo)
+{
+   if( ! array)
+      return( mulle_not_found_e);
+   return( _mulle_pointerpairarray_find_compare( array,
+                                                 search,
+                                                 compare,
+                                                 userinfo));
 }
 
 

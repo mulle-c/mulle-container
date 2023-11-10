@@ -137,15 +137,20 @@ static inline int  _mulle__pointerset_is_full( struct mulle__pointerset *set)
 }
 
 
+MULLE_C_NONNULL_FIRST
+static inline int  _mulle__pointerset_is_sparse_size( struct mulle__pointerset *set, unsigned int size)
+{
+   size = size / 2;
+   size = (size - (size >> MULLE__POINTERSET_FILL_SHIFT));
+   return( set->_count < size);
+}
+
+
 // sparse means the size is too large for the contents, a shrink wouldn't hurt
 MULLE_C_NONNULL_FIRST
 static inline int  _mulle__pointerset_is_sparse( struct mulle__pointerset *set)
 {
-   unsigned int    size;
-
-   size = set->_size / 2;
-   size = (size - (size >> MULLE__POINTERSET_FILL_SHIFT));
-   return( set->_count < size);
+   return( _mulle__pointerset_is_sparse_size( set, set->_size));
 }
 
 

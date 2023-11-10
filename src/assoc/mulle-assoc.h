@@ -401,8 +401,8 @@ static inline void
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_assoc_add( struct mulle_assoc *assoc, void *key, void *value)
 {
-   assert( mulle_pointerpair_is_invalid(
-               _mulle__assoc_search_callback( (struct mulle__assoc *) assoc, key, assoc->callback)));
+   assert( mulle_not_found_e ==
+               _mulle__assoc_find_callback( (struct mulle__assoc *) assoc, key, assoc->callback));
 
    assoc->_is_sorted = 0;
 

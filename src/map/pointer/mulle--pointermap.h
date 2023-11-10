@@ -46,6 +46,7 @@ static inline void   _mulle__pointermap_set_pair( struct mulle__pointermap *map,
    _mulle__pointermap_set_pair_generic( map, pair, &mulle__pointermap_keyvaluecallback, allocator);
 }
 
+
 static inline void   mulle__pointermap_set_pair( struct mulle__pointermap *map,
                                                  struct mulle_pointerpair *pair,
                                                  struct mulle_allocator *allocator)
@@ -68,6 +69,7 @@ static inline void   _mulle__pointermap_set( struct mulle__pointermap *map,
    pair.value = value;
    _mulle__pointermap_set_pair_generic( map, &pair, &mulle__pointermap_keyvaluecallback, allocator);
 }
+
 
 static inline void   mulle__pointermap_set( struct mulle__pointermap *map,
                                             void *key,
@@ -104,6 +106,17 @@ int   _mulle__pointermap_remove( struct mulle__pointermap *map,
                                               &mulle__pointermap_keyvaluecallback,
                                               allocator));
 }
+
+MULLE_C_NONNULL_SECOND
+static inline
+int   mulle__pointermap_remove( struct mulle__pointermap *map,
+                                void *key,
+                                struct mulle_allocator *allocator)
+{
+   if( map)
+      return( _mulle__pointermap_remove( map, key, allocator));
+}
+
 
 // created by make-container-do.sh mulle--pointermap.c
 

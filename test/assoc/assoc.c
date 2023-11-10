@@ -87,6 +87,10 @@ static void  simple( void)
       mulle_assoc_set( assoc, "VfL", "BOCHUM");
       assert( ! strcmp( "BOCHUM", mulle_assoc_get( assoc, "VfL")));
 
+
+      _mulle__assoc_set_at_index( (struct mulle__assoc *) assoc, 0, "VfL", "Bochum", &callback, NULL);
+      assert( ! strcmp( "Bochum", mulle_assoc_get( assoc, "VfL")));
+
       mulle_assoc_remove( assoc, onstack);
       assert( ! mulle_assoc_get( assoc, "VfL"));
    }
@@ -184,6 +188,9 @@ static void   assoc_copy( void)
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
    assoc = mulle_assoc_create( 0, &callback, _mulle_pointerpair_compare_string_key, NULL);
+
+   copy = mulle_assoc_copy( NULL);
+   mulle_assoc_destroy( copy);
 
    mulle_assoc_set( assoc, "VfL", "VFL");
    mulle_assoc_set( assoc, "Bochum", "BOCHUM");
@@ -297,6 +304,7 @@ static void   find_in_range( void)
    }
 }
 
+
 static void   remap( void)
 {
    char   *s;
@@ -318,6 +326,7 @@ static void   remap( void)
       mulle_free( s);
    }
 }
+
 
 static void   describe( void)
 {

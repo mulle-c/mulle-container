@@ -171,29 +171,6 @@ static void   grow_generic( struct mulle__pointermap *map,
 }
 
 
-static void   shrink_generic( struct mulle__pointermap *map,
-                              struct mulle_container_keycallback *callback,
-                              struct mulle_allocator *allocator)
-{
-   void           **buf;
-   unsigned int   new_size;
-
-   new_size = map->_size / 2;
-   if( new_size < MULLE__POINTERMAP_INITIAL_SIZE)
-      return;
-
-   assert( map->_count < map->_size);
-
-   buf = mulle__pointermap_allocate_storage_generic( new_size, callback->notakey, allocator);
-   copy_storage_generic( buf, new_size, map->_storage, map->_size, callback);
-   mulle_allocator_free( allocator, map->_storage);
-
-   map->_storage = buf;
-   map->_size    = new_size;
-}
-
-
-
 static unsigned long  _find_index_generic( void **storage,
                                            unsigned int size,
                                            void *key,
@@ -462,7 +439,6 @@ struct mulle_pointerpair   *
    unsigned int   i;
    unsigned int   size;
    unsigned int   mask;
-   uintptr_t      hash;
    void           *found;
    void           **storage;
    void           *notakey;
@@ -475,20 +451,17 @@ struct mulle_pointerpair   *
    size    = map->_size;
    mask    = size - 1;
 
-   //
-   // we use a random starting point, it doesn't matter what space->key is
-   // if that happens to be the previous key, though this could be
-   // fairly optimal ? when you are deleting contents with this in a loop
-   // or ?
-   //
-   hash  = (*callback->keycallback.hash)( &callback->keycallback, space->key);
-   i     = mulle__pointermap_hash_for_size( hash, size);
-
+   i = 0; // just any start
    for(;;)
    {
       found = storage[ i];
       if( found != notakey)
-         return( storage[ i + size]);
+      {
+         space->key   = found;
+         space->value = storage[ i + size];
+         return( space);
+      }
+
       i = (i + 1) & mask;
    }
 }
@@ -715,12 +688,37 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
 }
 
 
+
 void   _mulle__pointermap_shrink_generic( struct mulle__pointermap *map,
                                           struct mulle_container_keyvaluecallback *callback,
                                           struct mulle_allocator *allocator)
 {
+   void           **buf;
+   unsigned int   new_size;
+
    assert( _mulle__pointermap_is_sparse( map));
-   shrink_generic( map, &callback->keycallback, allocator);
+
+   new_size = map->_size / 2;
+   while( _mulle__pointermap_is_sparse_size( map, new_size))
+   {
+      new_size = new_size / 2;
+      if( new_size < MULLE__POINTERMAP_INITIAL_SIZE)
+         break;
+   }
+
+   if( new_size < MULLE__POINTERMAP_INITIAL_SIZE)
+      new_size = MULLE__POINTERMAP_INITIAL_SIZE;
+   if( new_size >= map->_size)
+      return;
+
+   assert( map->_count < new_size);
+
+   buf = mulle__pointermap_allocate_storage_generic( new_size, callback->keycallback.notakey, allocator);
+   copy_storage_generic( buf, new_size, map->_storage, map->_size, &callback->keycallback);
+   mulle_allocator_free( allocator, map->_storage);
+
+   map->_storage = buf;
+   map->_size    = new_size;
 }
 
 

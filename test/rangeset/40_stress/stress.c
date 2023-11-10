@@ -20,6 +20,9 @@ int   main( int argc, char *argv[])
 
    for( i = 0; i < 1000000; i++)
    {
+      if( i % 100000 == 98765)
+         _mulle__rangeset_reset( &set, NULL);
+
       if( i % 1000 == 999)
          fputc( '.', stderr);
       switch( rand() & 0x7)
