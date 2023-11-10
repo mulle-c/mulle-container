@@ -216,6 +216,16 @@ static inline void  _mulle__set_shrink_if_needed( struct mulle__set *set,
 }
 
 
+MULLE_C_NONNULL_SECOND
+static inline void   mulle__set_shrink_if_needed( struct mulle__set *set,
+                                                  struct mulle_container_keycallback *callback,
+                                                  struct mulle_allocator *allocator)
+{
+   if( set)
+      _mulle__set_shrink_if_needed( set, callback, allocator);
+}
+
+
 
 #pragma mark - copying
 

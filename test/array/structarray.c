@@ -35,6 +35,8 @@ static void  null( void)
 
    array = NULL;
 
+   assert( mulle_structarray_get_count( array) == 0);
+
    assert( mulle_structarray_get_last( array) == NULL);
 
    a = mulle_structarray_reserve( array);
@@ -74,6 +76,7 @@ static void  simple( void)
                                      NULL);
 
    assert( mulle_structarray_get_last( array) == NULL);
+   assert( _mulle__structarray_get_used( (struct mulle__structarray *) array) == 0);
 
    for( i = 0; i < LOOPS; i++)
    {
@@ -138,6 +141,7 @@ static void  simple( void)
    }
    assert( i == 0);
 
+   _mulle_structarray_size_to_fit( array);
    mulle_structarray_destroy( array);
 }
 

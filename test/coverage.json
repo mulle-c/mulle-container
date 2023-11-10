@@ -1,0 +1,462 @@
+{
+    "branch_covered": 697,
+    "branch_percent": 71.6,
+    "branch_total": 973,
+    "files": [
+        {
+            "branch_covered": 52,
+            "branch_percent": 0.929,
+            "branch_total": 56,
+            "filename": "array/mulle--array.c",
+            "line_covered": 122,
+            "line_percent": 0.992,
+            "line_total": 123
+        },
+        {
+            "branch_covered": 4,
+            "branch_percent": 0.667,
+            "branch_total": 6,
+            "filename": "array/mulle--array.h",
+            "line_covered": 28,
+            "line_percent": 0.966,
+            "line_total": 29
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "array/mulle-array.c",
+            "line_covered": 4,
+            "line_percent": 1.0,
+            "line_total": 4
+        },
+        {
+            "branch_covered": 1,
+            "branch_percent": 0.5,
+            "branch_total": 2,
+            "filename": "array/mulle-array.h",
+            "line_covered": 5,
+            "line_percent": 0.833,
+            "line_total": 6
+        },
+        {
+            "branch_covered": 25,
+            "branch_percent": 0.9620000000000001,
+            "branch_total": 26,
+            "filename": "array/pointer/mulle--pointerarray.c",
+            "line_covered": 89,
+            "line_percent": 1.0,
+            "line_total": 89
+        },
+        {
+            "branch_covered": 9,
+            "branch_percent": 0.9,
+            "branch_total": 10,
+            "filename": "array/pointer/mulle--pointerarray.h",
+            "line_covered": 50,
+            "line_percent": 0.98,
+            "line_total": 51
+        },
+        {
+            "branch_covered": 14,
+            "branch_percent": 0.636,
+            "branch_total": 22,
+            "filename": "array/struct/mulle--structarray.c",
+            "line_covered": 48,
+            "line_percent": 0.8140000000000001,
+            "line_total": 59
+        },
+        {
+            "branch_covered": 2,
+            "branch_percent": 0.5,
+            "branch_total": 4,
+            "filename": "array/struct/mulle--structarray.h",
+            "line_covered": 16,
+            "line_percent": 0.762,
+            "line_total": 21
+        },
+        {
+            "branch_covered": 43,
+            "branch_percent": 0.652,
+            "branch_total": 66,
+            "filename": "assoc/mulle--assoc.c",
+            "line_covered": 113,
+            "line_percent": 0.8009999999999999,
+            "line_total": 141
+        },
+        {
+            "branch_covered": 6,
+            "branch_percent": 0.6,
+            "branch_total": 10,
+            "filename": "assoc/mulle--assoc.h",
+            "line_covered": 34,
+            "line_percent": 0.872,
+            "line_total": 39
+        },
+        {
+            "branch_covered": 22,
+            "branch_percent": 0.7859999999999999,
+            "branch_total": 28,
+            "filename": "assoc/mulle-assoc.c",
+            "line_covered": 70,
+            "line_percent": 0.9209999999999999,
+            "line_total": 76
+        },
+        {
+            "branch_covered": 10,
+            "branch_percent": 0.833,
+            "branch_total": 12,
+            "filename": "assoc/mulle-assoc.h",
+            "line_covered": 21,
+            "line_percent": 0.955,
+            "line_total": 22
+        },
+        {
+            "branch_covered": 2,
+            "branch_percent": 0.5,
+            "branch_total": 4,
+            "filename": "assoc/pointerpair/mulle--pointerpairarray.c",
+            "line_covered": 26,
+            "line_percent": 0.684,
+            "line_total": 38
+        },
+        {
+            "branch_covered": 6,
+            "branch_percent": 0.5,
+            "branch_total": 12,
+            "filename": "assoc/pointerpair/mulle--pointerpairarray.h",
+            "line_covered": 39,
+            "line_percent": 0.736,
+            "line_total": 53
+        },
+        {
+            "branch_covered": 21,
+            "branch_percent": 0.583,
+            "branch_total": 36,
+            "filename": "assoc/pointerpair/mulle-pointerpair.c",
+            "line_covered": 28,
+            "line_percent": 0.636,
+            "line_total": 44
+        },
+        {
+            "branch_covered": 6,
+            "branch_percent": 0.6,
+            "branch_total": 10,
+            "filename": "assoc/pointerpair/mulle-pointerpair.h",
+            "line_covered": 30,
+            "line_percent": 0.667,
+            "line_total": 45
+        },
+        {
+            "branch_covered": 21,
+            "branch_percent": 0.8079999999999999,
+            "branch_total": 26,
+            "filename": "map/mulle--map.c",
+            "line_covered": 78,
+            "line_percent": 0.975,
+            "line_total": 80
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "map/mulle--map.h",
+            "line_covered": 20,
+            "line_percent": 1.0,
+            "line_total": 20
+        },
+        {
+            "branch_covered": 7,
+            "branch_percent": 0.875,
+            "branch_total": 8,
+            "filename": "map/mulle-map.c",
+            "line_covered": 18,
+            "line_percent": 1.0,
+            "line_total": 18
+        },
+        {
+            "branch_covered": 2,
+            "branch_percent": 1.0,
+            "branch_total": 2,
+            "filename": "map/mulle-map.h",
+            "line_covered": 15,
+            "line_percent": 1.0,
+            "line_total": 15
+        },
+        {
+            "branch_covered": 66,
+            "branch_percent": 0.635,
+            "branch_total": 104,
+            "filename": "map/pointer/mulle--pointermap-generic.c",
+            "line_covered": 173,
+            "line_percent": 0.6679999999999999,
+            "line_total": 259
+        },
+        {
+            "branch_covered": 13,
+            "branch_percent": 0.542,
+            "branch_total": 24,
+            "filename": "map/pointer/mulle--pointermap-generic.h",
+            "line_covered": 40,
+            "line_percent": 0.87,
+            "line_total": 46
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": 0.0,
+            "branch_total": 16,
+            "filename": "map/pointer/mulle--pointermap-struct.c",
+            "line_covered": 0,
+            "line_percent": 0.0,
+            "line_total": 50
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": 0.0,
+            "branch_total": 10,
+            "filename": "map/pointer/mulle--pointermap-struct.h",
+            "line_covered": 10,
+            "line_percent": 0.27,
+            "line_total": 37
+        },
+        {
+            "branch_covered": 1,
+            "branch_percent": 0.5,
+            "branch_total": 2,
+            "filename": "mulle-container-callback.c",
+            "line_covered": 32,
+            "line_percent": 0.78,
+            "line_total": 41
+        },
+        {
+            "branch_covered": 11,
+            "branch_percent": 0.688,
+            "branch_total": 16,
+            "filename": "mulle-container-callback.h",
+            "line_covered": 24,
+            "line_percent": 0.828,
+            "line_total": 29
+        },
+        {
+            "branch_covered": 2,
+            "branch_percent": 1.0,
+            "branch_total": 2,
+            "filename": "mulle-container-math.h",
+            "line_covered": 11,
+            "line_percent": 1.0,
+            "line_total": 11
+        },
+        {
+            "branch_covered": 2,
+            "branch_percent": 1.0,
+            "branch_total": 2,
+            "filename": "mulle-qsort.c",
+            "line_covered": 4,
+            "line_percent": 1.0,
+            "line_total": 4
+        },
+        {
+            "branch_covered": 57,
+            "branch_percent": 0.95,
+            "branch_total": 60,
+            "filename": "mulle-qsort.h",
+            "line_covered": 80,
+            "line_percent": 0.9640000000000001,
+            "line_total": 83
+        },
+        {
+            "branch_covered": 28,
+            "branch_percent": 0.9329999999999999,
+            "branch_total": 30,
+            "filename": "queue/mulle--pointerqueue.c",
+            "line_covered": 97,
+            "line_percent": 0.98,
+            "line_total": 99
+        },
+        {
+            "branch_covered": 6,
+            "branch_percent": 0.75,
+            "branch_total": 8,
+            "filename": "queue/mulle--pointerqueue.h",
+            "line_covered": 25,
+            "line_percent": 0.893,
+            "line_total": 28
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "queue/mulle-pointerqueue.c",
+            "line_covered": 4,
+            "line_percent": 1.0,
+            "line_total": 4
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "queue/mulle-pointerqueue.h",
+            "line_covered": 7,
+            "line_percent": 1.0,
+            "line_total": 7
+        },
+        {
+            "branch_covered": 15,
+            "branch_percent": 0.441,
+            "branch_total": 34,
+            "filename": "queue/struct/mulle--structqueue.c",
+            "line_covered": 61,
+            "line_percent": 0.57,
+            "line_total": 107
+        },
+        {
+            "branch_covered": 1,
+            "branch_percent": 0.125,
+            "branch_total": 8,
+            "filename": "queue/struct/mulle--structqueue.h",
+            "line_covered": 17,
+            "line_percent": 0.5479999999999999,
+            "line_total": 31
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "queue/struct/mulle-structqueue.c",
+            "line_covered": 4,
+            "line_percent": 1.0,
+            "line_total": 4
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "queue/struct/mulle-structqueue.h",
+            "line_covered": 7,
+            "line_percent": 1.0,
+            "line_total": 7
+        },
+        {
+            "branch_covered": 127,
+            "branch_percent": 0.713,
+            "branch_total": 178,
+            "filename": "rangeset/mulle--rangeset.c",
+            "line_covered": 217,
+            "line_percent": 0.741,
+            "line_total": 293
+        },
+        {
+            "branch_covered": 1,
+            "branch_percent": 0.5,
+            "branch_total": 2,
+            "filename": "rangeset/mulle--rangeset.h",
+            "line_covered": 5,
+            "line_percent": 0.833,
+            "line_total": 6
+        },
+        {
+            "branch_covered": 16,
+            "branch_percent": 0.8,
+            "branch_total": 20,
+            "filename": "set/mulle--set.c",
+            "line_covered": 55,
+            "line_percent": 0.982,
+            "line_total": 56
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "set/mulle--set.h",
+            "line_covered": 20,
+            "line_percent": 1.0,
+            "line_total": 20
+        },
+        {
+            "branch_covered": 9,
+            "branch_percent": 0.9,
+            "branch_total": 10,
+            "filename": "set/mulle-set.c",
+            "line_covered": 19,
+            "line_percent": 1.0,
+            "line_total": 19
+        },
+        {
+            "branch_covered": 2,
+            "branch_percent": 1.0,
+            "branch_total": 2,
+            "filename": "set/mulle-set.h",
+            "line_covered": 15,
+            "line_percent": 1.0,
+            "line_total": 15
+        },
+        {
+            "branch_covered": 65,
+            "branch_percent": 0.89,
+            "branch_total": 73,
+            "filename": "set/pointer/mulle--pointerset-generic.c",
+            "line_covered": 163,
+            "line_percent": 0.9059999999999999,
+            "line_total": 180
+        },
+        {
+            "branch_covered": 11,
+            "branch_percent": 0.7859999999999999,
+            "branch_total": 14,
+            "filename": "set/pointer/mulle--pointerset-generic.h",
+            "line_covered": 30,
+            "line_percent": 1.0,
+            "line_total": 30
+        },
+        {
+            "branch_covered": 8,
+            "branch_percent": 0.667,
+            "branch_total": 12,
+            "filename": "set/pointer/mulle--pointerset-struct.c",
+            "line_covered": 31,
+            "line_percent": 0.738,
+            "line_total": 42
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "set/pointer/mulle--pointerset-struct.h",
+            "line_covered": 8,
+            "line_percent": 1.0,
+            "line_total": 8
+        },
+        {
+            "branch_covered": 0,
+            "branch_percent": null,
+            "branch_total": 0,
+            "filename": "set/pointer/mulle--pointerset.h",
+            "line_covered": 3,
+            "line_percent": 1.0,
+            "line_total": 3
+        },
+        {
+            "branch_covered": 1,
+            "branch_percent": 0.5,
+            "branch_total": 2,
+            "filename": "set/pointer/mulle-pointerset.c",
+            "line_covered": 7,
+            "line_percent": 0.875,
+            "line_total": 8
+        },
+        {
+            "branch_covered": 2,
+            "branch_percent": 0.5,
+            "branch_total": 4,
+            "filename": "set/pointer/mulle-pointerset.h",
+            "line_covered": 14,
+            "line_percent": 0.9329999999999999,
+            "line_total": 15
+        }
+    ],
+    "gcovr/summary_format_version": "0.2",
+    "line_covered": 2037,
+    "line_percent": 81.0,
+    "line_total": 2515,
+    "root": "../../src"
+}

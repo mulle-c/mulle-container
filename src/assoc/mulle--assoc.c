@@ -411,8 +411,8 @@ int   mulle__assoc_member( struct mulle__assoc *assoc,
                            void *key,
                            struct mulle_container_keyvaluecallback *callback)
 {
-   struct mulle_pointerpair   result;
+   uintptr_t   result;
 
-   result = mulle__assoc_search_callback( assoc, key, callback);
-   return( ! mulle_pointerpair_is_invalid( result));
+   result = mulle__assoc_find_callback( assoc, key, callback);
+   return( result != mulle_not_found_e);
 }

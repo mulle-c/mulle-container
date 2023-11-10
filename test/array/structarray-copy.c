@@ -49,6 +49,12 @@ static void  add_array( void)
       _mulle_structarray_add( other, &a);
    }
 
+   // coverage
+   mulle_structarray_add_array( array, NULL, mulle_range_make_all());
+   // coverage
+   mulle_structarray_add_array( array, other, mulle_range_make( 1, 0));
+
+   // for real
    mulle_structarray_add_array( array, other, mulle_range_make( 1, 8));
 
    i     = 0;

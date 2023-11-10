@@ -178,27 +178,6 @@ void   *_mulle__pointermap_get( struct mulle__pointermap *map,
 }
 
 
-//
-// returns NULL if nothing found. There is no way to distinguish with
-// get, if a key/value pair exists, if NULL is a valid value!
-//
-struct mulle_pointerpair
-   mulle__pointermap_find_by_value( struct mulle__pointermap *map, void *value)
-{
-   struct mulle__pointermapenumerator  rover;
-   struct mulle_pointerpair            item;
-
-   rover = mulle__pointermap_enumerate( map);
-   while( _mulle__pointermapenumerator_next_pair( &rover, &item))
-   {
-      if( item.value == value)
-         break;
-   }
-   mulle__pointermapenumerator_done( &rover);
-   return( item);
-}
-
-
 void   _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
                                             struct mulle_allocator *allocator)
 {

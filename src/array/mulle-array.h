@@ -521,6 +521,14 @@ static inline uintptr_t
 }
 
 
+static inline uintptr_t
+   mulle_array_find( struct mulle_array *array, void *obj)
+{
+   return( mulle_array_find_in_range( array, obj, mulle_range_make_all()));
+}
+
+
+
 MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_array_qsort_r_inline( struct mulle_array *array,

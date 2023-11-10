@@ -80,6 +80,8 @@ static void  simple( void)
       assert( mulle_map_get_count( map) == 0);
       assert( ! mulle_map_get( map, "VfL"));
 
+      assert( ! mulle_map_get( map, NULL));
+
       mulle_map_set( map, "VfL", "VFL");
       assert( ! mulle_map_get( map, "VFL"));
       assert( ! strcmp( "VFL", mulle_map_get( map, "VfL")));
@@ -134,6 +136,52 @@ static void   map_reset( void)
 }
 
 
+static void   map_misc( void)
+{
+   struct mulle_map                          *map;
+   struct mulle_container_keyvaluecallback   callback;
+   struct mulle_pointerpair                  *any;
+   struct mulle_pointerpair                  anySpace;
+   struct mulle_pointerpair                  *p;
+   struct mulle_pointerpair                  pSpace;
+   void                                      *value;
+   uintptr_t                                 hash;
+   unsigned int                              perfects;
+
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+
+   assert( ! mulle__map_is_sparse( NULL));
+
+   map = mulle_map_create( 1000, &callback, NULL);
+
+   any = _mulle__map_get_any_pair( (struct mulle__map *) map, &callback, &anySpace);
+   assert( any == NULL);
+
+   mulle_map_set( map, "VfL", "VFL");
+   mulle_map_set( map, "Bochum", "BOCHUM");
+   mulle_map_set( map, "1848", "1848");
+
+   _mulle__map_count_collisions( (struct mulle__map *) map, &callback, NULL);
+
+   any = _mulle__map_get_any_pair( (struct mulle__map *) map, &callback, &anySpace);
+   assert( any);
+   p   = _mulle__map__get_pair( (struct mulle__map *) map, any->key, &callback, &pSpace);
+   assert( p->key == any->key);
+
+   hash  = (*callback.keycallback.hash)( &callback.keycallback, any->key);
+   value = _mulle__map__get_knownhash( (struct mulle__map *) map, any->key, hash, &callback);
+   assert( value == any->value);
+
+   _mulle__map_count_collisions( (struct mulle__map *) map, &callback, &perfects);
+   _mulle__map_count_collisions( (struct mulle__map *) map, &callback, NULL);
+
+   assert( mulle__map_is_sparse( (struct mulle__map *) map));
+   mulle_map_shrink_if_needed( map);
+
+   mulle_map_destroy( map);
+}
+
 
 static void   map_remove( void)
 {
@@ -145,9 +193,15 @@ static void   map_remove( void)
 
    map = mulle_map_create( 0, &callback, NULL);
 
+   mulle_map_remove( map, "Bochum");
+   assert( mulle_map_get_count( map) == 0);
+
    mulle_map_set( map, "VfL", "VFL");
    mulle_map_set( map, "Bochum", "BOCHUM");
    mulle_map_set( map, "1848", "1848");
+
+   mulle_map_remove( map, "Noone");
+   assert( mulle_map_get_count( map) == 3);
 
    mulle_map_remove( map, "Bochum");
    assert( mulle_map_get_count( map) == 2);
@@ -350,6 +404,7 @@ int   main( int argc, char * argv[])
    run_test( map_copy, "copy");
    run_test( map_add_map, "add_map");
    run_test( describe, "describe");
+   run_test( map_misc, "misc");
 
    return( 0);
 }

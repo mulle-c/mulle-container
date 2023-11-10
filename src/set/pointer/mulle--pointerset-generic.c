@@ -156,28 +156,6 @@ static void   grow_generic( struct mulle__pointerset *set,
 }
 
 
-static void   shrink_generic( struct mulle__pointerset *set,
-                              struct mulle_container_keycallback *callback,
-                              struct mulle_allocator *allocator)
-{
-   void           **buf;
-   unsigned int   new_size;
-
-   new_size = set->_size / 2;
-   if( new_size < MULLE__POINTERSET_INITIAL_SIZE)
-      return;
-
-   assert( set->_count < new_size);
-
-   buf = _mulle__pointerset_allocate_storage_generic( new_size, callback->notakey, allocator);
-   copy_storage_generic( buf, new_size, set->_storage, set->_size, callback);
-   mulle_allocator_free( allocator, set);
-
-   set->_storage = buf;
-   set->_size    = new_size;
-}
-
-
 static uintptr_t  _find_index_generic( void  **storage,
                                        unsigned int size,
                                        void *p,
@@ -385,11 +363,35 @@ void   *_mulle__pointerset_get_generic( struct mulle__pointerset *set,
 
 
 void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
-                                           struct mulle_container_keycallback *callback,
-                                           struct mulle_allocator *allocator)
+                                          struct mulle_container_keycallback *callback,
+                                          struct mulle_allocator *allocator)
 {
+   void           **buf;
+   unsigned int   new_size;
+
    assert( _mulle__pointerset_is_sparse( set));
-   shrink_generic( set, callback, allocator);
+
+   new_size = set->_size / 2;
+   while( _mulle__pointerset_is_sparse_size( set, new_size))
+   {
+      new_size = new_size / 2;
+      if( new_size < MULLE__POINTERSET_INITIAL_SIZE)
+         break;
+   }
+
+   if( new_size < MULLE__POINTERSET_INITIAL_SIZE)
+      new_size = MULLE__POINTERSET_INITIAL_SIZE;
+   if( new_size >= set->_size)
+      return;
+
+   assert( set->_count < new_size);
+
+   buf = _mulle__pointerset_allocate_storage_generic( new_size, callback->notakey, allocator);
+   copy_storage_generic( buf, new_size, set->_storage, set->_size, callback);
+   mulle_allocator_free( allocator, set->_storage);
+
+   set->_storage = buf;
+   set->_size    = new_size;
 }
 
 

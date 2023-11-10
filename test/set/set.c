@@ -190,7 +190,7 @@ static void   set_copy( void)
    struct mulle__set                         *copy2;
    struct mulle_container_keyvaluecallback   callback;
 
-   set = mulle_set_create( 0, &mulle_container_keycallback_copied_cstring, NULL);
+   set = mulle_set_create( 1000, &mulle_container_keycallback_copied_cstring, NULL);
 
    mulle_set_set( set, "VfL");
    mulle_set_set( set, "Bochum");
@@ -207,6 +207,8 @@ static void   set_copy( void)
    _mulle__set_destroy( copy2,
                         &mulle_container_keycallback_copied_cstring,
                         NULL);
+
+   mulle_set_shrink_if_needed( set);
 
    mulle_set_destroy( set);
 }
