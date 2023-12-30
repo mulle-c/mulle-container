@@ -289,7 +289,7 @@ void   _mulle__structqueue_reset( struct mulle__structqueue *queue,
 
 
 void   _mulle__structqueue_done( struct mulle__structqueue *queue,
-                          struct mulle_allocator *allocator)
+                                 struct mulle_allocator *allocator)
 {
    free_chained_buckets( queue->_read, allocator);
    free_chained_buckets( queue->_spares, allocator);

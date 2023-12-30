@@ -34,8 +34,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef mulle_array__h__
-#define mulle_array__h__
+#ifndef mulle_array_h__
+#define mulle_array_h__
 
 #include "mulle--array.h"
 #include "mulle-container-operation.h"
@@ -759,17 +759,6 @@ static inline void
 }
 
 
-//
-// sizeof( item) must be sizeof( void *)
-//
-#define mulle_array_for( array, item)                                                 \
-   for( struct mulle_arrayenumerator rover__ ## item = mulle_array_enumerate( array); \
-        _mulle_arrayenumerator_next( &rover__ ## item, (void **) &item);)
-
-#define mulle_array_for_reverse( array, item)                                                       \
-   for( struct mulle_arrayreverseenumerator rover__ ## item = mulle_array_reverseenumerate( array); \
-        _mulle_arrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
-
 
 
 // created by make-container-do.sh --flexible mulle-array.c
@@ -808,6 +797,32 @@ static inline void
       for( int  name ## __j = 0;    /* break protection */                      \
            name ## __j < 1;                                                     \
            name ## __j++)
+
+
+// created by make-container-for.sh src/array/mulle-array.c
+
+#define mulle_array_for( name, item)                                               \
+   assert( sizeof( item) == sizeof( void *));                                      \
+   for( struct mulle_arrayenumerator                                               \
+           rover__ ## item = mulle_array_enumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                 \
+        ! rover___  ## item ## __i;                                                \
+        rover___ ## item ## __i = (_mulle_arrayenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                    \
+      while( _mulle_arrayenumerator_next( &rover__ ## item, (void **) &item))
+
+
+// created by make-container-for.sh --reverse src/array/mulle-array.c
+
+#define mulle_array_for_reverse( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                             \
+   for( struct mulle_arrayreverseenumerator                                               \
+           rover__ ## item = mulle_array_reverseenumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                        \
+        ! rover___  ## item ## __i;                                                       \
+        rover___ ## item ## __i = (_mulle_arrayreverseenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                           \
+      while( _mulle_arrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
 
 #endif /* mulle_array_h */

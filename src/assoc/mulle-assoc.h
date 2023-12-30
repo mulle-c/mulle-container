@@ -34,8 +34,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef mulle_assoc__h__
-#define mulle_assoc__h__
+#ifndef mulle_assoc_h__
+#define mulle_assoc_h__
 
 #include "mulle--assoc.h"
 #include "mulle-container-operation.h"
@@ -713,18 +713,6 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
 {
 }
 
-//
-// sizeof( item) must be sizeof( void *)
-//
-#define mulle_assoc_for( assoc, key, value)                                           \
-   assert( sizeof( key) == sizeof( void *));                                          \
-   assert( sizeof( value) == sizeof( void *));                                        \
-   for( struct mulle_assocenumerator rover__ ## item = mulle_assoc_enumerate( assoc); \
-        _mulle_assocenumerator_next( &rover__ ## item,                                \
-                                     (void **) &key,                                  \
-                                     (void **) &value);)
-
-
 // created by make-container-do.sh -ls --compare --type struct mulle_pointerpair    mulle-assoc.c
 
 #define mulle_assoc_do( name, callback, compare)                             \
@@ -742,6 +730,24 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
       for( int  name ## __j = 0;    /* break protection */                   \
            name ## __j < 1;                                                  \
            name ## __j++)
+
+
+
+// created by make-container-for.sh src/assoc/mulle-assoc.c
+
+#define mulle_assoc_for( name, key, value)                                                                     \
+   assert( sizeof( key) == sizeof( void *));                                                                   \
+   assert( sizeof( value) == sizeof( void *));                                                                 \
+   for( struct mulle_assocenumerator                                                                           \
+           rover__ ## key ## __ ## value = mulle_assoc_enumerate( name),                                       \
+           *rover___  ## key ## __ ## value ## __i = (void *) 0;                                               \
+        ! rover___  ## key ## __ ## value ## __i;                                                              \
+        rover___ ## key ## __ ## value ## __i = (_mulle_assocenumerator_done( &rover__ ## key ## __ ## value), \
+                                              (void *) 1))                                                     \
+      while( _mulle_assocenumerator_next( &rover__ ## key ## __ ## value,                                      \
+                                      (void **) &key,                                                          \
+                                      (void **) &value))
+
 
 
 

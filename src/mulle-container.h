@@ -33,10 +33,10 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_container__h__
-#define mulle_container__h__
+#ifndef mulle_container_h__
+#define mulle_container_h__
 
-#define MULLE__CONTAINER_VERSION  ((8 << 20) | (0 << 8) | 0)
+#define MULLE__CONTAINER_VERSION  ((8UL << 20) | (0 << 8) | 0)
 
 #include "include.h"
 

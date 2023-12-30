@@ -195,7 +195,7 @@ static inline struct mulle__genericpointermapenumerator
    mulle__pointermap_enumerate_generic( struct mulle__pointermap *map,
                                         struct mulle_container_keyvaluecallback *callback)
 {
-   struct mulle__genericpointermapenumerator   rover;
+   struct mulle__genericpointermapenumerator   rover = { 0 }; // awkward, but sanitizes better
 
    if( map)
    {
@@ -204,8 +204,6 @@ static inline struct mulle__genericpointermapenumerator
       rover._offset  = _mulle__pointermap_get_size( map);
       rover._notakey = callback ? callback->keycallback.notakey : 0;
    }
-   else
-      rover._left    = 0;
 
    return( rover);
 }

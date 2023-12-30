@@ -307,6 +307,30 @@ static void  extract_pointers0( void)
 }
 
 
+static void   add_array( void)
+{
+   struct mulle_pointerarray   array;
+   struct mulle_pointerarray   copy;
+
+   mulle_pointerarray_init( &array, 0, NULL);
+
+   mulle_pointerarray_add( &array, "VfL");
+   mulle_pointerarray_add( &array, "Bochum");
+   mulle_pointerarray_add( &array, "1848");
+   assert( mulle_pointerarray_get_count( &array) == 3);
+
+   mulle_pointerarray_init( &copy, 20, NULL);
+
+   assert( mulle_pointerarray_get_count( &copy) == 0);
+   mulle_pointerarray_add_array( &copy, &array, mulle_range_make_all());
+   assert( mulle_pointerarray_get_count( &copy) == 3);
+   assert( mulle_pointerarray_get_count( &array) == 3);
+   assert( mulle_pointerarray_is_equal( &copy, &array));
+
+   mulle_pointerarray_done( &copy);
+   mulle_pointerarray_done( &array);
+}
+
 
 
 // the mulle_testallocator detects and aborts on leaks
@@ -330,5 +354,6 @@ int main(int argc, const char * argv[])
    run_test( extract_pointers, "extract_pointers");
    run_test( extract_pointers2, "extract_pointers2");
    run_test( extract_pointers0, "extract_pointers0");
+   run_test( add_array, "add array");
    return( 0);
 }

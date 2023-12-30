@@ -30,8 +30,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle__map__h__
-#define mulle__map__h__
+#ifndef mulle__map_h__
+#define mulle__map_h__
 
 #include "mulle--pointermap.h"
 
@@ -108,7 +108,7 @@ static inline int   _mulle__map_is_full( struct mulle__map *map)
 
 static inline int   mulle__map_is_full( struct mulle__map *map)
 {
-   return( map ? _mulle__map_is_full( map) : 1);
+   return( mulle__pointermap_is_full( (struct mulle__pointermap *) map));
 }
 
 
@@ -120,7 +120,7 @@ static inline int   _mulle__map_is_sparse( struct mulle__map *map)
 
 static inline int   mulle__map_is_sparse( struct mulle__map *map)
 {
-   return( map ? _mulle__map_is_sparse( map) : 0);
+   return( mulle__pointermap_is_sparse( (struct mulle__pointermap *) map));
 }
 
 
@@ -133,7 +133,7 @@ static inline unsigned int   _mulle__map_get_count( struct mulle__map *map)
 
 static inline unsigned int   mulle__map_get_count( struct mulle__map *map)
 {
-   return( map ? _mulle__map_get_count( map) : 0);
+   return( mulle__pointermap_get_count( (struct mulle__pointermap *) map));
 }
 
 
@@ -146,7 +146,7 @@ static inline unsigned int   _mulle__map_get_size( struct mulle__map *map)
 
 static inline unsigned int   mulle__map_get_size( struct mulle__map *map)
 {
-   return( map ? _mulle__map_get_size( map) : 0);
+   return( mulle__pointermap_get_size( (struct mulle__pointermap *) map));
 }
 
 
@@ -494,11 +494,11 @@ static inline char   *
 //
 MULLE_C_NONNULL_FIRST_SECOND
 static inline unsigned int
-   _mulle__map_count_collisions( struct mulle__map *map,
+   _mulle__map_count_collisions( struct mulle__map *set,
                                  struct mulle_container_keyvaluecallback *callback,
                                  unsigned int *perfects)
 {
-   return( _mulle__pointermap_count_collisions_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap_count_collisions_generic( (struct mulle__pointermap *) set,
                                                          callback,
                                                          perfects));
 }
@@ -584,6 +584,8 @@ static inline void
 }
 
 
+
+
 /*
  * a different and smaller interface, where you have to pass in space
  * to store the enumeration result each iteration and where notakey
@@ -620,13 +622,10 @@ static inline struct mulle__maptinyenumerator
 static inline struct mulle__maptinyenumerator
    mulle__map_tinyenumerate_nil( struct mulle__map *map)
 {
-   struct mulle__maptinyenumerator   rover;
-
    if( map)
       return( _mulle__map_tinyenumerate_nil( map));
 
-   rover._left = 0;
-   return( rover);
+   return( (struct mulle__maptinyenumerator) { 0 }); // less sanitizer warnings
 }
 
 
@@ -698,5 +697,14 @@ static inline void
            name ## __j++)
 
 
+
+#define mulle__map_for( map, key, value)                                                        \
+   assert( sizeof( key) == sizeof( void *));                                           \
+   assert( sizeof( value) == sizeof( void *));                                                  \
+   for( struct mulle__mapenumerator rover__ ## key ## __ ## value = mulle__map_enumerate( map); \
+        _mulle__mapenumerator_next( &rover__ ## key ## __ ## value,                             \
+                                    (void **) &(key),                                           \
+                                    (void **) &(value));                                        \
+        _mulle__mapenumerator_done( &rover__ ## key ## __ ## value))
 
 #endif

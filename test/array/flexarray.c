@@ -50,7 +50,7 @@ static struct demo_struct   flex_return( int n)
       {
          array[ i] = (struct demo_struct) { i,  i};
          if( i == n - 2)
-            mulle_flexarray_return( array, array[ i]);
+            _mulle_flexarray_return( array, array[ i]);
       }
    }
    return( (struct demo_struct) { 0});
@@ -70,7 +70,7 @@ static void  flex_explicit( int n)
 
    printf("Copied string: %s\n", copy);
    if( copy[ 0] == 'q')
-      mulle_flexarray_return_void( copy);
+      _mulle_flexarray_return_void( copy);
 
    mulle_flexarray_realloc( copy, n + n);
 

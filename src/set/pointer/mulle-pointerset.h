@@ -237,4 +237,20 @@ struct mulle_pointerset  *mulle_pointerset_copy( struct mulle_pointerset *set);
            name ## __j < 1;                                 \
            name ## __j++)
 
+//
+// API still incomplete, borrow from inferior data structure.
+//     In this for loop, pretend that _mulle__pointersetenumerator_done is
+//     very important, and needs to be called. Could be
+//     good in a different data structure, where an enumerator must actually
+//     allocate and free something.
+//
+#define mulle_pointerset_for( set, item)                                                                                     \
+   assert( sizeof( item) == sizeof( void *));                                                                                \
+   for( struct mulle__pointersetenumerator rover__ ## item = mulle__pointerset_enumerate( (struct mulle__pointerset *) set); \
+        *rover___  ## item ## __i = (void *) 0;                                                                              \
+        ! rover___  ## item ## __i;                                                                                          \
+        rover___ ## item ## __i   = (_mulle__pointersetenumerator_done( &rover__ ## item), (void *) 1))                      \
+                                                                                                                             \
+      while(_mulle__pointersetenumerator_next( &rover__ ## item, (void **) &item))
+
 #endif

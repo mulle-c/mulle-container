@@ -44,6 +44,7 @@
 //
 // mulle_pointerpairarray, simple growing array of pointer pairs
 // (kind of like a associative array)
+// TODO: hide mulle_pointerpair from API and use key/value ?
 // You can also use it as stack
 //
 struct mulle_pointerpairarray
@@ -459,7 +460,7 @@ static inline struct mulle_pointerpairarrayenumerator
 MULLE_C_NONNULL_FIRST_SECOND
 static inline int
 	_mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover,
-                                           struct mulle_pointerpair  *pair)
+                                           struct mulle_pointerpair *pair)
 {
    return( _mulle__pointerpairarrayenumerator_next( (struct mulle__pointerpairarrayenumerator *) rover,
                                                     pair));
@@ -468,7 +469,7 @@ static inline int
 
 static inline int
 	mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover,
-                                          struct mulle_pointerpair  *pair)
+                                          struct mulle_pointerpair *pair)
 {
    return( mulle__pointerpairarrayenumerator_next( (struct mulle__pointerpairarrayenumerator *) rover,
                                                    pair));
@@ -490,10 +491,6 @@ static inline void
 }
 
 
-#define mulle_pointerpairarray_for( array, pair)                                                            \
-   for( struct mulle_pointerpairarrayenumerator rover__ ## pair = mulle_pointerpairarray_enumerate( array); \
-        _mulle_pointerpairarrayenumerator_next( &rover__ ## pair, (void **) &pair);)
-
 
 // created by make-container-do.sh -v -ls --type struct mulle_pointerpair    mulle-pointerpairarray.c
 
@@ -512,6 +509,21 @@ static inline void
       for( int  name ## __j = 0;    /* break protection */      \
            name ## __j < 1;                                     \
            name ## __j++)
+
+
+//
+// TODO: Use standard key, value for this ?
+//
+#define mulle_pointerpairarray_for( name, pair)                                               \
+   for( struct mulle_pointerpairarrayenumerator                                               \
+           rover__ ## pair = mulle_pointerpairarray_enumerate( name),                         \
+           *rover___  ## pair ## __i = (void *) 0;                                            \
+        ! rover___  ## pair ## __i;                                                           \
+        rover___ ## pair ## __i = (_mulle_pointerpairarrayenumerator_done( &rover__ ## pair), \
+                                   (void *) 1))                                               \
+      while( _mulle_pointerpairarrayenumerator_next( &rover__ ## pair, &pair))
+
+
 
 
 #endif

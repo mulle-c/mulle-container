@@ -34,8 +34,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef mulle_container_compiler_attributes__h__
-#define mulle_container_compiler_attributes__h__
+#ifndef mulle_container_compiler_attributes_h__
+#define mulle_container_compiler_attributes_h__
 
 
 #ifndef MULLE_C_NONNULL_FIRST

@@ -387,6 +387,13 @@ static inline void
 }
 
 
+MULLE__CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+void   _mulle__pointerarray_add_array( struct mulle__pointerarray *array,
+                                       struct mulle__pointerarray *other,
+                                       struct mulle_range range,
+                                       struct mulle_allocator *allocator);
+
 MULLE_C_NONNULL_FIRST
 static inline void   *
    _mulle__pointerarray_pop( struct mulle__pointerarray *array)
@@ -420,6 +427,13 @@ static inline void
    if( array)
       _mulle__pointerarray_reset( array);
 }
+
+
+// other may be NULL
+MULLE__CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+int    _mulle__pointerarray_is_equal( struct mulle__pointerarray *array,
+                                      struct mulle__pointerarray *other);
 
 
 MULLE__CONTAINER_GLOBAL
@@ -1004,6 +1018,32 @@ static inline int   mulle__pointerarray_member( struct mulle__pointerarray *arra
       for( int  name ## __j = 0;    /* break protection */              \
            name ## __j < 1;                                             \
            name ## __j++)
+
+
+// created by make-container-for.sh src/array/pointer/mulle--pointerarray.c
+
+#define mulle__pointerarray_for( name, item)                                               \
+   assert( sizeof( item) == sizeof( void *));                                              \
+   for( struct mulle__pointerarrayenumerator                                               \
+           rover__ ## item = mulle__pointerarray_enumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                         \
+        ! rover___  ## item ## __i;                                                        \
+        rover___ ## item ## __i = (_mulle__pointerarrayenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                            \
+      while( _mulle__pointerarrayenumerator_next( &rover__ ## item, (void **) &item))
+
+
+// created by make-container-for.sh --reverse src/array/pointer/mulle--pointerarray.c
+
+#define mulle__pointerarray_for_reverse( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                                     \
+   for( struct mulle__pointerarrayreverseenumerator                                               \
+           rover__ ## item = mulle__pointerarray_reverseenumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                                \
+        ! rover___  ## item ## __i;                                                               \
+        rover___ ## item ## __i = (_mulle__pointerarrayreverseenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                                   \
+      while( _mulle__pointerarrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
 
 #endif

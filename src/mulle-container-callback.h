@@ -45,11 +45,6 @@
 #include <assert.h>
 
 
-#if MULLE__ALLOCATOR_VERSION < ((2 << 20) | (1 << 8) | 0)
-# error "mulle_allocator is too old"
-#endif
-
-
 #pragma mark - callback schemes for containers
 
 

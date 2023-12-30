@@ -34,8 +34,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef mulle_flexarray__h__
-#define mulle_flexarray__h__
+#ifndef mulle_flexarray_h__
+#define mulle_flexarray_h__
 
 #include "include.h"
 
@@ -43,36 +43,8 @@
 //#include <stdalign.h>
 
 
-// A mulle-flexarray is useful in functions, when you prefer to do the work
-// in a stack based (auto) array, but must remain flexible to use malloc
-// for heavier workloads
-//
-// e.g. conventional code:
-//
-// void  foo( int n, int *data)
-// {
-//    int  copy_data[ 32];
-//    int  *copy = copy_data;
-//
-//    if( n > 32)
-//       copy = malloc( n * sizeof( int));
-//
-//    memcpy( copy, data, n * sizeof( int));
-//
-//    if( copy != copy_data)
-//       free( copy);
-// }
-//
-//
-// mulle-flexarray code:
-//
-// void  foo( int n, int *data)
-// {
-//    mulle_flexarray_do( copy, int, 32, n);
-//    {
-//       memcpy( copy, data, n * sizeof( int));
-//    }
-// }
+// The mulle-flexarray was a precursor to mulle-alloca, it remains, because
+// there is some code that uses it already.
 
 #define mulle_flexarray( name, type, stackcount)                           \
    type                        name ## __storage[ (stackcount)];           \
@@ -104,16 +76,21 @@
    }                                                                       \
    while( 0)
 
-#define mulle_flexarray_return( name, value)                               \
+
+//
+// these macros are only useful, if you are not nesting your flexarray_dos
+// I just might throw these two macros out again
+//
+#define _mulle_flexarray_return( name, value)                              \
    do                                                                      \
    {                                                                       \
-      __typeof__( *name) name ## __tmp = (value);                          \
+      __typeof__( value) name ## __tmp = (value);                          \
       mulle_flexarray_done( name);                                         \
       return( name ## __tmp);                                              \
    }                                                                       \
    while( 0)
 
-#define mulle_flexarray_return_void( name)                                 \
+#define _mulle_flexarray_return_void( name)                                \
    do                                                                      \
    {                                                                       \
       mulle_flexarray_done( name);                                         \
