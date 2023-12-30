@@ -31,8 +31,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_structqueue__h__
-#define mulle_structqueue__h__
+#ifndef mulle_structqueue_h__
+#define mulle_structqueue_h__
 
 #include "mulle--structqueue.h"
 
@@ -61,7 +61,7 @@ struct mulle_structqueue
       ._sizeof_struct      = MULLE__STRUCTQUEUE_ALIGNED_SIZE( type),  \
       ._copy_sizeof_struct = sizeof( type),                           \
       ._bucket_size        = 64,                                      \
-      .allocator           = xallocator                               \
+      .allocator           = (xallocator)                             \
    })
 
 // does not set the allocator, init does
@@ -435,11 +435,6 @@ static inline void
 }
 
 
-#define mulle_structqueue_for( queue, item)                                                       \
-   for( struct mulle_structqueueenumerator rover__ ## item = mulle_structqueue_enumerate( queue); \
-        _mulle_structqueueenumerator_next( &rover__ ## item, (void **) &item);)
-
-
 #define mulle_structqueue_do( name, type)                              \
    for( struct mulle_structqueue                                       \
            name ## __container = MULLE_STRUCTQUEUE_INIT( type, NULL),  \
@@ -455,5 +450,18 @@ static inline void
       for( int  name ## __j = 0;    /* break protection */             \
            name ## __j < 1;                                            \
            name ## __j++)
+
+
+// created by make-container-for.sh src/queue/struct/mulle-structqueue.c
+
+#define mulle_structqueue_for( name, item)                                               \
+   assert( sizeof( item) == sizeof( void *));                                            \
+   for( struct mulle_structqueueenumerator                                               \
+           rover__ ## item = mulle_structqueue_enumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                       \
+        ! rover___  ## item ## __i;                                                      \
+        rover___ ## item ## __i = (_mulle_structqueueenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                          \
+      while( _mulle_structqueueenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif

@@ -107,12 +107,12 @@ MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
                                    struct mulle_allocator *allocator);
 
-static inline void
+static inline void   
    mulle__pointermap_destroy( struct mulle__pointermap *map,
                               struct mulle_allocator *allocator)
 {
    if( map)
-      _mulle__pointermap_destroy( map, allocator);
+      _mulle__pointermap_destroy( map, allocator);      
 }
 
 
@@ -132,12 +132,13 @@ MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                  struct mulle_allocator *allocator);
 
-static inline
-void   mulle__pointermap_reset( struct mulle__pointermap *map,
-                                struct mulle_allocator *allocator)
+
+static inline void   
+   mulle__pointermap_reset( struct mulle__pointermap *map,
+                            struct mulle_allocator *allocator)
 {
    if( map)
-      _mulle__pointermap_reset( map, allocator);
+      _mulle__pointermap_reset( map, allocator);      
 }
 
 
@@ -160,7 +161,7 @@ static inline int   mulle__pointermap_is_full( struct mulle__pointermap *map)
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int   _mulle__pointermap_is_sparse_size( struct mulle__pointermap *map, unsigned int size)
+static inline int  _mulle__pointermap_is_sparse_size( struct mulle__pointermap *map, unsigned int size)
 {
    size = size / 2;
    size = (size - (size >> MULLE__POINTERMAP_FILL_SHIFT));
@@ -234,11 +235,9 @@ static inline void   *mulle__pointermap_get( struct mulle__pointermap *map,
 
 
 // check for mulle_pointerpair_is_invalid if found or not
-// this was just stupid idea, as value are not unique, just use an enumerator
-// yourself...
-// MULLE__CONTAINER_GLOBAL
-// struct mulle_pointerpair
-//    mulle__pointermap_find_by_value( struct mulle__pointermap *map, void *value);
+MULLE__CONTAINER_GLOBAL
+struct mulle_pointerpair
+   mulle__pointermap_find_by_value( struct mulle__pointermap *map, void *value);
 
 
 // Experimental!
@@ -298,13 +297,10 @@ static inline struct mulle__pointermapenumerator
 static inline struct mulle__pointermapenumerator
    mulle__pointermap_enumerate( struct mulle__pointermap *map)
 {
-   struct mulle__pointermapenumerator   rover;
-
    if( map)
       return( _mulle__pointermap_enumerate( map));
 
-   rover._left = 0;
-   return( rover);
+   return( (struct mulle__pointermapenumerator) { 0 }); // less sanitizer warnings
 }
 
 
@@ -375,6 +371,10 @@ static inline int
    }
 }
 
+static inline void
+   _mulle__pointermapenumerator_done( struct mulle__pointermapenumerator *rover)
+{
+}
 
 
 static inline void

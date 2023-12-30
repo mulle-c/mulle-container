@@ -856,7 +856,9 @@ void   _mulle__rangeset_fprint( struct mulle__rangeset *p, FILE *fp)
    {
       range = _mulle__rangeset_get_range( p, i);
       fprintf( fp, "#%td: %tu,%tu\n",
-                     i, range.location, range.length);
+                     (ptrdiff_t) i,
+                     range.location,
+                     range.length);
    }
 }
 

@@ -123,9 +123,9 @@ do::add_backslashes()
 }
 
 
-do::emit_macro_definition()
+do::emit_do_macro_definition()
 {
-   log_entry "do::emit_macro_definition" "$@"
+   log_entry "do::emit_do_macro_definition" "$@"
 
    local name="$1"
    local allocator="$2"
@@ -152,9 +152,9 @@ do::emit_macro_definition()
 EOF
 }
 
-do::emit_flexible_macro_definition()
+do::emit_do_flexible_macro_definition()
 {
-   log_entry "do::emit_flexible_macro_definition" "$@"
+   log_entry "do::emit_do_flexible_macro_definition" "$@"
 
    local name="$1"
    local allocator="$2"
@@ -230,9 +230,9 @@ do::r_initialize_text()
 }
 
 
-do::emit_loop_start()
+do::emit_do_loop_start()
 {
-   log_entry "do::emit_loop_start" "$@"
+   log_entry "do::emit_do_loop_start" "$@"
 
    local name="$1"
    local allocator="$2"
@@ -265,9 +265,9 @@ EOF
 }
 
 
-do::emit_flexible_loop_start()
+do::emit_do_flexible_loop_start()
 {
-   log_entry "do::emit_flexible_loop_start" "$@"
+   log_entry "do::emit_do_flexible_loop_start" "$@"
 
    local name="$1"
    local allocator="$2"
@@ -295,9 +295,9 @@ EOF
 
 
 
-do::emit_loop_test()
+do::emit_do_loop_test()
 {
-   log_entry "do::emit_loop_test" "$@"
+   log_entry "do::emit_do_loop_test" "$@"
 
    local name="$1"
 
@@ -308,9 +308,9 @@ do::emit_loop_test()
 }
 
 
-do::emit_loop_end()
+do::emit_do_loop_end()
 {
-   log_entry "do::emit_loop_end" "$@"
+   log_entry "do::emit_do_loop_end" "$@"
 
    local name="$1"
    local allocator="$2"
@@ -344,9 +344,9 @@ EOF
 }
 
 
-do::emit_break_protection()
+do::emit_do_break_protection()
 {
-   log_entry "do::emit_break_protection" "$@"
+   log_entry "do::emit_do_break_protection" "$@"
 
    local name="$1"
 
@@ -396,6 +396,14 @@ do::main()
             OPTION_ALLOCATOR='NO'
          ;;
 
+         --callback)
+            OPTION_CALLBACK='YES'
+         ;;
+
+         --no-callback)
+            OPTION_CALLBACK='NO'
+         ;;
+
          --compare)
             OPTION_COMPARE='YES'
          ;;
@@ -412,19 +420,11 @@ do::main()
             OPTION_FLEXIBLE='NO'
          ;;
 
-         --callback)
-            OPTION_CALLBACK='YES'
-         ;;
-
-         --no-callback)
-            OPTION_CALLBACK='NO'
-         ;;
-
          --type)
             [ $# -eq 1 ] && match_list_usage "missing argument to $1"
             shift
 
-            OPTION_TYPE="$1   "
+            OPTION_TYPE="$1   " # three spaces intentional
          ;;
 
          --version)
@@ -503,6 +503,11 @@ do::main()
    if [ "${embeds_callback}" = 'DEFAULT' ]
    then
       case "${name}" in
+         *struct*)
+            log_verbose "Name contains 'struct' so assumed to not embed callbacks"
+            embeds_callback='NO'
+         ;;
+
          *pointer*)
             log_verbose "Name contains 'pointer' so assumed to not embed callbacks"
             embeds_callback='NO'
@@ -529,6 +534,11 @@ do::main()
          uses_callback='NO'
       else
          case "${name}" in
+            *struct*)
+               log_verbose "Name contains 'struct' so assumed to not use callbacks"
+               uses_callback='NO'
+            ;;
+
             *pointer*)
                log_verbose "Name contains 'pointer' so assumed to not use callbacks"
                uses_callback='NO'
@@ -564,35 +574,22 @@ do::main()
    fi
 
    (
-      do::emit_macro_definition "${name}" "${embeds_allocator}" "${needs_callback}" "${flexible}" "${compare}"
-      do::emit_loop_start "${name}" "${embeds_allocator}" "${embeds_callback}" "${flexible}" "${compare}"
-      do::emit_loop_test "${name}" "${uses_allocator}" "${uses_callback}"
-      do::emit_loop_end "${name}" "${uses_allocator}" "${uses_callback}"
+      if [ "${flexible}" = 'YES' ]
+      then
+         do::emit_do_flexible_macro_definition "${name}" "${embeds_allocator}" "${needs_callback}" "${flexible}" "${compare}"
+         do::emit_do_flexible_loop_start  "${name}" "${embeds_allocator}" "${embeds_callback}" "${flexible}" "${compare}"
+      else
+         do::emit_do_macro_definition "${name}" "${embeds_allocator}" "${needs_callback}" "${flexible}" "${compare}"
+         do::emit_do_loop_start "${name}" "${embeds_allocator}" "${embeds_callback}" "${flexible}" "${compare}"
+      fi
+      do::emit_do_loop_test "${name}" "${uses_allocator}" "${uses_callback}"
+      do::emit_do_loop_end "${name}" "${uses_allocator}" "${uses_callback}"
 
-      echo
+      do::emit_do_break_protection
 
-      do::emit_break_protection
    ) | do::add_backslashes
 
-
    echo
-
-   if [ "${flexible}" = 'YES' ]
-   then
-      (
-         do::emit_flexible_macro_definition "${name}" "${embeds_allocator}" "${needs_callback}" "${flexible}" "${compare}"
-         do::emit_flexible_loop_start  "${name}" "${embeds_allocator}" "${embeds_callback}" "${flexible}" "${compare}"
-         do::emit_loop_test "${name}" "${uses_allocator}" "${uses_callback}"
-         do::emit_loop_end "${name}" "${uses_allocator}" "${uses_callback}"
-
-         echo
-
-         do::emit_break_protection
-
-      ) | do::add_backslashes
-
-      echo
-   fi
 }
 
 #

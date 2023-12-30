@@ -27,8 +27,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle__set__h__
-#define mulle__set__h__
+#ifndef mulle__set_h__
+#define mulle__set_h__
 
 #include "mulle--pointerset.h"
 #include "mulle-container-callback.h"
@@ -286,7 +286,7 @@ static inline struct mulle__setenumerator
    mulle__set_enumerate( struct mulle__set *set,
                          struct mulle_container_keycallback *callback)
 {
-   if( set)
+   if( ! set)
       return( mulle__setenumerator_empty);
    return( _mulle__set_enumerate( set, callback));
 }
@@ -336,5 +336,19 @@ static inline void   mulle__setenumerator_done( struct mulle__setenumerator *rov
       for( int  name ## __j = 0;    /* break protection */          \
            name ## __j < 1;                                         \
            name ## __j++)
+
+
+// created by make-container-for.sh src/set/mulle--set.c
+
+#define mulle__set_for( name, callback, item)                                     \
+   assert( sizeof( item) == sizeof( void *));                                     \
+   for( struct mulle__setenumerator                                               \
+           rover__ ## item = mulle__set_enumerate( name, callback),               \
+           *rover___  ## item ## __i = (void *) 0;                                \
+        ! rover___  ## item ## __i;                                               \
+        rover___ ## item ## __i = (_mulle__setenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                   \
+      while( _mulle__setenumerator_next( &rover__ ## item, (void **) &item))
+
 
 #endif

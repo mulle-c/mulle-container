@@ -634,7 +634,7 @@ static inline int
 
 static inline int
    mulle__structarrayreverseenumerator_next( struct mulle__structarrayreverseenumerator *rover,
-                                              void **item)
+                                             void **item)
 {
    if( ! rover || rover->_curr <= rover->_sentinel)
    {
@@ -662,14 +662,6 @@ static inline void
 {
 }
 
-
-#define mulle__structarray_for( array, item)                                                        \
-   for( struct mulle__structarrayenumerator rover__ ## item = mulle__structarray_enumerate( array); \
-        _mulle__structarrayenumerator_next( &rover__ ## item, (void **) &item);)
-
-#define mulle__structarray_for_reverse( array, item)                                                              \
-   for( struct mulle_structarrayreverseenumerator rover__ ## item = mulle__structarray_reverseenumerate( array); \
-        _mulle__structarrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
 
 
 //
@@ -712,6 +704,32 @@ static inline void
            name ## __j < 1;                                                   \
            name ## __j++)
 
+
+
+// created by make-container-for.sh src/array/struct/mulle--structarray.c
+
+#define mulle__structarray_for( name, item)                                               \
+   assert( sizeof( item) == sizeof( void *));                                             \
+   for( struct mulle__structarrayenumerator                                               \
+           rover__ ## item = mulle__structarray_enumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                        \
+        ! rover___  ## item ## __i;                                                       \
+        rover___ ## item ## __i = (_mulle__structarrayenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                           \
+      while( _mulle__structarrayenumerator_next( &rover__ ## item, (void **) &item))
+
+
+// created by make-container-for.sh --reverse src/array/struct/mulle--structarray.c
+
+#define mulle__structarray_for_reverse( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                                    \
+   for( struct mulle__structarrayreverseenumerator                                               \
+           rover__ ## item = mulle__structarray_reverseenumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                               \
+        ! rover___  ## item ## __i;                                                              \
+        rover___ ## item ## __i = (_mulle__structarrayreverseenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                                  \
+      while( _mulle__structarrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
 
 #endif

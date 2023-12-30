@@ -30,8 +30,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle__pointermap__h__
-#define mulle__pointermap__h__
+#ifndef mulle__pointermap_h__
+#define mulle__pointermap_h__
 
 #include "mulle--pointermap-struct.h"
 #include "mulle--pointermap-generic.h"
@@ -115,6 +115,7 @@ int   mulle__pointermap_remove( struct mulle__pointermap *map,
 {
    if( map)
       return( _mulle__pointermap_remove( map, key, allocator));
+   return( 0);
 }
 
 
@@ -135,5 +136,15 @@ int   mulle__pointermap_remove( struct mulle__pointermap *map,
       for( int  name ## __j = 0;    /* break protection */       \
            name ## __j < 1;                                      \
            name ## __j++)
+
+
+#define mulle__pointermap_for( map, key, value)                                                               \
+   assert( sizeof( key) == sizeof( void *));                                                                  \
+   assert( sizeof( value) == sizeof( void *));                                                                \
+   for( struct mulle__pointermapenumerator rover__ ## key ## __ ## value = mulle__pointermap_enumerate( map); \
+        _mulle__pointermapenumerator_next( &rover__ ## key ## __ ## value,                                    \
+                                           (void **) &(key),                                                  \
+                                           (void **) &(value));                                               \
+        _mulle__pointermapenumerator_done( &rover__ ## key ## __ ## value))
 
 #endif

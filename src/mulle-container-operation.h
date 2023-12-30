@@ -32,11 +32,12 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef mulle_container_operation__h__
-#define mulle_container_operation__h__
+#ifndef mulle_container_operation_h__
+#define mulle_container_operation_h__
 
 #include <limits.h>
 #include <stdint.h>
+#include <stddef.h>
 
 // https://stackoverflow.com/questions/1464174/_size-t-vs-uintptr-t
 //
@@ -59,9 +60,14 @@
 // size_t is the "indexing" value for an array
 //
 #ifndef INTPTR_MAX
-#error "intprt_t and friends are needed for this platform"
+//# if defined( _WIN32) || defined( _WIN64)
+   typedef ptrdiff_t  intptr_t
+#  define INTPTR_MIN   PTRDIFF_MIN
+#  define INTPTR_MAX   PTRDIFF_MAX
+//# else
+//# // error "intptr_t and friends are needed for this platform"
+//# endif
 #endif
-
 
 enum mulle_container_write_mode
 {

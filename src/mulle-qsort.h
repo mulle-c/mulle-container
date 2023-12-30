@@ -30,8 +30,8 @@
  *
  * (adapted to mulle-c by Nat!)
  */
-#ifndef mulle_qsort__h__
-#define mulle_qsort__h__
+#ifndef mulle_qsort_h__
+#define mulle_qsort_h__
 
 #include "include.h"
 
