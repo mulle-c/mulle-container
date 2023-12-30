@@ -30,8 +30,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle__array__h__
-#define mulle__array__h__
+#ifndef mulle__array_h__
+#define mulle__array_h__
 
 #include "mulle--pointerarray.h"
 #include "mulle-container-callback.h"
@@ -637,14 +637,6 @@ int   mulle__array_member( struct mulle__array *array,
                            void *p,
                            struct mulle_container_keycallback *callback);
 
-#define mulle__array_for( array, callback, item)                                                  \
-   for( struct mulle__arrayenumerator rover__ ## item = mulle__array_enumerate( array, callback); \
-        _mulle__arrayenumerator_next( &rover__ ## item, (void **) &item);)
-
-#define mulle___array_for_reverse( array, callback, item)                                                       \
-   for( struct mulle__arrayreverseenumerator rover__ ## item = mulle__array_reverseenumerate( array, callback); \
-        _mulle__arrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
-
 
 // created by make-container-do.sh --flexible mulle--array.c
 
@@ -668,7 +660,7 @@ int   mulle__array_member( struct mulle__array *array,
    void   *name ## __storage[ stackcount];                            \
    for( struct mulle__array                                           \
            name ## __container =                                      \
-              MULLE__ARRAY_INIT( name ## __storage, stackcount),       \
+              MULLE__ARRAY_INIT( name ## __storage, stackcount),      \
            *name = &name ## __container,                              \
            *name ## __i = NULL;                                       \
         ! name ## __i;                                                \
@@ -682,6 +674,31 @@ int   mulle__array_member( struct mulle__array *array,
            name ## __j < 1;                                           \
            name ## __j++)
 
+
+// created by make-container-for.sh src/array/mulle--array.c
+
+#define mulle__array_for( name, callback, item)                                     \
+   assert( sizeof( item) == sizeof( void *));                                       \
+   for( struct mulle__arrayenumerator                                               \
+           rover__ ## item = mulle__array_enumerate( name, callback),               \
+           *rover___  ## item ## __i = (void *) 0;                                  \
+        ! rover___  ## item ## __i;                                                 \
+        rover___ ## item ## __i = (_mulle__arrayenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                     \
+      while( _mulle__arrayenumerator_next( &rover__ ## item, (void **) &item))
+
+
+// created by make-container-for.sh --reverse src/array/mulle--array.c
+
+#define mulle__array_for_reverse( name, callback, item)                                    \
+   assert( sizeof( item) == sizeof( void *));                                              \
+   for( struct mulle__arrayreverseenumerator                                               \
+           rover__ ## item = mulle__array_reverseenumerate( name, callback),               \
+           *rover___  ## item ## __i = (void *) 0;                                         \
+        ! rover___  ## item ## __i;                                                        \
+        rover___ ## item ## __i = (_mulle__arrayreverseenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                            \
+      while( _mulle__arrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif
 

@@ -523,11 +523,6 @@ static inline void
 }
 
 
-#define mulle__pointerpairarray_for( array, pair)                                                             \
-   for( struct mulle__pointerpairarrayenumerator rover__ ## pair = mulle__pointerpairarray_enumerate( array); \
-        _mulle__pointerpairarrayenumerator_next( &rover__ ## pair, (void **) &pair);)
-
-
 // created by make-container-do.sh -v -ls --type struct mulle_pointerpair    mulle--pointerpairarray.c
 
 #define mulle__pointerpairarray_do( name)                              \
@@ -545,6 +540,18 @@ static inline void
       for( int  name ## __j = 0;    /* break protection */             \
            name ## __j < 1;                                            \
            name ## __j++)
+
+
+// TODO: Use standard key, value for this ?
+//
+#define mulle__pointerpairarray_for( name, pair)                                               \
+   for( struct mulle__pointerpairarrayenumerator                                               \
+           rover__ ## pair = mulle__pointerpairarray_enumerate( name),                         \
+           *rover___  ## pair ## __i = (void *) 0;                                             \
+        ! rover___  ## pair ## __i;                                                            \
+        rover___ ## pair ## __i = (_mulle__pointerpairarrayenumerator_done( &rover__ ## pair), \
+                                   (void *) 1))                                                \
+      while( _mulle__pointerpairarrayenumerator_next( &rover__ ## pair, &pair))
 
 
 #endif

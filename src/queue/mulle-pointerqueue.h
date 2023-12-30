@@ -31,8 +31,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_pointerqueue__h__
-#define mulle_pointerqueue__h__
+#ifndef mulle_pointerqueue_h__
+#define mulle_pointerqueue_h__
 
 #include "mulle--pointerqueue.h"
 
@@ -374,10 +374,6 @@ static inline void   mulle_pointerqueueenumerator_done( struct mulle_pointerqueu
 }
 
 
-#define mulle_pointerqueue_for( queue, item)                                                        \
-   for( struct mulle_pointerqueueenumerator rover__ ## item = mulle_pointerqueue_enumerate( queue); \
-        _mulle_pointerqueueenumerator_next( &rover__ ## item, (void **) &item);)
-
 
 // created by make-container-do.sh mulle-pointerqueue.c
 
@@ -396,5 +392,18 @@ static inline void   mulle_pointerqueueenumerator_done( struct mulle_pointerqueu
       for( int  name ## __j = 0;    /* break protection */              \
            name ## __j < 1;                                             \
            name ## __j++)
+
+
+// created by make-container-for.sh src/set/pointer/mulle-pointerqueue.c
+
+#define mulle_pointerqueue_for( name, item)                                               \
+   assert( sizeof( item) == sizeof( void *));                                             \
+   for( struct mulle_pointerqueueenumerator                                               \
+           rover__ ## item = mulle_pointerqueue_enumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                        \
+        ! rover___  ## item ## __i;                                                       \
+        rover___ ## item ## __i = (_mulle_pointerqueueenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                           \
+      while( _mulle_pointerqueueenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif

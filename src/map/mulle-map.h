@@ -6,8 +6,8 @@
 //  Copyright © 2016 Mulle kybernetiK. All rights reserved.
 //
 
-#ifndef mulle_map__h__
-#define mulle_map__h__
+#ifndef mulle_map_h__
+#define mulle_map_h__
 
 #include "mulle--map.h"
 
@@ -467,9 +467,6 @@ static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover
 }
 
 
-#define mulle_map_for( map, key, value)                                        \
-   for( struct mulle_mapenumerator rover__ ## key = mulle_map_enumerate( map); \
-        _mulle_mapenumerator_next( &rover__ ## key, (void **) &(key), (void **) &(value));)
 
 
 #pragma mark - tiny enumeration
@@ -544,5 +541,33 @@ static inline void
            name ## __j < 1;                                       \
            name ## __j++)
 
+// created by make-container-for.sh -ls -v src/map/mulle-map.c
+// created by make-container-for.sh -ls -v src/map/mulle-map.c
+
+#define mulle_map_for( name, key, value)                                                                     \
+   assert( sizeof( key) == sizeof( void *));                                                                 \
+   assert( sizeof( value) == sizeof( void *));                                                               \
+   for( struct mulle_mapenumerator                                                                           \
+           rover__ ## key ## __ ## value = mulle_map_enumerate( name),                                       \
+           *rover___  ## key ## __ ## value ## __i = (void *) 0;                                             \
+        ! rover___  ## key ## __ ## value ## __i;                                                            \
+        rover___ ## key ## __ ## value ## __i = (_mulle_mapenumerator_done( &rover__ ## key ## __ ## value), \
+                                              (void *) 1))                                                   \
+      while( _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                                      \
+                                      (void **) &key,                                                        \
+                                      (void **) &value))
+
+
+
+//
+// #define mulle_map_for( map, key, value)                                                        \
+//    assert( sizeof( key) == sizeof( void *));                                          \
+//    assert( sizeof( value) == sizeof( void *));                                                 \
+//    for( struct mulle_mapenumerator rover__ ## key ## __ ## value = mulle_map_enumerate( map);  \
+//         _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                             \
+//                                     (void **) &(key),                                          \
+//                                     (void **) &(value));                                       \
+//         _mulle_mapenumerator_done( &rover__ ## key ## __ ## value))
+//
 
 #endif

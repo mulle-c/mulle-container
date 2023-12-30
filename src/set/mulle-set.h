@@ -35,8 +35,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle_set__h__
-#define mulle_set__h__
+#ifndef mulle_set_h__
+#define mulle_set_h__
 
 #include "mulle--set.h"
 
@@ -330,9 +330,6 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
 }
 
 
-#define mulle_set_for( set, item)                                               \
-   for( struct mulle_setenumerator rover__ ## item = mulle_set_enumerate( set); \
-        _mulle_setenumerator_next( &rover__ ## item, (void **) &item);)
 
 // created by make-container-do.sh mulle-set.c
 
@@ -352,6 +349,17 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
            name ## __j < 1;                                       \
            name ## __j++)
 
+// created by make-container-for.sh src/set/mulle-set.c
+
+#define mulle_set_for( name, item)                                               \
+   assert( sizeof( item) == sizeof( void *));                                    \
+   for( struct mulle_setenumerator                                               \
+           rover__ ## item = mulle_set_enumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                               \
+        ! rover___  ## item ## __i;                                              \
+        rover___ ## item ## __i = (_mulle_setenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                  \
+      while( _mulle_setenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif
 

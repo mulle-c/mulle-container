@@ -361,6 +361,28 @@ static inline void
 
 
 MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_pointerarray_add_array( struct mulle_pointerarray *array,
+                                  struct mulle_pointerarray *other,
+                                  struct mulle_range range)
+{
+   _mulle__pointerarray_add_array( (struct mulle__pointerarray *) array,
+                                   (struct mulle__pointerarray *) other,
+                                   range,
+                                   array->allocator);
+}
+
+static inline void
+   mulle_pointerarray_add_array( struct mulle_pointerarray *array,
+                                 struct mulle_pointerarray *other,
+                                 struct mulle_range range)
+{
+   if( array)
+      _mulle_pointerarray_add_array( array, other, range);
+}
+
+
+MULLE_C_NONNULL_FIRST
 static inline void  *
 	_mulle_pointerarray_pop( struct mulle_pointerarray *array)
 {
@@ -634,6 +656,18 @@ static inline void
 }
 
 
+// will use callbacks of array to determine equality
+static inline int   mulle_pointerarray_is_equal( struct mulle_pointerarray *array,
+                                                 struct mulle_pointerarray *other)
+{
+   if( ! array || ! other)
+      return( array == other);
+
+   return( _mulle__pointerarray_is_equal( (struct mulle__pointerarray *) array,
+                                          (struct mulle__pointerarray *) other));
+}
+
+
 #pragma mark - enumeration
 
 /*
@@ -804,38 +838,6 @@ static inline int
 }
 
 
-// -----------------------
-// Conveniences for iteration.
-// -----------------------
-// Instead of
-//
-//   struct  mulle_pointerarrayenumerator   rover;
-//   UIView                                 *view;
-//
-//   rover = mulle_pointerarray_enumerate( &_subviews);
-//   while(  _mulle_pointerarrayenumerator_next( &rover, (void **) &view))
-//   {
-//   }
-//   mulle_pointerarrayenumerator_done( &rover);
-//
-// write:
-//
-//   UIView   *view;
-//
-//   mulle_pointerarray_for( &_subviews, view)
-//   {
-//   }
-//
-// exploits that mulle_pointerarrayenumerator_done doesn't do anything.
-//
-
-#define mulle_pointerarray_for( array, item)                                                        \
-   for( struct mulle_pointerarrayenumerator rover__ ## item = mulle_pointerarray_enumerate( array); \
-        _mulle_pointerarrayenumerator_next( &rover__ ## item, (void **) &item);)
-
-#define mulle_pointerarray_for_reverse( array, item)                                                              \
-   for( struct mulle_pointerarrayreverseenumerator rover__ ## item = mulle_pointerarray_reverseenumerate( array); \
-        _mulle_pointerarrayreverseenumerator_next( &rover__ ## item, (void **) &item);)
 
 
 
@@ -879,5 +881,55 @@ static inline int
            name ## __j < 1;                                                  \
            name ## __j++)
 
+
+// -----------------------
+// Conveniences for iteration.
+// -----------------------
+// Instead of
+//
+//   struct  mulle_pointerarrayenumerator   rover;
+//   UIView                                 *view;
+//
+//   rover = mulle_pointerarray_enumerate( &_subviews);
+//   while(  _mulle_pointerarrayenumerator_next( &rover, (void **) &view))
+//   {
+//   }
+//   mulle_pointerarrayenumerator_done( &rover);
+//
+// write:
+//
+//   UIView   *view;
+//
+//   mulle_pointerarray_for( &_subviews, view)
+//   {
+//   }
+//
+// exploits that mulle_pointerarrayenumerator_done doesn't do anything.
+//
+
+// created by make-container-for.sh src/array/pointer/mulle-pointerarray.c
+
+#define mulle_pointerarray_for( name, item)                                               \
+   assert( sizeof( item) == sizeof( void *));                                             \
+   for( struct mulle_pointerarrayenumerator                                               \
+           rover__ ## item = mulle_pointerarray_enumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                        \
+        ! rover___  ## item ## __i;                                                       \
+        rover___ ## item ## __i = (_mulle_pointerarrayenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                           \
+      while( _mulle_pointerarrayenumerator_next( &rover__ ## item, (void **) &item))
+
+
+// created by make-container-for.sh --reverse src/array/pointer/mulle-pointerarray.c
+
+#define mulle_pointerarray_for_reverse( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                                    \
+   for( struct mulle_pointerarrayreverseenumerator                                               \
+           rover__ ## item = mulle_pointerarray_reverseenumerate( name),                         \
+           *rover___  ## item ## __i = (void *) 0;                                               \
+        ! rover___  ## item ## __i;                                                              \
+        rover___ ## item ## __i = (_mulle_pointerarrayreverseenumerator_done( &rover__ ## item), \
+                                   (void *) 1))                                                  \
+      while( _mulle_pointerarrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif

@@ -30,8 +30,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef mulle__assoc__h__
-#define mulle__assoc__h__
+#ifndef mulle__assoc_h__
+#define mulle__assoc_h__
 
 #include "mulle--pointerpairarray.h"
 #include "mulle-container-callback.h"
@@ -615,6 +615,23 @@ int   mulle__assoc_member( struct mulle__assoc *assoc,
       for( int  name ## __j = 0;    /* break protection */            \
            name ## __j < 1;                                           \
            name ## __j++)
+
+
+
+// created by make-container-for.sh src/assoc/mulle--assoc.c
+
+#define mulle__assoc_for( name, callback, key, value)                                                           \
+   assert( sizeof( key) == sizeof( void *));                                                                    \
+   assert( sizeof( value) == sizeof( void *));                                                                  \
+   for( struct mulle__assocenumerator                                                                           \
+           rover__ ## key ## __ ## value = mulle__assoc_enumerate( name, callback),                             \
+           *rover___  ## key ## __ ## value ## __i = (void *) 0;                                                \
+        ! rover___  ## key ## __ ## value ## __i;                                                               \
+        rover___ ## key ## __ ## value ## __i = (_mulle__assocenumerator_done( &rover__ ## key ## __ ## value), \
+                                              (void *) 1))                                                      \
+      while( _mulle__assocenumerator_next( &rover__ ## key ## __ ## value,                                      \
+                                           (void **) &key,                                                           \
+                                           (void **) &value))
 
 
 #endif

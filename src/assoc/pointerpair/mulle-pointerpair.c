@@ -59,10 +59,10 @@ uintptr_t
    struct mulle_pointerpair   *sentinel;
 
    // pointerpair can't use it
-   if( range.length == (uintptr_t) -1)
-      abort();
+   assert( range.length != (uintptr_t) -1);
 
-   assert( search.key != mulle_pointerpair_notakey);
+   if( mulle_pointerpair_is_invalid( search))
+      return( mulle_not_found_e);
 
    p        = &buf[ range.location];
    sentinel = &p[ range.length];
