@@ -119,6 +119,7 @@ static inline void  mulle_structqueue_init( struct mulle_structqueue *queue,
                                allocator);
 }
 
+
 static inline void
    mulle_structqueue_init_default( struct mulle_structqueue *queue,
                                    size_t sizeof_struct,
@@ -138,11 +139,24 @@ static inline void
 
 MULLE__CONTAINER_GLOBAL
 struct mulle_structqueue *
-   mulle_structqueue_create( unsigned int sizeof_struct,
+   mulle_structqueue_create( size_t sizeof_struct,
                              unsigned int alignof_struct,
                              unsigned short bucket_size,
                              unsigned short spare_allowance,
                              struct mulle_allocator *allocator);
+
+
+static inline struct mulle_structqueue *
+   mulle_structqueue_create_default( size_t sizeof_struct,
+                                     unsigned int alignof_struct,
+                                     struct mulle_allocator *allocator)
+{
+   return( mulle_structqueue_create( sizeof_struct,
+                                     alignof_struct,
+                                     256,
+                                     16,
+                                     allocator));
+}
 
 MULLE_C_NONNULL_FIRST
 static inline

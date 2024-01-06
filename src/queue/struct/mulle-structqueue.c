@@ -37,7 +37,7 @@
 
 
 struct mulle_structqueue   *
-   mulle_structqueue_create( unsigned int sizeof_struct,
+   mulle_structqueue_create( size_t sizeof_struct,
                              unsigned int alignof_struct,
                              unsigned short bucket_size,
                              unsigned short spare_allowance,

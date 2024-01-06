@@ -146,7 +146,7 @@ static inline void
 
 MULLE__CONTAINER_GLOBAL
 struct mulle__structqueue   *
-   mulle__structqueue_create( unsigned int sizeof_struct,
+   mulle__structqueue_create( size_t sizeof_struct,
                               unsigned int alignof_struct,
                               unsigned short bucket_size,
                               unsigned short spare_allowance,

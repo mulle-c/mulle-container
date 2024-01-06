@@ -1,3 +1,36 @@
+# 8.0.0
+
+* changed type for `sizeof_type` in create routines to `size_t`
+* add lots more convenience functions that were missing like for example `mulle_array_find`
+* `_mulle_structarray_set` added (not sure if these array set functions won't all be renamed to `set_at_index)`
+* **BREAKING CHANGES** renamed a lot of functions that were named "search" to "find" as they werent binary searches
+* fixed rarely if ever used "shrink" code of various containers
+* added `mulle__pointermap_remove`
+* add a lot of functions to `mulle__array_add` for completeness
+* rename `_mulle__pointerarray_absorb` to `_mulle__pointerarray_absorb_array` to be more inline with other two array functions
+* add sorting to `_mulle_pointerarray` and `_mulle__structarray`
+* add `mulle__assoc_create,` `mulle_assoc_find` and `mulle_assoc_find_in_range,` which where missing
+* **BREAKING** `insert_value_forkeys` functions are now renamed to `insert_key_values` and the order of keys and values is reversed, which is technically better, because now you don't need two NULLs to terminate the arguments, but just one
+* The `copy_items` functions no longer return an error code
+* the struct queue and array gain a new field `"copy_sizeof_struct"` so that there should be no reading off to much memory on input now, which could conceivably page fault when alignment is needed to expand the items
+* **BREAKING** the function `_mulle__pointermap_describe` has been removed as it was unused
+* added mulle-pointerset more or less for the convenience of writing test code for mulle--pointerset-generic
+* **BREAKING** `mulle_uniquepointerarray` is now completely superflous and was removed as mulle-pointerset exists now
+* added `_do` convenience temporary constructors to most if not all containers
+* added `mulle__pointermap_find_by_value`
+* add sort routines to pointerarray and array
+* add structqueue as an alternative to structarray
+* **BREAKINK CHANGE** `mulle_flexarray` now also defines the `<type>` *name argument and you don't have to assign the return value of alloc anymore to it. This makes it easier to work with, especially if you are mostly using `mulle_flexarray_do` and only sometimes need more control
+* `mulle__pointerarray` gains zeroing functions. This allows random access to a pointer array, so that the unused portions are filled up with zeroes. This is not sparse though!
+* finally there is a `_mulle__structarray_set_count` to explicitly grow or shrink a struct array
+* **BREAKING CHANGE** `_mulle__assoc_set` has been renamed to `__mulle_assoc_set_at_index`
+* if your `mulle_assoc` is `intptr_t` key base, you can now easily remap or move key ranges sometimes even without the need for memory coyping
+* new function `_mulle_pointerpair_bsearch_or_less`
+* callback `mulle_container_keycallback_intptr_is_equal` is now actually its own function, to be able to discern it when inspecting a callback
+* mulle-qsort added as `qsort_r` is not cross-platform and I want to support it for bsearch
+* added **mulle-assoc** an associative array as an alternative to mulle-map
+
+
 # 7.0.0
 
 * remove package.json as it conflicts with clib.json
