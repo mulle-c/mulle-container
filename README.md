@@ -13,12 +13,13 @@ Some data structures utilize callbacks that are compatible to OS X's
 [`NSHashtable`](//nshipster.com/nshashtable-and-nsmaptable/) and friends.
 
 
+
 | Release Version                                       | Release Notes
 |-------------------------------------------------------|--------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions)| [RELEASENOTES](RELEASENOTES.md) |
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions) ![Coverage](https://img.shields.io/badge/coverage-81%25%C2%A0-goldenrod) | [RELEASENOTES](RELEASENOTES.md) |
 
 
-/home/src/srcO/mulle-c/mulle-container()
+/home/src/srcO/mulle-c/mulle-container
 ## Data Structures
 
 The names of the functions are consistent. Each function is a **verb**
@@ -444,7 +445,7 @@ cmake --install build --config Release
 
 ## Author
 
-[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK
+[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK  
 
 
 
