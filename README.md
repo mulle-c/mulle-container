@@ -19,34 +19,6 @@ Some data structures utilize callbacks that are compatible to OS X's
 | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg?branch=release) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg?branch=release)](//github.com/mulle-c/mulle-container/actions) ![Coverage](https://img.shields.io/badge/coverage-81%25%C2%A0-goldenrod) | [RELEASENOTES](RELEASENOTES.md) |
 
 
-/home/src/srcO/mulle-c/mulle-container(
-    "API_PRIME.md",
-    "API_POINTERARRAY.md",
-    "VERBS.md",
-    "DATATYPES.md",
-    "API_HASH.md",
-    "internal/_ARRAY.md",
-    "internal/_QUEUE.md",
-    "internal/_MAP.md",
-    "internal/_SET.md",
-    "API_POINTERSET.md",
-    "BUILD.md",
-    "API_CONTAINER_CALLBACK.md",
-    "API_POINTERPAIRARRAY.md",
-    "API_MAP.md",
-    "API_ARRAY.md",
-    "API_SET.md"
-)| File                         | Description
-|------------------------------|-------------------------------------
-| [API_PRIME.md](dox/API_PRIME.md) | 
-| [API_POINTERARRAY.md](dox/API_POINTERARRAY.md) | 
-| [API_HASH.md](dox/API_HASH.md) | 
-| [API_POINTERSET.md](dox/API_POINTERSET.md) | 
-| [API_CONTAINER_CALLBACK.md](dox/API_CONTAINER_CALLBACK.md) | 
-| [API_POINTERPAIRARRAY.md](dox/API_POINTERPAIRARRAY.md) | 
-| [API_MAP.md](dox/API_MAP.md) | 
-| [API_ARRAY.md](dox/API_ARRAY.md) | 
-| [API_SET.md](dox/API_SET.md) | 
 
 ## Data Structures
 
