@@ -92,7 +92,7 @@ jobs:
 
     - if: matrix.build-mode == 'manual'
       run: |
-        mulle-sde craft
+        mulle-sde craft --release
  
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
