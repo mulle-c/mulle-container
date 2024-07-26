@@ -681,9 +681,9 @@ int   mulle__array_member( struct mulle__array *array,
    assert( sizeof( item) == sizeof( void *));                                       \
    for( struct mulle__arrayenumerator                                               \
            rover__ ## item = mulle__array_enumerate( name, callback),               \
-           *rover___  ## item ## __i = (void *) 0;                                  \
-        ! rover___  ## item ## __i;                                                 \
-        rover___ ## item ## __i = (_mulle__arrayenumerator_done( &rover__ ## item), \
+           *rover__  ## item ## __i = (void *) 0;                                  \
+        ! rover__  ## item ## __i;                                                 \
+        rover__ ## item ## __i = (_mulle__arrayenumerator_done( &rover__ ## item), \
                                    (void *) 1))                                     \
       while( _mulle__arrayenumerator_next( &rover__ ## item, (void **) &item))
 
@@ -694,9 +694,9 @@ int   mulle__array_member( struct mulle__array *array,
    assert( sizeof( item) == sizeof( void *));                                              \
    for( struct mulle__arrayreverseenumerator                                               \
            rover__ ## item = mulle__array_reverseenumerate( name, callback),               \
-           *rover___  ## item ## __i = (void *) 0;                                         \
-        ! rover___  ## item ## __i;                                                        \
-        rover___ ## item ## __i = (_mulle__arrayreverseenumerator_done( &rover__ ## item), \
+           *rover__  ## item ## __i = (void *) 0;                                         \
+        ! rover__  ## item ## __i;                                                        \
+        rover__ ## item ## __i = (_mulle__arrayreverseenumerator_done( &rover__ ## item), \
                                    (void *) 1))                                            \
       while( _mulle__arrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 

@@ -355,9 +355,9 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
    assert( sizeof( item) == sizeof( void *));                                    \
    for( struct mulle_setenumerator                                               \
            rover__ ## item = mulle_set_enumerate( name),                         \
-           *rover___  ## item ## __i = (void *) 0;                               \
-        ! rover___  ## item ## __i;                                              \
-        rover___ ## item ## __i = (_mulle_setenumerator_done( &rover__ ## item), \
+           *rover__  ## item ## __i = (void *) 0;                               \
+        ! rover__  ## item ## __i;                                              \
+        rover__ ## item ## __i = (_mulle_setenumerator_done( &rover__ ## item), \
                                    (void *) 1))                                  \
       while( _mulle_setenumerator_next( &rover__ ## item, (void **) &item))
 

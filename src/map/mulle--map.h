@@ -241,6 +241,9 @@ static inline struct mulle_pointerpair   *
 }
 
 
+/// SET
+
+
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline void
    _mulle__map_set_pair( struct mulle__map *map,
@@ -297,6 +300,7 @@ static inline void
 }
 
 
+/// INSERT
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline void    *
@@ -325,7 +329,7 @@ static inline void    *
 
 
 MULLE_C_NONNULL_FIRST_FOURTH
-static inline void
+static inline void *
    _mulle__map_insert( struct mulle__map *map,
                        void *key,
                        void *value,
@@ -336,11 +340,11 @@ static inline void
 
    pair.key   = key;
    pair.value = value;
-   _mulle__map_insert_pair( map, &pair, callback, allocator);
+   return( _mulle__map_insert_pair( map, &pair, callback, allocator));
 }
 
 
-static inline void
+static inline void *
    mulle__map_insert( struct mulle__map *map,
                       void *key,
                       void *value,
@@ -351,9 +355,87 @@ static inline void
 
    pair.key   = key;
    pair.value = value;
-   mulle__map_insert_pair( map, &pair, callback, allocator);
+   return( mulle__map_insert_pair( map, &pair, callback, allocator));
 }
 
+//
+// Experimental!
+// You need to provide zeroed space on the initial call for the return value.
+// Afterwards you keep it empty.
+// The intended use is for iterating over and deleting contents. This could be
+// fairly efficient, but its untested.
+//
+
+MULLE__CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST_FOURTH
+void   _mulle__map_insert_key_valuesv( struct mulle__map *map,
+                                       void *firstkey,
+                                       va_list args,
+                                       struct mulle_container_keyvaluecallback *callback,
+                                       struct mulle_allocator *allocator);
+
+
+/// REPLACE
+
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+static inline void *
+   _mulle__map_update_pair( struct mulle__map *map,
+                             struct mulle_pointerpair *pair,
+                             struct mulle_container_keyvaluecallback *callback,
+                             struct mulle_allocator *allocator)
+{
+   return( _mulle__pointermap_update_pair_generic( (struct mulle__pointermap *) map,
+                                                    pair,
+                                                    callback,
+                                                    allocator));
+}
+
+
+static inline void *
+   mulle__map_update_pair( struct mulle__map *map,
+                             struct mulle_pointerpair *pair,
+                             struct mulle_container_keyvaluecallback *callback,
+                             struct mulle_allocator *allocator)
+{
+   if( ! map)
+      return( NULL);
+   return( _mulle__map_update_pair( map, pair, callback, allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST_FOURTH
+static inline void *
+   _mulle__map_update( struct mulle__map *map,
+                        void *key,
+                        void *value,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   return( _mulle__map_update_pair( map, &pair, callback, allocator));
+}
+
+
+static inline void *
+   mulle__map_update( struct mulle__map *map,
+                       void *key,
+                       void *value,
+                       struct mulle_container_keyvaluecallback *callback,
+                       struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   return( mulle__map_update_pair( map, &pair, callback, allocator));
+}
+
+
+
+/// REMOVE
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline int
@@ -441,22 +523,6 @@ static inline void
    if( map)
       _mulle__map_shrink_if_needed( map, callback, allocator);
 }
-
-//
-// Experimental!
-// You need to provide zeroed space on the initial call for the return value.
-// Afterwards you keep it empty.
-// The intended use is for iterating over and deleting contents. This could be
-// fairly efficient, but its untested.
-//
-
-MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FIRST_FOURTH
-void   _mulle__map_insert_key_valuesv( struct mulle__map *map,
-                                       void *firstkey,
-                                       va_list args,
-                                       struct mulle_container_keyvaluecallback *callback,
-                                       struct mulle_allocator *allocator);
 
 
 # pragma mark - copy

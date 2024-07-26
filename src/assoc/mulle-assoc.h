@@ -740,9 +740,9 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
    assert( sizeof( value) == sizeof( void *));                                                                 \
    for( struct mulle_assocenumerator                                                                           \
            rover__ ## key ## __ ## value = mulle_assoc_enumerate( name),                                       \
-           *rover___  ## key ## __ ## value ## __i = (void *) 0;                                               \
-        ! rover___  ## key ## __ ## value ## __i;                                                              \
-        rover___ ## key ## __ ## value ## __i = (_mulle_assocenumerator_done( &rover__ ## key ## __ ## value), \
+           *rover__  ## key ## __ ## value ## __i = (void *) 0;                                               \
+        ! rover__  ## key ## __ ## value ## __i;                                                              \
+        rover__ ## key ## __ ## value ## __i = (_mulle_assocenumerator_done( &rover__ ## key ## __ ## value), \
                                               (void *) 1))                                                     \
       while( _mulle_assocenumerator_next( &rover__ ## key ## __ ## value,                                      \
                                       (void **) &key,                                                          \

@@ -625,9 +625,9 @@ int   mulle__assoc_member( struct mulle__assoc *assoc,
    assert( sizeof( value) == sizeof( void *));                                                                  \
    for( struct mulle__assocenumerator                                                                           \
            rover__ ## key ## __ ## value = mulle__assoc_enumerate( name, callback),                             \
-           *rover___  ## key ## __ ## value ## __i = (void *) 0;                                                \
-        ! rover___  ## key ## __ ## value ## __i;                                                               \
-        rover___ ## key ## __ ## value ## __i = (_mulle__assocenumerator_done( &rover__ ## key ## __ ## value), \
+           *rover__  ## key ## __ ## value ## __i = (void *) 0;                                                \
+        ! rover__  ## key ## __ ## value ## __i;                                                               \
+        rover__ ## key ## __ ## value ## __i = (_mulle__assocenumerator_done( &rover__ ## key ## __ ## value), \
                                               (void *) 1))                                                      \
       while( _mulle__assocenumerator_next( &rover__ ## key ## __ ## value,                                      \
                                            (void **) &key,                                                           \

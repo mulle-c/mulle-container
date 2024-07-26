@@ -18,7 +18,7 @@
 // maybe larger than copy. But on "ingress" we can only copy the original
 // sizeof, which could be misaligned ? Not 100% sure if this isn't just
 // paranoia though, but the point of MULLE__STRUCTARRAY_ALIGNED_SIZE is to
-// widen the internal size, if that is superflous then _copy_sizeof_struct
+// widen the internal size, if that is superfluous then _copy_sizeof_struct
 // should be too.
 //
 #define MULLE__STRUCTARRAY_BASE  \
@@ -712,9 +712,9 @@ static inline void
    assert( sizeof( item) == sizeof( void *));                                             \
    for( struct mulle__structarrayenumerator                                               \
            rover__ ## item = mulle__structarray_enumerate( name),                         \
-           *rover___  ## item ## __i = (void *) 0;                                        \
-        ! rover___  ## item ## __i;                                                       \
-        rover___ ## item ## __i = (_mulle__structarrayenumerator_done( &rover__ ## item), \
+           *rover__  ## item ## __i = (void *) 0;                                        \
+        ! rover__  ## item ## __i;                                                       \
+        rover__ ## item ## __i = (_mulle__structarrayenumerator_done( &rover__ ## item), \
                                    (void *) 1))                                           \
       while( _mulle__structarrayenumerator_next( &rover__ ## item, (void **) &item))
 
@@ -725,9 +725,9 @@ static inline void
    assert( sizeof( item) == sizeof( void *));                                                    \
    for( struct mulle__structarrayreverseenumerator                                               \
            rover__ ## item = mulle__structarray_reverseenumerate( name),                         \
-           *rover___  ## item ## __i = (void *) 0;                                               \
-        ! rover___  ## item ## __i;                                                              \
-        rover___ ## item ## __i = (_mulle__structarrayreverseenumerator_done( &rover__ ## item), \
+           *rover__  ## item ## __i = (void *) 0;                                               \
+        ! rover__  ## item ## __i;                                                              \
+        rover__ ## item ## __i = (_mulle__structarrayreverseenumerator_done( &rover__ ## item), \
                                    (void *) 1))                                                  \
       while( _mulle__structarrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 

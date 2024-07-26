@@ -164,6 +164,17 @@ EOF
 }
 
 
+# MEMO: why is _for using a pointer and _do using an identifier ?
+#
+# mulle_array_do( foo)
+# {
+#    mulle_array_for( foo)
+#    {
+#       // that's why
+#    }
+# }
+
+
 
 for::emit_for_loop()
 {
@@ -193,9 +204,9 @@ for::emit_for_loop()
       cat <<EOF
    for( struct ${name}${reverse_text}enumerator
            rover__ ## key ## __ ## value = ${name}_${reverse_text}enumerate( name${callback_text}),
-           *rover___  ## key ## __ ## value ## __i = (void *) 0;
-        ! rover___  ## key ## __ ## value ## __i;
-        rover___ ## key ## __ ## value ## __i = (_${name}${reverse_text}enumerator_done( &rover__ ## key ## __ ## value),
+           *rover__  ## key ## __ ## value ## __i = (void *) 0;
+        ! rover__  ## key ## __ ## value ## __i;
+        rover__ ## key ## __ ## value ## __i = (_${name}${reverse_text}enumerator_done( &rover__ ## key ## __ ## value),
                                               (void *) 1))
 
       while( _${name}enumerator_next( &rover__ ## key ## __ ## value,
@@ -206,9 +217,9 @@ EOF
       cat <<EOF
    for( struct ${name}${reverse_text}enumerator
            rover__ ## item = ${name}_${reverse_text}enumerate( name${callback_text}),
-           *rover___  ## item ## __i = (void *) 0;
-        ! rover___  ## item ## __i;
-        rover___ ## item ## __i = (_${name}${reverse_text}enumerator_done( &rover__ ## item),
+           *rover__  ## item ## __i = (void *) 0;
+        ! rover__  ## item ## __i;
+        rover__ ## item ## __i = (_${name}${reverse_text}enumerator_done( &rover__ ## item),
                                    (void *) 1))
 
       while( _${name}${reverse_text}enumerator_next( &rover__ ## item, (void **) &item))
