@@ -517,9 +517,9 @@ static inline void
 #define mulle_pointerpairarray_for( name, pair)                                               \
    for( struct mulle_pointerpairarrayenumerator                                               \
            rover__ ## pair = mulle_pointerpairarray_enumerate( name),                         \
-           *rover___  ## pair ## __i = (void *) 0;                                            \
-        ! rover___  ## pair ## __i;                                                           \
-        rover___ ## pair ## __i = (_mulle_pointerpairarrayenumerator_done( &rover__ ## pair), \
+           *rover__  ## pair ## __i = (void *) 0;                                            \
+        ! rover__  ## pair ## __i;                                                           \
+        rover__ ## pair ## __i = (_mulle_pointerpairarrayenumerator_done( &rover__ ## pair), \
                                    (void *) 1))                                               \
       while( _mulle_pointerpairarrayenumerator_next( &rover__ ## pair, &pair))
 

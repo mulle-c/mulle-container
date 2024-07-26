@@ -254,6 +254,8 @@ void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
 
          case mulle_container_insert_e :
             return( q);
+            
+         default : ;
          }
       }
 

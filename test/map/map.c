@@ -96,6 +96,45 @@ static void  simple( void)
 }
 
 
+static void  insert( void)
+{
+   struct mulle_container_keyvaluecallback      callback;
+   void   *old;
+
+   callback.keycallback   = mulle_container_keycallback_copied_cstring;
+   callback.valuecallback = mulle_container_valuecallback_copied_cstring;
+
+   mulle_map_do( map, &callback)
+   {
+      old = mulle_map_insert( map, "city", "Bochum");
+      assert( ! old);
+      old = mulle_map_insert( map, "city", "Witten");
+      assert( old && ! strcmp( "Bochum", old));
+   }
+}
+
+
+static void  do_register( void)
+{
+   struct mulle_container_keyvaluecallback   callback;
+   void   *old;
+
+   callback.keycallback   = mulle_container_keycallback_nonowned_cstring;
+   callback.valuecallback = mulle_container_valuecallback_nonowned_cstring;
+
+   mulle_map_do( map, &callback)
+   {
+      old = mulle_map_update( map, "city", "Bochum");
+      assert( ! old);
+      old = mulle_map_update( map, "city", "Witten");
+      assert( old && ! strcmp( "Bochum", old));
+      old = mulle_map_update( map, "city", "Hattingen");
+      assert( old && ! strcmp( "Witten", old));
+   }
+}
+
+
+
 static void  insert_argv( void)
 {
    struct mulle_container_keyvaluecallback      callback;
@@ -397,8 +436,10 @@ int   main( int argc, char * argv[])
    run_test( map_null, "map_null");
    run_test( create, "create");
    run_test( simple, "simple");
+   run_test( insert, "insert");
    run_test( insert_argv, "insert_argv");
    run_test( enumerate, "enumerate");
+   run_test( do_register, "register");
    run_test( map_reset, "reset");
    run_test( map_remove, "remove");
    run_test( map_copy, "copy");

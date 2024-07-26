@@ -40,7 +40,7 @@ static void  simple( int n)
 }
 
 
-static struct demo_struct   flex_return( int n)
+static struct demo_struct   _flex_return( int n)
 {
    unsigned int   i;
 
@@ -55,6 +55,14 @@ static struct demo_struct   flex_return( int n)
    }
    return( (struct demo_struct) { 0});
 }
+
+// because of the differing return value, in i386 apparently a different
+// calling convention / register is used and the n is mangled (!)
+static void   flex_return( int n)
+{
+   (void) _flex_return( n);
+}
+
 
 
 static void  flex_explicit( int n)

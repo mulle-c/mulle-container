@@ -400,9 +400,9 @@ static inline void   mulle_pointerqueueenumerator_done( struct mulle_pointerqueu
    assert( sizeof( item) == sizeof( void *));                                             \
    for( struct mulle_pointerqueueenumerator                                               \
            rover__ ## item = mulle_pointerqueue_enumerate( name),                         \
-           *rover___  ## item ## __i = (void *) 0;                                        \
-        ! rover___  ## item ## __i;                                                       \
-        rover___ ## item ## __i = (_mulle_pointerqueueenumerator_done( &rover__ ## item), \
+           *rover__  ## item ## __i = (void *) 0;                                        \
+        ! rover__  ## item ## __i;                                                       \
+        rover__ ## item ## __i = (_mulle_pointerqueueenumerator_done( &rover__ ## item), \
                                    (void *) 1))                                           \
       while( _mulle_pointerqueueenumerator_next( &rover__ ## item, (void **) &item))
 
