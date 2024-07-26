@@ -72,7 +72,8 @@
 enum mulle_container_write_mode
 {
    mulle_container_insert_e,
-   mulle_container_overwrite_e
+   mulle_container_overwrite_e,
+   mulle_container_update_e
 };
 
 // Convenient to be different to "notakey"

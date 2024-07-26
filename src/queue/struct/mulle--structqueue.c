@@ -75,7 +75,7 @@ struct mulle__structqueuebucket *
    {
       space = (sizeof( struct mulle__structqueuebucket) -
                sizeof( struct mulle__structqueuebucket *)) +
-               queue->_bucket_size * queue->_sizeof_struct;
+               (size_t) queue->_bucket_size * (size_t) queue->_sizeof_struct;
 
       p = mulle_allocator_malloc( allocator, space);
    }

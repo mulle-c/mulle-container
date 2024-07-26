@@ -472,9 +472,9 @@ static inline void
    assert( sizeof( item) == sizeof( void *));                                            \
    for( struct mulle_structqueueenumerator                                               \
            rover__ ## item = mulle_structqueue_enumerate( name),                         \
-           *rover___  ## item ## __i = (void *) 0;                                       \
-        ! rover___  ## item ## __i;                                                      \
-        rover___ ## item ## __i = (_mulle_structqueueenumerator_done( &rover__ ## item), \
+           *rover__  ## item ## __i = (void *) 0;                                        \
+        ! rover__  ## item ## __i;                                                       \
+        rover__ ## item ## __i = (_mulle_structqueueenumerator_done( &rover__ ## item),  \
                                    (void *) 1))                                          \
       while( _mulle_structqueueenumerator_next( &rover__ ## item, (void **) &item))
 

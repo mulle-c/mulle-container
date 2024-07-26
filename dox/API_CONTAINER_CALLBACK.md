@@ -7,32 +7,32 @@ This has the advantage, that memory management can be handled by the container.
 
 ## Overview of callbacks with no memory management
 
-Callback                            | Description
-------------------------------------|--------------------------------
-`mulle_container_keycallback_int` `mulle_container_valuecallback_int`  | store any **`int`** except `mulle_not_an_int` (`INT_MIN`)
-`mulle_container_keycallback_intptr ` `mulle_container_valuecallback_intptr`  | store any **`intptr_t`** except `mulle_not_an_intptr` (`INTPTR_MIN`)
-`mulle_container_keycallback_nonowned_pointer` `mulle_container_valuecallback_nonowned_pointer`  | store any **`void *`** except NULL.
-`mulle_container_keycallback_nonowned_cstring` `mulle_container_valuecallback_nonowned_cstring`  | store any **`char *`** except NULL.
-`mulle_container_keycallback_nonowned_pointer_or_null` | store any **`void *`** except `mulle_not_an_intptr` (`(void *) INTPTR_MIN`)
+| Callback                            | Description
+|-------------------------------------|--------------------------------
+| `mulle_container_keycallback_int` `mulle_container_valuecallback_int`  | store any **`int`** except `mulle_not_an_int` (`INT_MIN`)
+| `mulle_container_keycallback_intptr ` `mulle_container_valuecallback_intptr`  | store any **`intptr_t`** except `mulle_not_an_intptr` (`INTPTR_MIN`)
+| `mulle_container_keycallback_nonowned_pointer` `mulle_container_valuecallback_nonowned_pointer`  | store any **`void *`** except NULL.
+| `mulle_container_keycallback_nonowned_cstring` `mulle_container_valuecallback_nonowned_cstring`  | store any **`char *`** except NULL.
+| `mulle_container_keycallback_nonowned_pointer_or_null` | store any **`void *`** except `mulle_not_an_intptr` (`(void *) INTPTR_MIN`)
 
 Keys are `void *`. All values are possible except `mulle_container_not_a_pointer_key`.
 
 
 ## Overview of callbacks that free
 
-Callback                            | Description
-------------------------------------|--------------------------------
-`mulle_container_keycallback_owned_pointer` `mulle_container_valuecallback_owned_pointer`  | store any **`void *`** except NULL. Items will be freed when removed.
-`mulle_container_keycallback_owned_cstring` `mulle_container_valuecallback_owned_cstring`  | store any **`char *`** except NULL. Items will be freed when removed.
+| Callback                            | Description
+|-------------------------------------|--------------------------------
+| `mulle_container_keycallback_owned_pointer` `mulle_container_valuecallback_owned_pointer`  | store any **`void *`** | except NULL. Items will be freed when removed.
+| `mulle_container_keycallback_owned_cstring` `mulle_container_valuecallback_owned_cstring`  | store any **`char *`** except NULL. Items will be freed when removed.
 
 
 
 ## Overview of callbacks that copy and free
 
 
-Callback                            | Description
-------------------------------------|--------------------------------
-`mulle_container_keycallback_copied_cstring` `mulle_container_valuecallback_copied_cstring`  | Store a copy **`char *`** except NULL. Items will be freed when removed.
+| Callback                            | Description
+|-------------------------------------|--------------------------------
+| `mulle_container_keycallback_copied_cstring` `mulle_container_valuecallback_copied_cstring`  | Store a copy **`char *`** except NULL. Items will be freed when removed.
 
 ## Callbacks
 
@@ -98,15 +98,15 @@ struct mulle_container_keycallback
 This struct is mostly a collection of function pointers. The paramter `p` indicated the `key` as passed to the container. The `allocator` is the **mulle-allocator** to be used for memory management of this key. Note that the first parameter is the `callback` itself, which can be useful to access the `userinfo`.
 
 
-Field               | Description
---------------------|------------------
-`.hash`             | is used to derive a **uintptr_t** hash from `p`.
-`.is_equal`         | is used to test two keys `p` and `q` for equality (1: equals).
-`.retain`           | is an operation to transfer ownership of `p` to the container using `allocator`.
-`.release`          | is an operation to yield ownership of `p` from the container using `allocator`.
-`.describe`         | is debugging operation that returns a UTF8 string created with `allocator`.
-`.not_a_key_marker` | if the container desires to store 0/nil, this value will be used as a marke for an empty slot instead.
-`.userinfo`         | a place to store something for the user
+| Field               | Description
+|---------------------|------------------
+| `.hash`             | is used to derive a **uintptr_t** hash from `p`.
+| `.is_equal`         | is used to test two keys `p` and `q` for equality (1: equals).
+| `.retain`           | is an operation to transfer ownership of `p` to the container using `allocator`.
+| `.release`          | is an operation to yield ownership of `p` from the container using `allocator`.
+| `.describe`         | is debugging operation that returns a UTF8 string created with `allocator`.
+| `.not_a_key_marker` | if the container desires to store 0/nil, this value will be used as a marke for an empty slot | instead.
+| `.userinfo`         | a place to store something for the user
 
 
 ### `struct mulle_container_valuecallback`
@@ -125,12 +125,12 @@ struct mulle_container_valuecallback
 This is basically a reduced version of `mulle_container_keycallback` for values.
 
 
-Field       | Description
-------------|------------------
-`.retain`   | is an operation to transfer ownership of `p` to the container using `allocator`.
-`.release`  | is an operation to yield ownership of `p` from the container using `allocator`.
-`.describe` | is debugging operation that returns a UTF8 string created with `allocator`.
-`.userinfo` | a place to store something for the user
+| Field       | Description
+|-------------|------------------
+| `.retain`   | is an operation to transfer ownership of `p` to the container using `allocator`.
+| `.release`  | is an operation to yield ownership of `p` from the container using `allocator`.
+| `.describe` | is debugging operation that returns a UTF8 string created with `allocator`.
+| `.userinfo` | a place to store something for the user
 
 
 ### `struct mulle_container_keyvaluecallback`

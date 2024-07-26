@@ -241,6 +241,7 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
    uintptr_t                  found;
    unsigned int               i;
    void                       **q;
+   void                       *old;
    struct mulle_pointerpair   new_pair;
    uintptr_t                  hash;
 
@@ -262,31 +263,36 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
 
       if( found != mulle_not_found_e)
       {
-         i = (unsigned int) found;
-         q = &storage[ i];
+         i   = (unsigned int) found;
+         q   = &storage[ i];
+         old = q[ size];
          if( mode == mulle_container_insert_e)
-            return( q[ size]);
+            return( old);
 
          q = &storage[ i];
-         if( q[ size] == pair->value && *q == pair->key)
-            return( q[ size]);
+         if( old == pair->value && *q == pair->key)
+            return( NULL);
 
          new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
          new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
 
          (callback->keycallback.release)( &callback->keycallback, *q, allocator);
-         (callback->valuecallback.release)( &callback->valuecallback, q[ size], allocator);
+         (callback->valuecallback.release)( &callback->valuecallback, old, allocator);
 
          *q       = new_pair.key;
          q[ size] = new_pair.value;
-         return( q[ size]);
+
+         // if we do replace, we return the old value. If the release is a nop,
+         // or an autorelease, then this will be still value. This will crash
+         // if the callback if strdup/free
+         return( mode == mulle_container_update_e ? old : NULL);
       }
 
       i = hole_index;
       if( ! _mulle__pointermap_is_full( map))
       {
-         new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
-         new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
+         new_pair.key       = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
+         new_pair.value     = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
 
          storage[ i]        = new_pair.key;
          storage[ i + size] = new_pair.value;
@@ -298,7 +304,7 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
    if( _mulle__pointermap_is_full( map))
       grow_generic( map, &callback->keycallback, allocator);
 
-   i               = mulle__pointermap_hash_for_size( hash, map->_size);
+   i              = mulle__pointermap_hash_for_size( hash, map->_size);
    new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
    new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
 
