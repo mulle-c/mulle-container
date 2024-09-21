@@ -310,6 +310,25 @@ static inline void
 }
 
 
+// currently pop doesn't shrink the allocated memory, though we pass
+// an allocator (for future)
+static inline int
+   _mulle__structarray_pop( struct mulle__structarray *array,
+                            void *item,
+                            struct mulle_allocator *allocator)
+{
+   void   *adr;
+
+   adr = _mulle__structarray_get_last( array);
+   if( ! adr)
+      return( 0);
+
+   memcpy( item, adr, array->_copy_sizeof_struct);
+   array->_curr = adr;
+   return( 1);
+}
+
+
 static inline void
    _mulle__structarray_set( struct mulle__structarray *array,
                             unsigned int i,
@@ -320,6 +339,7 @@ static inline void
    address = _mulle__structarray_get( array, i);
    memcpy( address, item, array->_copy_sizeof_struct);
 }
+
 
 
 
@@ -545,6 +565,7 @@ static inline int
    *item = NULL;
    return( 0);
 }
+
 
 static inline int
    mulle__structarrayenumerator_next( struct mulle__structarrayenumerator *rover,

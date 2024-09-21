@@ -305,6 +305,18 @@ static inline void
 }
 
 
+static inline int
+   mulle_structarray_pop( struct mulle_structarray *array, void *item)
+{
+   if( ! array)
+      return( 0);
+
+   return( _mulle__structarray_pop( (struct mulle__structarray *) array,
+                                    item,
+                                    array->allocator));
+}
+
+
 static inline void
    mulle_structarray_add( struct mulle_structarray *array, void *item)
 {

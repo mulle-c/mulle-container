@@ -351,14 +351,14 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
 
 // created by make-container-for.sh src/set/mulle-set.c
 
-#define mulle_set_for( name, item)                                               \
-   assert( sizeof( item) == sizeof( void *));                                    \
-   for( struct mulle_setenumerator                                               \
-           rover__ ## item = mulle_set_enumerate( name),                         \
+#define mulle_set_for( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                   \
+   for( struct mulle_setenumerator                                              \
+           rover__ ## item = mulle_set_enumerate( name),                        \
            *rover__  ## item ## __i = (void *) 0;                               \
         ! rover__  ## item ## __i;                                              \
         rover__ ## item ## __i = (_mulle_setenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                  \
+                                   (void *) 1))                                 \
       while( _mulle_setenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif
