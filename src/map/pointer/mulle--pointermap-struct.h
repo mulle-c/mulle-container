@@ -66,7 +66,7 @@ struct mulle__pointermap
 };
 
 
-#define MULLE__POINTERMAP_INIT   { 0, 0, 0 }
+#define MULLE__POINTERMAP_DATA   { 0, 0, 0 }
 
 
 MULLE__CONTAINER_GLOBAL

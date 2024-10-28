@@ -55,7 +55,7 @@ struct mulle_pointerarray
 };
 
 
-#define MULLE_POINTERARRAY_INIT( storage, count, xallocator) \
+#define MULLE_POINTERARRAY_DATA( storage, count, xallocator) \
    ((struct mulle_pointerarray)                              \
    {                                                         \
       ._storage         = (storage),                         \
@@ -78,6 +78,10 @@ static inline void   _mulle_pointerarray_init( struct mulle_pointerarray *array,
    array->allocator = allocator;
 }
 
+#define _mulle_pointerarray_init_default( array)  \
+   _mulle_pointerarray_init( array, 8, NULL)
+
+
 static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
                                               unsigned int capacity,
                                               struct mulle_allocator *allocator)
@@ -85,6 +89,10 @@ static inline void   mulle_pointerarray_init( struct mulle_pointerarray *array,
    if( array)
       _mulle_pointerarray_init( array, capacity, allocator);
 }
+
+
+#define mulle_pointerarray_init_default( array)  \
+   mulle_pointerarray_init( array, 8, NULL)
 
 
 static inline void
@@ -135,9 +143,12 @@ static inline struct mulle_pointerarray *
    struct mulle_pointerarray   *array;
 
    array = mulle_pointerarray_alloc( allocator);
-   _mulle_pointerarray_init( array, 0, allocator);
+   _mulle_pointerarray_init( array, 8, allocator);
    return( array);
 }
+
+#define mulle_pointerarray_create_default( allocator)  \
+   mulle_pointerarray_create( allocator)
 
 
 static inline void   mulle_pointerarray_destroy( struct mulle_pointerarray *array)
@@ -867,7 +878,7 @@ static inline int
    void   *name ## __storage[ stackcount];                                   \
    for( struct mulle_pointerarray                                            \
            name ## __container =                                             \
-              MULLE_POINTERARRAY_INIT( name ## __storage, stackcount, NULL), \
+              MULLE_POINTERARRAY_DATA( name ## __storage, stackcount, NULL), \
            *name = &name ## __container,                                     \
            *name ## __i = NULL;                                              \
         ! name ## __i;                                                       \

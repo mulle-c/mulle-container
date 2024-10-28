@@ -67,10 +67,10 @@ static inline void   mulle_pointers_done( struct mulle_pointers p,
 
 //
 // mulle__pointerarray is a growing array of pointers, it just reallocs.
-// You can remove the last item via "pop", but there is no random access
-// removal. You would create a copy for this.
-// (Actually there is now a remove operation:
-//   mulle__pointerarray_remove_in_range, but it's very slow)
+// You can remove the last item via "pop", in general you would eschew
+// random access removal for a copy operation. But there is now
+// actually a remove operation:
+//   mulle__pointerarray_remove_in_range, but it's very slow.
 //
 #define MULLE__POINTERARRAY_BASE    \
    void      **_storage;            \
@@ -85,7 +85,7 @@ struct mulle__pointerarray
 };
 
 
-#define MULLE__POINTERARRAY_INIT( storage, count) \
+#define MULLE__POINTERARRAY_DATA( storage, count) \
    ((struct mulle__pointerarray)                  \
    {                                              \
       ._storage         = (storage),              \
@@ -1005,7 +1005,7 @@ static inline int   mulle__pointerarray_member( struct mulle__pointerarray *arra
    void   *name ## __storage[ stackcount];                              \
    for( struct mulle__pointerarray                                      \
            name ## __container =                                        \
-              MULLE__POINTERARRAY_INIT( name ## __storage, stackcount), \
+              MULLE__POINTERARRAY_DATA( name ## __storage, stackcount), \
            *name = &name ## __container,                                \
            *name ## __i = NULL;                                         \
         ! name ## __i;                                                  \

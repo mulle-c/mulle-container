@@ -53,7 +53,7 @@ struct mulle_structqueue
 };
 
 
-#define MULLE_STRUCTQUEUE_INIT( type, xallocator)                     \
+#define MULLE_STRUCTQUEUE_DATA( type, xallocator)                     \
    ((struct mulle_structqueue)                                        \
    {                                                                  \
       ._read_index         = 64,                                      \
@@ -451,7 +451,7 @@ static inline void
 
 #define mulle_structqueue_do( name, type)                              \
    for( struct mulle_structqueue                                       \
-           name ## __container = MULLE_STRUCTQUEUE_INIT( type, NULL),  \
+           name ## __container = MULLE_STRUCTQUEUE_DATA( type, NULL),  \
            *name = &name ## __container,                               \
            *name ## __i = NULL;                                        \
         ! name ## __i;                                                 \

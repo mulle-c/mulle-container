@@ -27,7 +27,7 @@ struct mulle_uniquepointerarray
 };
 
 
-#define MULLE_UNIQUEPOINTERARRAY_INIT( storage, count, xallocator) \
+#define MULLE_UNIQUEPOINTERARRAY_DATA( storage, count, xallocator) \
    ((struct mulle_uniquepointerarray)                              \
    {                                                               \
       ._storage         = (storage),                               \
@@ -199,7 +199,7 @@ static inline int   mulle_uniquepointerarray_member( struct mulle_uniquepointera
    void   *name ## __storage[ stackcount];                                      \
    for( struct mulle_uniquepointerarray                                         \
            name ## __container =                                                \
-              MULLE_UNIQUEPOINTERARRAY_INIT( name ## __storage, stackcount, 0), \
+              MULLE_UNIQUEPOINTERARRAY_DATA( name ## __storage, stackcount, 0), \
            *name = &name ## __container,                                        \
            *name ## __i = NULL;                                                 \
         ! name ## __i;                                                          \

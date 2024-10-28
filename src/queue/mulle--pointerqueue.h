@@ -62,7 +62,7 @@ struct mulle__pointerqueue
 };
 
 
-#define MULLE__POINTERQUEUE_INIT( xbucket_size, xspare_allowance) \
+#define MULLE__POINTERQUEUE_DATA( xbucket_size, xspare_allowance) \
    ((struct mulle__pointerqueue)                                  \
    {                                                              \
       ._bucket_size     = xbucket_size,                           \
@@ -281,7 +281,7 @@ static inline void   mulle__pointerqueueenumerator_done( struct mulle__pointerqu
 // and then hand edited
 #define mulle__pointerqueue_do( name)                              \
    for( struct mulle__pointerqueue                                 \
-           name ## __container = MULLE__POINTERQUEUE_INIT( 64, 0), \
+           name ## __container = MULLE__POINTERQUEUE_DATA( 64, 0), \
            *name = &name ## __container,                           \
            *name ## __i = NULL;                                    \
         ! name ## __i;                                             \
