@@ -29,7 +29,7 @@ struct mulle_map
    MULLE_MAP_BASE;
 };
 
-#define MULLE_MAP_INIT( xcallback, xallocator) \
+#define MULLE_MAP_DATA( xcallback, xallocator) \
    ((struct mulle_map)                         \
    {                                           \
       .callback  = (xcallback),                \
@@ -559,7 +559,7 @@ static inline void
 
 #define mulle_map_do( name, callback)                             \
    for( struct mulle_map                                          \
-           name ## __container = MULLE_MAP_INIT( callback, NULL), \
+           name ## __container = MULLE_MAP_DATA( callback, NULL), \
            *name = &name ## __container,                          \
            *name ## __i = NULL;                                   \
         ! name ## __i;                                            \
@@ -576,24 +576,24 @@ static inline void
 // created by make-container-for.sh -ls -v src/map/mulle-map.c
 // created by make-container-for.sh -ls -v src/map/mulle-map.c
 
-#define mulle_map_for( name, key, value)                                                                     \
-   assert( sizeof( key) == sizeof( void *));                                                                 \
-   assert( sizeof( value) == sizeof( void *));                                                               \
-   for( struct mulle_mapenumerator                                                                           \
-           rover__ ## key ## __ ## value = mulle_map_enumerate( name),                                       \
+#define mulle_map_for( name, key, value)                                                                    \
+   assert( sizeof( key) == sizeof( void *));                                                                \
+   assert( sizeof( value) == sizeof( void *));                                                              \
+   for( struct mulle_mapenumerator                                                                          \
+           rover__ ## key ## __ ## value = mulle_map_enumerate( name),                                      \
            *rover__  ## key ## __ ## value ## __i = (void *) 0;                                             \
         ! rover__  ## key ## __ ## value ## __i;                                                            \
         rover__ ## key ## __ ## value ## __i = (_mulle_mapenumerator_done( &rover__ ## key ## __ ## value), \
-                                              (void *) 1))                                                   \
-      while( _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                                      \
-                                      (void **) &key,                                                        \
+                                              (void *) 1))                                                  \
+      while( _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                                     \
+                                      (void **) &key,                                                       \
                                       (void **) &value))
 
 
 
 //
 // #define mulle_map_for( map, key, value)                                                        \
-//    assert( sizeof( key) == sizeof( void *));                                          \
+//    assert( sizeof( key) == sizeof( void *));                                                   \
 //    assert( sizeof( value) == sizeof( void *));                                                 \
 //    for( struct mulle_mapenumerator rover__ ## key ## __ ## value = mulle_map_enumerate( map);  \
 //         _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                             \

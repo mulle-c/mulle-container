@@ -67,7 +67,7 @@ struct mulle__structqueue
    MULLE__STRUCTQUEUE_BASE;
 };
 
-#define MULLE__STRUCTQUEUE_INIT( type)                              \
+#define MULLE__STRUCTQUEUE_DATA( type)                              \
    ((struct mulle__structqueue)                                     \
    {                                                                \
       ._bucket_size        = 64,                                    \
@@ -336,11 +336,11 @@ static inline void
 
 
 // created by make-container-do.sh src/queue/struct/mulle--structqueue.c
-// but hand edited signature and the MULLE__STRUCTQUEUE_INIT
+// but hand edited signature and the MULLE__STRUCTQUEUE_DATA
 
 #define mulle__structqueue_do( name, type)                        \
    for( struct mulle__structqueue                                 \
-           name ## __container = MULLE__STRUCTQUEUE_INIT( type),  \
+           name ## __container = MULLE__STRUCTQUEUE_DATA( type),  \
            *name = &name ## __container,                          \
            *name ## __i = NULL;                                   \
         ! name ## __i;                                            \

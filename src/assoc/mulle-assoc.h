@@ -66,7 +66,7 @@ struct mulle_assoc
 };
 
 
-#define MULLE_ASSOC_INIT( xcallback, xcompare, xallocator) \
+#define MULLE_ASSOC_DATA( xcallback, xcompare, xallocator) \
    ((struct mulle_assoc)                                   \
    {                                                       \
       .callback         = (xcallback),                     \
@@ -717,7 +717,7 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
 
 #define mulle_assoc_do( name, callback, compare)                             \
    for( struct mulle_assoc                                                   \
-           name ## __container = MULLE_ASSOC_INIT( callback, compare, NULL), \
+           name ## __container = MULLE_ASSOC_DATA( callback, compare, NULL), \
            *name = &name ## __container,                                     \
            *name ## __i = NULL;                                              \
         ! name ## __i;                                                       \

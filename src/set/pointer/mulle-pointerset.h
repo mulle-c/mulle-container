@@ -41,7 +41,7 @@ struct mulle_pointerset
 };
 
 
-#define MULLE_POINTERSET_INIT( xallocator) \
+#define MULLE_POINTERSET_DATA( xallocator) \
    ((struct mulle_pointerset)              \
    {                                       \
       .allocator = xallocator              \

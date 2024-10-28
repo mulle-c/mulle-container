@@ -31,7 +31,7 @@ struct mulle__rangeset
    unsigned int         _size;
 };
 
-#define MULLE__RANGESET_INIT( storage, size)  \
+#define MULLE__RANGESET_DATA( storage, size)  \
    ((struct mulle__rangeset)                  \
    {                                          \
       ._ranges          = (storage),          \
@@ -373,7 +373,7 @@ struct mulle_range
    struct mulle_range      name ## __storage[ stackcount];          \
    for( struct mulle__rangeset                                      \
            name ## __container =                                    \
-              MULLE__RANGESET_INIT( name ## __storage, stackcount), \
+              MULLE__RANGESET_DATA( name ## __storage, stackcount), \
            *name = &name ## __container,                            \
            *name ## __i = NULL;                                     \
         ! name ## __i;                                              \

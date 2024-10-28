@@ -61,7 +61,7 @@ struct mulle_set
    MULLE_SET_BASE;
 };
 
-#define MULLE_SET_INIT( xcallback, xallocator) \
+#define MULLE_SET_DATA( xcallback, xallocator) \
    ((struct mulle_set)                         \
    {                                           \
       .callback  = (xcallback),                \
@@ -335,7 +335,7 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
 
 #define mulle_set_do( name, callback)                             \
    for( struct mulle_set                                          \
-           name ## __container = MULLE_SET_INIT( callback, NULL), \
+           name ## __container = MULLE_SET_DATA( callback, NULL), \
            *name = &name ## __container,                          \
            *name ## __i = NULL;                                   \
         ! name ## __i;                                            \

@@ -40,7 +40,7 @@ struct mulle__structarray
    (size_t) (sizeof( type) + (sizeof( type) % alignof( type)))
 
 
-#define MULLE__STRUCTARRAY_INIT( storage, type, count)                        \
+#define MULLE__STRUCTARRAY_DATA( storage, type, count)                        \
    ((struct mulle__structarray)                                               \
    {                                                                          \
       ._storage                 = (storage),                                  \
@@ -690,7 +690,7 @@ static inline void
 //
 #define mulle__structarray_do( name, type)                                    \
    for( struct mulle__structarray                                             \
-           name ## __array = MULLE__STRUCTARRAY_INIT( NULL, type, 0),         \
+           name ## __array = MULLE__STRUCTARRAY_DATA( NULL, type, 0),         \
            *name = &name ## __array,                                          \
            *name ## __i = NULL;                                               \
         ! name ## __i;                                                        \
@@ -710,7 +710,7 @@ static inline void
    type   name ## __storage[ stackcount];                                     \
    for( struct mulle__structarray                                             \
            name ## __array =                                                  \
-              MULLE__STRUCTARRAY_INIT( name ## __storage, type, stackcount),  \
+              MULLE__STRUCTARRAY_DATA( name ## __storage, type, stackcount),  \
            *name = &name ## __array,                                          \
            *name ## __i = NULL;                                               \
         ! name ## __i;                                                        \
