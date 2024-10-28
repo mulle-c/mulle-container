@@ -56,8 +56,8 @@ struct mulle__array
 };
 
 
-#define MULLE__ARRAY_INIT( storage, count)  \
-   MULLE__POINTERARRAY_INIT( storage, count)
+#define MULLE__ARRAY_DATA( storage, count)  \
+   MULLE__POINTERARRAY_DATA( storage, count)
 
 
 
@@ -660,7 +660,7 @@ int   mulle__array_member( struct mulle__array *array,
    void   *name ## __storage[ stackcount];                            \
    for( struct mulle__array                                           \
            name ## __container =                                      \
-              MULLE__ARRAY_INIT( name ## __storage, stackcount),      \
+              MULLE__ARRAY_DATA( name ## __storage, stackcount),      \
            *name = &name ## __container,                              \
            *name ## __i = NULL;                                       \
         ! name ## __i;                                                \

@@ -24,7 +24,7 @@ struct mulle_structarray
 };
 
 
-#define MULLE_STRUCTARRAY_INIT( storage, type, count, xallocator)     \
+#define MULLE_STRUCTARRAY_DATA( storage, type, count, xallocator)     \
    ((struct mulle_structarray)                                        \
    {                                                                  \
       ._storage            = (storage),                               \
@@ -94,6 +94,9 @@ static inline void   mulle_structarray_init( struct mulle_structarray *array,
                                allocator);
 }
 
+#define mulle_structarray_init_default( type)   \
+   mulle_structarray_init( array, sizeof( type), alignof( type), 8, NULL)
+
 
 MULLE_C_NONNULL_FIRST
 static inline void
@@ -149,6 +152,11 @@ static inline struct mulle_structarray *
    _mulle_structarray_init( array, sizeof_struct, alignof_struct, capacity, allocator);
    return( array);
 }
+
+
+#define mulle_structarray_create_default( type)   \
+   mulle_structarray_create( sizeof( type), alignof( type), 8, NULL)
+
 
 
 MULLE_C_NONNULL_FIRST
@@ -290,6 +298,27 @@ static inline size_t
 
    return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
 }
+
+
+// MEMO: alternative name, maybe it will become the standard
+MULLE_C_NONNULL_FIRST
+static inline size_t
+   _mulle_structarray_get_struct_size( struct mulle_structarray *array)
+{
+   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
+}
+
+
+static inline size_t
+   mulle_structarray_get_struct_size( struct mulle_structarray *array)
+{
+   if( ! array)
+      return( 0);
+
+   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
+}
+
+
 
 
 
@@ -439,9 +468,6 @@ static inline void   _mulle_structarray_zero_to_count( struct mulle_structarray 
                                       count,
                                       array->allocator);
 }
-
-
-
 
 
 #pragma mark - petty accessors
@@ -695,7 +721,7 @@ static inline void
 //
 #define mulle_structarray_do( name, type)                                   \
    for( struct mulle_structarray                                            \
-           name ## __array =  MULLE_STRUCTARRAY_INIT( NULL, type, 0, NULL), \
+           name ## __array =  MULLE_STRUCTARRAY_DATA( NULL, type, 0, NULL), \
            *name = &name ## __array,                                        \
            *name ## __i = NULL;                                             \
         ! name ## __i;                                                      \
@@ -715,7 +741,7 @@ static inline void
    type   name ## __storage[ stackcount];                                      \
    for( struct mulle_structarray                                               \
            name ## __array =                                                   \
-              MULLE_STRUCTARRAY_INIT( name ## __storage, type, stackcount, 0), \
+              MULLE_STRUCTARRAY_DATA( name ## __storage, type, stackcount, 0), \
            *name = &name ## __array,                                           \
            *name ## __i = NULL;                                                \
         ! name ## __i;                                                         \

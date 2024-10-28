@@ -50,7 +50,7 @@
    type                        name ## __storage[ (stackcount)];           \
    type                        *name;                                      \
    struct mulle__structarray   name ## __array =                           \
-                               MULLE__STRUCTARRAY_INIT( name ## __storage, \
+                               MULLE__STRUCTARRAY_DATA( name ## __storage, \
                                                         type,              \
                                                         (stackcount))
 
@@ -108,7 +108,7 @@
    type   *name;                                                             \
    for( struct mulle__structarray                                            \
            name ## __array =                                                 \
-              MULLE__STRUCTARRAY_INIT( name ## __storage, type, stackcount), \
+              MULLE__STRUCTARRAY_DATA( name ## __storage, type, stackcount), \
            name ## __i =                                                     \
            {                                                                 \
               ( mulle_flexarray_alloc( name, count), (void *) 0 )            \

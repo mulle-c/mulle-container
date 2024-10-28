@@ -45,17 +45,17 @@
 //
 // mulle-array is a mulle--array with the allocator and callback embedded.
 //
-// You can not insert callback->notakey and you will get back callback->notakey
-// if a value doesn't exist.
+// You can not insert callback->notakey. If a value doesn't exist, you will
+// get back callback->notakey as "not found" (not necessarily NULL).
 //
 // You can use the mulle_container_keycallback_int callbacks to store "int"
 // into mulle-array and use mulle_int_as_pointer() and mulle_pointer_as_int()
-// to convert them for mulle-arrayconsumption. But it's much better and more
+// to convert them for array consumption. But it's much better and more
 // efficient to use mulle-structarray for this.
 //
-#define MULLE_ARRAY_BASE                           \
-   MULLE__ARRAY_BASE;                              \
-   struct mulle_container_keycallback   *callback; \
+#define MULLE_ARRAY_BASE                                         \
+   MULLE__ARRAY_BASE;                                            \
+   struct mulle_container_keycallback   *callback;               \
    struct mulle_allocator               *allocator
 
 
@@ -65,7 +65,7 @@ struct mulle_array
 };
 
 
-#define MULLE_ARRAY_INIT( storage, count, xcallback, xallocator) \
+#define MULLE_ARRAY_DATA( storage, count, xcallback, xallocator) \
    ((struct mulle_pointerarray)                                  \
    {                                                             \
       ._storage         = (storage),                             \
@@ -94,6 +94,10 @@ static inline void    mulle_array_init( struct mulle_array *array,
 }
 
 
+#define mulle_array_init_default( array, callback)   \
+   mulle_array_init( array, 8, callback, NULL)
+
+
 static inline void   _mulle_array_done( struct mulle_array *array)
 {
    _mulle__array_done( (struct mulle__array *) array,
@@ -118,6 +122,9 @@ struct mulle_array    *
                        struct mulle_container_keycallback *callback,
                        struct mulle_allocator *allocator);
 
+
+#define mulle_array_create_default( callback)   \
+   mulle_array_create( 8, callback, NULL)
 
 static inline void   mulle_array_destroy( struct mulle_array *array)
 {
@@ -784,7 +791,7 @@ static inline void
    void   *name ## __storage[ stackcount];                                      \
    for( struct mulle_array                                                      \
            name ## __container =                                                \
-              MULLE_ARRAY_INIT( name ## __storage, stackcount, callback, NULL), \
+              MULLE_ARRAY_DATA( name ## __storage, stackcount, callback, NULL), \
            *name = &name ## __container,                                        \
            *name ## __i = NULL;                                                 \
         ! name ## __i;                                                          \

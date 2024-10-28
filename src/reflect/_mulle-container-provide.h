@@ -15,7 +15,6 @@
 
 #include "mulle--array.h"
 #include "mulle-array.h"
-#include "mulle-flexarray.h"
 #include "mulle--pointerarray.h"
 #include "mulle-pointerarray.h"
 #include "mulle--structarray.h"
