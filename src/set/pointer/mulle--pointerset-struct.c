@@ -54,7 +54,7 @@
 //
 
 void    _mulle__pointerset_init( struct mulle__pointerset *p,
-                                 unsigned int capacity,
+                                 size_t capacity,
                                  struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
@@ -74,7 +74,7 @@ void    _mulle__pointerset_init( struct mulle__pointerset *p,
 }
 
 
-struct mulle__pointerset   *_mulle__pointerset_create( unsigned int capacity,
+struct mulle__pointerset   *_mulle__pointerset_create( size_t capacity,
                                                        size_t extra,
                                                        struct mulle_allocator *allocator)
 {
@@ -109,9 +109,9 @@ void   *_mulle__pointerset__get( struct mulle__pointerset *set,
                                  void *key)
 {
    uintptr_t      hash;
-   unsigned int   i;
-   unsigned int   mask;
-   unsigned int   size;
+   size_t   i;
+   size_t   mask;
+   size_t   size;
    void           **storage;
    void           *found;
 

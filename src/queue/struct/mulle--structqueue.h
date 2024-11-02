@@ -48,12 +48,12 @@ struct mulle__structqueuebucket;
    struct mulle__structqueuebucket    *_spares;            \
    struct mulle__structqueuebucket    *_read;              \
    struct mulle__structqueuebucket    *_write;             \
-   unsigned int                       _count;              \
-   unsigned int                       _read_index;         \
-   unsigned int                       _write_index;        \
+   size_t                       _count;              \
+   size_t                       _read_index;         \
+   size_t                       _write_index;        \
                                                            \
-   unsigned int                       _sizeof_struct;      \
-   unsigned int                       _copy_sizeof_struct; \
+   size_t                       _sizeof_struct;      \
+   size_t                       _copy_sizeof_struct; \
    unsigned short                     _bucket_size;        \
    unsigned short                     _spare_allowance
 
@@ -73,7 +73,7 @@ struct mulle__structqueue
       ._bucket_size        = 64,                                    \
       ._read_index         = 64,                                    \
       ._write_index        = 64,                                    \
-      ._copy_sizeof_struct = (unsigned int) sizeof( type),          \
+      ._copy_sizeof_struct = (size_t) sizeof( type),          \
       ._sizeof_struct      = MULLE__STRUCTQUEUE_ALIGNED_SIZE( type) \
    })
 
@@ -118,7 +118,7 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__structqueue_init( struct mulle__structqueue *queue,
                              size_t sizeof_struct,
-                             unsigned int alignof_struct,
+                             size_t alignof_struct,
                              unsigned short bucket_size,
                              unsigned short spare_allowance)
 {
@@ -135,11 +135,11 @@ static inline void
    queue->_read_index  =
    queue->_write_index = bucket_size >= 4 ? bucket_size : 4;
 
-   assert( sizeof_struct == (unsigned int) sizeof_struct);
+   assert( sizeof_struct == (size_t) sizeof_struct);
    assert( alignof_struct <= alignof( double));
 
-   queue->_sizeof_struct       = (unsigned int) (sizeof_struct + (sizeof_struct % alignof_struct));
-   queue->_copy_sizeof_struct  = (unsigned int) sizeof_struct;
+   queue->_sizeof_struct       = (size_t) (sizeof_struct + (sizeof_struct % alignof_struct));
+   queue->_copy_sizeof_struct  = (size_t) sizeof_struct;
    queue->_spare_allowance     = spare_allowance;
 }
 
@@ -147,7 +147,7 @@ static inline void
 MULLE__CONTAINER_GLOBAL
 struct mulle__structqueue   *
    mulle__structqueue_create( size_t sizeof_struct,
-                              unsigned int alignof_struct,
+                              size_t alignof_struct,
                               unsigned short bucket_size,
                               unsigned short spare_allowance,
                               struct mulle_allocator *allocator);
@@ -208,7 +208,7 @@ int   _mulle__structqueue_pop( struct mulle__structqueue *queue,
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle__structqueue_get_count( struct mulle__structqueue *queue)
 {
    return( queue->_count);
@@ -224,7 +224,7 @@ static inline unsigned short
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle__structqueue_get_element_size( struct mulle__structqueue *queue)
 {
    return( queue->_sizeof_struct);
@@ -238,7 +238,7 @@ static inline unsigned int
 #define MULLE__STRUCTQUEUEENUMERATOR_BASE      \
    struct mulle__structqueue        *_queue;   \
    struct mulle__structqueuebucket  *_curr;    \
-   unsigned int                      _index
+   size_t                      _index
 
 
 struct mulle__structqueueenumerator
@@ -280,8 +280,8 @@ static inline int
    extern int   __mulle__structqueueenumerator_next( struct mulle__structqueueenumerator *,
                                                      void **item);
    struct mulle__structqueue  *queue;
-   unsigned int                limit;
-   unsigned int                offset;
+   size_t                limit;
+   size_t                offset;
 
    queue = rover->_queue;
    if( ! queue)

@@ -40,10 +40,10 @@
 # pragma mark - memory allocation
 
 static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
-                                            unsigned int new_size,
+                                            size_t new_size,
                                             struct mulle_allocator *allocator)
 {
-   unsigned int    used;
+   size_t    used;
 
    used     = _mulle__pointerarray_get_count( array);
    new_size = mulle_pow2round( new_size);
@@ -76,12 +76,12 @@ void   _mulle__pointerarray_grow( struct mulle__pointerarray *array,
 
 
 void **   _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
-                                          unsigned int length,
+                                          size_t length,
                                           struct mulle_allocator *allocator)
 {
-   unsigned int   available;
-   unsigned int   _size;
-   unsigned int   _used;
+   size_t   available;
+   size_t   _size;
+   size_t   _used;
 
    _size     = _mulle__pointerarray_get_size( array);
    _used     = _mulle__pointerarray_get_count( array);
@@ -144,7 +144,7 @@ uintptr_t
 int    _mulle__pointerarray_is_equal( struct mulle__pointerarray *array,
                                       struct mulle__pointerarray *other)
 {
-   unsigned int   n;
+   size_t   n;
 
    n = _mulle__pointerarray_get_count( array);
    if( n != _mulle__pointerarray_get_count( other))
@@ -158,8 +158,8 @@ void
    _mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
                                          struct mulle_range range)
 {
-   unsigned int   count;
-   unsigned int   tail;
+   size_t   count;
+   size_t   tail;
 
    count  = _mulle__pointerarray_get_count( array);
    tail   = range.location + range.length;
@@ -173,7 +173,7 @@ void
 
 
 
-unsigned int
+size_t
    _mulle__pointerarray_get_in_range( struct mulle__pointerarray *array,
                                       struct mulle_range range,
                                       void *buf)
@@ -219,7 +219,7 @@ void   _mulle__pointerarray_add_array( struct mulle__pointerarray *array,
                                        struct mulle_range range,
                                        struct mulle_allocator *allocator)
 {
-   unsigned int   count;
+   size_t   count;
    void           **q;
    void           **dst;
 
@@ -244,7 +244,7 @@ void  _mulle__pointerarray_absorb_array( struct mulle__pointerarray *array,
                                          struct mulle_allocator *victim_allocator)
 {
    void           **reserved;
-   unsigned int   n;
+   size_t   n;
 
    assert( array != victim);
 

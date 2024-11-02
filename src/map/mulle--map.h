@@ -67,7 +67,7 @@ struct mulle__map
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_THIRD
-struct mulle__map   *_mulle__map_create( unsigned int capacity,
+struct mulle__map   *_mulle__map_create( size_t capacity,
                                          size_t extra,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator);
@@ -81,7 +81,7 @@ void   _mulle__map_destroy( struct mulle__map *map,
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__map_init( struct mulle__map *map,
-                         unsigned int capacity,
+                         size_t capacity,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator);
 
@@ -126,12 +126,12 @@ static inline int   mulle__map_is_sparse( struct mulle__map *map)
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int   _mulle__map_get_count( struct mulle__map *map)
+static inline size_t   _mulle__map_get_count( struct mulle__map *map)
 {
    return( _mulle__pointermap_get_count( (struct mulle__pointermap *) map));
 }
 
-static inline unsigned int   mulle__map_get_count( struct mulle__map *map)
+static inline size_t   mulle__map_get_count( struct mulle__map *map)
 {
    return( mulle__pointermap_get_count( (struct mulle__pointermap *) map));
 }
@@ -139,12 +139,12 @@ static inline unsigned int   mulle__map_get_count( struct mulle__map *map)
 
 // _size for key really
 MULLE_C_NONNULL_FIRST
-static inline unsigned int   _mulle__map_get_size( struct mulle__map *map)
+static inline size_t   _mulle__map_get_size( struct mulle__map *map)
 {
    return( _mulle__pointermap_get_size( (struct mulle__pointermap *) map));
 }
 
-static inline unsigned int   mulle__map_get_size( struct mulle__map *map)
+static inline size_t   mulle__map_get_size( struct mulle__map *map)
 {
    return( mulle__pointermap_get_size( (struct mulle__pointermap *) map));
 }
@@ -559,10 +559,10 @@ static inline char   *
 // collisions is the amount of additional compares needed for misplaced keys
 //
 MULLE_C_NONNULL_FIRST_SECOND
-static inline unsigned int
+static inline size_t
    _mulle__map_count_collisions( struct mulle__map *set,
                                  struct mulle_container_keyvaluecallback *callback,
-                                 unsigned int *perfects)
+                                 size_t *perfects)
 {
    return( _mulle__pointermap_count_collisions_generic( (struct mulle__pointermap *) set,
                                                          callback,
@@ -660,8 +660,8 @@ static inline void
 
 #define MULLE__MAPTINYENUMERATOR_BASE  \
    void           **_curr;             \
-   unsigned int   _left;               \
-   unsigned int   _offset
+   size_t   _left;               \
+   size_t   _offset
 
 
 struct mulle__maptinyenumerator

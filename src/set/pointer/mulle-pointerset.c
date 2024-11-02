@@ -36,7 +36,7 @@ struct mulle_pointerset  *
    mulle_pointerset_copy( struct mulle_pointerset *set)
 {
    struct mulle_pointerset   *other;
-   unsigned int              n;
+   size_t              n;
 
    if( ! set)
       return( NULL);

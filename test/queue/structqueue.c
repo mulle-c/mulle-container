@@ -72,7 +72,7 @@ static void  misc_coverage( void)
 {
    struct mulle__structqueue    *queue;
    char                         c;
-   unsigned int                 i;
+   size_t                 i;
    char                         *p;
 
    queue = mulle__structqueue_create( sizeof( char), alignof( char), 32, 32, NULL);

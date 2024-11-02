@@ -42,7 +42,7 @@
 //
 
 MULLE__CONTAINER_GLOBAL
-void   **mulle__pointermap_allocate_storage_generic( unsigned int n,
+void   **mulle__pointermap_allocate_storage_generic( size_t n,
                                                      void *notakey,
                                                      struct mulle_allocator *allocator);
 
@@ -190,10 +190,10 @@ void   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
-unsigned int
+size_t
    _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
                                                 struct mulle_container_keyvaluecallback *callback,
-                                                unsigned int *perfects);
+                                                size_t *perfects);
 
 
 # pragma mark - enumeration
@@ -202,8 +202,8 @@ unsigned int
 #define MULLE__GENERICPOINTERMAPENUMERATOR_BASE   \
    struct mulle_pointerpair    _space;            \
    void                        **_curr;           \
-   unsigned int                _left;             \
-   unsigned int                _offset;           \
+   size_t                _left;             \
+   size_t                _offset;           \
    void                        *_notakey
 
 

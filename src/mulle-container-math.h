@@ -49,7 +49,7 @@
 //
 // 0 is also a power of two for these purposes
 //
-static inline int   mulle_is_pow2( unsigned int x)
+static inline int   mulle_is_pow2( size_t x)
 {
    return( (x & (~x + 1)) == x);
 }
@@ -86,11 +86,11 @@ static inline uint64_t   mulle_pow2round_64( uint64_t v)
 }
 
 
-static inline unsigned int   mulle_pow2round( unsigned int v)
+static inline size_t   mulle_pow2round( size_t v)
 {
-   if( sizeof( unsigned int) >= sizeof( uint64_t))
-      return( (unsigned int) mulle_pow2round_64( (uint64_t) v));
-   return( (unsigned int) mulle_pow2round_32( (uint32_t) v));
+   if( sizeof( size_t) >= sizeof( uint64_t))
+      return( (size_t) mulle_pow2round_64( (uint64_t) v));
+   return( (size_t) mulle_pow2round_32( (uint32_t) v));
 }
 
 #endif

@@ -16,7 +16,7 @@
 static void  stress_queue( int bucketsize, int spares)
 {
    struct mulle__pointerqueue   *queue;
-   unsigned int                 i;
+   size_t                 i;
    intptr_t                     read_cnt;
    intptr_t                     write_cnt;
    intptr_t                     popped;

@@ -41,19 +41,19 @@ struct mulle_map
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_SECOND
-struct mulle_map   *mulle_map_create( unsigned int capacity,
+struct mulle_map   *mulle_map_create( size_t capacity,
                                       struct mulle_container_keyvaluecallback *callback,
                                       struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle_map_init( struct mulle_map *map,
-                        unsigned int capacity,
+                        size_t capacity,
                         struct mulle_container_keyvaluecallback *callback,
                         struct mulle_allocator *allocator);
 
 static inline void   mulle_map_init( struct mulle_map *map,
-                                     unsigned int capacity,
+                                     size_t capacity,
                                      struct mulle_container_keyvaluecallback *callback,
                                      struct mulle_allocator *allocator)
 {
@@ -125,13 +125,13 @@ static inline struct mulle_allocator *
 // TODO: why is this "get" not "lookup" ?
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int   _mulle_map_get_count( struct mulle_map *map)
+static inline size_t   _mulle_map_get_count( struct mulle_map *map)
 {
    return( _mulle__map_get_count( (struct mulle__map *) map));
 }
 
 
-static inline unsigned int   mulle_map_get_count( struct mulle_map *map)
+static inline size_t   mulle_map_get_count( struct mulle_map *map)
 {
    return( mulle__map_get_count( (struct mulle__map *) map));
 }
@@ -139,12 +139,12 @@ static inline unsigned int   mulle_map_get_count( struct mulle_map *map)
 
 // _size for key really
 MULLE_C_NONNULL_FIRST
-static inline unsigned int   _mulle_map_get_size( struct mulle_map *map)
+static inline size_t   _mulle_map_get_size( struct mulle_map *map)
 {
    return( _mulle__map_get_size( (struct mulle__map *) map));
 }
 
-static inline unsigned int   mulle_map_get_size( struct mulle_map *map)
+static inline size_t   mulle_map_get_size( struct mulle_map *map)
 {
    return( mulle__map_get_size( (struct mulle__map *) map));
 }

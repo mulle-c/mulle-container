@@ -45,10 +45,10 @@
 
 // intentionally not static inline
 static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *array,
-                                                unsigned int new_size,
+                                                size_t new_size,
                                                 struct mulle_allocator *allocator)
 {
-   unsigned int   used;
+   size_t   used;
 
    new_size = mulle_pow2round( new_size);
    if( new_size == 0)
@@ -66,7 +66,7 @@ static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *
 void   _mulle__pointerpairarray_grow( struct mulle__pointerpairarray *array,
                                       struct mulle_allocator *allocator)
 {
-   unsigned int   size;
+   size_t   size;
 
    size = _mulle__pointerpairarray_get_size( array);
    _mulle__pointerpairarray_realloc( array, size * 2, allocator);
@@ -75,11 +75,11 @@ void   _mulle__pointerpairarray_grow( struct mulle__pointerpairarray *array,
 
 struct mulle_pointerpair  *
    _mulle__pointerpairarray_guarantee( struct mulle__pointerpairarray *array,
-                                       unsigned int length,
+                                       size_t length,
                                        struct mulle_allocator *allocator)
 {
-   unsigned int   available;
-   unsigned int   size;
+   size_t   available;
+   size_t   size;
 
    available = _mulle__pointerpairarray_get_guaranteed_size( array);
    if( available < length)
@@ -112,8 +112,8 @@ void
    _mulle__pointerpairarray_remove_in_range( struct mulle__pointerpairarray *array,
                                              struct mulle_range range)
 {
-   unsigned int   n;
-   unsigned int   i;
+   size_t   n;
+   size_t   i;
 
    n     = _mulle__pointerpairarray_get_count( array);
    range = mulle_range_validate_against_length( range, n);
@@ -127,7 +127,7 @@ void
 
 
 
-unsigned int
+size_t
    _mulle__pointerpairarray_get_in_range( struct mulle__pointerpairarray *array,
                                           struct mulle_range range,
                                           struct mulle_pointerpair *buf)
@@ -143,8 +143,8 @@ unsigned int
 void   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *array)
 {
    struct mulle__pointerset   set;
-   unsigned int               n;
-   unsigned int               m;
+   size_t               n;
+   size_t               m;
    struct mulle_pointerpair   *p;
    struct mulle_pointerpair   *sentinel;
 

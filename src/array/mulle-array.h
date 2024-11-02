@@ -80,7 +80,7 @@ struct mulle_array
 
 MULLE_C_NONNULL_THIRD
 static inline void    mulle_array_init( struct mulle_array *array,
-                                        unsigned int length,
+                                        size_t length,
                                         struct mulle_container_keycallback *callback,
                                         struct mulle_allocator *allocator)
 {
@@ -118,7 +118,7 @@ static inline void   mulle_array_done( struct mulle_array *array)
 
 MULLE__CONTAINER_GLOBAL
 struct mulle_array    *
-   mulle_array_create( unsigned int capacity,
+   mulle_array_create( size_t capacity,
                        struct mulle_container_keycallback *callback,
                        struct mulle_allocator *allocator);
 
@@ -149,14 +149,14 @@ static inline void **
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle_array_get_size( struct mulle_array *array)
 {
    return( _mulle__array_get_size( (struct mulle__array *) array));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle_array_get_size( struct mulle_array *array)
 {
    return( mulle__array_get_size( (struct mulle__array *) array));
@@ -164,14 +164,14 @@ static inline unsigned int
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
 	_mulle_array_get_guaranteed_size( struct mulle_array *array)
 {
    return( _mulle__array_get_guaranteed_size( (struct mulle__array *) array));
 }
 
 
-static inline unsigned int
+static inline size_t
 	mulle_array_get_guaranteed_size( struct mulle_array *array)
 {
    return( mulle__array_get_guaranteed_size( (struct mulle__array *) array));
@@ -180,14 +180,14 @@ static inline unsigned int
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle_array_get_count( struct mulle_array *array)
 {
    return( _mulle__array_get_count( (struct mulle__array *) array));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle_array_get_count( struct mulle_array *array)
 {
    return( mulle__array_get_count( (struct mulle__array *) array));
@@ -244,7 +244,7 @@ static inline struct mulle_allocator *
 MULLE_C_NONNULL_FIRST
 static inline void **
    _mulle_array_guarantee( struct mulle_array *array,
-                           unsigned int length)
+                           size_t length)
 {
    return( _mulle__array_guarantee( (struct mulle__array *) array,
                                     length,
@@ -254,7 +254,7 @@ static inline void **
 
 static inline void **
    mulle_array_guarantee( struct mulle_array *array,
-                          unsigned int length)
+                          size_t length)
 {
    if( ! array)
       return( NULL);
@@ -361,7 +361,7 @@ static inline void    mulle_array_add( struct mulle_array *array,
 
 MULLE_C_NONNULL_FIRST_THIRD
 static inline void    _mulle_array_set( struct mulle_array *array,
-                                        unsigned int i,
+                                        size_t i,
                                         void  *p)
 {
    _mulle__array_set( (struct mulle__array *) array,
@@ -374,7 +374,7 @@ static inline void    _mulle_array_set( struct mulle_array *array,
 
 MULLE_C_NONNULL_THIRD
 static inline void    mulle_array_set( struct mulle_array *array,
-                                       unsigned int i,
+                                       size_t i,
                                        void  *p)
 {
    if( array)
@@ -385,8 +385,8 @@ static inline void    mulle_array_set( struct mulle_array *array,
  *  Loop over all items. This works as long as you don't remove
  *  anything from the array. It will not retrieve newly added elements.
  *
- *  unsigned int  i, n;
- *  unsigned int  *item;
+ *  size_t  i, n;
+ *  size_t  *item;
  *
  *  for( i = 0, n = mulle_array_get_count( array); i < n; i++)
  *  {
@@ -398,8 +398,8 @@ static inline void    mulle_array_set( struct mulle_array *array,
  *  anything but the last element from the array. It will not retrieve newly
  *  added elements.
  *
- *  unsigned int  i;
- *  unsigned int  *item;
+ *  size_t  i;
+ *  size_t  *item;
  *
  *  for( i = mulle_array_get_count( array); i;)
  *  {
@@ -408,7 +408,7 @@ static inline void    mulle_array_set( struct mulle_array *array,
  *  }
  *
  */
-static inline void   *mulle_array_get( struct mulle_array *array, unsigned int index)
+static inline void   *mulle_array_get( struct mulle_array *array, size_t index)
 {
    if( ! array)
       return( NULL);
@@ -418,7 +418,7 @@ static inline void   *mulle_array_get( struct mulle_array *array, unsigned int i
 
 
 MULLE_C_NONNULL_FIRST_THIRD
-static inline unsigned int
+static inline size_t
    _mulle_array_get_in_range( struct mulle_array *array,
                               struct mulle_range range,
                               void *buf)
@@ -429,7 +429,7 @@ static inline unsigned int
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle_array_get_in_range( struct mulle_array *array,
                              struct mulle_range range,
                              void *buf)

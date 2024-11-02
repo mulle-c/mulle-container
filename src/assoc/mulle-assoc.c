@@ -37,7 +37,7 @@
 #include "mulle-assoc.h"
 
 
-struct mulle_assoc   *mulle_assoc_create( unsigned int capacity,
+struct mulle_assoc   *mulle_assoc_create( size_t capacity,
                                           struct mulle_container_keyvaluecallback *callback,
                                           mulle_pointerpair_compare_t *compare,
                                           struct mulle_allocator *allocator)

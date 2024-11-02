@@ -286,14 +286,14 @@ void   *mulle_pointerqueue_pop( struct mulle_pointerqueue *queue)
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle_pointerqueue_get_count( struct mulle_pointerqueue *queue)
 {
    return( _mulle__pointerqueue_get_count( (struct mulle__pointerqueue *) queue));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle_pointerqueue_get_count( struct mulle_pointerqueue *queue)
 {
    return( queue ? _mulle_pointerqueue_get_count( queue) : 0);
@@ -308,7 +308,7 @@ static inline unsigned short
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle_pointerqueue_get_bucketsize( struct mulle_pointerqueue *queue)
 {
    return( queue ? _mulle_pointerqueue_get_bucketsize( queue) : 0);

@@ -46,7 +46,7 @@ void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
 
 // Should also be usable for "_size to fit"
 void   _mulle__structarray_sizeto( struct mulle__structarray *array,
-                                   unsigned int new_size,
+                                   size_t new_size,
                                    struct mulle_allocator *allocator)
 {
    _mulle__structarray_sizeto_length( array, new_size * array->_sizeof_struct, allocator);
@@ -66,12 +66,12 @@ void   _mulle__structarray_grow( struct mulle__structarray *array,
 
 
 void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
-                                       unsigned int length,
+                                       size_t length,
                                        struct mulle_allocator *allocator)
 {
-   unsigned int   available;
-   unsigned int   _size;
-   unsigned int   _used;
+   size_t   available;
+   size_t   _size;
+   size_t   _used;
    size_t         new_size;
    size_t         needed_size;
    size_t         old_size;
@@ -93,8 +93,8 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
 }
 
 
-unsigned int  _mulle__structarray_set_count( struct mulle__structarray *array,
-                                             unsigned int count,
+size_t  _mulle__structarray_set_count( struct mulle__structarray *array,
+                                             size_t count,
                                              struct mulle_allocator *allocator)
 {
    long   diff;
@@ -107,20 +107,20 @@ unsigned int  _mulle__structarray_set_count( struct mulle__structarray *array,
       return( 0);
    }
 
-   _mulle__structarray_advance( array, (unsigned int) diff, allocator);
-   return( (unsigned int) diff);
+   _mulle__structarray_advance( array, (size_t) diff, allocator);
+   return( (size_t) diff);
 }
 
 
 
 void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
-                                          unsigned int count,
+                                          size_t count,
                                           struct mulle_allocator *allocator)
 {
    long   diff;
 
    diff = _mulle__structarray_set_count( array, count, allocator);
-   memset( &((char *) array->_curr)[ -diff * array->_sizeof_struct], 0, (unsigned int) diff * array->_sizeof_struct);
+   memset( &((char *) array->_curr)[ -diff * array->_sizeof_struct], 0, (size_t) diff * array->_sizeof_struct);
 }
 
 
@@ -130,7 +130,7 @@ void
                                  struct mulle_range range,
                                  struct mulle_allocator *allocator)
 {
-   unsigned int   count;
+   size_t   count;
    void           *buf;
 
    if( ! array)

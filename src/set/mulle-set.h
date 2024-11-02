@@ -70,13 +70,13 @@ struct mulle_set
 
 
 MULLE__CONTAINER_GLOBAL
-struct mulle_set   *mulle_set_create( unsigned int capacity,
+struct mulle_set   *mulle_set_create( size_t capacity,
                                       struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 void   mulle_set_init( struct mulle_set *set,
-                       unsigned int capacity,
+                       size_t capacity,
                        struct mulle_container_keycallback *callback,
                        struct mulle_allocator *allocator);
 
@@ -122,13 +122,13 @@ static inline struct mulle_container_keycallback   *
 }
 
 
-static inline unsigned int   mulle_set_get_count( struct mulle_set *set)
+static inline size_t   mulle_set_get_count( struct mulle_set *set)
 {
    return( set ? _mulle__set_get_count( (struct mulle__set *) set) : 0);
 }
 
 
-static inline unsigned int   mulle_set_get_size( struct mulle__set *set)
+static inline size_t   mulle_set_get_size( struct mulle__set *set)
 {
    return( set ? _mulle__set_get_size( (struct mulle__set *) set) : 0);
 }
