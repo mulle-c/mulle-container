@@ -25,7 +25,7 @@ static int  _pointer_compare( void *p_a, void *p_b)
 
 MULLE_C_NONNULL_FIRST_THIRD
 extern void *
-   mulle_pointers_bsearch( void **buf, unsigned int n, void  *search);
+   mulle_pointers_bsearch( void **buf, size_t n, void  *search);
 
 
 

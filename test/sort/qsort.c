@@ -72,8 +72,8 @@ static void  large()
 {
    int   *tmp;
    int   prev;
-   unsigned int  i;
-   unsigned int  n;
+   size_t  i;
+   size_t  n;
 
    n = 100000;
    tmp = mulle_calloc( n, sizeof( int));

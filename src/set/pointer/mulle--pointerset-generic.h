@@ -33,7 +33,7 @@
 #include "mulle--pointerset-struct.h"
 
 
-void   **_mulle__pointerset_allocate_storage_generic( unsigned int n,
+void   **_mulle__pointerset_allocate_storage_generic( size_t n,
                                                       void *notakey,
                                                       struct mulle_allocator *allocator);
 
@@ -118,7 +118,7 @@ void   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
 
 #define MULLE__GENERICPOINTERSETENUMERATOR_BASE \
    void           **_curr;                      \
-   unsigned int   _left;                        \
+   size_t   _left;                        \
    void           *_notakey
 
 struct mulle__genericpointersetenumerator

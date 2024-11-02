@@ -21,7 +21,7 @@ static void   simple_fill_test()
 {
    char                key[ 5];
    struct mulle__set   *set;
-   unsigned int        i;
+   size_t        i;
 
    set = _mulle__set_create( 128, 0, CALLBACK, NULL);
 

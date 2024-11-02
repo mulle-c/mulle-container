@@ -148,7 +148,7 @@ void   _mulle__array_remove( struct mulle__array *array,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator)
 {
-   unsigned int  i;
+   size_t  i;
    void          *item;
 
    //
@@ -187,7 +187,7 @@ int    _mulle__array_is_equal( struct mulle__array *array,
                                struct mulle__array *other,
                                struct mulle_container_keycallback *callback)
 {
-   unsigned int   i, n;
+   size_t   i, n;
    void     **p;
    void     **q;
 
@@ -228,7 +228,7 @@ void    _mulle__array_add( struct mulle__array *array,
 
 
 void    _mulle__array_set( struct mulle__array *array,
-                           unsigned int i,
+                           size_t i,
                            void  *p,
                            struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator)
@@ -253,7 +253,7 @@ void   _mulle__array_add_array( struct mulle__array *array,
                                 struct mulle_container_keycallback *callback,
                                 struct mulle_allocator *allocator)
 {
-   unsigned int   count;
+   size_t   count;
    void     **q;
    void     **sentinel;
 
@@ -279,7 +279,7 @@ void _mulle__array_copy_items( struct mulle__array *dst,
                                struct mulle_container_keycallback *callback,
                                struct mulle_allocator *allocator)
 {
-   unsigned int   n;
+   size_t   n;
    void           **p;
    void           **sentinel;
 

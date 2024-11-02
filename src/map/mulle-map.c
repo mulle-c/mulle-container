@@ -16,7 +16,7 @@
 
 
 void   _mulle_map_init( struct mulle_map *map,
-                        unsigned int capacity,
+                        size_t capacity,
                         struct mulle_container_keyvaluecallback *callback,
                         struct mulle_allocator *allocator)
 {
@@ -34,7 +34,7 @@ void   _mulle_map_init( struct mulle_map *map,
 
 
 
-struct mulle_map   *mulle_map_create( unsigned int capacity,
+struct mulle_map   *mulle_map_create( size_t capacity,
                                       struct mulle_container_keyvaluecallback *callback,
                                       struct mulle_allocator *allocator)
 {

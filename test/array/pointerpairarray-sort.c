@@ -51,7 +51,7 @@ static void  simple( void)
                                                  NULL);
    if( result != mulle_not_found_e)
    {
-      item = mulle_pointerpairarray_get( array, (unsigned int) result);
+      item = mulle_pointerpairarray_get( array, (size_t) result);
       printf( "Found:\n");
       printf( "\t{ %s, %s }\n", (char *) item.key, (char *) item.value);
    }

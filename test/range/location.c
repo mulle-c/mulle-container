@@ -32,8 +32,8 @@ int   main( int argc, char *argv[])
 {
    struct mulle_range   range1;
    uintptr_t            location;
-   unsigned int         i, j;
-   unsigned int         k;
+   size_t         i, j;
+   size_t         k;
 
    for( k = 0; k < 6; k++)
    {

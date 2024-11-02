@@ -27,7 +27,7 @@ static void  zero_array( void)
    struct mulle_structarray   *array;
    struct demo_struct         a;
    struct demo_struct         *p;
-   unsigned int               i;
+   int                        i;
 
    array = mulle_structarray_create( sizeof( struct demo_struct),
                                      alignof( struct demo_struct),
@@ -35,7 +35,7 @@ static void  zero_array( void)
                                      NULL);
 
 
-   printf( "%u", mulle_structarray_get_count( array));
+   printf( "%zu", mulle_structarray_get_count( array));
    _mulle_structarray_zero_to_count( array, 20);
 
    for( i = 0; i < 20; i++)
@@ -47,7 +47,7 @@ static void  zero_array( void)
       _mulle_structarray_set( array, i, &a);
    }
 
-   printf( " -> %u", mulle_structarray_get_count( array));
+   printf( " -> %zu", mulle_structarray_get_count( array));
    _mulle_structarray_zero_to_count( array, 10);
 
    for( i = 0; i < 10; i++)
@@ -59,7 +59,7 @@ static void  zero_array( void)
       assert( p->c == i + 'A');
    }
 
-   printf( " -> %u\n", mulle_structarray_get_count( array));
+   printf( " -> %zu\n", mulle_structarray_get_count( array));
 
    mulle_structarray_destroy( array);
 }
@@ -75,11 +75,11 @@ static void  set_count_array( void)
                                      NULL);
 
 
-   printf( "%u", mulle_structarray_get_count( array));
+   printf( "%zu", mulle_structarray_get_count( array));
    _mulle_structarray_set_count( array, 20);
-   printf( " -> %u", mulle_structarray_get_count( array));
+   printf( " -> %zu", mulle_structarray_get_count( array));
    _mulle_structarray_set_count( array, 10);
-   printf( " -> %u\n", mulle_structarray_get_count( array));
+   printf( " -> %zu\n", mulle_structarray_get_count( array));
 
    mulle_structarray_destroy( array);
 }

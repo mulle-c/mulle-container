@@ -173,7 +173,7 @@ static inline int   _mulle_pointerpair_compare_string_key( struct mulle_pointerp
 // return -1 if not found, otherwise the index in buf (0-(n-1))
 //
 static inline int   _mulle_pointerpair_bsearch( struct mulle_pointerpair *buf,
-                                                unsigned int n,
+                                                size_t n,
                                                 struct mulle_pointerpair search,
                                                 mulle_pointerpair_compare_t *compare,
                                                 void *userinfo)
@@ -217,7 +217,7 @@ static inline int   _mulle_pointerpair_bsearch( struct mulle_pointerpair *buf,
 // return -1 if not found, otherwise the index in buf (0-(n-1))
 //
 static inline int   _mulle_pointerpair_bsearch_or_less( struct mulle_pointerpair *buf,
-                                                        unsigned int n,
+                                                        size_t n,
                                                         struct mulle_pointerpair search,
                                                         mulle_pointerpair_compare_t *compare,
                                                         void *userinfo)
@@ -261,7 +261,7 @@ static inline int   _mulle_pointerpair_bsearch_or_less( struct mulle_pointerpair
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FOURTH
 void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,
-                                  unsigned int n,
+                                  size_t n,
                                   mulle_pointerpair_compare_t *compare,
                                   void *userinfo);
 

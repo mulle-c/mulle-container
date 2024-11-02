@@ -60,7 +60,7 @@ static inline struct mulle_pointerset  *
 // if capacity is 0, this just does a memset 0
 MULLE_C_NONNULL_FIRST
 static inline void    _mulle_pointerset_init( struct mulle_pointerset *set,
-                                              unsigned int capacity,
+                                              size_t capacity,
                                               struct mulle_allocator *allocator)
 {
    _mulle__pointerset_init( (struct mulle__pointerset *) set, capacity, allocator);
@@ -70,7 +70,7 @@ static inline void    _mulle_pointerset_init( struct mulle_pointerset *set,
 
 
 static inline void    mulle_pointerset_init( struct mulle_pointerset *set,
-                                              unsigned int capacity,
+                                              size_t capacity,
                                               struct mulle_allocator *allocator)
 {
    if( set)
@@ -120,14 +120,14 @@ static inline void   mulle__pointerset_reset( struct mulle_pointerset *set)
 //
 //
 // count is the number of pointers in the set
-static inline unsigned int   mulle_pointerset_get_count( struct mulle_pointerset *set)
+static inline size_t   mulle_pointerset_get_count( struct mulle_pointerset *set)
 {
    if( ! set)
       return( 0);
    return( _mulle__pointerset_get_count( (struct mulle__pointerset *) set));
 }
 
-static inline unsigned int   mulle_pointerset_get_size( struct mulle_pointerset *set)
+static inline size_t   mulle_pointerset_get_size( struct mulle_pointerset *set)
 {
    if( ! set)
       return( 0);

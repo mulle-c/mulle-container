@@ -185,7 +185,7 @@ static void   map_misc( void)
    struct mulle_pointerpair                  pSpace;
    void                                      *value;
    uintptr_t                                 hash;
-   unsigned int                              perfects;
+   size_t                              perfects;
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
