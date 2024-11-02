@@ -22,7 +22,7 @@ static void  run_random( void)
    int                         zeroes;
    intptr_t                    index;
    struct mulle_pointerarray   *array;
-   unsigned int                n;
+   size_t                n;
 
    array  = mulle_pointerarray_create( NULL);
 

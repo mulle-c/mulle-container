@@ -114,7 +114,7 @@ void   _mulle__assoc_remove( struct mulle__assoc *assoc,
                              struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
-   unsigned int               i;
+   size_t               i;
    struct mulle_pointerpair   item;
 
    //
@@ -153,7 +153,7 @@ int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
                                struct mulle__assoc *other,
                                struct mulle_container_keyvaluecallback *callback)
 {
-   unsigned int               i, n;
+   size_t               i, n;
    struct mulle_pointerpair   *p;
    struct mulle_pointerpair   *q;
 
@@ -194,7 +194,7 @@ void    _mulle__assoc_add( struct mulle__assoc *assoc,
 
 
 void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
-                                    unsigned int i,
+                                    size_t i,
                                     void *key,
                                     void *value,
                                     struct mulle_container_keyvaluecallback *callback,
@@ -222,7 +222,7 @@ void
                                  struct mulle_container_keyvaluecallback *callback,
                                  struct mulle_allocator *allocator)
 {
-   unsigned int               count;
+   size_t               count;
    struct mulle_pointerpair   *q;
    struct mulle_pointerpair   *sentinel;
    uintptr_t                  i;
@@ -261,7 +261,7 @@ void _mulle__assoc_copy_items( struct mulle__assoc *dst,
                                struct mulle_container_keyvaluecallback *callback,
                                struct mulle_allocator *allocator)
 {
-   unsigned int              n;
+   size_t              n;
    struct mulle_pointerpair  *p;
    struct mulle_pointerpair  *sentinel;
 

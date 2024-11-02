@@ -27,8 +27,8 @@ struct mulle__rangeset
 {
    struct mulle_range   *_ranges;
    struct mulle_range   *_initial_storage; // for use with static storage
-   unsigned int         _length;
-   unsigned int         _size;
+   size_t         _length;
+   size_t         _size;
 };
 
 #define MULLE__RANGESET_DATA( storage, size)  \
@@ -43,7 +43,7 @@ struct mulle__rangeset
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
-                                            unsigned int capacity,
+                                            size_t capacity,
                                             struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
@@ -58,7 +58,7 @@ static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
 MULLE_C_NONNULL_FIRST_SECOND
 static inline void   _mulle__rangeset_init_with_static_ranges( struct mulle__rangeset *p,
                                                                struct mulle_range *storage,
-                                                               unsigned int capacity)
+                                                               size_t capacity)
 {
    memset( p, 0, sizeof( *p));
    p->_size            = capacity;
@@ -95,7 +95,7 @@ static inline uintptr_t   _mulle__rangeset_get_first( struct mulle__rangeset *p)
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_range   _mulle__rangeset_get( struct mulle__rangeset *p,
-                                                         unsigned int i)
+                                                         size_t i)
 {
    return( i < p->_length ? p->_ranges[ i] : mulle_range_make_invalid());
 }

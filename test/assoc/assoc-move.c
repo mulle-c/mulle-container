@@ -27,7 +27,7 @@ static void   move_test( struct mulle_range range, intptr_t index)
    intptr_t                                  key;
    char                                      *value;
    char                                      *sep;
-   unsigned int                              i;
+   size_t                              i;
 
    callback.keycallback   = mulle_container_keycallback_intptr;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;

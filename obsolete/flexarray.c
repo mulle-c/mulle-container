@@ -24,7 +24,7 @@ struct demo_struct
 
 static void  simple( int n)
 {
-   unsigned int   i;
+   size_t   i;
 
    mulle_flexarray_do( array, struct demo_struct, 4, n)
    {
@@ -42,7 +42,7 @@ static void  simple( int n)
 
 static struct demo_struct   _flex_return( int n)
 {
-   unsigned int   i;
+   size_t   i;
 
    mulle_flexarray_do( array, struct demo_struct, 4, n)
    {

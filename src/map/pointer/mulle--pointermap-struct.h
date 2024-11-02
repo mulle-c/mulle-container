@@ -56,8 +56,8 @@
 //
 #define MULLE__POINTERMAP_BASE   \
    void           **_storage;    \
-   unsigned int   _count;        \
-   unsigned int   _size
+   size_t   _count;        \
+   size_t   _size
 
 
 struct mulle__pointermap
@@ -80,8 +80,8 @@ struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback;
 // to 0 or 2 (leave odd alone) for better insert perfomance
 //
 // (?)
-static inline unsigned int   mulle__pointermap_hash_for_size( uintptr_t  hash,
-                                                              unsigned int _size)
+static inline size_t   mulle__pointermap_hash_for_size( uintptr_t  hash,
+                                                              size_t _size)
 {
    assert( _size >= 2);
 
@@ -98,7 +98,7 @@ static inline unsigned int   mulle__pointermap_hash_for_size( uintptr_t  hash,
 
 
 MULLE__CONTAINER_GLOBAL
-struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
+struct mulle__pointermap   *mulle__pointermap_create( size_t capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator);
 
@@ -119,7 +119,7 @@ static inline void
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointermap_init( struct mulle__pointermap *map,
-                                unsigned int capacity,
+                                size_t capacity,
                                 struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
@@ -147,7 +147,7 @@ static inline void
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__pointermap_is_full( struct mulle__pointermap *map)
 {
-   unsigned int    _size;
+   size_t    _size;
 
    _size = map->_size;
    _size = (_size - (_size >> MULLE__POINTERMAP_FILL_SHIFT));  // full when 75% occupied
@@ -161,7 +161,7 @@ static inline int   mulle__pointermap_is_full( struct mulle__pointermap *map)
 
 
 MULLE_C_NONNULL_FIRST
-static inline int  _mulle__pointermap_is_sparse_size( struct mulle__pointermap *map, unsigned int size)
+static inline int  _mulle__pointermap_is_sparse_size( struct mulle__pointermap *map, size_t size)
 {
    size = size / 2;
    size = (size - (size >> MULLE__POINTERMAP_FILL_SHIFT));
@@ -183,12 +183,12 @@ static inline int   mulle__pointermap_is_sparse( struct mulle__pointermap *map)
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int   _mulle__pointermap_get_count( struct mulle__pointermap *map)
+static inline size_t   _mulle__pointermap_get_count( struct mulle__pointermap *map)
 {
    return( map->_count);
 }
 
-static inline unsigned int   mulle__pointermap_get_count( struct mulle__pointermap *map)
+static inline size_t   mulle__pointermap_get_count( struct mulle__pointermap *map)
 {
    return( map ? _mulle__pointermap_get_count( map) : 0);
 }
@@ -196,12 +196,12 @@ static inline unsigned int   mulle__pointermap_get_count( struct mulle__pointerm
 
 // _size for key really
 MULLE_C_NONNULL_FIRST
-static inline unsigned int   _mulle__pointermap_get_size( struct mulle__pointermap *map)
+static inline size_t   _mulle__pointermap_get_size( struct mulle__pointermap *map)
 {
    return( map->_size);
 }
 
-static inline unsigned int   mulle__pointermap_get_size( struct mulle__pointermap *map)
+static inline size_t   mulle__pointermap_get_size( struct mulle__pointermap *map)
 {
    return( map ? _mulle__pointermap_get_size( map) : 0);
 }
@@ -270,8 +270,8 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 
 #define MULLE__POINTERMAPENUMERATOR_BASE  \
    void           **_curr;                \
-   unsigned int   _left;                  \
-   unsigned int   _offset
+   size_t   _left;                  \
+   size_t   _offset
 
 
 struct mulle__pointermapenumerator

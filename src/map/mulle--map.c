@@ -47,7 +47,7 @@
 // static const void   *dummy_notakey_storage[ _MULLE_MAP_INITIAL_SIZE * 2];
 
 void   _mulle__map_init( struct mulle__map *p,
-                         unsigned int capacity,
+                         size_t capacity,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
 {
@@ -70,7 +70,7 @@ void   _mulle__map_init( struct mulle__map *p,
 }
 
 
-struct mulle__map   *_mulle__map_create( unsigned int capacity,
+struct mulle__map   *_mulle__map_create( size_t capacity,
                                          size_t extra,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator)
@@ -194,7 +194,7 @@ char   *_mulle__map_describe( struct mulle__map *set,
    char                          *key;
    char                          *value;
    int                           separate;
-   unsigned int                  len;
+   size_t                  len;
    size_t                        key_len;
    size_t                        value_len;
    struct mulle__mapenumerator   rover;

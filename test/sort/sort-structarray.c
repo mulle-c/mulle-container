@@ -64,7 +64,7 @@ static void  simple( void)
    mulle_structarray_for( array, item)
    {
       assert( item);
-      printf( "\t%d: %g=%c\n", i, item->x, item->y);
+      printf( "\t%u: %g=%c\n", i, item->x, item->y);
       ++i;
    }
 
@@ -77,7 +77,7 @@ static void  simple( void)
    mulle_structarray_for( array, item)
    {
       assert( item);
-      printf( "\t%d: %g=%c\n", i, item->x, item->y);
+      printf( "\t%u: %g=%c\n", i, item->x, item->y);
       ++i;
    }
 

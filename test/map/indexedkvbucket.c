@@ -23,7 +23,7 @@ static void   simple_fill_test()
 {
    char                       key[ 5];
    struct mulle__map          *bucket;
-   unsigned int               i;
+   size_t               i;
    struct mulle_pointerpair   pair;
 
    bucket = _mulle__map_create( 128, 0, CALLBACK, NULL);

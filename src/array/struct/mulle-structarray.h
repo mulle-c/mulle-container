@@ -54,8 +54,8 @@ static inline struct mulle_structarray  *
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_init( struct mulle_structarray *array,
                                               size_t _sizeof_struct,
-                                              unsigned int alignof_struct,
-                                              unsigned int capacity,
+                                              size_t alignof_struct,
+                                              size_t capacity,
                                               struct mulle_allocator *allocator)
 {
    _mulle__structarray_init( (struct mulle__structarray *) array,
@@ -82,8 +82,8 @@ static inline void   _mulle_structarray_init( struct mulle_structarray *array,
 
 static inline void   mulle_structarray_init( struct mulle_structarray *array,
                                              size_t sizeof_struct,
-                                             unsigned int alignof_struct,
-                                             unsigned int capacity,
+                                             size_t alignof_struct,
+                                             size_t capacity,
                                              struct mulle_allocator *allocator)
 {
    if( array)
@@ -102,8 +102,8 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_structarray_init_with_static_storage( struct mulle_structarray *array,
                                                 size_t sizeof_struct,
-                                                unsigned int alignof_struct,
-                                                unsigned int count,
+                                                size_t alignof_struct,
+                                                size_t count,
                                                 void  *storage,
                                                 struct mulle_allocator *allocator)
 {
@@ -121,8 +121,8 @@ static inline void
 static inline void
    mulle_structarray_init_with_static_storage( struct mulle_structarray *array,
                                                size_t sizeof_struct,
-                                               unsigned int alignof_struct,
-                                               unsigned int count,
+                                               size_t alignof_struct,
+                                               size_t count,
                                                void  *storage,
                                                struct mulle_allocator *allocator)
 {
@@ -142,8 +142,8 @@ static inline void
 
 static inline struct mulle_structarray *
    mulle_structarray_create( size_t sizeof_struct,
-                             unsigned int alignof_struct,
-                             unsigned int capacity,
+                             size_t alignof_struct,
+                             size_t capacity,
                              struct mulle_allocator *allocator)
 {
    struct mulle_structarray  *array;
@@ -211,14 +211,14 @@ static inline void **
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle_structarray_get_count( struct mulle_structarray *array)
 {
    return( _mulle__structarray_get_count( (struct mulle__structarray *) array));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle_structarray_get_count( struct mulle_structarray *array)
 {
    if( ! array)
@@ -238,14 +238,14 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle_structarray_get_size( struct mulle_structarray *array)
 {
    return( _mulle__structarray_get_size( (struct mulle__structarray *) array));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle_structarray_get_size( struct mulle_structarray *array)
 {
    if( ! array)
@@ -357,14 +357,14 @@ static inline void
 
 MULLE_C_NONNULL_FIRST_THIRD
 static inline void
-   _mulle_structarray_set( struct mulle_structarray *array, unsigned int i, void *item)
+   _mulle_structarray_set( struct mulle_structarray *array, size_t i, void *item)
 {
    _mulle__structarray_set( (struct mulle__structarray *) array, i, item);
 }
 
 
 static inline void
-   mulle_structarray_set( struct mulle_structarray *array, unsigned int i, void *item)
+   mulle_structarray_set( struct mulle_structarray *array, size_t i, void *item)
 {
    if( array && item)
       _mulle_structarray_set( array, i, item);
@@ -376,7 +376,7 @@ static inline void
 // guarantee ensures that you can add up to length items without a realloc
 MULLE_C_NONNULL_FIRST
 static inline void   *_mulle_structarray_guarantee( struct mulle_structarray *array,
-                                                    unsigned int count)
+                                                    size_t count)
 {
    return( _mulle__structarray_guarantee( (struct mulle__structarray *) array,
                                           count,
@@ -389,7 +389,7 @@ static inline void   *_mulle_structarray_guarantee( struct mulle_structarray *ar
 MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_advance( struct mulle_structarray *array,
-                               unsigned int count)
+                               size_t count)
 {
    return( _mulle__structarray_advance( (struct mulle__structarray *) array,
                                         count,
@@ -523,14 +523,14 @@ static inline void *
 // use get to set as well
 MULLE_C_NONNULL_FIRST
 static inline void *
-   _mulle_structarray_get( struct mulle_structarray *array, unsigned int i)
+   _mulle_structarray_get( struct mulle_structarray *array, size_t i)
 {
    return( _mulle__structarray_get( (struct mulle__structarray *) array, i));
 }
 
 
 static inline void *
-   mulle_structarray_get( struct mulle_structarray *array, unsigned int i)
+   mulle_structarray_get( struct mulle_structarray *array, size_t i)
 {
    if( array)
       return( _mulle_structarray_get( array, i));

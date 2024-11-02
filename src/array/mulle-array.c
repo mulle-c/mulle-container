@@ -37,7 +37,7 @@
 #include "mulle-array.h"
 
 
-struct mulle_array   *mulle_array_create( unsigned int capacity,
+struct mulle_array   *mulle_array_create( size_t capacity,
                                           struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator)
 {

@@ -66,7 +66,7 @@ struct mulle__assoc
 
 MULLE_C_NONNULL_FIRST
 static inline void    _mulle__assoc_init( struct mulle__assoc *assoc,
-                                          unsigned int capacity,
+                                          size_t capacity,
                                           struct mulle_allocator *allocator)
 {
    _mulle__pointerpairarray_init( (struct mulle__pointerpairarray *) assoc,
@@ -100,14 +100,14 @@ void   _mulle__assoc_done( struct mulle__assoc *assoc,
 # pragma mark - petty accessors
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle__assoc_get_size( struct mulle__assoc *assoc)
 {
    return( _mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) assoc));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle__assoc_get_size( struct mulle__assoc *assoc)
 {
    return( mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) assoc));
@@ -115,14 +115,14 @@ static inline unsigned int
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle__assoc_get_guaranteed_size( struct mulle__assoc *assoc)
 {
    return( _mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) assoc));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle__assoc_get_guaranteed_size( struct mulle__assoc *assoc)
 {
    return( mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) assoc));
@@ -131,14 +131,14 @@ static inline unsigned int
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle__assoc_get_count( struct mulle__assoc *assoc)
 {
    return( _mulle__pointerpairarray_get_count( (struct mulle__pointerpairarray *) assoc));
 }
 
 
-static inline unsigned int
+static inline size_t
    mulle__assoc_get_count( struct mulle__assoc *assoc)
 {
    return( mulle__pointerpairarray_get_count( (struct mulle__pointerpairarray *) assoc));
@@ -233,7 +233,7 @@ static inline void
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_FIFTH
 void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
-                                    unsigned int i,
+                                    size_t i,
                                     void *key,
                                     void *value,
                                     struct mulle_container_keyvaluecallback *callback,
@@ -244,7 +244,7 @@ void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair
    _mulle__assoc_get_at_index( struct mulle__assoc *assoc,
-                               unsigned int i)
+                               size_t i)
 {
    return( _mulle__pointerpairarray_get( (struct mulle__pointerpairarray *) assoc, i));
 }
@@ -254,8 +254,8 @@ static inline struct mulle_pointerpair
  *  Loop over all items. This works as long as you don't remove
  *  anything from the assoc. It will not retrieve newly added elements.
  *
- *  unsigned int  i, n;
- *  unsigned int  *item;
+ *  size_t  i, n;
+ *  size_t  *item;
  *
  *  for( i = 0, n = mulle__assoc_get_count( assoc); i < n; i++)
  *  {
@@ -267,8 +267,8 @@ static inline struct mulle_pointerpair
  *  anything but the last element from the assoc. It will not retrieve newly
  *  added elements.
  *
- *  unsigned int  i;
- *  unsigned int  *item;
+ *  size_t  i;
+ *  size_t  *item;
  *
  *  for( i = mulle__assoc_get_count( assoc); i;)
  *  {
@@ -278,7 +278,7 @@ static inline struct mulle_pointerpair
  *
  */
 static inline struct mulle_pointerpair
-   mulle__assoc_get_at_index( struct mulle__assoc *assoc, unsigned int i)
+   mulle__assoc_get_at_index( struct mulle__assoc *assoc, size_t i)
 {
    if( ! assoc)
       return( mulle_pointerpair_make_invalid());
@@ -287,7 +287,7 @@ static inline struct mulle_pointerpair
 
 
 MULLE_C_NONNULL_FIRST_THIRD
-static inline unsigned int
+static inline size_t
    _mulle__assoc_get_in_range( struct mulle__assoc *assoc,
                                struct mulle_range range,
                                struct mulle_pointerpair *buf)
@@ -299,7 +299,7 @@ static inline unsigned int
 
 
 // TODO: maybe rename to get_pointers_in_range
-static inline unsigned int
+static inline size_t
    mulle__assoc_get_in_range( struct mulle__assoc *assoc,
                               struct mulle_range range,
                               struct mulle_pointerpair *buf)

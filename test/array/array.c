@@ -590,7 +590,7 @@ static void   get_in_range( void)
    struct mulle_arrayenumerator   rover;
    void                           *item;
    char                           *buf[ 32];
-   unsigned int                   length;
+   size_t                   length;
 
    mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
 

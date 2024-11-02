@@ -46,7 +46,7 @@
 // suitable for sue by mulle--set and mulle--pointerset
 
 
-void   **_mulle__pointerset_allocate_storage_generic( unsigned int n,
+void   **_mulle__pointerset_allocate_storage_generic( size_t n,
                                                       void *notakey,
                                                       struct mulle_allocator *allocator)
 {
@@ -87,8 +87,8 @@ void   _mulle__pointerset_reset_generic( struct mulle__pointerset *set,
 
 
 static inline void   store_pointer_generic( void **data,
-                                            unsigned int size,
-                                            unsigned int i,
+                                            size_t size,
+                                            size_t i,
                                             void *p,
                                             void *notakey)
 {
@@ -104,14 +104,14 @@ static inline void   store_pointer_generic( void **data,
 
 
 static void   copy_storage_generic( void **dst,
-                                    unsigned int dst_size,
+                                    size_t dst_size,
                                     void **src,
-                                    unsigned int src_size,
+                                    size_t src_size,
                                     struct mulle_container_keycallback *callback)
 {
    void           *p;
    void           **sentinel;
-   unsigned int   i;
+   size_t   i;
    uintptr_t      hash;
 
    sentinel = &src[ src_size];
@@ -122,7 +122,7 @@ static void   copy_storage_generic( void **dst,
          continue;
 
       hash = (*callback->hash)( callback, p);
-      i    = (unsigned int) mulle__pointerset_hash_for_size( hash, dst_size);
+      i    = (size_t) mulle__pointerset_hash_for_size( hash, dst_size);
       store_pointer_generic( dst, dst_size, i, p, callback->notakey);
    }
 }
@@ -132,7 +132,7 @@ static void   grow_generic( struct mulle__pointerset *set,
                             struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator)
 {
-   unsigned int   new_size;
+   size_t   new_size;
    void           **buf;
 
    // for good "not found" performance, there should be a high possibility of
@@ -157,18 +157,18 @@ static void   grow_generic( struct mulle__pointerset *set,
 
 
 static uintptr_t  _find_index_generic( void  **storage,
-                                       unsigned int size,
+                                       size_t size,
                                        void *p,
                                        void *q,
-                                       unsigned int i,
-                                       unsigned int *hole_index,
+                                       size_t i,
+                                       size_t *hole_index,
                                        struct mulle_container_keycallback *callback)
 {
    int            (*f)( void *, void *, void *);
    void           *param1;
    void           *param2;
    void           *notakey;
-   unsigned int   mask;
+   size_t   mask;
 
    f       = (int (*)()) callback->is_equal;
    param1  = callback;
@@ -192,14 +192,14 @@ static uintptr_t  _find_index_generic( void  **storage,
 
 
 static inline uintptr_t   find_index_generic( void **storage,
-                                              unsigned int size,
+                                              size_t size,
                                               void *p,
                                               uintptr_t hash,
-                                              unsigned int *hole_index,
+                                              size_t *hole_index,
                                               struct mulle_container_keycallback *callback)
 {
    void           *q;
-   unsigned int   i;
+   size_t   i;
 
    assert( storage);
 
@@ -224,7 +224,7 @@ void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
                                           struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator)
 {
-   unsigned int   i;
+   size_t   i;
    uintptr_t      hash;
 
    hash = (*callback->hash)( callback, p);
@@ -232,13 +232,13 @@ void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
    {
       void           *q;
       uintptr_t      found;
-      unsigned int   hole_index;
+      size_t   hole_index;
 
       hole_index = 0xfeedface; // for the analyzer
       found = find_index_generic( set->_storage, set->_size, p, hash, &hole_index, callback);
       if( found != mulle_not_found_e)
       {
-         i = (unsigned int) found;
+         i = (size_t) found;
          q = set->_storage[ i];
          switch( mode)
          {
@@ -310,9 +310,9 @@ void   *_mulle__pointerset__get_generic( struct mulle__pointerset *set,
 {
    int            (*f)( void *, void *, void *);
    uintptr_t      hash;
-   unsigned int   i;
-   unsigned int   mask;
-   unsigned int   size;
+   size_t   i;
+   size_t   mask;
+   size_t   size;
    void           **storage;
    void           *found;
    void           *notakey;
@@ -369,7 +369,7 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
                                           struct mulle_allocator *allocator)
 {
    void           **buf;
-   unsigned int   new_size;
+   size_t   new_size;
 
    assert( _mulle__pointerset_is_sparse( set));
 
@@ -404,12 +404,12 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
 {
    uintptr_t      found;
    uintptr_t      hash;
-   unsigned int   dst_index;
-   unsigned int   hole_index;
-   unsigned int   i;
-   unsigned int   mask;
-   unsigned int   search_start;
-   unsigned int   size;
+   size_t   dst_index;
+   size_t   hole_index;
+   size_t   i;
+   size_t   mask;
+   size_t   search_start;
+   size_t   size;
    void           *notakey;
    void           *q;
 
@@ -421,7 +421,7 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
    if( found == mulle_not_found_e)
       return( 0);
 
-   i = (unsigned int) found;
+   i = (size_t) found;
    q = set->_storage[ i];
    (callback->release)( callback, q, allocator);  // get rid of it
    set->_count--;

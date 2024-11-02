@@ -73,7 +73,7 @@ struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback =
 // if capacity, this is just a memset, so if you know memory is zeroed
 // you can actually forego this
 void   _mulle__pointermap_init( struct mulle__pointermap *p,
-                                unsigned int capacity,
+                                size_t capacity,
                                 struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
@@ -91,7 +91,7 @@ void   _mulle__pointermap_init( struct mulle__pointermap *p,
 }
 
 
-struct mulle__pointermap   *mulle__pointermap_create( unsigned int capacity,
+struct mulle__pointermap   *mulle__pointermap_create( size_t capacity,
                                                       size_t extra,
                                                       struct mulle_allocator *allocator)
 {
@@ -145,9 +145,9 @@ void   _mulle__pointermap_reset( struct mulle__pointermap *map,
 void   *_mulle__pointermap_get( struct mulle__pointermap *map,
                                 void *key)
 {
-   unsigned int   i;
-   unsigned int   size;
-   unsigned int   mask;
+   size_t   i;
+   size_t   size;
+   size_t   mask;
    uintptr_t      hash;
    void           *found;
    void           **storage;

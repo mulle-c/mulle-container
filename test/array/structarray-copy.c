@@ -28,7 +28,7 @@ static void  add_array( void)
    struct mulle_structarray                   *array;
    struct mulle_structarray                   *other;
    struct mulle_structarrayenumerator         rover;
-   unsigned int                               i;
+   int                                        i;
    void                                       *item;
 
    array = mulle_structarray_create( sizeof( struct demo_struct),

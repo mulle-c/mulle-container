@@ -88,7 +88,7 @@ static void  run_test( void (*f)( void), char *name)
 
 int main(int argc, const char * argv[])
 {
-   unsigned int  i;
+   size_t  i;
 
    for( i = 0; i < 10; i++)
       test_strings[ i] = strdup( test_strings[ i]);

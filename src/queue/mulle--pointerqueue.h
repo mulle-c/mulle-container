@@ -48,9 +48,9 @@ struct mulle__pointerqueuebucket;
    struct mulle__pointerqueuebucket   *_spares;          \
    struct mulle__pointerqueuebucket   *_read;            \
    struct mulle__pointerqueuebucket   *_write;           \
-   unsigned int                       _count;            \
-   unsigned int                       _read_index;       \
-   unsigned int                       _write_index;      \
+   size_t                       _count;            \
+   size_t                       _read_index;       \
+   size_t                       _write_index;      \
                                                          \
    unsigned short                     _bucket_size;      \
    unsigned short                     _spare_allowance
@@ -182,7 +182,7 @@ void  *_mulle__pointerqueue_pop( struct mulle__pointerqueue *queue,
 
 
 MULLE_C_NONNULL_FIRST
-static inline unsigned int
+static inline size_t
    _mulle__pointerqueue_get_count( struct mulle__pointerqueue *queue)
 {
    return( queue->_count);
@@ -204,7 +204,7 @@ static inline unsigned short
 #define MULLE__POINTERQUEUEENUMERATOR_BASE      \
    struct mulle__pointerqueue        *_queue;   \
    struct mulle__pointerqueuebucket  *_curr;    \
-   unsigned int                       _index
+   size_t                       _index
 
 
 struct mulle__pointerqueueenumerator
@@ -246,7 +246,7 @@ static inline int
    extern int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *,
                                                       void **item);
    struct mulle__pointerqueue  *queue;
-   unsigned int                limit;
+   size_t                limit;
 
    queue = rover->_queue;
    if( ! queue)

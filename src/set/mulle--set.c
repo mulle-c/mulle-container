@@ -51,7 +51,7 @@
 //
 
 void    _mulle__set_init( struct mulle__set *p,
-                          unsigned int capacity,
+                          size_t capacity,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
@@ -69,7 +69,7 @@ void    _mulle__set_init( struct mulle__set *p,
 
 
 
-struct mulle__set   *_mulle__set_create( unsigned int capacity,
+struct mulle__set   *_mulle__set_create( size_t capacity,
                                          size_t extra,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator)

@@ -28,7 +28,7 @@ static void   print_value( uintptr_t value)
 int   main( int argc, char *argv[])
 {
    struct mulle_range   range;
-   unsigned int         i, j;
+   size_t         i, j;
 
    for( j= 0; j < 6; j++)
       for( i = 0; i < 6; i++)
