@@ -1,0 +1,10 @@
+[submodule "mulle-allocator"]
+    path = mulle-allocator
+    url = https://github.com/mulle-c/mulle-allocator.git
+    branch = release
+
+[submodule "mulle-data"]
+    path = mulle-data
+    url = https://github.com/mulle-c/mulle-data.git
+    branch = release
+
