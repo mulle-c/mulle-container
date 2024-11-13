@@ -1,0 +1,12 @@
+#! /bin/sh
+
+# need not mulle-testallocator here
+LD_PRELOAD=
+unset LD_PRELOAD
+
+set -x
+rm -rf kitchen \
+&& cmake -DCMAKE_VERBOSE_MAKEFILE=ON -G Ninja -S . -B kitchen \
+&& cmake --build kitchen \
+&& ./kitchen/package.exe
+
