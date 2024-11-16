@@ -411,8 +411,6 @@ Add `-isystem src/mulle-c` to your `CFLAGS` and compile all the sources that wer
 
 ## Install
 
-### Install with mulle-sde
-
 Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container and all dependencies:
 
 ``` sh
@@ -420,7 +418,7 @@ mulle-sde install --prefix /usr/local \
    https://github.com/mulle-c/mulle-container/archive/latest.tar.gz
 ```
 
-### Manual Installation
+### Legacy Installation
 
 Install the requirements:
 
