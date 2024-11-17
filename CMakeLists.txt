@@ -50,6 +50,6 @@ include( InstallLibrary)
 if( LINK_PHASE)
    include( InstallCMakeInclude)
    include( InstallCMakePackage)
-endif() 
+endif()
 
 include( FinalOutput OPTIONAL)
