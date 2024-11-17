@@ -147,8 +147,8 @@ static inline struct mulle_pointerarray *
    return( array);
 }
 
-#define mulle_pointerarray_create_default( allocator)  \
-   mulle_pointerarray_create( allocator)
+#define mulle_pointerarray_create_default()  \
+   mulle_pointerarray_create( NULL)
 
 
 static inline void   mulle_pointerarray_destroy( struct mulle_pointerarray *array)

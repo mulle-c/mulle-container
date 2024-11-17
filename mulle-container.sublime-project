@@ -25,6 +25,7 @@
             "build",
             "Build",
             "kitchen",
+            "include",
             "dependency",
             "stash",
             "var"
