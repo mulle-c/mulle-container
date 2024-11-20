@@ -1,3 +1,45 @@
+# 9.0.0
+
+
+
+
+feat: improve CMake packaging and dependency handling
+
+* Add CMake package configuration support
+  - Add mulle-container-config.cmake.in template
+  - Add version information in config header
+  - Support proper package version compatibility checks
+  - Enable namespace exports for targets
+
+* Enhance dependency management
+  - Add `COLLECT_DEPENDENCY_LIBRARIES_AS_NAMES` mode
+  - Improve library name collection for dependencies
+  - Support both system and local library finding
+  - Preserve dependency order in library list
+
+* Build system improvements
+  - Use `CMAKE_CURRENT_SOURCE_DIR` for better subdir support
+  - Add tree command to development tools
+  - Fix Windows compatibility issues
+  - Improve header installation handling
+
+* Documentation updates
+  - Clarify installation instructions
+  - Rename "Manual Installation" to "Legacy Installation"
+  - Update README formatting
+
+
+* **BREAKING** after a longer research i now settled on `size_t` as the index and capacity for the datastructures. So from `uintptr_t` to unsigned int now to `size_t.` I really don't want my own unsigned `<whatevr>` define in here and also not NSUInteger which must be `uintptr_t`
+
+* **BREAKING** ``_INIT`` macros are now called ``_DATA`` for overall consistency with other mulle libraries
+* There are now a lot but not enough ``_default`` init functions, whre you don't even need to pass in an allocatore, for even more convenience
+* **BREAKING** ``mulle_flexarray`` is now superflous and replaced by `mulle_alloca.` just remove the third parameter
+
+* add `mulle_structarray_pop` function
+
+* added update functions to hashtables/maps besides insert and set
+
+
 # 8.0.0
 
 * changed type for `sizeof_type` in create routines to `size_t`
