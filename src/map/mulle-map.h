@@ -287,21 +287,46 @@ static inline void
 }
 
 
-static inline void   *
+static inline int
    mulle_map_insert( struct mulle_map *map, void *key, void *value)
 {
-   if( map)
-   {
-      struct mulle_pointerpair   pair;
+   struct mulle_pointerpair   pair;
 
-      pair.key   = key;
-      pair.value = value;
-      return( _mulle__map_insert_pair( (struct mulle__map *) map,
-                                        &pair,
-                                        map->callback,
-                                        map->allocator));
-   }
-   return( NULL);
+   if( ! map)
+      return( 0);
+
+   pair.key   = key;
+   pair.value = value;
+   return( _mulle__map_insert_pair( (struct mulle__map *) map,
+                                     &pair,
+                                     map->callback,
+                                     map->allocator));
+}
+
+
+
+/// REGISTER
+
+static inline void   *
+   _mulle_map_register( struct mulle_map *map, void *key, void *value)
+{
+   struct mulle_pointerpair   pair;
+   void                       *registered;
+
+   pair.key   = key;
+   pair.value = value;
+   registered = _mulle__map_register_pair( (struct mulle__map *) map,
+                                           &pair,
+                                           map->callback,
+                                           map->allocator);
+   return( registered);
+}
+
+
+static inline void   *
+   mulle_map_register( struct mulle_map *map, void *key, void *value)
+{
+   return( map ? _mulle_map_register( map, key, value) : NULL);
 }
 
 

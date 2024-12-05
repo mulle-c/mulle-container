@@ -99,17 +99,20 @@ static void  simple( void)
 static void  insert( void)
 {
    struct mulle_container_keyvaluecallback      callback;
-   void   *old;
+   void    *value;
+   int     state;
 
    callback.keycallback   = mulle_container_keycallback_copied_cstring;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
 
    mulle_map_do( map, &callback)
    {
-      old = mulle_map_insert( map, "city", "Bochum");
-      assert( ! old);
-      old = mulle_map_insert( map, "city", "Witten");
-      assert( old && ! strcmp( "Bochum", old));
+      state = mulle_map_insert( map, "city", "Bochum");
+      assert( state);
+      state = mulle_map_insert( map, "city", "Witten");
+      assert( ! state);
+      value = mulle_map_get( map, "city");
+      assert( value && ! strcmp( "Bochum", value));
    }
 }
 

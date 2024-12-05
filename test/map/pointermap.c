@@ -33,6 +33,8 @@ static void   create( void)
 static void  simple( void)
 {
    char   onstack[] = { 'V', 'f', 'L', 0 };
+   void   *old;
+   int    state;
 
    mulle__pointermap_do( map)
    {
@@ -41,6 +43,10 @@ static void  simple( void)
 
       mulle__pointermap_set( map, "VfL", "VFL", NULL);
       assert( ! mulle__pointermap_get( map, "VFL"));
+      assert( ! strcmp( "VFL", mulle__pointermap_get( map, "VfL")));
+
+      state = mulle__pointermap_insert( map, "VfL", "xxx", NULL);
+      assert( ! state);
       assert( ! strcmp( "VFL", mulle__pointermap_get( map, "VfL")));
 
       mulle__pointermap_set( map, "VfL", "BOCHUM", NULL);
