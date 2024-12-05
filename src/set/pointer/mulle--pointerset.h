@@ -43,21 +43,38 @@ static inline void   _mulle__pointerset_reset( struct mulle__pointerset *set)
 }
 
 MULLE_C_NONNULL_FIRST
-static inline
-void    _mulle__pointerset_set( struct mulle__pointerset *set,
-                                void *p,
-                                struct mulle_allocator *allocator)
+static inline void
+   _mulle__pointerset_set( struct mulle__pointerset *set,
+                           void *p,
+                           struct mulle_allocator *allocator)
 {
    _mulle__pointerset_set_generic( set, p, &mulle_container_keycallback_nonowned_pointer_or_null, allocator);
 }
 
+
 MULLE_C_NONNULL_FIRST
-static inline
-void    *_mulle__pointerset_insert( struct mulle__pointerset *set,
-                                    void *p,
-                                    struct mulle_allocator *allocator)
+static inline int
+   _mulle__pointerset_insert( struct mulle__pointerset *set,
+                              void *p,
+                              struct mulle_allocator *allocator)
 {
-   return( _mulle__pointerset_insert_generic( set, p, &mulle_container_keycallback_nonowned_pointer_or_null, allocator));
+   return( _mulle__pointerset_insert_generic( set,
+                                              p,
+                                              &mulle_container_keycallback_nonowned_pointer_or_null,
+                                              allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void *
+   _mulle__pointerset_register( struct mulle__pointerset *set,
+                                void *p,
+                                struct mulle_allocator *allocator)
+{
+   return( _mulle__pointerset_register_generic( set,
+                                                p,
+                                                &mulle_container_keycallback_nonowned_pointer_or_null,
+                                                allocator));
 }
 
 

@@ -170,13 +170,23 @@ void    mulle_pointerset_set( struct mulle_pointerset *set, void *p)
 }
 
 
-static inline
-void    *mulle_pointerset_insert( struct mulle_pointerset *set, void *p)
+static inline int
+   mulle_pointerset_insert( struct mulle_pointerset *set, void *p)
+{
+   if( ! set)
+      return( 0);
+   return( _mulle__pointerset_insert( (struct mulle__pointerset *) set, p, set->allocator));
+}
+
+
+static inline void *
+   mulle_pointerset_register( struct mulle_pointerset *set, void *p)
 {
    if( ! set)
       return( NULL);
-   return( _mulle__pointerset_insert( (struct mulle__pointerset *) set, p, set->allocator));
+   return( _mulle__pointerset_register( (struct mulle__pointerset *) set, p, set->allocator));
 }
+
 
 
 static inline

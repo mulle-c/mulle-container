@@ -77,10 +77,31 @@ void   _mulle__pointermap_set_pair_generic( struct mulle__pointermap *map,
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
-void    *_mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
-                                                 struct mulle_pointerpair *pair,
-                                                 struct mulle_container_keyvaluecallback *callback,
-                                                 struct mulle_allocator *allocator)
+   void    *_mulle__pointermap_register_pair_generic( struct mulle__pointermap *map,
+                                                      struct mulle_pointerpair *pair,
+                                                      struct mulle_container_keyvaluecallback *callback,
+                                                      struct mulle_allocator *allocator)
+{
+   void   *value;
+
+   MULLE__CONTAINER_GLOBAL
+   void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
+                                                  struct mulle_pointerpair *pair,
+                                                  enum mulle_container_write_mode mode,
+                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  struct mulle_allocator *allocator);
+
+   value = _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator);
+   return( value ? value : pair->value);
+}
+
+
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+static inline
+int    _mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
+                                               struct mulle_pointerpair *pair,
+                                               struct mulle_container_keyvaluecallback *callback,
+                                               struct mulle_allocator *allocator)
 {
    MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
@@ -89,16 +110,17 @@ void    *_mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
 
-   return( _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator));
+   return( _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator) == NULL);
 }
+
 
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline void *
    _mulle__pointermap_update_pair_generic( struct mulle__pointermap *map,
-                                             struct mulle_pointerpair *pair,
-                                             struct mulle_container_keyvaluecallback *callback,
-                                             struct mulle_allocator *allocator)
+                                           struct mulle_pointerpair *pair,
+                                           struct mulle_container_keyvaluecallback *callback,
+                                           struct mulle_allocator *allocator)
 {
    MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
@@ -112,6 +134,7 @@ static inline void *
    assert( ! _mulle_container_valuecallback_releases( &callback->valuecallback));
    return( _mulle__pointermap_write_pair_generic( map, pair, mulle_container_update_e, callback, allocator));
 }
+
 
 
 

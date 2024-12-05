@@ -118,10 +118,10 @@ static void   copy_storage_generic( void **dst,
                                     size_t src_size,
                                     struct mulle_container_keycallback *callback)
 {
-   void           *key;
-   void           **sentinel;
-   size_t   i;
-   uintptr_t      hash;
+   void        *key;
+   void        **sentinel;
+   size_t      i;
+   uintptr_t   hash;
 
    assert( mulle_is_pow2( dst_size));
    assert( mulle_is_pow2( src_size));
@@ -179,10 +179,10 @@ static unsigned long  _find_index_generic( void **storage,
                                            size_t *hole_index,
                                            struct mulle_container_keycallback *callback)
 {
-   int            (*f)( void *, void *, void *);
-   void           *param1;
-   void           *param2;
-   void           *notakey;
+   int      (*f)( void *, void *, void *);
+   void     *param1;
+   void     *param2;
+   void     *notakey;
    size_t   mask;
 
    f       = (int (*)()) callback->is_equal;
@@ -239,9 +239,9 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                struct mulle_allocator *allocator)
 {
    uintptr_t                  found;
-   size_t               i;
+   size_t                     i;
    void                       **q;
-   void                       *old;
+   void                       *old_value;
    struct mulle_pointerpair   new_pair;
    uintptr_t                  hash;
 
@@ -263,29 +263,28 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
 
       if( found != mulle_not_found_e)
       {
-         i   = (size_t) found;
-         q   = &storage[ i];
-         old = q[ size];
+         i         = (size_t) found;
+         q         = &storage[ i];
+         old_value = q[ size];         // old_value
          if( mode == mulle_container_insert_e)
-            return( old);
+            return( old_value);
 
-         q = &storage[ i];
-         if( old == pair->value && *q == pair->key)
+         if( old_value == pair->value && *q == pair->key)
             return( NULL);
 
          new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
          new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
 
          (callback->keycallback.release)( &callback->keycallback, *q, allocator);
-         (callback->valuecallback.release)( &callback->valuecallback, old, allocator);
+         (callback->valuecallback.release)( &callback->valuecallback, old_value, allocator);
 
          *q       = new_pair.key;
          q[ size] = new_pair.value;
 
-         // if we do replace, we return the old value. If the release is a nop,
+         // if we do replace, we return the old_value value. If the release is a nop,
          // or an autorelease, then this will be still value. This will crash
          // if the callback if strdup/free
-         return( mode == mulle_container_update_e ? old : NULL);
+         return( mode == mulle_container_update_e ? old_value : NULL);
       }
 
       i = hole_index;
@@ -330,13 +329,13 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
                                                    uintptr_t hash,
                                                    struct mulle_container_keyvaluecallback *callback)
 {
-   int             (*f)( void *, void *, void *);
+   int       (*f)( void *, void *, void *);
    size_t    i;
    size_t    size;
    size_t    mask;
-   void            *found;
-   void            **storage;
-   void            *notakey;
+   void      *found;
+   void      **storage;
+   void      *notakey;
 
    notakey  = callback->keycallback.notakey;
    // important to not hit a NULL storage later
@@ -387,13 +386,13 @@ struct mulle_pointerpair   *
                                                    struct mulle_container_keyvaluecallback *callback,
                                                    struct mulle_pointerpair *pair)
 {
-   int             (*f)( void *, void *, void *);
+   int       (*f)( void *, void *, void *);
    size_t    i;
    size_t    size;
    size_t    mask;
-   void            *found;
-   void            **storage;
-   void            *notakey;
+   void      *found;
+   void      **storage;
+   void      *notakey;
 
    // important to not hit a NULL storage later
    // size must be > 2 for the hash to work, otherwise we could get

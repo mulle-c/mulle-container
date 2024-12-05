@@ -63,11 +63,11 @@ void  _mulle__pointerset_set_generic( struct mulle__pointerset *set,
 }
 
 MULLE_C_NONNULL_FIRST_THIRD
-static inline
-void    *_mulle__pointerset_insert_generic( struct mulle__pointerset *set,
-                                            void *p,
-                                            struct mulle_container_keycallback *callback,
-                                            struct mulle_allocator *allocator)
+static inline int
+   _mulle__pointerset_insert_generic( struct mulle__pointerset *set,
+                                      void *p,
+                                      struct mulle_container_keycallback *callback,
+                                      struct mulle_allocator *allocator)
 {
    void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
                                              void *p,
@@ -79,8 +79,33 @@ void    *_mulle__pointerset_insert_generic( struct mulle__pointerset *set,
                                              p,
                                              mulle_container_insert_e,
                                              callback,
-                                             allocator));
+                                             allocator) == NULL);
 }
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline void *
+   _mulle__pointerset_register_generic( struct mulle__pointerset *set,
+                                        void *p,
+                                        struct mulle_container_keycallback *callback,
+                                        struct mulle_allocator *allocator)
+{
+   void  *old;
+
+   void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
+                                             void *p,
+                                             enum mulle_container_write_mode mode,
+                                             struct mulle_container_keycallback *callback,
+                                             struct mulle_allocator *allocator);
+
+   old = _mulle__pointerset_write_generic( set,
+                                           p,
+                                           mulle_container_insert_e,
+                                           callback,
+                                           allocator);
+   return( old != callback->notakey ? old : p);
+}
+
 
 
 MULLE_C_NONNULL_FIRST_THIRD

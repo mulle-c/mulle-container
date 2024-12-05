@@ -167,17 +167,34 @@ static inline void   mulle_set_remove( struct mulle_set *set, void *p)
 
 
 MULLE_C_NONNULL_FIRST
-static inline void   *_mulle_set_insert( struct mulle_set *set, void *p)
+static inline int   _mulle_set_insert( struct mulle_set *set, void *p)
 {
    return( _mulle__set_insert( (struct mulle__set *) set, p, set->callback, set->allocator));
 }
 
-static inline void   *mulle_set_insert( struct mulle_set *set, void *p)
+
+static inline int   mulle_set_insert( struct mulle_set *set, void *p)
+{
+   if( ! set)
+      return( 0);
+   return( _mulle_set_insert( set, p));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   *_mulle_set_register( struct mulle_set *set, void *p)
+{
+   return( _mulle__set_register( (struct mulle__set *) set, p, set->callback, set->allocator));
+}
+
+
+static inline void   *mulle_set_register( struct mulle_set *set, void *p)
 {
    if( ! set)
       return( NULL);
-   return( _mulle_set_insert( set, p));
+   return( _mulle_set_register( set, p));
 }
+
 
 
 MULLE_C_NONNULL_FIRST

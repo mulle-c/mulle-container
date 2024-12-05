@@ -303,7 +303,7 @@ static inline void
 /// INSERT
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
-static inline void    *
+static inline int
    _mulle__map_insert_pair( struct mulle__map *map,
                             struct mulle_pointerpair *pair,
                             struct mulle_container_keyvaluecallback *callback,
@@ -316,20 +316,20 @@ static inline void    *
 }
 
 
-static inline void    *
+static inline int
    mulle__map_insert_pair( struct mulle__map *map,
                            struct mulle_pointerpair *pair,
                            struct mulle_container_keyvaluecallback *callback,
                            struct mulle_allocator *allocator)
 {
    if( ! map)
-      return( NULL);
+      return( 0);
    return( _mulle__map_insert_pair( map, pair, callback, allocator));
 }
 
 
 MULLE_C_NONNULL_FIRST_FOURTH
-static inline void *
+static inline int
    _mulle__map_insert( struct mulle__map *map,
                        void *key,
                        void *value,
@@ -344,7 +344,7 @@ static inline void *
 }
 
 
-static inline void *
+static inline int
    mulle__map_insert( struct mulle__map *map,
                       void *key,
                       void *value,
@@ -375,7 +375,67 @@ void   _mulle__map_insert_key_valuesv( struct mulle__map *map,
                                        struct mulle_allocator *allocator);
 
 
-/// REPLACE
+/// REGISTER
+
+MULLE_C_NONNULL_FIRST_SECOND_THIRD
+static inline void *
+   _mulle__map_register_pair( struct mulle__map *map,
+                              struct mulle_pointerpair *pair,
+                              struct mulle_container_keyvaluecallback *callback,
+                              struct mulle_allocator *allocator)
+{
+   return( _mulle__pointermap_register_pair_generic( (struct mulle__pointermap *) map,
+                                                     pair,
+                                                     callback,
+                                                     allocator));
+}
+
+
+static inline void *
+   mulle__map_register_pair( struct mulle__map *map,
+                           struct mulle_pointerpair *pair,
+                           struct mulle_container_keyvaluecallback *callback,
+                           struct mulle_allocator *allocator)
+{
+   if( ! map)
+      return( NULL);
+   return( _mulle__map_register_pair( map, pair, callback, allocator));
+}
+
+
+MULLE_C_NONNULL_FIRST_FOURTH
+static inline void *
+   _mulle__map_register( struct mulle__map *map,
+                         void *key,
+                         void *value,
+                         struct mulle_container_keyvaluecallback *callback,
+                         struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   return( _mulle__map_register_pair( map, &pair, callback, allocator));
+}
+
+
+static inline void *
+   mulle__map_register( struct mulle__map *map,
+                        void *key,
+                        void *value,
+                        struct mulle_container_keyvaluecallback *callback,
+                        struct mulle_allocator *allocator)
+{
+   struct mulle_pointerpair   pair;
+
+   pair.key   = key;
+   pair.value = value;
+   return( mulle__map_register_pair( map, &pair, callback, allocator));
+}
+
+
+
+/// UPDATE
 
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline void *

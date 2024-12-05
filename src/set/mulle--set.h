@@ -138,16 +138,31 @@ void   _mulle__set_set( struct mulle__set *set,
 
 MULLE_C_NONNULL_FIRST_THIRD
 static inline
-void    *_mulle__set_insert( struct mulle__set *set,
-                             void *p,
-                             struct mulle_container_keycallback *callback,
-                             struct mulle_allocator *allocator)
+int   _mulle__set_insert( struct mulle__set *set,
+                          void *p,
+                          struct mulle_container_keycallback *callback,
+                          struct mulle_allocator *allocator)
 {
    return( _mulle__pointerset_insert_generic( (struct mulle__pointerset *) set,
                                                p,
                                                callback,
                                                allocator));
 }
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline void *
+   _mulle__set_register( struct mulle__set *set,
+                         void *p,
+                         struct mulle_container_keycallback *callback,
+                         struct mulle_allocator *allocator)
+{
+   return( _mulle__pointerset_register_generic( (struct mulle__pointerset *) set,
+                                                p,
+                                                callback,
+                                                allocator));
+}
+
 
 
 //

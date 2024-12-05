@@ -269,8 +269,8 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 # pragma mark - enumeration
 
 #define MULLE__POINTERMAPENUMERATOR_BASE  \
-   void           **_curr;                \
-   size_t   _left;                  \
+   void     **_curr;                      \
+   size_t   _left;                        \
    size_t   _offset
 
 

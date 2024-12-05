@@ -232,7 +232,7 @@ void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
    {
       void           *q;
       uintptr_t      found;
-      size_t   hole_index;
+      size_t         hole_index;
 
       hole_index = 0xfeedface; // for the analyzer
       found = find_index_generic( set->_storage, set->_size, p, hash, &hole_index, callback);
