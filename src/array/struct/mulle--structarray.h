@@ -437,7 +437,7 @@ void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
                                           struct mulle_allocator *allocator);
 
 
-typedef int   mulle_structarray_cmp_t( void **, void **, void *);
+typedef int   mulle_structarray_cmp_t( void *, void *, void *);
 
 MULLE_C_NONNULL_FIRST
 static inline void
@@ -466,8 +466,8 @@ static inline void
 MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__structarray_qsort_r( struct mulle__structarray *array,
-                                 mulle_structarray_cmp_t *compare,
-                                 void *userinfo)
+                                mulle_structarray_cmp_t *compare,
+                                void *userinfo)
 {
    mulle_qsort_r( array->_storage,
                   _mulle__structarray_get_count( array),
@@ -479,8 +479,8 @@ static inline void
 
 static inline void
    mulle__structarray_qsort_r( struct mulle__structarray *array,
-                                       mulle_structarray_cmp_t *compare,
-                                       void *userinfo)
+                               mulle_structarray_cmp_t *compare,
+                               void *userinfo)
 {
    if( array)
       _mulle__structarray_qsort_r( array, compare, userinfo);

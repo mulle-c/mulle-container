@@ -1,3 +1,11 @@
+### 9.0.1
+
+* add missing sort functions to mulle-structarray
+* changed `mulle_structarray_cmp_t` signature
+
+* clarified that insert now only returns 0 or 1 (if applicable)
+* register now always returns the registered value
+
 # 9.0.0
 
 

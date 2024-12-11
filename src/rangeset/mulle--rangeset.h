@@ -27,8 +27,8 @@ struct mulle__rangeset
 {
    struct mulle_range   *_ranges;
    struct mulle_range   *_initial_storage; // for use with static storage
-   size_t         _length;
-   size_t         _size;
+   size_t                _length;
+   size_t                _size;
 };
 
 #define MULLE__RANGESET_DATA( storage, size)  \
