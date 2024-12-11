@@ -320,8 +320,6 @@ static inline size_t
 
 
 
-
-
 # pragma mark - array operations
 
 MULLE_C_NONNULL_FIRST_SECOND
@@ -467,6 +465,51 @@ static inline void   _mulle_structarray_zero_to_count( struct mulle_structarray 
    _mulle__structarray_zero_to_count( (struct mulle__structarray *) array,
                                       count,
                                       array->allocator);
+}
+
+
+#pragma mark - sorting
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_structarray_qsort_r_inline( struct mulle_structarray *array,
+                                      mulle_structarray_cmp_t *compare,
+                                      void *userinfo)
+{
+   _mulle__structarray_qsort_r_inline( (struct mulle__structarray *) array,
+                                       compare,
+                                       userinfo);
+}
+
+
+static inline void
+   mulle_structarray_qsort_r_inline( struct mulle_structarray *array,
+                                     mulle_structarray_cmp_t *compare,
+                                     void *userinfo)
+{
+   if( array)
+      _mulle_structarray_qsort_r_inline( array, compare, userinfo);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_structarray_qsort_r( struct mulle_structarray *array,
+                               mulle_structarray_cmp_t *compare,
+                               void *userinfo)
+{
+   _mulle__structarray_qsort_r( (struct mulle__structarray *) array, compare, userinfo);
+}
+
+
+static inline void
+   mulle_structarray_qsort_r( struct mulle_structarray *array,
+                              mulle_structarray_cmp_t *compare,
+                              void *userinfo)
+{
+   if( array)
+      _mulle_structarray_qsort_r( array, compare, userinfo);
 }
 
 
