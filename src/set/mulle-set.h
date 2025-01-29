@@ -154,7 +154,9 @@ static inline int
 static inline int
    mulle_set_member( struct mulle_set *set, void *p)
 {
-   return( mulle__set_member( (struct mulle__set *) set, p, set->callback));
+   if( set)
+      return( _mulle_set_member( set, p));
+   return( 0);
 }
 
 
@@ -243,6 +245,53 @@ static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 
 
 void   mulle_set_add_set( struct mulle_set *set, struct mulle_set *other);
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_set_intersect( struct mulle_set *dst,
+                         struct mulle_set *a,
+                         struct mulle_set *b)
+{
+   _mulle__set_intersect( (struct mulle__set *) dst,
+                          (struct mulle__set *) a,
+                          (struct mulle__set *) b,
+                          dst->callback,
+                          dst->allocator);
+}
+
+
+static inline void
+   mulle_set_intersect( struct mulle_set *dst,
+                        struct mulle_set *a,
+                        struct mulle_set *b)
+{
+   if( dst)
+      _mulle_set_intersect( dst, a, b);
+}
+
+
+
+MULLE_C_NONNULL_FIRST
+static inline void   _mulle_set_union( struct mulle_set *dst,
+                                       struct mulle_set *a,
+                                       struct mulle_set *b)
+{
+   _mulle__set_union( (struct mulle__set *) dst,
+                      (struct mulle__set *) a,
+                      (struct mulle__set *) b,
+                      dst->callback,
+                      dst->allocator);
+}
+
+
+static inline void   mulle_set_union( struct mulle_set *dst,
+                                      struct mulle_set *a,
+                                      struct mulle_set *b)
+{
+   if( dst)
+      _mulle_set_union( dst, a, b);
+}
 
 
 #pragma mark - management

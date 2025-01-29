@@ -739,7 +739,7 @@ void  _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
    assert( dst != src);
 
    rover = mulle__pointermap_enumerate_generic( src, callback);
-   while( item = _mulle__genericpointermapenumerator_next_pair( &rover))
+   while( (item = _mulle__genericpointermapenumerator_next_pair( &rover)))
    {
       _mulle__pointermap_set_pair_generic( dst, item, callback, allocator);
    }

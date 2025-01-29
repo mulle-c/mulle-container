@@ -43,9 +43,9 @@
 #include <assert.h>
 
 //
-// mulle-assoc is a autosorting. You add a compare operation and then
-// your associative array is always sorted. You can not add duplicate values
-// though. The API tries to be very similiar to mulle_map so you can
+// mulle-assoc is an autosorting associative array. You add a compare operation
+// and then your associative array is always sorted. You can not add duplicate
+// values though. The API tries to be very similar to mulle_map so you can
 // swap between both implementations more easily. The advantage of mulle-assoc
 // over mulle_map is, that it does not need "holes", therefore will use less
 // memory in most cases (except when very, very few items are present)
@@ -91,6 +91,7 @@ static inline void    mulle_assoc_init( struct mulle_assoc *assoc,
    assoc->compare    = compare ? compare : _mulle_pointerpair_compare_pointer_key;
    assoc->_is_sorted = 0;
 }
+
 
 static inline void   _mulle_assoc_done( struct mulle_assoc *assoc)
 {

@@ -317,6 +317,32 @@ static inline void   mulle_array_remove( struct mulle_array *array,
 }
 
 
+static inline void   _mulle_array_remove_unique( struct mulle_array *array,
+                                               void *item)
+{
+   _mulle__array_remove_unique( (struct mulle__array *) array,
+                              item,
+                              array->callback,
+                              array->allocator);
+}
+
+
+//
+// Remove first occurence of item. Other occurences of item will remain.
+// Will remove from back to front
+//
+static inline void   mulle_array_remove_unique( struct mulle_array *array,
+                                              void *item)
+{
+   if( array)
+      _mulle__array_remove_unique( (struct mulle__array *) array,
+                                 item,
+                                 array->callback,
+                                 array->allocator);
+}
+
+
+
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_array_reset( struct mulle_array *array)

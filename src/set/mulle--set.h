@@ -258,6 +258,39 @@ void   _mulle__set_copy_items( struct mulle__set *dst,
 }
 
 
+MULLE_C_NONNULL_FIRST_FOURTH
+static inline void
+   _mulle__set_intersect( struct mulle__set *dst,
+                          struct mulle__set *a,
+                          struct mulle__set *b,
+                          struct mulle_container_keycallback *callback,
+                          struct mulle_allocator *allocator)
+{
+   _mulle__pointerset_intersect_generic( (struct mulle__pointerset *) dst,
+                                         (struct mulle__pointerset *) a,
+                                         (struct mulle__pointerset *) b,
+                                         callback,
+                                         allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST_FOURTH
+static inline void
+   _mulle__set_union( struct mulle__set *dst,
+                      struct mulle__set *a,
+                      struct mulle__set *b,
+                      struct mulle_container_keycallback *callback,
+                      struct mulle_allocator *allocator)
+{
+   _mulle__pointerset_union_generic( (struct mulle__pointerset *) dst,
+                                     (struct mulle__pointerset *) a,
+                                     (struct mulle__pointerset *) b,
+                                     callback,
+                                     allocator);
+}
+
+
+
 MULLE_C_NONNULL_FIRST_SECOND
 struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
                                        struct mulle_container_keycallback *callback,

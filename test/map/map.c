@@ -178,6 +178,7 @@ static void   map_reset( void)
 }
 
 
+
 static void   map_misc( void)
 {
    struct mulle_map                          *map;

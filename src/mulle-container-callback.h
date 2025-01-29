@@ -234,7 +234,7 @@ mulle_container_valuecallback_describe_t   mulle_container_callback_cstring_desc
 
 
 MULLE__CONTAINER_GLOBAL
-char *
+void *
    mulle_container_callback_cstring_copy( struct mulle_container_valuecallback  *callback,
                                           void *s,
                                           struct mulle_allocator *allocator);

@@ -103,7 +103,7 @@ void   _mulle__map_release_all( struct mulle__map *map,
    if( callback && mulle_container_keyvaluecallback_releases( callback))
    {
       rover = mulle__map_enumerate( map, callback);
-      while( pair = _mulle__mapenumerator_next_pair( &rover))
+      while( (pair = _mulle__mapenumerator_next_pair( &rover)))
       {
          (callback->keycallback.release)( &callback->keycallback, pair->key, allocator);
          (callback->valuecallback.release)( &callback->valuecallback, pair->value, allocator);
@@ -205,7 +205,7 @@ char   *_mulle__map_describe( struct mulle__map *set,
    result = NULL;
    len    = 0;
    rover = mulle__map_enumerate( set, callback);
-   while( item = _mulle__mapenumerator_next_pair( &rover))
+   while( (item = _mulle__mapenumerator_next_pair( &rover)))
    {
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
       value_allocator = key_allocator;
