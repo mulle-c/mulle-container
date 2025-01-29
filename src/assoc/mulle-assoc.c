@@ -138,8 +138,8 @@ void   _mulle_assoc_remap_intptr_key_range( struct mulle_assoc *assoc,
 
    for( ; p < sentinel; p++)
    {
-      value  = (intptr_t) p->key;
-      if( value >= end)
+      value = (intptr_t) p->key;
+      if( (uintptr_t) value >= end)
          break;
 
       value += offset;
@@ -229,8 +229,8 @@ void   _mulle_assoc_move_intptr_key_range( struct mulle_assoc *assoc,
 
    for( ; p < sentinel; p++)
    {
-      value  = (intptr_t) p->key;
-      if( value > end)
+      value = (intptr_t) p->key;
+      if( (uintptr_t) value > end)
          break;
 
       if( mulle_range_contains_location( move_away_range, value))

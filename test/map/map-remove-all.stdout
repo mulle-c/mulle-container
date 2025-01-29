@@ -1,0 +1,5 @@
+Count before remove_all: 2
+Contains VfL before: 1
+Count after remove_all: 0
+Contains VfL after: 0
+remove_all on NULL completed

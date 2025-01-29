@@ -43,8 +43,7 @@
 
 # pragma mark - generic operations
 
-// suitable for sue by mulle--set and mulle--pointerset
-
+// suitable for use by mulle--set and mulle--pointerset
 
 void   **_mulle__pointerset_allocate_storage_generic( size_t n,
                                                       void *notakey,
@@ -67,6 +66,23 @@ void   **_mulle__pointerset_allocate_storage_generic( size_t n,
       *p++ = notakey;
 
    return( buf);
+}
+
+
+void   _mulle__pointerset_release_all_generic( struct mulle__pointerset *set,
+                                               struct mulle_container_keycallback *callback,
+                                               struct mulle_allocator *allocator)
+{
+   struct mulle__genericpointersetenumerator   rover;
+   void                                        *item;
+
+   if( callback && _mulle_container_keycallback_releases( callback))
+   {
+      rover = _mulle__pointerset_enumerate_generic( set, callback);
+      while( _mulle__genericpointersetenumerator_next( &rover, &item))
+         (*callback->release)( callback, item, allocator);
+      _mulle__genericpointersetenumerator_done( &rover);
+   }
 }
 
 
@@ -559,3 +575,85 @@ void  _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
    }
    mulle__genericpointersetenumerator_done( &rover);
 }
+
+
+void   _mulle__pointerset_intersect_generic( struct mulle__pointerset *dst,
+                                             struct mulle__pointerset *a,
+                                             struct mulle__pointerset *b,
+                                             struct mulle_container_keycallback *callback,
+                                             struct mulle_allocator *allocator)
+{
+   struct mulle__genericpointersetenumerator  rover;
+   struct mulle__pointerset                   tmp = { 0};
+   void                                       *item;
+   void                                       *found;
+
+   // Create temporary set, if any of a or b is NULL, we can skip this
+   // as the intersection is empty
+   if( a && b)
+   {
+      tmp._size    = a->_size;
+      tmp._storage = _mulle__pointerset_allocate_storage_generic( tmp._size,
+                                                                  callback->notakey,
+                                                                  allocator);
+
+      // Build intersection in temporary set
+      rover = _mulle__pointerset_enumerate_generic( a, callback);
+      while( _mulle__genericpointersetenumerator_next( &rover, &item))
+      {
+         found = _mulle__pointerset_get_generic( b, item, callback);
+         if( found != callback->notakey)
+            _mulle__pointerset_set_generic( &tmp, item, callback, allocator);
+      }
+      mulle__genericpointersetenumerator_done( &rover);
+   }
+
+   //
+   // Swap storage between dst and tmp, we do it like this so dst can also
+   // be a or b
+   //
+   _mulle__pointerset_release_all_generic( dst, callback, allocator);
+   _mulle__pointerset_done( dst, allocator);
+
+   *dst = tmp;
+}
+
+
+void   _mulle__pointerset_union_generic( struct mulle__pointerset *dst,
+                                         struct mulle__pointerset *a,
+                                         struct mulle__pointerset *b,
+                                         struct mulle_container_keycallback *callback,
+                                         struct mulle_allocator *allocator)
+{
+   struct mulle__pointerset   tmp = { 0};
+
+   // Create temporary set, if both a and b are NULL, we can skip this
+   // as the union is empty
+   if( a || b)
+   {
+      tmp._size = mulle_pow2round( (a ? a->_count : 0) +
+                                   (b ? b->_count : 0));
+      if( tmp._size)
+      {
+         tmp._storage = _mulle__pointerset_allocate_storage_generic( tmp._size,
+                                                                     callback->notakey,
+                                                                     allocator);
+         if( a)
+            _mulle__pointerset_copy_items_generic( &tmp, a, callback, allocator);
+         if( b)
+            _mulle__pointerset_copy_items_generic( &tmp, b, callback, allocator);
+      }
+   }
+
+   //
+   // Swap storage between dst and tmp, we do it like this so dst can also
+   // be a or b
+   //
+   _mulle__pointerset_release_all_generic( dst, callback, allocator);
+   _mulle__pointerset_done( dst, allocator);
+
+   *dst = tmp;
+}
+
+
+

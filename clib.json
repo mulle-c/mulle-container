@@ -1,6 +1,6 @@
 {
    "name" : "mulle-container",
-   "version" : "9.0.1",
+   "version" : "9.1.0",
    "description" : "🛄 Arrays, hashtables and a queue",
    "keywords" : [],
    "license" : "BSD-3-Clause",

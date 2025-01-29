@@ -64,8 +64,8 @@ static inline size_t
 
 // fields are considered private
 #define MULLE__POINTERSET_BASE  \
-   void           **_storage;   \
-   size_t   _count;       \
+   void     **_storage;         \
+   size_t   _count;             \
    size_t   _size
 
 // NSSet/NSMutableSet/NSHashTable
@@ -165,7 +165,7 @@ void   *_mulle__pointerset_get( struct mulle__pointerset *set,
 #pragma mark - enumeration
 
 #define MULLE__POINTERSETENUMERATOR_BASE  \
-   void           **_curr;                \
+   void     **_curr;                      \
    size_t   _left
 
 

@@ -67,19 +67,19 @@ static inline void   _mulle_structarray_init( struct mulle_structarray *array,
    array->allocator = allocator;
 }
 
-// TODO: simplify to..
-// #define mulle_structarray_init( array, type, capacity, allocator) \
-// do                                                                \
-// {                                                                 \
-//    if( array)                                                     \
-//       _mulle_structarray_init( array,                             \
-//                                sizeof( type),                     \
-//                                alignof( type),                    \
-//                                capacity,                          \
-//                                allocator);                        \
-// }                                                                 \
-// while( 0)
-
+/* TODO: simplify to..
+ * #define mulle_structarray_init( array, type, capacity, allocator) \
+ * do                                                                \
+ * {                                                                 \
+ *    if( array)                                                     \
+ *       _mulle_structarray_init( array,                             \
+ *                                sizeof( type),                     \
+ *                                alignof( type),                    \
+ *                                capacity,                          \
+ *                                allocator);                        \
+ * }                                                                 \
+ * while( 0)
+ */
 static inline void   mulle_structarray_init( struct mulle_structarray *array,
                                              size_t sizeof_struct,
                                              size_t alignof_struct,

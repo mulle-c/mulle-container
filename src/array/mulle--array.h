@@ -205,6 +205,14 @@ void   _mulle__array_remove( struct mulle__array *array,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator);
 
+// convenience, that uses find in range and then remove in range
+MULLE__CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST_THIRD
+void   _mulle__array_remove_unique( struct mulle__array *array,
+                                  void *item,
+                                  struct mulle_container_keycallback *callback,
+                                  struct mulle_allocator *allocator);
+
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_reset( struct mulle__array *array,

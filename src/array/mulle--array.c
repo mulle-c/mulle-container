@@ -143,13 +143,14 @@ void   _mulle__array_remove_in_range( struct mulle__array *array,
 }
 
 
+
 void   _mulle__array_remove( struct mulle__array *array,
                              void *p,
                              struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator)
 {
    size_t  i;
-   void          *item;
+   void    *item;
 
    //
    // Removal back to front is cool, as long as we are the only one
@@ -178,6 +179,53 @@ void   _mulle__array_remove( struct mulle__array *array,
                                            mulle_range_make( i, 1),
                                            callback,
                                            allocator);
+      }
+   }
+}
+
+
+
+void   _mulle__array_remove_unique( struct mulle__array *array,
+                                  void *p,
+                                  struct mulle_container_keycallback *callback,
+                                  struct mulle_allocator *allocator)
+{
+   size_t  i;
+   void    *item;
+
+   //
+   // Removal back to front is cool, as long as we are the only one
+   // modifying the array. We don't use an enumerator here, but an index is
+   // safe...
+   //
+   if( callback->is_equal == mulle_container_keycallback_pointer_is_equal)
+   {
+      for( i = mulle__array_get_count( array); i;)
+      {
+         item = mulle__array_get( array, --i);
+         if( p == item)
+         {
+            _mulle__array_remove_in_range( array,
+                                           mulle_range_make( i, 1),
+                                           callback,
+                                           allocator);
+            break;
+         }
+      }
+   }
+   else
+   {
+      for( i = mulle__array_get_count( array); i;)
+      {
+         item = mulle__array_get( array, --i);
+         if( (callback->is_equal)( callback, p, item))
+         {
+            _mulle__array_remove_in_range( array,
+                                           mulle_range_make( i, 1),
+                                           callback,
+                                           allocator);
+            break;
+         }
       }
    }
 }

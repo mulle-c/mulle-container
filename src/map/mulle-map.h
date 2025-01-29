@@ -67,15 +67,35 @@ MULLE_C_NONNULL_FIRST
 static inline void    _mulle_map_done( struct mulle_map *map)
 {
    _mulle__map_done( (struct mulle__map *) map, map->callback, map->allocator);
-}
-
-
-static inline void    mulle_map_done( struct mulle_map *map)
+}static inline void   mulle_map_done( struct mulle_map *map)
 {
    if( ! map)
       return;
    _mulle_map_done( map);
 }
+
+
+static inline int   mulle_map_is_empty( struct mulle_map *map)
+{
+   return( map ? ! _mulle__map_get_count( (struct mulle__map *) map) : 1);
+}
+
+
+static inline int   mulle_map_contains( struct mulle_map *map, void *key)
+{
+   if( ! map)
+      return( 0);
+   return( _mulle__map_get( (struct mulle__map *) map, key, map->callback) != NULL);
+}
+
+
+static inline void   mulle_map_remove_all( struct mulle_map *map)
+{
+   if( map)
+      _mulle__map_reset( (struct mulle__map *) map, map->callback, map->allocator);
+}
+
+
 
 
 MULLE_C_NONNULL_FIRST
@@ -564,7 +584,6 @@ static inline int
 }
 
 
-
 MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
@@ -616,15 +635,15 @@ static inline void
 
 
 
-//
-// #define mulle_map_for( map, key, value)                                                        \
-//    assert( sizeof( key) == sizeof( void *));                                                   \
-//    assert( sizeof( value) == sizeof( void *));                                                 \
-//    for( struct mulle_mapenumerator rover__ ## key ## __ ## value = mulle_map_enumerate( map);  \
-//         _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                             \
-//                                     (void **) &(key),                                          \
-//                                     (void **) &(value));                                       \
-//         _mulle_mapenumerator_done( &rover__ ## key ## __ ## value))
-//
+/*
+ * #define mulle_map_for( map, key, value)                                                        \
+ *    assert( sizeof( key) == sizeof( void *));                                                   \
+ *    assert( sizeof( value) == sizeof( void *));                                                 \
+ *    for( struct mulle_mapenumerator rover__ ## key ## __ ## value = mulle_map_enumerate( map);  \
+ *         _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                             \
+ *                                     (void **) &(key),                                          \
+ *                                     (void **) &(value));                                       \
+ *         _mulle_mapenumerator_done( &rover__ ## key ## __ ## value))
+ */
 
 #endif

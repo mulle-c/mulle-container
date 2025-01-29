@@ -157,8 +157,8 @@ char *
 }
 
 
-char *
-   mulle_container_callback_cstring_copy( struct mulle_container_valuecallback  *callback,
+void *
+   mulle_container_callback_cstring_copy( struct mulle_container_valuecallback *callback,
                                           void *s,
                                           struct mulle_allocator *allocator)
 {
