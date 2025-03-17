@@ -92,7 +92,7 @@ static inline void
 {
    mulle_allocator_free( allocator, array->_storage);
 #ifdef DEBUG   
-   memset( array, 0xFD, sizeof( struct mulle__pointerpairarray));
+   mulle_memset_uint32( array, 0xDEADDEAD,sizeof( struct mulle__pointerpairarray));
 #endif   
 }
 

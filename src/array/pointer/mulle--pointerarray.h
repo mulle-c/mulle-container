@@ -149,7 +149,7 @@ static inline void  _mulle__pointerarray_done( struct mulle__pointerarray *array
    if( array->_storage != array->_initial_storage)
       mulle_allocator_free( allocator, array->_storage);
 #ifdef DEBUG
-   memset( array, 0xFD, sizeof( struct mulle__pointerarray));
+   mulle_memset_uint32( array, 0xDEADDEAD, sizeof( struct mulle__pointerarray));
 #endif
 }
 
@@ -606,8 +606,8 @@ void
 
 MULLE_C_NONNULL_FIRST
 static inline
-void   _mulle__pointerarray_remove_unique( struct mulle__pointerarray *array,
-                                         void *p)
+void   *_mulle__pointerarray_remove_unique( struct mulle__pointerarray *array,
+                                            void *p)
 {
    size_t  i;
    void    *item;
@@ -619,18 +619,20 @@ void   _mulle__pointerarray_remove_unique( struct mulle__pointerarray *array,
       {
          _mulle__pointerarray_remove_in_range( array,
                                                mulle_range_make( i, 1));
-         break;
+         return( item);
       }
    }
+   return( NULL);
 }
 
 static inline
-void
+void *
    mulle__pointerarray_remove_unique( struct mulle__pointerarray *array,
                                void *p)
 {
    if( array)
-      _mulle__pointerarray_remove_unique( array, p);
+      return( _mulle__pointerarray_remove_unique( array, p));
+   return( NULL);
 }
 
 

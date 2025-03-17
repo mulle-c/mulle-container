@@ -294,7 +294,7 @@ void   _mulle__structqueue_done( struct mulle__structqueue *queue,
    free_chained_buckets( queue->_read, allocator);
    free_chained_buckets( queue->_spares, allocator);
 #ifdef DEBUG
-   memset( queue, 0xFD, sizeof( struct mulle__structqueue));
+   mulle_memset_uint32( queue, 0xDEADDEAD,sizeof( struct mulle__structqueue));
 #endif
 }
 
