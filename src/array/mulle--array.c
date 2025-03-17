@@ -186,9 +186,9 @@ void   _mulle__array_remove( struct mulle__array *array,
 
 
 void   _mulle__array_remove_unique( struct mulle__array *array,
-                                  void *p,
-                                  struct mulle_container_keycallback *callback,
-                                  struct mulle_allocator *allocator)
+                                    void *p,
+                                    struct mulle_container_keycallback *callback,
+                                    struct mulle_allocator *allocator)
 {
    size_t  i;
    void    *item;

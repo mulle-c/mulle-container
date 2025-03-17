@@ -110,9 +110,13 @@ static inline void   mulle_array_done( struct mulle_array *array)
 {
    if( ! array)
       return;
+
    _mulle__array_done( (struct mulle__array *) array,
                        array->callback,
                        array->allocator);
+#ifdef DEBUG
+   mulle_memset_uint32( array, 0xDEADDEAD, sizeof( *array));
+#endif
 }
 
 

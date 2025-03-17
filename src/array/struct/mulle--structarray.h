@@ -129,7 +129,7 @@ static inline void  _mulle__structarray_done( struct mulle__structarray *array,
    if( ! array->_initial_storage)
       mulle_allocator_free( allocator, array->_storage);
 #ifdef DEBUG
-   memset( array, 0xFD, sizeof( struct mulle__structarray));
+   mulle_memset_uint32( array, 0xDEADDEAD,sizeof( struct mulle__structarray));
 #endif
 }
 
@@ -169,7 +169,11 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle__structarray_get_count( struct mulle__structarray *array)
 {
-   return( (size_t) (((char *) array->_curr - (char *) array->_storage) / array->_sizeof_struct));
+   size_t   length;
+
+   // we don't crash anymore on a zero array
+   length = (size_t) ((char *) array->_curr - (char *) array->_storage);
+   return( length ? length / array->_sizeof_struct : length);
 }
 
 
@@ -210,7 +214,10 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle__structarray_get_size( struct mulle__structarray *array)
 {
-   return( (size_t) (((char *) array->_sentinel - (char *) array->_storage) / array->_sizeof_struct));
+   size_t   length;
+
+   length = (size_t) ((char *) array->_sentinel - (char *) array->_storage);
+   return( length ? length / array->_sizeof_struct : 0);
 }
 
 

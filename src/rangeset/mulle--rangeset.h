@@ -74,7 +74,7 @@ static inline void   _mulle__rangeset_done( struct mulle__rangeset *p,
    if( p->_ranges != p->_initial_storage)
       mulle_allocator_free( allocator, p->_ranges);
 #ifdef DEBUG   
-   memset( p, 0xFD, sizeof( struct mulle__rangeset));
+   mulle_memset_uint32( p, 0xDEADDEAD,sizeof( struct mulle__rangeset));
 #endif    
 }
 

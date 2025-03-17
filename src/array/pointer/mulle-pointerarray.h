@@ -562,36 +562,26 @@ void   mulle_pointerarray_remove( struct mulle_pointerarray *array,
 
 MULLE_C_NONNULL_FIRST
 static inline
-void   _mulle_pointerarray_remove_unique( struct mulle_pointerarray *array,
-                                        void *p)
+void   * _mulle_pointerarray_remove_unique( struct mulle_pointerarray *array,
+                                            void *p)
 {
-   size_t  i;
-   void    *item;
-
-   //
-   // Removal back to front is cool, as long as we are the only one
-   // modifying the array. We don't use an enumerator here, but an index is
-   // safe...
-   //
-   for( i = _mulle_pointerarray_get_count( array); i;)
-   {
-      item = _mulle_pointerarray_get( array, --i);
-      if( p == item)
-      {
-         _mulle_pointerarray_remove_in_range( array,
-                                              mulle_range_make( i, 1));
-         break;
-      }
-   }
+   return( _mulle__pointerarray_remove_unique( (struct mulle__pointerarray *) array,
+                                               p));
 }
 
 
+//
+// mulle_pointerarray_remove_unique returns 'p' if it was actually removed
+// otherwise NULL. mulle_array can't do this, because it may have already
+// released 'p'
+//
 static inline
-void   mulle_pointerarray_remove_unique( struct mulle_pointerarray *array,
+void   *mulle_pointerarray_remove_unique( struct mulle_pointerarray *array,
                                        void *p)
 {
    if( array)
-      _mulle_pointerarray_remove_unique( array, p);
+      return( _mulle_pointerarray_remove_unique( array, p));
+   return( NULL);
 }
 
 
@@ -941,7 +931,7 @@ static inline int
         ! name ## __i;                                      \
         name ## __i =                                       \
         (                                                   \
-           _mulle_pointerarray_done( &name ## __container), \
+           mulle_pointerarray_done( name),                  \
            (void *) 0x1                                     \
         )                                                   \
       )                                                     \
@@ -959,7 +949,7 @@ static inline int
         ! name ## __i;                                                       \
         name ## __i =                                                        \
         (                                                                    \
-           _mulle_pointerarray_done( &name ## __container),                  \
+           mulle_pointerarray_done( name),                                   \
            (void *) 0x1                                                      \
         )                                                                    \
       )                                                                      \

@@ -91,7 +91,7 @@ void   _mulle__pointerset_done( struct mulle__pointerset *set,
 {
    mulle_allocator_free( allocator, set->_storage);
 #ifdef DEBUG   
-   memset( set, 0xFD, sizeof( struct mulle__pointerset));
+   mulle_memset_uint32( set, 0xDEADDEAD,sizeof( struct mulle__pointerset));
 #endif   
 }
 
