@@ -530,7 +530,6 @@ static inline int
 }
 
 
-
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
 {
@@ -543,60 +542,6 @@ static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover
    mulle__mapenumerator_done( (struct mulle__mapenumerator *) rover);
 }
 
-
-
-
-#pragma mark - tiny enumeration
-
-
-#define MULLE_MAPTINYENUMERATOR_BASE    MULLE__MAPTINYENUMERATOR_BASE
-
-
-struct mulle_maptinyenumerator
-{
-   MULLE_MAPTINYENUMERATOR_BASE;
-};
-
-
-
-static inline struct mulle_maptinyenumerator
-   mulle_map_tinyenumerate_nil( struct mulle_map *map)
-{
-   struct mulle_maptinyenumerator    rover;
-   struct mulle__maptinyenumerator   tmp;
-
-   tmp = mulle__map_tinyenumerate_nil( (struct mulle__map *) map);
-   memcpy( &rover, &tmp, sizeof( struct mulle__maptinyenumerator));
-   return( rover);
-}
-
-
-static inline int
-   mulle_maptinyenumerator_next( struct mulle_maptinyenumerator *rover,
-                                 void **key,
-                                 void **value)
-{
-   if( ! rover)
-      return( 0);
-   return( _mulle__maptinyenumerator_next( (struct mulle__maptinyenumerator *) rover,
-                                           key,
-                                           value));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static inline void
-   _mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
-{
-   _mulle__maptinyenumerator_done( (struct mulle__maptinyenumerator *) rover);
-}
-
-
-static inline void
-   mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
-{
-   mulle__maptinyenumerator_done( (struct mulle__maptinyenumerator *) rover);
-}
 
 
 // created by make-container-do.sh mulle-map.c
@@ -632,7 +577,6 @@ static inline void
       while( _mulle_mapenumerator_next( &rover__ ## key ## __ ## value,                                     \
                                       (void **) &key,                                                       \
                                       (void **) &value))
-
 
 
 /*

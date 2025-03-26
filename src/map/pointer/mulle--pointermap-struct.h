@@ -54,10 +54,25 @@
 // So you just map unique pointers to each other. You can't map
 // mulle_not_a_pointer to anything.
 //
-#define MULLE__POINTERMAP_BASE   \
-   void           **_storage;    \
-   size_t   _count;        \
+#define _MULLE__POINTERMAP_BASE   \
+   void     **_storage;           \
+   size_t   _count;               \
    size_t   _size
+
+
+#ifndef MULLE__CONTAINER_MISER_MODE
+
+#define MULLE__POINTERMAP_BASE    \
+    _MULLE__POINTERMAP_BASE;      \
+    uintptr_t  _n_mutations
+
+#else
+
+#define MULLE__POINTERMAP_BASE    \
+    _MULLE__POINTERMAP_BASE
+
+#endif
+
 
 
 struct mulle__pointermap
@@ -66,7 +81,7 @@ struct mulle__pointermap
 };
 
 
-#define MULLE__POINTERMAP_DATA   { 0, 0, 0 }
+#define MULLE__POINTERMAP_DATA   { 0 }
 
 
 MULLE__CONTAINER_GLOBAL
@@ -81,7 +96,7 @@ struct mulle_container_keyvaluecallback  mulle__pointermap_keyvaluecallback;
 //
 // (?)
 static inline size_t   mulle__pointermap_hash_for_size( uintptr_t  hash,
-                                                              size_t _size)
+                                                        size_t _size)
 {
    assert( _size >= 2);
 
@@ -268,10 +283,28 @@ struct mulle__pointermap   *_mulle__pointermap_copy( struct mulle__pointermap *s
 
 # pragma mark - enumeration
 
-#define MULLE__POINTERMAPENUMERATOR_BASE  \
-   void     **_curr;                      \
-   size_t   _left;                        \
+#define _MULLE__POINTERMAPENUMERATOR_BASE  \
+   void     **_curr;                       \
+   size_t   _left;                         \
    size_t   _offset
+
+//
+// could also use MULLE__CONTAINER_MISER_MODE, but enumerators are not to
+// be stored over the length of a function call
+//
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+#define MULLE__POINTERMAPENUMERATOR_BASE   \
+    _MULLE__POINTERMAPENUMERATOR_BASE;     \
+    struct mulle__pointermap *_map;        \
+    uintptr_t  _n_mutations
+
+#else
+
+#define MULLE__POINTERMAPENUMERATOR_BASE   \
+    _MULLE__POINTERMAPENUMERATOR_BASE
+
+#endif
 
 
 struct mulle__pointermapenumerator
@@ -290,6 +323,11 @@ static inline struct mulle__pointermapenumerator
    rover._curr   = map->_storage;
    rover._offset = _mulle__pointermap_get_size( map);
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations = map->_n_mutations;
+   rover._map         = map;
+#endif
+
    return( rover);
 }
 
@@ -304,14 +342,12 @@ static inline struct mulle__pointermapenumerator
 }
 
 
-//
-// the map mustn't have too much free space for this to be reasonably
-// efficient, therefore it's important to shrink after lots of removes
-//
+
 MULLE_C_NONNULL_FIRST
 static inline int
-   _mulle__pointermapenumerator_next_pair( struct mulle__pointermapenumerator *rover,
-                                           struct mulle_pointerpair *pair)
+   _mulle__pointermapenumerator_next_pair_notakey( struct mulle__pointermapenumerator *rover,
+                                                   void  *notakey,
+                                                   struct mulle_pointerpair *pair)
 {
    void   **p;
 
@@ -322,11 +358,15 @@ static inline int
       return( 0);
    }
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   assert( rover->_map->_n_mutations == rover->_n_mutations && "map was modified during enumeration");
+#endif
+
    rover->_left--;
    for(;;)
    {
       p = rover->_curr++;
-      if( *p != mulle_not_a_pointer)
+      if( *p != notakey)
       {
          if( pair)
          {
@@ -338,12 +378,26 @@ static inline int
    }
 }
 
+//
+// the map mustn't have too much free space for this to be reasonably
+// efficient, therefore it's important to shrink after lots of removes
+//
+MULLE_C_NONNULL_FIRST
+static inline int
+   _mulle__pointermapenumerator_next_pair( struct mulle__pointermapenumerator *rover,
+                                           struct mulle_pointerpair *pair)
+{
+   return( _mulle__pointermapenumerator_next_pair_notakey( rover, mulle_not_a_pointer, pair));
+}
+
+
 
 MULLE_C_NONNULL_FIRST
 static inline int
-   _mulle__pointermapenumerator_next( struct mulle__pointermapenumerator *rover,
-                                      void **key,
-                                      void **value)
+   _mulle__pointermapenumerator_next_notakey( struct mulle__pointermapenumerator *rover,
+                                              void  *notakey,
+                                              void **key,
+                                              void **value)
 {
    void   **p;
 
@@ -356,11 +410,15 @@ static inline int
       return( 0);
    }
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   assert( rover->_map->_n_mutations == rover->_n_mutations && "map was modified during enumeration");
+#endif
+
    rover->_left--;
    for(;;)
    {
       p = rover->_curr++;
-      if( *p != mulle_not_a_pointer)
+      if( *p != notakey)
       {
          if( key)
             *key = *p;
@@ -370,6 +428,17 @@ static inline int
       }
    }
 }
+
+
+MULLE_C_NONNULL_FIRST
+static inline int
+   _mulle__pointermapenumerator_next( struct mulle__pointermapenumerator *rover,
+                                      void **key,
+                                      void **value)
+{
+   return( _mulle__pointermapenumerator_next_notakey( rover, mulle_not_a_pointer, key, value));
+}
+
 
 static inline void
    _mulle__pointermapenumerator_done( struct mulle__pointermapenumerator *rover)

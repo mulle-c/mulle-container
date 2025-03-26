@@ -712,96 +712,6 @@ static inline void
 
 
 
-/*
- * a different and smaller interface, where you have to pass in space
- * to store the enumeration result each iteration and where notakey
- * must be NULL
- */
-
-#define MULLE__MAPTINYENUMERATOR_BASE  \
-   void           **_curr;             \
-   size_t   _left;               \
-   size_t   _offset
-
-
-struct mulle__maptinyenumerator
-{
-   MULLE__MAPTINYENUMERATOR_BASE;
-};
-
-
-static inline struct mulle__maptinyenumerator
-   _mulle__map_tinyenumerate_nil( struct mulle__map *map)
-{
-   struct mulle__maptinyenumerator   rover;
-
-   assert( map);
-   rover._left   = map->_count;
-   rover._curr   = map->_storage;
-   rover._offset = _mulle__map_get_size( map);
-
-   return( rover);
-}
-
-
-
-static inline struct mulle__maptinyenumerator
-   mulle__map_tinyenumerate_nil( struct mulle__map *map)
-{
-   if( map)
-      return( _mulle__map_tinyenumerate_nil( map));
-
-   return( (struct mulle__maptinyenumerator) { 0 }); // less sanitizer warnings
-}
-
-
-MULLE_C_NONNULL_FIRST
-static inline int
-   _mulle__maptinyenumerator_next( struct mulle__maptinyenumerator *rover,
-                                   void **key,
-                                   void **value)
-{
-   void   **p;
-
-   if( ! rover->_left)
-   {
-      if( key)
-         *key   = NULL;
-      if( value)
-         *value = NULL;
-      return( 0);
-   }
-
-   rover->_left--;
-   for(;;)
-   {
-      p = rover->_curr++;
-      if( *p)
-      {
-         if( key)
-            *key   = *p;
-         if( value)
-            *value = p[ rover->_offset];
-         return( 1);
-      }
-   }
-}
-
-
-
-MULLE_C_NONNULL_FIRST
-static inline void
-   _mulle__maptinyenumerator_done( struct mulle__maptinyenumerator *rover)
-{
-}
-
-
-static inline void
-   mulle__maptinyenumerator_done( struct mulle__maptinyenumerator *rover)
-{
-}
-
-
 // created by make-container-do.sh --flexible mulle--map.c
 
 // created by make-container-do.sh mulle--map.c
@@ -825,7 +735,7 @@ static inline void
 
 
 #define mulle__map_for( map, key, value)                                                        \
-   assert( sizeof( key) == sizeof( void *));                                           \
+   assert( sizeof( key) == sizeof( void *));                                                    \
    assert( sizeof( value) == sizeof( void *));                                                  \
    for( struct mulle__mapenumerator rover__ ## key ## __ ## value = mulle__map_enumerate( map); \
         _mulle__mapenumerator_next( &rover__ ## key ## __ ## value,                             \

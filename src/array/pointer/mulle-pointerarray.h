@@ -396,6 +396,7 @@ static inline void
 /*
  *  Loop over all items. This works as long as you don't remove
  *  anything from the array. It will not retrieve newly added elements.
+ *  You could loop over them if you don't cache the count in 'n'.
  *
  *  size_t  i, n;
  *  size_t  *item;
@@ -840,7 +841,8 @@ static inline void
  *  printf( "\n");
  *
  */
-#define MULLE_POINTERARRAYREVERSEENUMERATOR_BASE  MULLE__POINTERARRAYREVERSEENUMERATOR_BASE
+#define MULLE_POINTERARRAYREVERSEENUMERATOR_BASE  \
+   MULLE__POINTERARRAYREVERSEENUMERATOR_BASE
 
 struct mulle_pointerarrayreverseenumerator
 {
@@ -912,8 +914,6 @@ static inline int
 {
    return( mulle__pointerarray_member( (struct mulle__pointerarray *) array, p));
 }
-
-
 
 
 
