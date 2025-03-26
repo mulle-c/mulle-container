@@ -83,6 +83,9 @@ void   _mulle__pointermap_reset_generic( struct mulle__pointermap *map,
       *p++ = notakey;
 
    map->_count = 0;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   map->_n_mutations++;
+#endif    
 }
 
 
@@ -168,6 +171,10 @@ static void   grow_generic( struct mulle__pointermap *map,
 
    map->_storage = buf;
    map->_size    = new_size;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   map->_n_mutations++;
+#endif    
 }
 
 
@@ -184,6 +191,7 @@ static unsigned long  _find_index_generic( void **storage,
    void     *param2;
    void     *notakey;
    size_t   mask;
+   int      is_equal;
 
    f       = (int (*)()) callback->is_equal;
    param1  = callback;
@@ -193,7 +201,8 @@ static unsigned long  _find_index_generic( void **storage,
 
    do
    {
-      if( (*f)( param1, param2, q))
+      is_equal = (*f)( param1, param2, q);
+      if( is_equal)
          return( i);
 
       i = (i + 1) & mask;
@@ -213,7 +222,7 @@ static inline uintptr_t  find_index_generic( void **storage,
                                              size_t *hole_index,
                                              struct mulle_container_keycallback *callback)
 {
-   void           *q;
+   void     *q;
    size_t   i;
 
    assert( storage);
@@ -244,11 +253,14 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
    void                       *old_value;
    struct mulle_pointerpair   new_pair;
    uintptr_t                  hash;
-
+#ifndef MULLE__CONTAINER_MUTATION_NDEBUG
+   uintptr_t                  memo_map = map->_n_mutations;
+#endif  
    assert( pair->key != callback->keycallback.notakey);
 
-   hash = (*callback->keycallback.hash)( &callback->keycallback, pair->key);
+   hash = _mulle__pointermap_keycallback_hash( map, &callback->keycallback, pair->key);
 
+   // TODO: get rid of this
    if( map->_count)
    {
       size_t   size;
@@ -260,7 +272,9 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
 
       hole_index = 0xfeedface;  // for the analyzer
       found      = find_index_generic( storage, size, pair->key, hash, &hole_index, &callback->keycallback);
-
+#ifndef MULLE__CONTAINER_MUTATION_NDEBUG
+      assert( memo_map == map->_n_mutations && "map was changed during is_equal callback");
+#endif   
       if( found != mulle_not_found_e)
       {
          i         = (size_t) found;
@@ -272,15 +286,17 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
          if( old_value == pair->value && *q == pair->key)
             return( NULL);
 
-         new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
-         new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
+         new_pair.key   = _mulle__pointermap_keycallback_retain( map, &callback->keycallback, pair->key, allocator);
+         new_pair.value = _mulle__pointermap_valuecallback_retain( map, &callback->valuecallback, pair->value, allocator);
 
-         (callback->keycallback.release)( &callback->keycallback, *q, allocator);
-         (callback->valuecallback.release)( &callback->valuecallback, old_value, allocator);
+         _mulle__pointermap_keycallback_release( map, &callback->keycallback, *q, allocator);
+         _mulle__pointermap_valuecallback_release( map, &callback->valuecallback, old_value, allocator);
 
          *q       = new_pair.key;
          q[ size] = new_pair.value;
-
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+         map->_n_mutations++;
+#endif   
          // if we do replace, we return the old_value value. If the release is a nop,
          // or an autorelease, then this will be still value. This will crash
          // if the callback if strdup/free
@@ -290,12 +306,15 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
       i = hole_index;
       if( ! _mulle__pointermap_is_full( map))
       {
-         new_pair.key       = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
-         new_pair.value     = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
+         new_pair.key       = _mulle__pointermap_keycallback_retain( map, &callback->keycallback, pair->key, allocator);
+         new_pair.value     = _mulle__pointermap_valuecallback_retain( map, &callback->valuecallback, pair->value, allocator);
 
          storage[ i]        = new_pair.key;
          storage[ i + size] = new_pair.value;
          map->_count++;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+         map->_n_mutations++;
+#endif            
          return( NULL);
       }
    }
@@ -304,8 +323,8 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
       grow_generic( map, &callback->keycallback, allocator);
 
    i              = mulle__pointermap_hash_for_size( hash, map->_size);
-   new_pair.key   = (*callback->keycallback.retain)( &callback->keycallback, pair->key, allocator);
-   new_pair.value = (*callback->valuecallback.retain)( &callback->valuecallback, pair->value, allocator);
+   new_pair.key   = _mulle__pointermap_keycallback_retain( map, &callback->keycallback, pair->key, allocator);
+   new_pair.value = _mulle__pointermap_valuecallback_retain( map, &callback->valuecallback, pair->value, allocator);
 
    store_key_value_generic( map->_storage,
                             map->_size,
@@ -314,7 +333,9 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                             new_pair.value,
                             callback->keycallback.notakey);
    map->_count++;
-
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   map->_n_mutations++;
+#endif   
    return( NULL);
 }
 
@@ -329,13 +350,17 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
                                                    uintptr_t hash,
                                                    struct mulle_container_keyvaluecallback *callback)
 {
-   int       (*f)( void *, void *, void *);
-   size_t    i;
-   size_t    size;
-   size_t    mask;
-   void      *found;
-   void      **storage;
-   void      *notakey;
+   int        (*f)( void *, void *, void *);
+   size_t     i;
+   size_t     size;
+   size_t     mask;
+   void       *found;
+   void       **storage;
+   void       *notakey;
+   int        is_equal;
+#ifndef MULLE__CONTAINER_MUTATION_NDEBUG 
+   uintptr_t  memo_map = map->_n_mutations;
+#endif
 
    notakey  = callback->keycallback.notakey;
    // important to not hit a NULL storage later
@@ -356,7 +381,9 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
          return( NULL);
       if( key == found)
          break;
-      if( (*f)( callback, found, key))
+      is_equal = (*f)( callback, found, key);
+      assert( map->_n_mutations == memo_map && "map was modified during hash callback");
+      if( is_equal)
          break;
       i = (i + 1) & mask;
    }
@@ -374,7 +401,7 @@ void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
 {
    uintptr_t   hash;
 
-   hash = (*callback->keycallback.hash)( &callback->keycallback, key);
+   hash = _mulle__pointermap_keycallback_hash( map, &callback->keycallback, key);
    return( _mulle__pointermap__get_generic_knownhash( map, key, hash, callback));
 }
 
@@ -386,13 +413,17 @@ struct mulle_pointerpair   *
                                                    struct mulle_container_keyvaluecallback *callback,
                                                    struct mulle_pointerpair *pair)
 {
-   int       (*f)( void *, void *, void *);
-   size_t    i;
-   size_t    size;
-   size_t    mask;
-   void      *found;
-   void      **storage;
-   void      *notakey;
+   int        (*f)( void *, void *, void *);
+   size_t     i;
+   size_t     size;
+   size_t     mask;
+   void       *found;
+   void       **storage;
+   void       *notakey;
+   int        is_equal;
+#ifndef MULLE__CONTAINER_MUTATION_NDEBUG 
+   uintptr_t  memo_map = map->_n_mutations;
+#endif
 
    // important to not hit a NULL storage later
    // size must be > 2 for the hash to work, otherwise we could get
@@ -413,7 +444,10 @@ struct mulle_pointerpair   *
          return( NULL);
       if( key == found)
          break;
-      if( (*f)( callback, found, key))
+
+      is_equal = (*f)( callback, found, key);
+      assert( map->_n_mutations == memo_map && "map was modified during hash callback");
+      if( is_equal)
          break;
       i = (i + 1) & mask;
    }
@@ -547,20 +581,22 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
 {
    size_t      hole_index;
    size_t      i;
-   uintptr_t         found;
-   void              **storage;
-   void              **q;
+   uintptr_t   found;
+   void        **storage;
+   void        **q;
    size_t      dst_index;
    size_t      search_start;
    size_t      size;
    size_t      mask;
-   uintptr_t         hash;
-
+   uintptr_t   hash;
+#ifndef MULLE__CONTAINER_MUTATION_NDEBUG
+   uintptr_t   memo_map = map->_n_mutations;
+#endif   
    // important to not hit a NULL storage later
    if( map->_count == 0)
       return( 0);
 
-   hash    = (callback->keycallback.hash)( &callback->keycallback, key);
+   hash    = _mulle__pointermap_keycallback_hash( map, &callback->keycallback, key);
    storage = map->_storage;
    size    = map->_size;
 
@@ -568,10 +604,18 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
    if( found == mulle_not_found_e)
       return( 0);
 
+#ifndef MULLE__CONTAINER_MUTATION_NDEBUG
+   assert( memo_map == map->_n_mutations && "map was changed during is_equal callback");
+#endif   
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   map->_n_mutations++;
+#endif 
+
    i = (size_t) found;
    q = &storage[ i];
-   (callback->keycallback.release)( &callback->keycallback, *q, allocator);  // get rid of it
-   (callback->valuecallback.release)( &callback->valuecallback, q[ size], allocator);  // get rid of it
+
+   _mulle__pointermap_keycallback_release( map, &callback->keycallback, *q, allocator);
+   _mulle__pointermap_valuecallback_release( map, &callback->valuecallback, q[ size], allocator);
    map->_count--;
 
    // now we may need to do a whole lot of shifting, if
@@ -599,7 +643,7 @@ int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
       // the "hole" in the front we just made
       // but keep going because "wrong" hashes might be behind
       // be sure not to move items that won't be found
-      hash         = (*callback->keycallback.hash)( &callback->keycallback, *q);
+      hash         = _mulle__pointermap_keycallback_hash( map, &callback->keycallback, *q);
       search_start = mulle__pointermap_hash_for_size( hash, size);
 
       // object better off where it is ?
@@ -724,6 +768,10 @@ void   _mulle__pointermap_shrink_generic( struct mulle__pointermap *map,
 
    map->_storage = buf;
    map->_size    = new_size;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   map->_n_mutations++;
+#endif 
 }
 
 
@@ -749,35 +797,36 @@ void  _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
 
 // use this only for debugging
 size_t
-   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
+   _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *map,
                                                 struct mulle_container_keyvaluecallback *callback,
                                                 size_t *perfects)
 {
-   size_t                                collisions;
-   size_t                                distance;
-   size_t                                dummy;
-   size_t                                i;
-   size_t                                search_start;
+   size_t                                      collisions;
+   size_t                                      distance;
+   size_t                                      dummy;
+   size_t                                      i;
+   size_t                                      search_start;
    struct mulle__genericpointermapenumerator   rover;
    uintptr_t                                   hash;
    void                                        **sentinel;
    void                                        *key;
 
-   rover      = mulle__pointermap_enumerate_generic( set, callback);
-   sentinel   = &rover._curr[ set->_size];
+   rover      = mulle__pointermap_enumerate_generic( map, callback);
+   // dig directly in the enumerator, somewhat ugly
+   sentinel   = &rover._base._curr[ map->_size];
    collisions = 0;
    if( ! perfects)
       perfects = &dummy;
    *perfects  = 0;
 
-   for( i = 0; rover._curr < sentinel; ++rover._curr, i++)
+   for( i = 0; rover._base._curr < sentinel; ++rover._base._curr, i++)
    {
-      key = *rover._curr;
+      key = *rover._base._curr;
       if( key == rover._notakey)
          continue;
 
-      hash         = (*callback->keycallback.hash)( &callback->keycallback, key);
-      search_start = mulle__pointermap_hash_for_size( hash, set->_size);
+      hash         = _mulle__pointermap_keycallback_hash( map, &callback->keycallback, key);
+      search_start = mulle__pointermap_hash_for_size( hash, map->_size);
       // search_start is where the table  starts to search and i is where it
       // will find the current key
       if( search_start <= i)
@@ -787,7 +836,7 @@ size_t
             ++*perfects;
       }
       else
-         distance = set->_size - search_start + i; // needs to wrap
+         distance = map->_size - search_start + i; // needs to wrap
       collisions += distance;
    }
    return( collisions);

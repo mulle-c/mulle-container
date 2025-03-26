@@ -26,6 +26,8 @@
 #include "mulle-pointerpair.h"
 #include "mulle--map.h"
 #include "mulle-map.h"
+#include "mulle--maptinyenumerator.h"
+#include "mulle-maptinyenumerator.h"
 #include "mulle--pointermap-generic.h"
 #include "mulle--pointermap.h"
 #include "mulle--pointermap-struct.h"

@@ -35,6 +35,185 @@
 
 #include "mulle--pointermap-struct.h"
 
+
+# pragma mark - callback access with mutation check
+
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+static inline uintptr_t   _mulle__pointermap_keycallback_hash( struct mulle__pointermap *map,
+                                                               struct mulle_container_keycallback *callback,
+                                                               void *a)
+{
+   uintptr_t   memo_map;
+   uintptr_t   hash;
+
+   memo_map = map->_n_mutations;
+   hash     = (*callback->hash)( callback, a);
+   assert( map->_n_mutations == memo_map && "map was modified during hash callback");
+
+   return( hash);
+}
+
+static inline int   _mulle__pointermap_keycallback_equal( struct mulle__pointermap *map,
+                                                          struct mulle_container_keycallback *callback,
+                                                          void *a,
+                                                          void *b)
+{
+   uintptr_t   memo_map;
+   int         is_equal;
+
+   memo_map = map->_n_mutations;
+   is_equal = (*callback->is_equal)( callback, a, b);
+   assert( map->_n_mutations == memo_map && "map was modified during is_equal callback");
+
+   return( is_equal);
+}
+
+
+static inline void   *_mulle__pointermap_keycallback_retain( struct mulle__pointermap *map,
+                                                             struct mulle_container_keycallback *callback,
+                                                             void *p,
+                                                             struct mulle_allocator *allocator)
+{
+   uintptr_t   memo_map;
+
+   memo_map = map->_n_mutations;
+   p        = (*callback->retain)( callback, p, allocator);
+   assert( map->_n_mutations == memo_map && "map was modified during retain callback");
+   return( p);
+}
+
+
+static inline void   _mulle__pointermap_keycallback_release( struct mulle__pointermap *map,
+                                                             struct mulle_container_keycallback *callback,
+                                                             void *p,
+                                                             struct mulle_allocator *allocator)
+{
+   uintptr_t   memo_map;
+
+   memo_map = map->_n_mutations;
+   (*callback->release)( callback, p, allocator);
+   assert( map->_n_mutations == memo_map && "map was modified during release callback");
+
+}
+
+
+static inline char   *_mulle__pointermap_keycallback_describe( struct mulle__pointermap *map,
+                                                               struct mulle_container_keycallback *callback,
+                                                               void *p,
+                                                               struct mulle_allocator **allocator)
+{
+   uintptr_t   memo_map;
+   char        *s;
+
+   memo_map = map->_n_mutations;
+   s        = (*callback->describe)( callback, p, allocator);
+   assert( map->_n_mutations == memo_map && "map was modified during release callback");
+   return( s);
+}
+
+
+static inline void   *_mulle__pointermap_valuecallback_retain( struct mulle__pointermap *map,
+                                                               struct mulle_container_valuecallback *callback,
+                                                               void *p,
+                                                               struct mulle_allocator *allocator)
+{
+   uintptr_t   memo_map;
+
+   memo_map = map->_n_mutations;
+   p        = (*callback->retain)( callback, p, allocator);
+   assert( map->_n_mutations == memo_map && "map was modified during retain callback");
+   return( p);
+}
+
+
+static inline void   _mulle__pointermap_valuecallback_release( struct mulle__pointermap *map,
+                                                               struct mulle_container_valuecallback *callback,
+                                                               void *p,
+                                                               struct mulle_allocator *allocator)
+{
+   uintptr_t   memo_map;
+
+   memo_map = map->_n_mutations;
+   (*callback->release)( callback, p, allocator);
+   assert( map->_n_mutations == memo_map && "map was modified during release callback");
+
+}
+
+
+static inline char   *_mulle__pointermap_valuecallback_describe( struct mulle__pointermap *map,
+                                                                 struct mulle_container_valuecallback *callback,
+                                                                 void *p,
+                                                                 struct mulle_allocator **allocator)
+{
+   uintptr_t   memo_map;
+   char        *s;
+
+   memo_map = map->_n_mutations;
+   s        = (*callback->describe)( callback, p, allocator);
+   assert( map->_n_mutations == memo_map && "map was modified during release callback");
+   return( s);
+}
+
+
+#else
+
+static inline int   _mulle__pointermap_keycallback_equal( struct mulle__pointermap *map,
+                                                          struct mulle_container_keycallback *callback,
+                                                          void *a,
+                                                          void *b)
+{
+   MULLE_C_UNUSED( array);
+   is_equal = (*callback->is_equal)( callback, a, b);
+   return( is_equal);
+}
+
+
+static inline void   *_mulle__pointermap_keycallback_retain( struct mulle__pointermap *map,
+                                                             struct mulle_container_keycallback *callback,
+                                                             void *p,
+                                                             struct mulle_allocator *allocator)
+{
+   MULLE_C_UNUSED( array);
+   return( (*callback->retain)( callback, p, allocator));
+   return( p);
+}
+
+
+static inline void   _mulle__pointermap_keycallback_release( struct mulle__pointermap *map,
+                                                             struct mulle_container_keycallback *callback,
+                                                             void *p,
+                                                             struct mulle_allocator *allocator)
+{
+   MULLE_C_UNUSED( array);
+   (*callback->release)( callback, p, allocator);
+}
+
+static inline void   *_mulle__pointermap_valuecallback_retain( struct mulle__pointermap *map,
+                                                               struct mulle_container_valuecallback *callback,
+                                                               void *p,
+                                                               struct mulle_allocator *allocator)
+{
+   MULLE_C_UNUSED( array);
+   return( (*callback->retain)( callback, p, allocator));
+   return( p);
+}
+
+
+static inline void   _mulle__pointermap_valuecallback_release( struct mulle__pointermap *map,
+                                                               struct mulle_container_valuecallback *callback,
+                                                               void *p,
+                                                               struct mulle_allocator *allocator)
+{
+   MULLE_C_UNUSED( array);
+   (*callback->release)( callback, p, allocator);
+}
+
+
+#endif
+
+
 //
 // mulle_pointermap_generic is the base for mulle-map
 // with the passing of the callbacks, this is now more generic to use than
@@ -222,12 +401,10 @@ size_t
 # pragma mark - enumeration
 
 
-#define MULLE__GENERICPOINTERMAPENUMERATOR_BASE   \
-   struct mulle_pointerpair    _space;            \
-   void                        **_curr;           \
-   size_t                _left;             \
-   size_t                _offset;           \
-   void                        *_notakey
+#define MULLE__GENERICPOINTERMAPENUMERATOR_BASE      \
+   struct mulle__pointermapenumerator  _base;        \
+   struct mulle_pointerpair            _space;       \
+   void                                *_notakey
 
 
 struct mulle__genericpointermapenumerator
@@ -245,9 +422,7 @@ static inline struct mulle__genericpointermapenumerator
 
    if( map)
    {
-      rover._left    = map->_count;
-      rover._curr    = map->_storage;
-      rover._offset  = _mulle__pointermap_get_size( map);
+      rover._base    = _mulle__pointermap_enumerate( map);
       rover._notakey = callback ? callback->keycallback.notakey : 0;
    }
 
@@ -263,24 +438,11 @@ MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair *
    _mulle__genericpointermapenumerator_next_pair( struct mulle__genericpointermapenumerator *rover)
 {
-   void   **p;
-   void   *key;
-
-   if( ! rover->_left)
-      return( NULL);
-
-   rover->_left--;
-   for(;;)
-   {
-      p   = rover->_curr++;
-      key = *p;
-      if( key != rover->_notakey)
-      {
-         rover->_space.key   = key;
-         rover->_space.value = p[ rover->_offset];
-         return( &rover->_space);
-      }
-   }
+   if( _mulle__pointermapenumerator_next_pair_notakey( &rover->_base, 
+                                                       rover->_notakey, 
+                                                       &rover->_space))
+      return( &rover->_space);
+   return( NULL);
 }
 
 
@@ -300,23 +462,10 @@ static inline int
                                              void **key,
                                              void **value)
 {
-   struct mulle_pointerpair  *pair;
-
-   pair = _mulle__genericpointermapenumerator_next_pair( rover);
-   if( ! pair)
-   {
-      if( key)
-         *key = rover->_notakey;  // maybe should use NULL always for consistency
-      if( value)
-         *value = NULL;
-      return( 0);
-   }
-
-   if( key)
-      *key = pair->key;
-   if( value)
-      *value = pair->value;
-   return( 1);
+   return( _mulle__pointermapenumerator_next_notakey( &rover->_base, 
+                                                      rover->_notakey, 
+                                                      key, 
+                                                      value));
 }
 
 
@@ -334,7 +483,7 @@ static inline int
       return( 0);
    }
 
-   return(  _mulle__genericpointermapenumerator_next( rover, key, value));
+   return( _mulle__genericpointermapenumerator_next( rover, key, value));
 }
 
 

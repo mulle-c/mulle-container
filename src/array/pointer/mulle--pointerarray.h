@@ -44,8 +44,8 @@
 
 struct mulle_pointers
 {
-   void           **pointers;
-   size_t         count;
+   void     **pointers;
+   size_t   count;
 };
 
 
@@ -72,11 +72,26 @@ static inline void   mulle_pointers_done( struct mulle_pointers p,
 // actually a remove operation:
 //   mulle__pointerarray_remove_in_range, but it's very slow.
 //
-#define MULLE__POINTERARRAY_BASE    \
-   void      **_storage;            \
-   void      **_curr;               \
-   void      **_sentinel;           \
-   void      **_initial_storage
+#define _MULLE__POINTERARRAY_BASE    \
+    void      **_storage;            \
+    void      **_curr;               \
+    void      **_sentinel;           \
+    void      **_initial_storage
+
+
+#ifndef MULLE__CONTAINER_MISER_MODE
+
+#define MULLE__POINTERARRAY_BASE          \
+    _MULLE__POINTERARRAY_BASE;            \
+    uintptr_t  _n_mutations
+
+#else
+
+#define MULLE__POINTERARRAY_BASE          \
+    _MULLE__POINTERARRAY_BASE
+
+#endif
+
 
 
 struct mulle__pointerarray
@@ -146,6 +161,10 @@ MULLE_C_NONNULL_FIRST
 static inline void  _mulle__pointerarray_done( struct mulle__pointerarray *array,
                                                struct mulle_allocator *allocator)
 {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
+
    if( array->_storage != array->_initial_storage)
       mulle_allocator_free( allocator, array->_storage);
 #ifdef DEBUG
@@ -235,7 +254,7 @@ static inline size_t
 static inline size_t
    mulle__pointerarray_get_size( struct mulle__pointerarray *array)
 {
-   return(  array ? _mulle__pointerarray_get_size( array) : 0);
+   return( array ? _mulle__pointerarray_get_size( array) : 0);
 }
 
 
@@ -346,6 +365,9 @@ static inline void **
    reserved      = array->_curr;
    array->_curr += length;
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( reserved);
 }
 
@@ -361,6 +383,9 @@ void   _mulle__pointerarray_add_guaranteed( struct mulle__pointerarray *array,
 {
    assert( array->_curr < array->_sentinel);
    *array->_curr++ = pointer;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -374,6 +399,9 @@ static inline void
       _mulle__pointerarray_grow( array, allocator);
 
    *array->_curr++ = pointer;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -399,7 +427,12 @@ static inline void   *
    _mulle__pointerarray_pop( struct mulle__pointerarray *array)
 {
    if( array->_curr > array->_storage)
+   {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      array->_n_mutations++;
+#endif
       return( *--array->_curr);
+   }
    return( NULL);
 }
 
@@ -435,6 +468,7 @@ static inline void   **
    assert( &array->_storage[ i] >= array->_storage);
    assert( &array->_storage[ i] < array->_curr);
 
+// do we count this as a mutation ? No
    return( &array->_storage[ i]);
 }
 
@@ -539,6 +573,9 @@ static inline void
    _mulle__pointerarray_reset( struct mulle__pointerarray *array)
 {
    array->_curr = array->_storage;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -722,6 +759,9 @@ static inline void   *
 
    old = array->_storage[ i];
    array->_storage[ i] = p;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( old);
 }
 
@@ -765,7 +805,12 @@ static inline void   _mulle__pointerarray_set_zeroing( struct mulle__pointerarra
    space  = _mulle__pointerarray_advance( array, zeroes + 1, allocator);
    memset( space, 0, zeroes * sizeof( void *));
    space[ zeroes] = value;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
+
 
 static inline void   mulle__pointerarray_set_zeroing( struct mulle__pointerarray *array,
                                                       size_t       i,
@@ -848,9 +893,26 @@ struct mulle_pointers
  *
  */
 
-#define MULLE__POINTERARRAYENUMERATOR_BASE   \
-   void   **_curr;                           \
+#define _MULLE__POINTERARRAYENUMERATOR_BASE   \
+   void   **_curr;                            \
    void   **_sentinel
+
+//
+// could also use MULLE__CONTAINER_MISER_MODE, but enumerators are not to
+// be stored over the length of a function call
+//
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+#define MULLE__POINTERARRAYENUMERATOR_BASE    \
+    _MULLE__POINTERARRAYENUMERATOR_BASE;      \
+    struct mulle__pointerarray *_array;       \
+    uintptr_t  _n_mutations
+#else
+
+#define MULLE__POINTERARRAYENUMERATOR_BASE    \
+    _MULLE__POINTERARRAYENUMERATOR_BASE
+
+#endif
 
 
 struct mulle__pointerarrayenumerator
@@ -873,6 +935,11 @@ static inline struct mulle__pointerarrayenumerator
 
    rover._curr     = array->_storage;
    rover._sentinel = array->_curr;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations = array->_n_mutations;
+   rover._array       = array;
+#endif
    assert( rover._sentinel >= rover._curr);
 
    return( rover);
@@ -896,6 +963,10 @@ static inline int
 {
    if( rover->_curr < rover->_sentinel)
    {
+      // assert here coz rover->_array could be NULL
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      assert( rover->_array->_n_mutations == rover->_n_mutations && "array was modified during enumeration");
+#endif
       *item = *rover->_curr++;
       return( 1);
    }
@@ -949,7 +1020,19 @@ static inline void
  *  mulle__pointerarrayreverseenumerator_done( &rover);
  *
  */
-#define MULLE__POINTERARRAYREVERSEENUMERATOR_BASE   MULLE__POINTERARRAYENUMERATOR_BASE
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+#define MULLE__POINTERARRAYREVERSEENUMERATOR_BASE    \
+    _MULLE__POINTERARRAYENUMERATOR_BASE;             \
+    struct mulle__pointerarray *_array;              \
+    uintptr_t  _n_mutations
+
+#else
+
+#define MULLE__POINTERARRAYREVERSEENUMERATOR_BASE    \
+    _MULLE__POINTERARRAYENUMERATOR_BASE
+
+#endif
 
 
 struct mulle__pointerarrayreverseenumerator
@@ -972,6 +1055,10 @@ static inline struct  mulle__pointerarrayreverseenumerator
 
    rover._curr     = array->_curr;
    rover._sentinel = array->_storage;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations = array->_n_mutations;
+   rover._array       = array;
+#endif
    assert( rover._sentinel <= rover._curr);
 
    return( rover);
@@ -998,6 +1085,10 @@ static inline int
       *item = NULL;
       return( 0);
    }
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   assert( rover->_array->_n_mutations == rover->_n_mutations && "array was modified during enumeration");
+#endif
 
    *item = *--rover->_curr;
    return( 1);
@@ -1115,5 +1206,28 @@ static inline int   mulle__pointerarray_member( struct mulle__pointerarray *arra
                                    (void *) 1))                                                   \
       while( _mulle__pointerarrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
+
+//
+// Experimental:
+//
+// Running a loop over an array, where people might add or remove stuff
+// in the middle of the loop. regular for is fine if you just add stuff
+//
+//#define mulle__pointerarray_safefor( name, item)                     \
+//   assert( sizeof( item) == sizeof( void *));                        \                                          \
+//   mulle__pointerarray_do_flexible( name ## __tmp, 16)               \
+//   {                                                                 \
+//      void   *name ## __value;                                       \
+//                                                                     \
+//      mulle__pointerarray_for( name, name ## __value)                \
+//      {                                                              \
+//         mulle__pointerarray_add( name ## __tmp, name ## __value);   \
+//      }                                                              \
+//                                                                     \
+//      mulle__pointerarray_for( name ## __tmp, item)
+//
+//
+//#define mulle__pointerarray_safefor_end( name)                       \
+//   }
 
 #endif

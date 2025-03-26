@@ -45,6 +45,12 @@
 #include <assert.h>
 
 
+#define MULLE_CONTAINER_CALLBACK_BASE( type)                      \
+   mulle_container_ ## type ## callback_retain_t     *retain;     \
+   mulle_container_ ## type ## callback_release_t    *release;    \
+   mulle_container_ ## type ## callback_describe_t   *describe;   \
+   void                                              *userinfo
+
 #pragma mark - callback schemes for containers
 
 
@@ -82,14 +88,12 @@ typedef char *
 //
 struct mulle_container_keycallback
 {
+   MULLE_CONTAINER_CALLBACK_BASE( key);
+
+   // layout up till here identical to mulle_container_valuecallback FWIW
    mulle_container_keycallback_hash_t       *hash;
    mulle_container_keycallback_is_equal_t   *is_equal;
-   mulle_container_keycallback_retain_t     *retain;
-   mulle_container_keycallback_release_t    *release;
-   mulle_container_keycallback_describe_t   *describe;
-
-   void   *notakey;   // don't make it INTPTR_MAX as that's mulle_not_found_e
-   void   *userinfo;
+   void                                     *notakey;   // don't make it INTPTR_MAX as that's mulle_not_found_e
 };
 
 
@@ -181,11 +185,7 @@ typedef char *
 //
 struct mulle_container_valuecallback
 {
-   mulle_container_valuecallback_retain_t     *retain;
-   mulle_container_valuecallback_release_t    *release;
-   mulle_container_valuecallback_describe_t   *describe;
-
-   void   *userinfo;
+   MULLE_CONTAINER_CALLBACK_BASE( value);
 };
 
 

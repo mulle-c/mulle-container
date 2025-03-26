@@ -40,6 +40,8 @@
 #include <string.h>
 #include <assert.h>
 
+
+
 //
 // mulle--array accepts mulle_container_keycallback. Elements in the array are
 // retained on addition and released on removal. Furthermore equality is no
@@ -164,6 +166,116 @@ static inline int
 }
 
 
+# pragma mark - callback access with mutation check
+
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+static inline int   _mulle__array_callback_equal( struct mulle__array *array,
+                                                  struct mulle_container_keycallback *callback,
+                                                  void *a,
+                                                  void *b)
+{
+   uintptr_t   memo_array;
+   int         is_equal;
+
+   memo_array = array->_n_mutations;
+   is_equal   = (*callback->is_equal)( callback, a, b);
+   assert( array->_n_mutations == memo_array && "array was modified during is_equal callback");
+
+   return( is_equal);
+}
+
+
+static inline void   *_mulle__array_callback_retain( struct mulle__array *array,
+                                                     struct mulle_container_keycallback *callback,
+                                                     void *p,
+                                                     struct mulle_allocator *allocator)
+{
+   uintptr_t   memo_array;
+
+   memo_array = array->_n_mutations;
+   p          = (*callback->retain)( callback, p, allocator);
+   assert( array->_n_mutations == memo_array && "array was modified during retain callback");
+   return( p);
+}
+
+
+static inline void   _mulle__array_callback_release( struct mulle__array *array,
+                                                     struct mulle_container_keycallback *callback,
+                                                     void *p,
+                                                     struct mulle_allocator *allocator)
+{
+   uintptr_t   memo_array;
+
+   memo_array = array->_n_mutations;
+   (*callback->release)( callback, p, allocator);
+   assert( array->_n_mutations == memo_array && "array was modified during release callback");
+
+}
+
+static inline char   *_mulle__array_callback_describe( struct mulle__array *array,
+                                                       struct mulle_container_keycallback *callback,
+                                                       void *p,
+                                                       struct mulle_allocator **allocator)
+{
+   uintptr_t   memo_array;
+   char        *s;
+
+   memo_array = array->_n_mutations;
+   s          = (*callback->describe)( callback, p, allocator);
+   assert( array->_n_mutations == memo_array && "array was modified during release callback");
+   return( s);
+}
+
+
+#else
+
+static inline int   _mulle__array_callback_equal( struct mulle__array *array,
+                                                  struct mulle_container_keycallback *callback,
+                                                  void *a,
+                                                  void *b)
+{
+   MULLE_C_UNUSED( array);
+   is_equal = (*callback->is_equal)( callback, a, b);
+   return( is_equal);
+}
+
+
+static inline void   *_mulle__array_callback_retain( struct mulle__array *array,
+                                                     struct mulle_container_keycallback *callback,
+                                                     void *p,
+                                                     struct mulle_allocator *allocator)
+{
+   MULLE_C_UNUSED( array);
+   return( (*callback->retain)( callback, p, allocator));
+   return( p);
+}
+
+
+static inline void   _mulle__array_callback_release( struct mulle__array *array,
+                                                     struct mulle_container_keycallback *callback,
+                                                     void *p,
+                                                     struct mulle_allocator *allocator)
+{
+   MULLE_C_UNUSED( array);
+   (*callback->release)( callback, p, allocator);
+}
+
+
+static inline char   *_mulle__array_callback_describe( struct mulle__array *array,
+                                                       struct mulle_container_keycallback *callback,
+                                                       void *p,
+                                                       struct mulle_allocator **allocator)
+{
+   MULLE_C_UNUSED( array);
+   return( (*callback->describe)( callback, p, allocator));
+}
+
+#endif
+
+
+
 # pragma mark - memory operations
 
 MULLE_C_NONNULL_FIRST
@@ -241,7 +353,7 @@ void    _mulle__array_add_guaranteed( struct mulle__array *array,
 {
    assert( p != callback->notakey);
 
-   p = (*callback->retain)( callback, p, allocator);
+   p = _mulle__array_callback_retain( array, callback, p, allocator);
    _mulle__pointerarray_add_guaranteed( (struct mulle__pointerarray *)  array,
                                        p);
 }
@@ -359,7 +471,7 @@ void  _mulle__array_remove_last( struct mulle__array *array,
    void   *p;
 
    p = _mulle__pointerarray_pop( (struct mulle__pointerarray *) array);
-   (*callback->release)( callback, p, allocator);
+   _mulle__array_callback_release( array, callback, p, allocator);
 }
 
 

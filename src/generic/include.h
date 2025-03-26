@@ -19,6 +19,28 @@
    sourcetree, then you don't need it.
  */
 
+// if compiling with NDEBUG, we don't do the asserts so we can leave it out.
+// this is painful, when you mix different libraries though that are compiled
+// differently. So we keep the fields in the actual structs constants but
+// unused unless you define MULLE__CONTAINER_MISER_MODE
+//
+#ifndef MULLE__CONTAINER_HAVE_MUTATION_COUNT
+# ifdef NDEBUG
+#  define MULLE__CONTAINER_HAVE_MUTATION_COUNT  0
+# else
+#  define MULLE__CONTAINER_HAVE_MUTATION_COUNT  1
+# endif
+#endif
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT && defined( NDEBUG)
+# define MULLE__CONTAINER_MUTATION_NDEBUG
+#endif
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT && defined( MULLE__CONTAINER_MISER_MODE)
+# error "You can't define MULLE__CONTAINER_MISER_MODE and also have MULLE__CONTAINER_HAVE_MUTATION_COUNT enabled"
+#endif
+
+
 #include "_mulle-container-include.h"
 
 #ifdef MULLE__CONTAINER_BUILD

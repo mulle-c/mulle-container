@@ -62,6 +62,11 @@ static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
                                                  sizeof( void *) * new_size);
    array->_curr     = &array->_storage[ used];
    array->_sentinel = &array->_storage[ new_size];
+
+// memo its not directly a mutation, but an enumerator will get garbage now
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif   
 }
 
 
@@ -90,6 +95,12 @@ void **   _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,
       _mulle__pointerarray_realloc( array,
                                     _size + (length - available),
                                     allocator);
+
+   // we only guarantee, so someone can write into the array, so assume this
+   // is a mutation
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( array->_curr);
 }
 
@@ -112,6 +123,10 @@ void   _mulle__pointerarray_compact( struct mulle__pointerarray *array,
    }
 
    array->_curr = q;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -169,6 +184,10 @@ void
             (count - tail) * sizeof( void *));
 
    array->_curr -= range.length;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -186,29 +205,32 @@ size_t
 
 
 struct mulle_pointers
-   _mulle__pointerarray_extract_pointers( struct mulle__pointerarray *buffer,
+   _mulle__pointerarray_extract_pointers( struct mulle__pointerarray *array,
                                           struct mulle_allocator *allocator)
 {
    struct mulle_pointers   data;
 
-   data = mulle_pointers_make( buffer->_storage,
-                               _mulle__pointerarray_get_count( buffer));
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 
-   if( data.pointers && data.pointers == buffer->_initial_storage)
+   data = mulle_pointers_make( array->_storage,
+                               _mulle__pointerarray_get_count( array));
+
+   if( data.pointers && data.pointers == array->_initial_storage)
    {
       data.pointers = mulle_allocator_malloc( allocator, data.count * sizeof( void *));
-      memcpy( data.pointers, buffer->_storage, data.count * sizeof( void *));
+      memcpy( data.pointers, array->_storage, data.count * sizeof( void *));
 
-      buffer->_curr    =
-      buffer->_storage = buffer->_initial_storage;
-
+      array->_curr    =
+      array->_storage = array->_initial_storage;
       return( data);
    }
 
-   buffer->_storage          =
-   buffer->_curr             =
-   buffer->_sentinel         =
-   buffer->_initial_storage  = NULL;
+   array->_storage          =
+   array->_curr             =
+   array->_sentinel         =
+   array->_initial_storage  = NULL;
 
    return( data);
 }
@@ -234,6 +256,10 @@ void   _mulle__pointerarray_add_array( struct mulle__pointerarray *array,
    q   = &other->_storage[ range.location];
    // even if you add self to self, the memory areas dont overlap
    memcpy( dst, q, range.length * sizeof( void *));
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -243,7 +269,7 @@ void  _mulle__pointerarray_absorb_array( struct mulle__pointerarray *array,
                                          struct mulle__pointerarray *victim,
                                          struct mulle_allocator *victim_allocator)
 {
-   void           **reserved;
+   void     **reserved;
    size_t   n;
 
    assert( array != victim);
@@ -252,6 +278,11 @@ void  _mulle__pointerarray_absorb_array( struct mulle__pointerarray *array,
       allocator = &mulle_default_allocator;
    if( ! victim_allocator)
       victim_allocator = &mulle_default_allocator;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
+
    if( ! array->_storage && allocator == victim_allocator)
    {
       array->_initial_storage = NULL;
