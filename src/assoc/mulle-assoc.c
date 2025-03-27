@@ -102,6 +102,9 @@ void   _mulle_assoc_set( struct mulle_assoc *assoc, void *key, void *value)
                                                        assoc->callback,
                                                        assoc->allocator);
    mulle_pointerpair_release( old, assoc->callback, assoc->allocator);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+#endif
 }
 
 
@@ -147,6 +150,9 @@ void   _mulle_assoc_remap_intptr_key_range( struct mulle_assoc *assoc,
    }
 
    assoc->_is_sorted = 0;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+#endif
 }
 
 
@@ -242,4 +248,7 @@ void   _mulle_assoc_move_intptr_key_range( struct mulle_assoc *assoc,
    }
 
    assoc->_is_sorted = 0;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+#endif
 }

@@ -307,29 +307,42 @@ char   *_mulle__set_describe( struct mulle__set *set,
 
 #define MULLE__SETENUMERATOR_BASE   MULLE__GENERICPOINTERSETENUMERATOR_BASE
 
-
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+struct mulle__setenumerator
+{
+   MULLE__SETENUMERATOR_BASE;
+   struct mulle__set *_set;
+   uintptr_t  _n_mutations;
+};
+#else
 struct mulle__setenumerator
 {
    MULLE__SETENUMERATOR_BASE;
 };
+#endif
 
 extern struct mulle__setenumerator   mulle__setenumerator_empty;
-
 
 MULLE_C_NONNULL_FIRST_SECOND
 static inline struct mulle__setenumerator
    _mulle__set_enumerate( struct mulle__set *set,
                           struct mulle_container_keycallback *callback)
 {
-   struct mulle__setenumerator                 rover;
-   struct mulle__genericpointersetenumerator   tmp;
+   struct mulle__setenumerator   rover;
 
-   tmp = _mulle__pointerset_enumerate_generic( (struct mulle__pointerset *) set, callback);
-   memcpy( &rover, &tmp, sizeof( struct mulle__genericpointersetenumerator));
+   rover._curr        = set->_storage;
+   rover._left        = set->_count;
+   rover._notakey     = callback->notakey;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._set         = set;
+   rover._n_mutations = set->_n_mutations;
+#endif
+
    return( rover);
 }
 
 
+MULLE_C_NONNULL_SECOND
 static inline struct mulle__setenumerator
    mulle__set_enumerate( struct mulle__set *set,
                          struct mulle_container_keycallback *callback)

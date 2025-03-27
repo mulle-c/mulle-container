@@ -159,12 +159,28 @@ static inline char   *_mulle__pointermap_valuecallback_describe( struct mulle__p
 
 #else
 
+static inline uintptr_t   _mulle__pointermap_keycallback_hash( struct mulle__pointermap *map,
+                                                               struct mulle_container_keycallback *callback,
+                                                               void *a)
+{
+   uintptr_t   hash;
+
+   MULLE_C_UNUSED( map);
+
+   hash = (*callback->hash)( callback, a);
+   return( hash);
+}
+
+
 static inline int   _mulle__pointermap_keycallback_equal( struct mulle__pointermap *map,
                                                           struct mulle_container_keycallback *callback,
                                                           void *a,
                                                           void *b)
 {
-   MULLE_C_UNUSED( array);
+   int   is_equal;
+
+   MULLE_C_UNUSED( map);
+
    is_equal = (*callback->is_equal)( callback, a, b);
    return( is_equal);
 }
@@ -175,8 +191,9 @@ static inline void   *_mulle__pointermap_keycallback_retain( struct mulle__point
                                                              void *p,
                                                              struct mulle_allocator *allocator)
 {
-   MULLE_C_UNUSED( array);
-   return( (*callback->retain)( callback, p, allocator));
+   MULLE_C_UNUSED( map);
+
+   p = (*callback->retain)( callback, p, allocator);
    return( p);
 }
 
@@ -186,17 +203,34 @@ static inline void   _mulle__pointermap_keycallback_release( struct mulle__point
                                                              void *p,
                                                              struct mulle_allocator *allocator)
 {
-   MULLE_C_UNUSED( array);
+   MULLE_C_UNUSED( map);
+
    (*callback->release)( callback, p, allocator);
 }
+
+
+static inline char   *_mulle__pointermap_keycallback_describe( struct mulle__pointermap *map,
+                                                               struct mulle_container_keycallback *callback,
+                                                               void *p,
+                                                               struct mulle_allocator **allocator)
+{
+   char   *s;
+
+   MULLE_C_UNUSED( map);
+
+   s = (*callback->describe)( callback, p, allocator);
+   return( s);
+}
+
 
 static inline void   *_mulle__pointermap_valuecallback_retain( struct mulle__pointermap *map,
                                                                struct mulle_container_valuecallback *callback,
                                                                void *p,
                                                                struct mulle_allocator *allocator)
 {
-   MULLE_C_UNUSED( array);
-   return( (*callback->retain)( callback, p, allocator));
+   MULLE_C_UNUSED( map);
+
+   p = (*callback->retain)( callback, p, allocator);
    return( p);
 }
 
@@ -206,8 +240,23 @@ static inline void   _mulle__pointermap_valuecallback_release( struct mulle__poi
                                                                void *p,
                                                                struct mulle_allocator *allocator)
 {
-   MULLE_C_UNUSED( array);
+   MULLE_C_UNUSED( map);
+
    (*callback->release)( callback, p, allocator);
+}
+
+
+static inline char   *_mulle__pointermap_valuecallback_describe( struct mulle__pointermap *map,
+                                                                 struct mulle_container_valuecallback *callback,
+                                                                 void *p,
+                                                                 struct mulle_allocator **allocator)
+{
+   char   *s;
+
+   MULLE_C_UNUSED( map);
+
+   s = (*callback->describe)( callback, p, allocator);
+   return( s);
 }
 
 

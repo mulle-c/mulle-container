@@ -236,7 +236,10 @@ static inline int   _mulle__array_callback_equal( struct mulle__array *array,
                                                   void *a,
                                                   void *b)
 {
+   int   is_equal;
+
    MULLE_C_UNUSED( array);
+
    is_equal = (*callback->is_equal)( callback, a, b);
    return( is_equal);
 }
@@ -248,7 +251,8 @@ static inline void   *_mulle__array_callback_retain( struct mulle__array *array,
                                                      struct mulle_allocator *allocator)
 {
    MULLE_C_UNUSED( array);
-   return( (*callback->retain)( callback, p, allocator));
+
+   p = (*callback->retain)( callback, p, allocator);
    return( p);
 }
 
@@ -259,6 +263,7 @@ static inline void   _mulle__array_callback_release( struct mulle__array *array,
                                                      struct mulle_allocator *allocator)
 {
    MULLE_C_UNUSED( array);
+
    (*callback->release)( callback, p, allocator);
 }
 
@@ -269,6 +274,7 @@ static inline char   *_mulle__array_callback_describe( struct mulle__array *arra
                                                        struct mulle_allocator **allocator)
 {
    MULLE_C_UNUSED( array);
+
    return( (*callback->describe)( callback, p, allocator));
 }
 

@@ -22,7 +22,7 @@ static void   _mulle__rangeset_assert( struct mulle__rangeset *set)
    struct mulle_range   *sentinel;
 
    old      = NULL;
-   curr    = &set->_ranges[ 0];
+   curr     = &set->_ranges[ 0];
    sentinel = &set->_ranges[ set->_length];
    while( curr < sentinel)
    {
@@ -149,8 +149,6 @@ int   _mulle__rangeset_intersects( struct mulle__rangeset *p,
    found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
    return( found ? 1 : 0);
 }
-
-
 
 
 // low level stuff, doesn't sort, doesn't check
