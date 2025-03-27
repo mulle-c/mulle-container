@@ -765,7 +765,6 @@ static inline void   *
    return( old);
 }
 
-
 static inline void   *
    mulle__pointerarray_set( struct mulle__pointerarray *array,
                             size_t i,

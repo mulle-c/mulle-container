@@ -93,8 +93,10 @@ void   _mulle__assoc_reset( struct mulle__assoc *assoc,
    _mulle__assoc_release( assoc, mulle_range_make( 0, _mulle__assoc_get_count( assoc)), callback, allocator);
 
    mulle__pointerpairarray_reset( (struct mulle__pointerpairarray *) assoc);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+#endif
 }
-
 
 void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
                                       struct mulle_range range,
@@ -106,8 +108,10 @@ void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
 
    _mulle__pointerpairarray_remove_in_range( (struct mulle__pointerpairarray *) assoc,
                                              range);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+#endif
 }
-
 
 void   _mulle__assoc_remove( struct mulle__assoc *assoc,
                              void *key,
@@ -250,6 +254,9 @@ void
       {
          _mulle__assoc_add( assoc, q->key, q->value, callback, allocator);
          all.length++;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+         ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+#endif
       }
       ++q;
    }
@@ -288,8 +295,10 @@ void _mulle__assoc_copy_items( struct mulle__assoc *dst,
    }
 
    dst->_curr = sentinel;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   ((struct mulle__pointerpairarray *) dst)->_n_mutations++;
+#endif
 }
-
 
 
 // use this only for debugging

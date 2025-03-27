@@ -63,13 +63,21 @@ static inline size_t
  */
 
 // fields are considered private
-#define MULLE__POINTERSET_BASE  \
+#define _MULLE__POINTERSET_BASE  \
    void     **_storage;         \
    size_t   _count;             \
    size_t   _size
 
-// NSSet/NSMutableSet/NSHashTable
+#ifndef MULLE__CONTAINER_MISER_MODE
+#define MULLE__POINTERSET_BASE          \
+    _MULLE__POINTERSET_BASE;            \
+    uintptr_t  _n_mutations
+#else
+#define MULLE__POINTERSET_BASE          \
+    _MULLE__POINTERSET_BASE
+#endif
 
+// NSSet/NSMutableSet/NSHashTable
 struct mulle__pointerset
 {
    MULLE__POINTERSET_BASE;
@@ -168,12 +176,19 @@ void   *_mulle__pointerset_get( struct mulle__pointerset *set,
    void     **_curr;                      \
    size_t   _left
 
-
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+struct mulle__pointersetenumerator
+{
+   MULLE__POINTERSETENUMERATOR_BASE;
+   struct mulle__pointerset *_set;
+   uintptr_t  _n_mutations;
+};
+#else
 struct mulle__pointersetenumerator
 {
    MULLE__POINTERSETENUMERATOR_BASE;
 };
-
+#endif
 
 #define mulle__pointersetenumerator_empty \
    ((struct mulle__pointersetenumerator) { 0 })
@@ -187,6 +202,10 @@ static inline struct mulle__pointersetenumerator
 
    rover._left = set->_count;
    rover._curr = set->_storage;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._set = set;
+   rover._n_mutations = set->_n_mutations;
+#endif
 
    return( rover);
 }
@@ -215,6 +234,11 @@ static inline int
          *item = mulle_not_a_pointer;
       return( 0);
    }
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   assert( rover->_set->_n_mutations == rover->_n_mutations && 
+          "set was modified during enumeration");
+#endif
 
    for(;;)
    {

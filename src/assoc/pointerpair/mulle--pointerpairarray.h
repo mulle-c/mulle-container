@@ -46,11 +46,24 @@
 // mulle__pointerpairarray, simple growing array of pointer pairs
 // (kind of like a associative array)
 // You can also use it as stack
-#define MULLE__POINTERPAIRARRAY_BASE         \
+#define _MULLE__POINTERPAIRARRAY_BASE        \
    struct mulle_pointerpair    *_storage;    \
    struct mulle_pointerpair    *_curr;       \
    struct mulle_pointerpair    *_sentinel
 
+
+#ifndef MULLE__CONTAINER_MISER_MODE
+
+#define MULLE__POINTERPAIRARRAY_BASE          \
+    _MULLE__POINTERPAIRARRAY_BASE;            \
+    uintptr_t  _n_mutations
+
+#else
+
+#define MULLE__POINTERPAIRARRAY_BASE          \
+    _MULLE__POINTERPAIRARRAY_BASE
+
+#endif
 
 struct mulle__pointerpairarray
 {
@@ -90,6 +103,9 @@ static inline void
    _mulle__pointerpairarray_done( struct mulle__pointerpairarray *array,
                                   struct mulle_allocator *allocator)
 {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    mulle_allocator_free( allocator, array->_storage);
 #ifdef DEBUG   
    mulle_memset_uint32( array, 0xDEADDEAD,sizeof( struct mulle__pointerpairarray));
@@ -130,7 +146,12 @@ static inline void
    mulle__pointerpairarray_reset( struct mulle__pointerpairarray *array)
 {
    if( array)
+   {
       array->_curr = array->_storage;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      array->_n_mutations++;
+#endif
+   }
 }
 
 
@@ -225,6 +246,9 @@ static inline void   _mulle__pointerpairarray_add( struct mulle__pointerpairarra
       _mulle__pointerpairarray_grow( array, allocator);
 
    *array->_curr++ = pair;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -237,6 +261,9 @@ void   _mulle__pointerpairarray_add_guaranteed( struct mulle__pointerpairarray *
 {
    assert( array->_curr < array->_sentinel);
    *array->_curr++ = pair;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -249,7 +276,12 @@ static inline struct mulle_pointerpair
    _mulle__pointerpairarray_pop( struct mulle__pointerpairarray *array)
 {
    if( array->_curr > array->_storage)
+   {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      array->_n_mutations++;
+#endif
       return( *--array->_curr);
+   }
    return( mulle_pointerpair_make_invalid());
 }
 
@@ -336,6 +368,9 @@ static inline struct mulle_pointerpair
 
    old = array->_storage[ i];
    array->_storage[ i] = pair;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( old);
 }
 
@@ -444,18 +479,26 @@ static inline void
 
 #pragma mark - enumerator
 
-#define MULLE__POINTERPAIRARRAYENUMERATOR_BASE   \
-   struct mulle_pointerpair   *_curr;            \
+#define _MULLE__POINTERPAIRARRAYENUMERATOR_BASE   \
+   struct mulle_pointerpair   *_curr;             \
    struct mulle_pointerpair   *_sentinel
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
 struct mulle__pointerpairarrayenumerator
 {
-   MULLE__POINTERPAIRARRAYENUMERATOR_BASE;
+   _MULLE__POINTERPAIRARRAYENUMERATOR_BASE;
+   struct mulle__pointerpairarray *_array;
+   uintptr_t  _n_mutations;
 };
+#else
+struct mulle__pointerpairarrayenumerator
+{
+   _MULLE__POINTERPAIRARRAYENUMERATOR_BASE;
+};
+#endif
 
 #define mulle__pointerpairarrayenumerator_empty  \
    ((struct mulle__pointerpairarrayenumerator) { 0 })
-
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle__pointerpairarrayenumerator
@@ -465,6 +508,10 @@ static inline struct mulle__pointerpairarrayenumerator
 
    rover._curr     = array->_storage;
    rover._sentinel = array->_curr;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations = array->_n_mutations;
+   rover._array       = array;
+#endif
    assert( rover._sentinel >= rover._curr);
 
    return( rover);
@@ -487,6 +534,9 @@ static inline int
 {
    while( rover->_curr < rover->_sentinel)
    {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      assert( rover->_array->_n_mutations == rover->_n_mutations && "array was modified during enumeration");
+#endif
       *pair = *rover->_curr++;
       return( 1);
    }
@@ -544,13 +594,13 @@ static inline void
 
 // TODO: Use standard key, value for this ?
 //
-#define mulle__pointerpairarray_for( name, pair)                                               \
-   for( struct mulle__pointerpairarrayenumerator                                               \
-           rover__ ## pair = mulle__pointerpairarray_enumerate( name),                         \
+#define mulle__pointerpairarray_for( name, pair)                                              \
+   for( struct mulle__pointerpairarrayenumerator                                              \
+           rover__ ## pair = mulle__pointerpairarray_enumerate( name),                        \
            *rover__  ## pair ## __i = (void *) 0;                                             \
         ! rover__  ## pair ## __i;                                                            \
         rover__ ## pair ## __i = (_mulle__pointerpairarrayenumerator_done( &rover__ ## pair), \
-                                   (void *) 1))                                                \
+                                   (void *) 1))                                               \
       while( _mulle__pointerpairarrayenumerator_next( &rover__ ## pair, &pair))
 
 

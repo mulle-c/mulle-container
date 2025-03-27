@@ -334,19 +334,24 @@ static inline void   *mulle_set_describe( struct mulle_set *set)
  * mulle_setenumerator_done( &rover);
  *
  */
-#define MULLE_SETENUMERATOR_BASE   \
-   MULLE__SETENUMERATOR_BASE
-
-
-struct  mulle_setenumerator
-{
-   MULLE_SETENUMERATOR_BASE;
-};
-
+#define MULLE_SETENUMERATOR_BASE   MULLE__SETENUMERATOR_BASE
 
 #define mulle_setenumerator_empty  \
    ((struct mulle_setenumerator) { 0 })
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+struct mulle_setenumerator
+{
+   MULLE_SETENUMERATOR_BASE;
+   struct mulle__set *_set;
+   uintptr_t  _n_mutations;
+};
+#else
+struct mulle_setenumerator
+{
+   MULLE_SETENUMERATOR_BASE;
+};
+#endif
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_setenumerator
@@ -356,10 +361,15 @@ static inline struct mulle_setenumerator
    struct mulle__setenumerator   tmp;
 
    tmp = _mulle__set_enumerate( (struct mulle__set *) set, set->callback);
-   memcpy( &rover, &tmp, sizeof( struct mulle__setenumerator));
+   rover._curr    = tmp._curr;
+   rover._left    = tmp._left;
+   rover._notakey = tmp._notakey;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._set = (struct mulle__set *) set;
+   rover._n_mutations = tmp._n_mutations;
+#endif
    return( rover);
 }
-
 
 static inline struct mulle_setenumerator
    mulle_set_enumerate( struct mulle_set *set)
@@ -428,4 +438,3 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
       while( _mulle_setenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif
-

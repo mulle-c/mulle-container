@@ -423,30 +423,39 @@ static inline void   mulle_pointerpairarray_qsort( struct mulle_pointerpairarray
 
 #pragma mark - enumerator
 
-#define MULLE_POINTERPAIRARRAYENUMERATOR_BASE   MULLE__POINTERPAIRARRAYENUMERATOR_BASE
+#define _MULLE_POINTERPAIRARRAYENUMERATOR_BASE   \
+   struct mulle_pointerpair   *_curr;            \
+   struct mulle_pointerpair   *_sentinel
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
 struct mulle_pointerpairarrayenumerator
 {
-   MULLE_POINTERPAIRARRAYENUMERATOR_BASE;
+   _MULLE_POINTERPAIRARRAYENUMERATOR_BASE;
+   struct mulle__pointerpairarray *_array;
+   uintptr_t  _n_mutations;
 };
-
+#else
+struct mulle_pointerpairarrayenumerator
+{
+   _MULLE_POINTERPAIRARRAYENUMERATOR_BASE;
+};
+#endif
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpairarrayenumerator
-	_mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
+   _mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
    struct mulle_pointerpairarrayenumerator    rover;
    struct mulle__pointerpairarrayenumerator   tmp;
 
    tmp = _mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
-   // idiocy for overzealous C compilers, should optimize away to nothing
    memcpy( &rover, &tmp, sizeof( struct mulle__pointerpairarrayenumerator));
    return( rover);
 }
 
 
 static inline struct mulle_pointerpairarrayenumerator
-	mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
+   mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
    struct mulle_pointerpairarrayenumerator    rover;
    struct mulle__pointerpairarrayenumerator   tmp;

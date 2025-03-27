@@ -60,6 +60,10 @@ static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *
                                               sizeof( struct mulle_pointerpair) * new_size);
    array->_curr     = &array->_storage[ used];
    array->_sentinel = &array->_storage[ new_size];
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;  // realloc is a mutation since it changes the storage
+#endif
 }
 
 
@@ -123,8 +127,11 @@ void
             (n - i) * sizeof( struct mulle_pointerpair));
 
    array->_curr -= range.length;
-}
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
+}
 
 
 size_t
@@ -163,5 +170,4 @@ void   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *
 
    assert( n == m);
 }
-#endif 
-
+#endif

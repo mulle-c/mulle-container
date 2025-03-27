@@ -93,6 +93,9 @@ void   _mulle__pointerset_done( struct mulle__pointerset *set,
 #ifdef DEBUG   
    mulle_memset_uint32( set, 0xDEADDEAD,sizeof( struct mulle__pointerset));
 #endif   
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   set->_n_mutations++;
+#endif
 }
 
 

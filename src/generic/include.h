@@ -32,7 +32,7 @@
 # endif
 #endif
 
-#if MULLE__CONTAINER_HAVE_MUTATION_COUNT && defined( NDEBUG)
+#if ! MULLE__CONTAINER_HAVE_MUTATION_COUNT || defined( NDEBUG)
 # define MULLE__CONTAINER_MUTATION_NDEBUG
 #endif
 
