@@ -236,10 +236,10 @@ struct mulle_pointers
 }
 
 
-void   _mulle__pointerarray_add_array( struct mulle__pointerarray *array,
-                                       struct mulle__pointerarray *other,
-                                       struct mulle_range range,
-                                       struct mulle_allocator *allocator)
+void   _mulle__pointerarray_add_pointerarray( struct mulle__pointerarray *array,
+                                              struct mulle__pointerarray *other,
+                                              struct mulle_range range,
+                                              struct mulle_allocator *allocator)
 {
    size_t   count;
    void           **q;

@@ -1,0 +1,5 @@
+Empty assocs equal: 1
+Same content equal: 1
+Different content equal: 0
+Index 0: key=1 value=10
+After set index 0: key=2 value=20

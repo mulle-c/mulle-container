@@ -88,7 +88,7 @@ static void  simple( void)
       assert( ! strcmp( "BOCHUM", mulle_assoc_get( assoc, "VfL")));
 
 
-      _mulle__assoc_set_at_index( (struct mulle__assoc *) assoc, 0, "VfL", "Bochum", &callback, NULL);
+      mulle_assoc_set_at_index( assoc, 0, "VfL", "Bochum");
       assert( ! strcmp( "Bochum", mulle_assoc_get( assoc, "VfL")));
 
       mulle_assoc_remove( assoc, onstack);

@@ -398,10 +398,10 @@ static inline void
 
 
 void
-   mulle__structarray_add_array( struct mulle__structarray *array,
-                                 struct mulle__structarray *other,
-                                 struct mulle_range range,
-                                 struct mulle_allocator *allocator);
+   mulle__structarray_add_structarray( struct mulle__structarray *array,
+                                       struct mulle__structarray *other,
+                                       struct mulle_range range,
+                                       struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST
 static inline void *

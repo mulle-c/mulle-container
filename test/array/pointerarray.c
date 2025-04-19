@@ -322,7 +322,7 @@ static void   add_array( void)
    mulle_pointerarray_init( &copy, 20, NULL);
 
    assert( mulle_pointerarray_get_count( &copy) == 0);
-   mulle_pointerarray_add_array( &copy, &array, mulle_range_make_all());
+   mulle_pointerarray_add_pointerarray( &copy, &array, mulle_range_make_all());
    assert( mulle_pointerarray_get_count( &copy) == 3);
    assert( mulle_pointerarray_get_count( &array) == 3);
    assert( mulle_pointerarray_is_equal( &copy, &array));

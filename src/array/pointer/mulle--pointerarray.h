@@ -143,17 +143,15 @@ static inline void   _mulle__pointerarray_init( struct mulle__pointerarray *arra
                                                 size_t capacity,
                                                 struct mulle_allocator *allocator)
 {
-   if( ! capacity)
-   {
-      memset( array, 0, sizeof( *array));
-      return;
-   }
+   memset( array, 0, sizeof( *array));
 
-   array->_storage         = mulle_allocator_malloc( allocator,
-                                                     capacity * sizeof( void *));
-   array->_curr            = array->_storage;
-   array->_sentinel        = &array->_curr[ capacity];
-   array->_initial_storage = NULL;
+   if( capacity)
+   {
+      array->_storage         = mulle_allocator_malloc( allocator,
+                                                        capacity * sizeof( void *));
+      array->_curr            = array->_storage;
+      array->_sentinel        = &array->_curr[ capacity];
+   }
 }
 
 
@@ -417,10 +415,22 @@ static inline void
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
-void   _mulle__pointerarray_add_array( struct mulle__pointerarray *array,
-                                       struct mulle__pointerarray *other,
-                                       struct mulle_range range,
-                                       struct mulle_allocator *allocator);
+void   _mulle__pointerarray_add_pointerarray( struct mulle__pointerarray *array,
+                                              struct mulle__pointerarray *other,
+                                              struct mulle_range range,
+                                              struct mulle_allocator *allocator);
+
+
+static inline void
+   mulle__pointerarray_add_pointerarray( struct mulle__pointerarray *array,
+                                         struct mulle__pointerarray *other,
+                                         struct mulle_range range,
+                                         struct mulle_allocator *allocator)
+{
+   if( array)
+      return( _mulle__pointerarray_add_pointerarray( array, other, range, allocator));
+}
+
 
 MULLE_C_NONNULL_FIRST
 static inline void   *

@@ -373,23 +373,23 @@ static inline void
 
 MULLE_C_NONNULL_FIRST
 static inline void
-   _mulle_pointerarray_add_array( struct mulle_pointerarray *array,
-                                  struct mulle_pointerarray *other,
-                                  struct mulle_range range)
+   _mulle_pointerarray_add_pointerarray( struct mulle_pointerarray *array,
+                                         struct mulle_pointerarray *other,
+                                         struct mulle_range range)
 {
-   _mulle__pointerarray_add_array( (struct mulle__pointerarray *) array,
-                                   (struct mulle__pointerarray *) other,
-                                   range,
-                                   array->allocator);
+   _mulle__pointerarray_add_pointerarray( (struct mulle__pointerarray *) array,
+                                          (struct mulle__pointerarray *) other,
+                                          range,
+                                          array->allocator);
 }
 
 static inline void
-   mulle_pointerarray_add_array( struct mulle_pointerarray *array,
-                                 struct mulle_pointerarray *other,
-                                 struct mulle_range range)
+   mulle_pointerarray_add_pointerarray( struct mulle_pointerarray *array,
+                                        struct mulle_pointerarray *other,
+                                        struct mulle_range range)
 {
    if( array)
-      _mulle_pointerarray_add_array( array, other, range);
+      _mulle_pointerarray_add_pointerarray( array, other, range);
 }
 
 
