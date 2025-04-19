@@ -50,12 +50,12 @@ static void  add_array( void)
    }
 
    // coverage
-   mulle_structarray_add_array( array, NULL, mulle_range_make_all());
+   mulle_structarray_add_structarray( array, NULL, mulle_range_make_all());
    // coverage
-   mulle_structarray_add_array( array, other, mulle_range_make( 1, 0));
+   mulle_structarray_add_structarray( array, other, mulle_range_make( 1, 0));
 
    // for real
-   mulle_structarray_add_array( array, other, mulle_range_make( 1, 8));
+   mulle_structarray_add_structarray( array, other, mulle_range_make( 1, 8));
 
    i     = 0;
    rover = mulle_structarray_enumerate( array);

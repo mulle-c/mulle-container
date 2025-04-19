@@ -41,21 +41,13 @@
 #include <string.h>
 
 
-/**
-  * Bit twiddling code from
-  * https://www.exploringbinary.com/ten-ways-to-check-if-an-integer-is-a-power-of-two-in-c/
-  * https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
- **/
-//
-// 0 is also a power of two for these purposes
-//
-
 void    _mulle__set_init( struct mulle__set *p,
                           size_t capacity,
                           struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
-   p->_count = 0;
+   memset( p, 0, sizeof( *p));
+
    //
    // our set requires mulle_not_a_pointer to find an end
    // so give it ~25% holes. For this to work though, we can not be smaller

@@ -45,7 +45,7 @@
 #include <string.h>
 
 //
-// a mulle_set is a mulle_hashtable, with callbacks added
+// a mulle_set is a mulle_hashtable, with callbacks and the allocator embedded
 // this makes a mulle_set more convenient.
 //
 

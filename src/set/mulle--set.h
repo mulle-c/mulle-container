@@ -40,7 +40,6 @@
 
 
 // NSSet/NSMutableSet/NSHashTable
-
 struct mulle__set
 {
    MULLE__SET_BASE;

@@ -396,15 +396,15 @@ static inline void *
 
 
 static inline void
-   mulle_structarray_add_array( struct mulle_structarray *array,
-                                struct mulle_structarray *other,
-                                struct mulle_range range)
+   mulle_structarray_add_structarray( struct mulle_structarray *array,
+                                      struct mulle_structarray *other,
+                                      struct mulle_range range)
 {
    if( array)
-      mulle__structarray_add_array( (struct mulle__structarray *) array,
-                                    (struct mulle__structarray *) other,
-                                    range,
-                                    array->allocator);
+      mulle__structarray_add_structarray( (struct mulle__structarray *) array,
+                                          (struct mulle__structarray *) other,
+                                          range,
+                                          array->allocator);
 }
 
 
@@ -422,7 +422,7 @@ static inline struct mulle_structarray *
    array->_sizeof_struct      = other->_sizeof_struct;
    array->_copy_sizeof_struct = other->_copy_sizeof_struct;
    array->allocator           = allocator;
-   mulle_structarray_add_array( array, other, mulle_range_make_all());
+   mulle_structarray_add_structarray( array, other, mulle_range_make_all());
    return( array);
  }
 

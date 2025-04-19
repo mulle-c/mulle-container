@@ -91,9 +91,9 @@ struct mulle_container_keycallback
    MULLE_CONTAINER_CALLBACK_BASE( key);
 
    // layout up till here identical to mulle_container_valuecallback FWIW
+   void                                     *notakey;   // don't make it INTPTR_MAX as that's mulle_not_found_e
    mulle_container_keycallback_hash_t       *hash;
    mulle_container_keycallback_is_equal_t   *is_equal;
-   void                                     *notakey;   // don't make it INTPTR_MAX as that's mulle_not_found_e
 };
 
 

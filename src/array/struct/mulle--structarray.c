@@ -125,10 +125,10 @@ void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
 
 
 void
-   mulle__structarray_add_array( struct mulle__structarray *array,
-                                 struct mulle__structarray *other,
-                                 struct mulle_range range,
-                                 struct mulle_allocator *allocator)
+   mulle__structarray_add_structarray( struct mulle__structarray *array,
+                                       struct mulle__structarray *other,
+                                       struct mulle_range range,
+                                       struct mulle_allocator *allocator)
 {
    size_t   count;
    void           *buf;
