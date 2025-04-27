@@ -3,6 +3,8 @@
    {
       description="🛄 Arrays, hashtables and a queue";
       domain="github";
+      language="c";
+      dialect="c";
       name="mulle-container";
       user="mulle-c";
       repo="mulle-container";

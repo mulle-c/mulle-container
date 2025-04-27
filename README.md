@@ -14,9 +14,9 @@ Some data structures utilize callbacks that are compatible to OS X's
 
 
 
-| Release Version                                       | Release Notes
-|-------------------------------------------------------|--------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg)](//github.com/mulle-c/mulle-container/actions) ![Coverage](https://img.shields.io/badge/coverage-81%25%C2%A0-goldenrod) | [RELEASENOTES](RELEASENOTES.md) |
+| Release Version                                       | Release Notes  | AI Documentation
+|-------------------------------------------------------|----------------|---------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg)](//github.com/mulle-c/mulle-container/actions) ![Coverage](https://img.shields.io/badge/coverage-81%25%C2%A0-goldenrod) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-container](https://deepwiki.com/mulle-c/mulle-container)
 
 
 
@@ -321,9 +321,9 @@ equality. Each callback name is to be prefixed with
 
 ## Efficiency
 
-As time critical sections are all inlined, the performance of the
+As time critical sections are inlined, the performance of the
 library code is as good as your compiler (within the runtime limitations of the
-algorithm.
+algorithm).
 
 Here is an example of mulle-container code, compiled with -Os:
 

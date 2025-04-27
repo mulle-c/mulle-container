@@ -71,3 +71,7 @@ coverage*.html
 cola/wilted/
 cola/coverage.json
 cmake-build-*/
+CMakeLists.txt.bak
+.mulle/etc/make/build-dir
+.idea/
+vgcore.*
