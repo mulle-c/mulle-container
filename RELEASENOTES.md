@@ -1,3 +1,24 @@
+# 10.0.0
+
+
+* **BREAKING CHANGE** renamed `mulle__pointerarray_add_array` to `mulle__pointerarray_add_pointerarray` and treated similiar functions in other containers the same
+* mulle-assoc has now a richer API to make it more like the other containers
+* **BREAKING CHANGE** mulle--assoc ist now like all the other containers the same as mulle-assoc  (i.e. autosorting) but lacks callbacks and allocator for reduced size
+
+* codebuff added mutation tracking to mulle--set and mulle--alloc
+
+* the map tiny enumerator is only used by fast enumeration, so lets split it off and out of sight
+* map and array now have a mutation pointer which enables catching these remove while in a loop bugs
+* callbacks fields have been reordered so that the value callback fields have the same layout as the starting key callbacks fields for potential savings in shared code
+
+* fix `get_size` functions on zeroed arrays
+* use new `mulle_memset_uint32` for scribble
+
+* added `mulle_set_intersect` (and `mulle__pointerset_release_all_generic)` for set intersection
+* added `mulle_map_is_empty` and `mulle_map_remove_all`
+* added `mulle_pointerarray_remove` and `mulle_array_remove_unique` (finally)
+
+
 ### 9.0.1
 
 * add missing sort functions to mulle-structarray
