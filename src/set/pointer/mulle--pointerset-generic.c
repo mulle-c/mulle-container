@@ -128,10 +128,10 @@ static void   copy_storage_generic( void **dst,
                                     size_t src_size,
                                     struct mulle_container_keycallback *callback)
 {
-   void           *p;
-   void           **sentinel;
-   size_t   i;
-   uintptr_t      hash;
+   void        *p;
+   void        **sentinel;
+   size_t      i;
+   uintptr_t   hash;
 
    sentinel = &src[ src_size];
    while( src < sentinel)
@@ -154,7 +154,7 @@ static void   grow_generic( struct mulle__pointerset *set,
                             struct mulle_allocator *allocator)
 {
    size_t   new_size;
-   void           **buf;
+   void     **buf;
 
    // for good "not found" performance, there should be a high possibility of
    // a NULL after each slot
@@ -188,13 +188,13 @@ static uintptr_t  _find_index_generic( void  **storage,
                                        size_t *hole_index,
                                        struct mulle_container_keycallback *callback)
 {
-   int            (*f)( void *, void *, void *);
+   mulle_container_keycallback_is_equal_t   *f;
    void           *param1;
    void           *param2;
    void           *notakey;
    size_t   mask;
 
-   f       = (int (*)()) callback->is_equal;
+   f       = callback->is_equal;
    param1  = callback;
    param2  = p;
    notakey = callback->notakey;
@@ -222,7 +222,7 @@ static inline uintptr_t   find_index_generic( void **storage,
                                               size_t *hole_index,
                                               struct mulle_container_keycallback *callback)
 {
-   void           *q;
+   void     *q;
    size_t   i;
 
    assert( storage);
@@ -248,11 +248,12 @@ void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
                                           struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator)
 {
-   size_t         i;
-   uintptr_t      hash;
+   size_t      i;
+   uintptr_t   hash;
 #ifndef MULLE__CONTAINER_MUTATION_NDEBUG
-   uintptr_t      memo_set = set->_n_mutations;
+   uintptr_t   memo_set = set->_n_mutations;
 #endif
+
    hash = _mulle__pointerset_keycallback_hash( set, callback, p);
    if( set->_count)
    {
@@ -405,7 +406,7 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
                                           struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator)
 {
-   void           **buf;
+   void     **buf;
    size_t   new_size;
 
    assert( _mulle__pointerset_is_sparse( set));
@@ -452,6 +453,7 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
 #ifndef MULLE__CONTAINER_MUTATION_NDEBUG
    uintptr_t      memo_set = set->_n_mutations;
 #endif
+
    if( ! set->_count)
       return( 0);
 

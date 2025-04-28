@@ -14,11 +14,14 @@ for( i = 0; i < n; i++)                // unsigned int
 
 Type               | Usage
 -------------------|------------------------------------------------------
-`unsigned int `    | counts or indices into the data structure
+`unsigned int`     | counts or indices into the data structure
 `size_t`           | byte quantity values
 `uintptr_t`        | hashes, search results (and other functions returning
                    | `mulle_not_found`)
 
+MEMO: so usually get_count should return `unsigned int` unless the
+data structure holds bytes size info. For ... reasons `unsigned int` the count
+is more often than not also `size_t`...
 
 ## Struct datatypes
 
