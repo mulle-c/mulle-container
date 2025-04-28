@@ -1222,21 +1222,21 @@ static inline int   mulle__pointerarray_member( struct mulle__pointerarray *arra
 // Running a loop over an array, where people might add or remove stuff
 // in the middle of the loop. regular for is fine if you just add stuff
 //
-//#define mulle__pointerarray_safefor( name, item)                     \
-//   assert( sizeof( item) == sizeof( void *));                        \                                          \
-//   mulle__pointerarray_do_flexible( name ## __tmp, 16)               \
-//   {                                                                 \
-//      void   *name ## __value;                                       \
-//                                                                     \
-//      mulle__pointerarray_for( name, name ## __value)                \
-//      {                                                              \
-//         mulle__pointerarray_add( name ## __tmp, name ## __value);   \
-//      }                                                              \
-//                                                                     \
+//#define mulle__pointerarray_safefor( name, item)
+//   assert( sizeof( item) == sizeof( void *));
+//   mulle__pointerarray_do_flexible( name ## __tmp, 16)
+//   {
+//      void   *name ## __value;
+//
+//      mulle__pointerarray_for( name, name ## __value)
+//      {
+//         mulle__pointerarray_add( name ## __tmp, name ## __value);
+//      }
+//
 //      mulle__pointerarray_for( name ## __tmp, item)
 //
 //
-//#define mulle__pointerarray_safefor_end( name)                       \
+//#define mulle__pointerarray_safefor_end( name)
 //   }
 
 #endif
