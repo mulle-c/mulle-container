@@ -94,8 +94,8 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
 
 
 size_t  _mulle__structarray_set_count( struct mulle__structarray *array,
-                                             size_t count,
-                                             struct mulle_allocator *allocator)
+                                       size_t count,
+                                       struct mulle_allocator *allocator)
 {
    long   diff;
 
@@ -117,10 +117,12 @@ void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
                                           size_t count,
                                           struct mulle_allocator *allocator)
 {
-   long   diff;
+   size_t   diff; // _mulle__structarray_set_count won't return negative
 
    diff = _mulle__structarray_set_count( array, count, allocator);
-   memset( &((char *) array->_curr)[ -diff * array->_sizeof_struct], 0, (size_t) diff * array->_sizeof_struct);
+   memset( &((char *) array->_curr)[ - (long) diff * array->_sizeof_struct],
+           0,
+           diff * array->_sizeof_struct);
 }
 
 
@@ -131,7 +133,7 @@ void
                                        struct mulle_allocator *allocator)
 {
    size_t   count;
-   void           *buf;
+   void     *buf;
 
    if( ! array)
       return;

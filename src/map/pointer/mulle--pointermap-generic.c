@@ -178,22 +178,22 @@ static void   grow_generic( struct mulle__pointermap *map,
 }
 
 
-static unsigned long  _find_index_generic( void **storage,
-                                           size_t size,
-                                           void *key,
-                                           void *q,
-                                           size_t i,
-                                           size_t *hole_index,
-                                           struct mulle_container_keycallback *callback)
+static uintptr_t   _find_index_generic( void **storage,
+                                        size_t size,
+                                        void *key,
+                                        void *q,
+                                        size_t i,
+                                        size_t *hole_index,
+                                        struct mulle_container_keycallback *callback)
 {
-   int      (*f)( void *, void *, void *);
+   mulle_container_keycallback_is_equal_t   *f;
    void     *param1;
    void     *param2;
    void     *notakey;
    size_t   mask;
    int      is_equal;
 
-   f       = (int (*)()) callback->is_equal;
+   f       = callback->is_equal;
    param1  = callback;
    param2  = key;
    notakey = callback->notakey;
@@ -350,7 +350,7 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
                                                    uintptr_t hash,
                                                    struct mulle_container_keyvaluecallback *callback)
 {
-   int        (*f)( void *, void *, void *);
+   mulle_container_keycallback_is_equal_t   *f;
    size_t     i;
    size_t     size;
    size_t     mask;
@@ -371,7 +371,7 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
    storage  = map->_storage;
    size     = map->_size;
    i        = mulle__pointermap_hash_for_size( hash, size);
-   f        = (int (*)()) callback->keycallback.is_equal;
+   f        = callback->keycallback.is_equal;
    mask     = size - 1;
 
    for(;;)
@@ -381,7 +381,7 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
          return( NULL);
       if( key == found)
          break;
-      is_equal = (*f)( callback, found, key);
+      is_equal = (*f)( &callback->keycallback, found, key);
       assert( map->_n_mutations == memo_map && "map was modified during hash callback");
       if( is_equal)
          break;
@@ -413,7 +413,7 @@ struct mulle_pointerpair   *
                                                    struct mulle_container_keyvaluecallback *callback,
                                                    struct mulle_pointerpair *pair)
 {
-   int        (*f)( void *, void *, void *);
+   mulle_container_keycallback_is_equal_t   *f;
    size_t     i;
    size_t     size;
    size_t     mask;
@@ -434,7 +434,7 @@ struct mulle_pointerpair   *
    storage  = map->_storage;
    size     = map->_size;
    i        = mulle__pointermap_hash_for_size( hash, size);
-   f        = (int (*)()) callback->keycallback.is_equal;
+   f        = callback->keycallback.is_equal;
    mask     = size - 1;
 
    for(;;)
@@ -445,7 +445,7 @@ struct mulle_pointerpair   *
       if( key == found)
          break;
 
-      is_equal = (*f)( callback, found, key);
+      is_equal = (*f)( &callback->keycallback, found, key);
       assert( map->_n_mutations == memo_map && "map was modified during hash callback");
       if( is_equal)
          break;
@@ -478,9 +478,9 @@ struct mulle_pointerpair   *
    size_t   i;
    size_t   size;
    size_t   mask;
-   void           *found;
-   void           **storage;
-   void           *notakey;
+   void     *found;
+   void     **storage;
+   void     *notakey;
 
    notakey = callback->keycallback.notakey;
    if( ! map->_count)
@@ -742,7 +742,7 @@ void   _mulle__pointermap_shrink_generic( struct mulle__pointermap *map,
                                           struct mulle_container_keyvaluecallback *callback,
                                           struct mulle_allocator *allocator)
 {
-   void           **buf;
+   void     **buf;
    size_t   new_size;
 
    assert( _mulle__pointermap_is_sparse( map));

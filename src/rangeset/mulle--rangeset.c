@@ -122,7 +122,7 @@ void   _mulle__rangeset_reset( struct mulle__rangeset *p,
 
 
 int   _mulle__rangeset_contains( struct mulle__rangeset *p,
-                                struct mulle_range range)
+                                 struct mulle_range range)
 {
    struct mulle_range   *found;
 
@@ -131,13 +131,13 @@ int   _mulle__rangeset_contains( struct mulle__rangeset *p,
    if( ! p->_length)
       return( 0);
 
-   found = mulle_range_contains_bsearch( p->_ranges, p->_length, range);
+   found = mulle_range_contains_bsearch( p->_ranges, (unsigned int) p->_length, range);
    return( found ? 1 : 0);
 }
 
 
 int   _mulle__rangeset_intersects( struct mulle__rangeset *p,
-                                  struct mulle_range range)
+                                   struct mulle_range range)
 {
    struct mulle_range   *found;
 
@@ -146,7 +146,7 @@ int   _mulle__rangeset_intersects( struct mulle__rangeset *p,
    if( ! p->_length)
       return( 0);
 
-   found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
+   found = mulle_range_intersects_bsearch( p->_ranges, (unsigned int) p->_length, range);
    return( found ? 1 : 0);
 }
 
@@ -205,7 +205,7 @@ static void   __mulle__rangeset_insert_known_absent( struct mulle__rangeset *p,
    if( ! range.length)
       return;
 
-   index = _mulle_range_hole_bsearch( p->_ranges, p->_length, range.location);
+   index = _mulle_range_hole_bsearch( p->_ranges, (unsigned int) p->_length, range.location);
 
    // we know that we don't intersect, but maybe we can combine ?
    // check the previous and the next for combine possibilities
@@ -278,7 +278,7 @@ void   __mulle__rangeset_insert( struct mulle__rangeset *p,
 
    _mulle__rangeset_assert( p);
 
-   found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
+   found = mulle_range_intersects_bsearch( p->_ranges, (unsigned int) p->_length, range);
    if( ! found)
    {
       __mulle__rangeset_insert_known_absent( p, range, allocator);
@@ -372,7 +372,7 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
 
    for(;;)
    {
-      found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
+      found = mulle_range_intersects_bsearch( p->_ranges, (unsigned int) p->_length, range);
       if( ! found)
       {
          // no current range intersects, so we're done
@@ -425,9 +425,9 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
 
 
 void   _mulle__rangeset_insert_ranges( struct mulle__rangeset *p,
-                                      struct mulle_range *ranges,
-                                      uintptr_t n,
-                                      struct mulle_allocator *allocator)
+                                       struct mulle_range *ranges,
+                                       uintptr_t n,
+                                       struct mulle_allocator *allocator)
 {
    struct mulle_range   *curr;
    struct mulle_range   *sentinel;
@@ -502,8 +502,8 @@ struct mulle_range
    // re-retrieve curr since we don't know what remove ranges did
    //
    curr = mulle_range_intersects_bsearch( p->_ranges,
-                                           p->_length,
-                                           mulle_range_make( location, 1));
+                                          (unsigned int) p->_length,
+                                          mulle_range_make( location, 1));
    return( curr ? *curr : mulle_range_make_invalid());
 }
 
@@ -517,7 +517,7 @@ static struct mulle_range  *
    uintptr_t            index;
 
    curr = mulle_range_intersects_bsearch( p->_ranges,
-                                          p->_length,
+                                          (unsigned int) p->_length,
                                           mulle_range_make( location, 1));
    if( ! curr)
    {
@@ -526,7 +526,7 @@ static struct mulle_range  *
 
       // get the best fitting hole index then
       index = _mulle_range_hole_bsearch( p->_ranges,
-                                         p->_length,
+                                         (unsigned int) p->_length,
                                          location);
       index = index == p->_length ? index - 1 : index;
       curr  = &p->_ranges[ index];
@@ -853,10 +853,12 @@ void   _mulle__rangeset_fprint( struct mulle__rangeset *p, FILE *fp)
    for( i = 0; i < _mulle__rangeset_get_rangecount( p); i++)
    {
       range = _mulle__rangeset_get_range( p, i);
-      fprintf( fp, "#%td: %tu,%tu\n",
-                     (ptrdiff_t) i,
-                     range.location,
-                     range.length);
+      // using %ld coz windows dont like %td: ptrdiff_t
+      // better use mulle_fprintf if available
+      fprintf( fp, "#%lu: %lu,%lu\n",
+                     (unsigned long) i,
+                     (unsigned long) range.location,
+                     (unsigned long) range.length);
    }
 }
 

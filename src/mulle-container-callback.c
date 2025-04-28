@@ -268,7 +268,7 @@ struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring 
 {
    .hash     = mulle_container_keycallback_cstring_hash,
    .is_equal = mulle_container_keycallback_cstring_is_equal,
-   .retain   = (void *(*)()) mulle_container_callback_cstring_copy,
+   .retain   = (mulle_container_keycallback_retain_t *) mulle_container_callback_cstring_copy,
    .release  = _mulle_container_keycallback_pointer_free,
    .describe = (mulle_container_keycallback_describe_t *) mulle_container_callback_cstring_describe,
    .notakey  = NULL,
@@ -339,7 +339,7 @@ struct mulle_container_valuecallback   mulle_container_valuecallback_nonowned_po
 
 struct mulle_container_valuecallback   mulle_container_valuecallback_copied_cstring =
 {
-   .retain   = (void *(*)()) mulle_container_callback_cstring_copy,
+   .retain   = mulle_container_callback_cstring_copy,
    .release  = mulle_container_valuecallback_pointer_free,
    .describe = mulle_container_callback_cstring_describe,
    .userinfo = NULL
