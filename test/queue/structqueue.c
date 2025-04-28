@@ -55,7 +55,7 @@ static void  simple_queue( void)
    char   c;
    int    i;
 
-   mulle_structqueue_do( queue, char *)
+   mulle_structqueue_do( queue, char)
    {
       mulle_structqueue_push( queue, (c = '1', &c));
       for( i = 0; i < 5; i++)
@@ -72,7 +72,7 @@ static void  misc_coverage( void)
 {
    struct mulle__structqueue    *queue;
    char                         c;
-   size_t                 i;
+   size_t                       i;
    char                         *p;
 
    queue = mulle__structqueue_create( sizeof( char), alignof( char), 32, 32, NULL);

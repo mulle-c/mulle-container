@@ -17,11 +17,13 @@
 static void  test_do( void)
 {
    size_t   i;
+   char     *s;
 
+   s = "VfL";
    mulle_structarray_do_flexible( array, char *, 10)
    {
       for( i = 0; i < 20; i++)
-         _mulle_structarray_add( array, "VfL");
+         _mulle_structarray_add( array, &s);
 
       assert( mulle_structarray_get_count( array) == 20);
    }
