@@ -46,6 +46,8 @@ uintptr_t
    mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback,
                                              void *p)
 {
+   MULLE_C_UNUSED( callback);
+
    return( mulle_pointer_hash( p));
 }
 
@@ -56,6 +58,8 @@ int
                                                 void *a,
                                                 void *b)
 {
+   MULLE_C_UNUSED( callback);
+
    return( (intptr_t) a == (intptr_t) b);
 }
 
@@ -66,21 +70,29 @@ int
                                                  void *a,
                                                  void *b)
 {
+   MULLE_C_UNUSED( callback);
+
    return( a == b);
 }
 
 
 void   mulle_container_valuecallback_nop( struct mulle_container_valuecallback *callback,
                                           void *p,
-                                          struct mulle_allocator *a)
+                                          struct mulle_allocator *allocator)
 {
+   MULLE_C_UNUSED( callback);
+   MULLE_C_UNUSED( p);
+   MULLE_C_UNUSED( allocator);
 }
 
 
 void   *mulle_container_valuecallback_self( struct mulle_container_valuecallback *callback,
                                             void *p,
-                                            struct mulle_allocator *a)
+                                            struct mulle_allocator *allocator)
 {
+   MULLE_C_UNUSED( callback);
+   MULLE_C_UNUSED( allocator);
+
    return( p);
 }
 
@@ -89,6 +101,9 @@ char   *mulle_container_valuecallback_no_description( struct mulle_container_val
                                                       void *p,
                                                       struct mulle_allocator **p_allocator)
 {
+   MULLE_C_UNUSED( callback);
+   MULLE_C_UNUSED( p);
+
    assert( p_allocator && *p_allocator);
 
    *p_allocator = NULL;
@@ -110,6 +125,8 @@ void
                                                void *p,
                                                struct mulle_allocator *allocator)
 {
+   MULLE_C_UNUSED( callback);
+
    mulle_allocator_free( allocator, p);
 }
 
@@ -121,6 +138,8 @@ char   *
                                           struct mulle_allocator **p_allocator)
 {
    char   buf[ 64];
+
+   MULLE_C_UNUSED( callback);
 
    assert( p_allocator && *p_allocator);
 
@@ -136,6 +155,8 @@ char   *
 {
    char   buf[ 64];
 
+   MULLE_C_UNUSED( callback);
+
    assert( p_allocator && *p_allocator);
 
    snprintf( buf, sizeof( buf), "%lld", (long long) (intptr_t) p);
@@ -149,6 +170,8 @@ char *
                                               struct mulle_allocator **p_allocator)
 {
    char   buf[ 64];
+
+   MULLE_C_UNUSED( callback);
 
    assert( p_allocator && *p_allocator);
 
@@ -165,6 +188,8 @@ void *
    size_t   len;
    char     *copy;
 
+   MULLE_C_UNUSED( callback);
+
    len  = strlen( s) + 1;
    copy = mulle_allocator_malloc( allocator, len);
    memcpy( copy,  s, len);
@@ -173,11 +198,13 @@ void *
 
 
 char
-   *mulle_container_callback_cstring_describe( struct mulle_container_valuecallback  *ignore,
+   *mulle_container_callback_cstring_describe( struct mulle_container_valuecallback *callback,
                                                void *p,
                                                struct mulle_allocator **p_allocator)
 {
    assert( p_allocator && *p_allocator);
+
+   MULLE_C_UNUSED( callback);
 
    *p_allocator = NULL;
    return( p);
@@ -185,18 +212,22 @@ char
 
 
 uintptr_t
-   mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *ignore,
+   mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *callback,
                                              void *s)
 {
+   MULLE_C_UNUSED( callback);
+
    return( _mulle_fnv1a_inline( s, strlen( s)));
 }
 
 
 int
-   mulle_container_keycallback_cstring_is_equal( struct mulle_container_keycallback *ignore,
+   mulle_container_keycallback_cstring_is_equal( struct mulle_container_keycallback *callback,
                                                  void *a,
                                                  void *b)
 {
+   MULLE_C_UNUSED( callback);
+
    assert( a && b);
    return( ! strcmp( a, b));
 }

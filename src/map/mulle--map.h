@@ -701,12 +701,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__mapenumerator_done( struct mulle__mapenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle__mapenumerator_done( struct mulle__mapenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

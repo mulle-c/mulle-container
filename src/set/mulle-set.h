@@ -398,11 +398,13 @@ static inline int
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_setenumerator_done( struct mulle_setenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

@@ -132,6 +132,8 @@ static inline int   _mulle_pointerpair_compare_pointer_key( struct mulle_pointer
    char   *s_a = a->key;
    char   *s_b = b->key;
 
+   MULLE_C_UNUSED( userinfo);
+
    return( (int) (s_a - s_b));
 }
 
@@ -142,6 +144,8 @@ static inline int   _mulle_pointerpair_compare_intptr_key( struct mulle_pointerp
 {
    intptr_t  v_a = (intptr_t) a->key;
    intptr_t  v_b = (intptr_t) b->key;
+
+   MULLE_C_UNUSED( userinfo);
 
    return( (int) (v_a - v_b));
 }
@@ -154,6 +158,8 @@ static inline int   _mulle_pointerpair_compare_string_key( struct mulle_pointerp
 {
    char  *a_s = a->key;
    char  *b_s = b->key;
+
+   MULLE_C_UNUSED( userinfo);
 
    while( *a_s)
    {

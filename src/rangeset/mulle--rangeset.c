@@ -40,6 +40,7 @@ static void   _mulle__rangeset_assert( struct mulle__rangeset *set)
 
 static inline void   _mulle__rangeset_assert( struct mulle__rangeset *set)
 {
+   MULLE_C_UNUSED( set);
 }
 
 #endif
@@ -154,8 +155,8 @@ int   _mulle__rangeset_intersects( struct mulle__rangeset *p,
 // low level stuff, doesn't sort, doesn't check
 
 static void   __mulle__rangeset_move_down_pointer( struct mulle__rangeset *p,
-                                                  struct mulle_range *curr,
-                                                  struct mulle_allocator *allocator)
+                                                   struct mulle_range *curr,
+                                                   struct mulle_allocator *allocator)
 {
    uintptr_t   n;
 
@@ -163,6 +164,8 @@ static void   __mulle__rangeset_move_down_pointer( struct mulle__rangeset *p,
    if( n > 1)
       memmove( curr, curr + 1, (n - 1) * sizeof( struct mulle_range));
    --p->_length;
+
+   MULLE_C_UNUSED( allocator); // hmm
 }
 
 

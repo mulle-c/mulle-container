@@ -93,8 +93,7 @@ static inline void
                                                  size_t sizeof_struct,
                                                  size_t alignof_struct,
                                                  size_t count,
-                                                 void  *storage,
-                                                 struct mulle_allocator *allocator)
+                                                 void  *storage)
 {
    array->_storage            = storage;
    array->_curr               = storage;
@@ -326,6 +325,8 @@ static inline int
 {
    void   *adr;
 
+   MULLE_C_UNUSED( allocator);
+
    adr = _mulle__structarray_get_last( array);
    if( ! adr)
       return( 0);
@@ -393,6 +394,9 @@ static inline void
    assert( (char *) pointer >= (char *) array->_storage &&
            (char *) pointer < (char *) array->_curr);
    assert( ((char *) pointer - (char *) array->_storage) % array->_sizeof_struct == 0);
+
+   MULLE_C_UNUSED( array);
+   MULLE_C_UNUSED( pointer);
 }
 
 
@@ -497,23 +501,11 @@ static inline void
 #pragma mark - extract
 
 
+// the returned data is always allocated even if storage is still static
 MULLE_C_NONNULL_FIRST
-static inline struct mulle_data
-   _mulle__structarray_extract_data( struct mulle__structarray *buffer,
-                                     struct mulle_allocator *allocator)
-{
-   struct mulle_data   data;
-
-   data = mulle_data_make( buffer->_storage,
-                           _mulle__structarray_get_used_as_length( buffer));
-
-   buffer->_storage  =
-   buffer->_curr     =
-   buffer->_sentinel = NULL;
-
-   return( data);
-}
-
+struct mulle_data
+   _mulle__structarray_extract_data( struct mulle__structarray *array,
+                                     struct mulle_allocator *allocator);
 
 
 #pragma mark - structarray enumerator
@@ -596,12 +588,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__structarrayenumerator_done( struct mulle__structarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle__structarrayenumerator_done( struct mulle__structarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
@@ -682,12 +676,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__structarrayreverseenumerator_done( struct mulle__structarrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle__structarrayreverseenumerator_done( struct mulle__structarrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
@@ -736,27 +732,27 @@ static inline void
 
 // created by make-container-for.sh src/array/struct/mulle--structarray.c
 
-#define mulle__structarray_for( name, item)                                               \
-   assert( sizeof( item) == sizeof( void *));                                             \
-   for( struct mulle__structarrayenumerator                                               \
-           rover__ ## item = mulle__structarray_enumerate( name),                         \
+#define mulle__structarray_for( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                            \
+   for( struct mulle__structarrayenumerator                                              \
+           rover__ ## item = mulle__structarray_enumerate( name),                        \
            *rover__  ## item ## __i = (void *) 0;                                        \
         ! rover__  ## item ## __i;                                                       \
         rover__ ## item ## __i = (_mulle__structarrayenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                           \
+                                   (void *) 1))                                          \
       while( _mulle__structarrayenumerator_next( &rover__ ## item, (void **) &item))
 
 
 // created by make-container-for.sh --reverse src/array/struct/mulle--structarray.c
 
-#define mulle__structarray_for_reverse( name, item)                                              \
-   assert( sizeof( item) == sizeof( void *));                                                    \
-   for( struct mulle__structarrayreverseenumerator                                               \
-           rover__ ## item = mulle__structarray_reverseenumerate( name),                         \
+#define mulle__structarray_for_reverse( name, item)                                             \
+   assert( sizeof( item) == sizeof( void *));                                                   \
+   for( struct mulle__structarrayreverseenumerator                                              \
+           rover__ ## item = mulle__structarray_reverseenumerate( name),                        \
            *rover__  ## item ## __i = (void *) 0;                                               \
         ! rover__  ## item ## __i;                                                              \
         rover__ ## item ## __i = (_mulle__structarrayreverseenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                                  \
+                                   (void *) 1))                                                 \
       while( _mulle__structarrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
 

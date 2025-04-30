@@ -256,10 +256,12 @@ static inline int
 
 static inline void   _mulle__pointersetenumerator_done( struct mulle__pointersetenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 static inline void   mulle__pointersetenumerator_done( struct mulle__pointersetenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 #endif

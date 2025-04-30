@@ -391,10 +391,12 @@ static inline int
 
 static inline void   _mulle__genericpointersetenumerator_done( struct mulle__genericpointersetenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 static inline void   mulle__genericpointersetenumerator_done( struct mulle__genericpointersetenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

@@ -760,11 +760,13 @@ static inline int
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_assocenumerator_done( struct mulle_assocenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 // created by make-container-do.sh -ls --compare --type struct mulle_pointerpair    mulle-assoc.c

@@ -541,12 +541,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__genericpointermapenumerator_done( struct mulle__genericpointermapenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle__genericpointermapenumerator_done( struct mulle__genericpointermapenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 #endif

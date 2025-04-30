@@ -117,12 +117,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__maptinyenumerator_done( struct mulle__maptinyenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle__maptinyenumerator_done( struct mulle__maptinyenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 #endif

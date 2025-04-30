@@ -791,12 +791,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
   _mulle__assocenumerator_done( struct mulle__assocenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
   mulle__assocenumerator_done( struct mulle__assocenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

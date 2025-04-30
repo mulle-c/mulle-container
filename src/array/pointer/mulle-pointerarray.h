@@ -816,12 +816,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
 	_mulle_pointerarrayenumerator_done( struct mulle_pointerarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle_pointerarrayenumerator_done( struct mulle_pointerarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
@@ -898,12 +900,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
 	_mulle_pointerarrayreverseenumerator_done( struct mulle_pointerarrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle_pointerarrayreverseenumerator_done( struct mulle_pointerarrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

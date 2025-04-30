@@ -307,11 +307,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__structqueueenumerator_done( struct mulle__structqueueenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
+
 
 static inline void
    mulle__structqueueenumerator_done( struct mulle__structqueueenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
@@ -331,6 +334,9 @@ static inline void
    }
    _mulle__structqueueenumerator_done( &rover);
    assert( item == p);
+#else
+   MULLE_C_UNUSED( queue);
+   MULLE_C_UNUSED( p);
 #endif
 }
 

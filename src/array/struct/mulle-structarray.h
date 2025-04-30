@@ -111,8 +111,7 @@ static inline void
                                                   sizeof_struct,
                                                   alignof_struct,
                                                   count,
-                                                  storage,
-                                                  allocator);
+                                                  storage);
 
    array->allocator = allocator;
 }
@@ -132,8 +131,7 @@ static inline void
                                                     sizeof_struct,
                                                     alignof_struct,
                                                     count,
-                                                    storage, //  NULL storage is OK, so useless
-                                                    allocator);
+                                                    storage);
       array->allocator = allocator;
    }
 }
@@ -683,12 +681,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_structarrayenumerator_done( struct mulle_structarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle_structarrayenumerator_done( struct mulle_structarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
@@ -750,12 +750,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_structarrayreverseenumerator_done( struct mulle_structarrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle_structarrayreverseenumerator_done( struct mulle_structarrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

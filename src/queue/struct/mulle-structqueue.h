@@ -434,10 +434,12 @@ static inline int
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structqueueenumerator_done( struct mulle_structqueueenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 static inline void   mulle_structqueueenumerator_done( struct mulle_structqueueenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
