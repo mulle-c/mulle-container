@@ -135,6 +135,8 @@ void   _mulle__pointermap_destroy( struct mulle__pointermap *map,
 void   _mulle__pointermap_reset( struct mulle__pointermap *map,
                                  struct mulle_allocator *allocator)
 {
+   MULLE_C_UNUSED( allocator);
+
    _mulle__pointermap_reset_generic( map, mulle_not_a_pointer);
 }
 

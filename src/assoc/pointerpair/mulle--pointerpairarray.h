@@ -471,6 +471,7 @@ void   mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *
 static inline void
    mulle__pointerpairarray_assert_no_dupes( struct mulle__pointerpairarray *array)
 {
+   MULLE_C_UNUSED( array);
 }
 
 #endif
@@ -564,12 +565,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle__pointerpairarrayenumerator_done( struct mulle__pointerpairarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle__pointerpairarrayenumerator_done( struct mulle__pointerpairarrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

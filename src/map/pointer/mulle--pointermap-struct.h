@@ -443,12 +443,14 @@ static inline int
 static inline void
    _mulle__pointermapenumerator_done( struct mulle__pointermapenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle__pointermapenumerator_done( struct mulle__pointermapenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 

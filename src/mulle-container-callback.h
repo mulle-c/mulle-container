@@ -133,6 +133,8 @@ static inline void
    assert( callback->retain);
    assert( callback->release);
    assert( callback->describe);
+
+   MULLE_C_UNUSED( callback);
 }
 
 MULLE__CONTAINER_GLOBAL
@@ -195,6 +197,8 @@ static inline void   assert_mulle_container_valuecallback( struct mulle_containe
    assert( callback->retain);
    assert( callback->release);
    assert( callback->describe);
+
+   MULLE_C_UNUSED( callback);
 }
 
 

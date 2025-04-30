@@ -695,11 +695,13 @@ static inline int
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void   mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
@@ -787,12 +789,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_arrayreverseenumerator_done( struct mulle_arrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
 static inline void
    mulle_arrayreverseenumerator_done( struct mulle_arrayreverseenumerator *rover)
 {
+   MULLE_C_UNUSED( rover);
 }
 
 
