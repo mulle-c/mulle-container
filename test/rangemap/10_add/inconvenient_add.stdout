@@ -1,0 +1,12 @@
+Initial map:
+#0: 0,2 -> 0x1
+#1: 4,2 -> 0x2
+#2: 8,2 -> 0x3
+
+Filling gaps with bigger range:
+Merged value: (nil)
+#0: 0,7 -> 0x1
+
+Adding overlapping ranges:
+Merged value: (nil)
+#0: 0,11 -> 0x1
