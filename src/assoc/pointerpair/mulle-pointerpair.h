@@ -37,7 +37,6 @@
 #define mulle_pointerpair_h__
 
 #include "mulle-container-callback.h"
-#include "mulle-qsort.h"
 
 #define mulle_pointerpair_notakey    mulle_not_a_pointer
 

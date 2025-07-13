@@ -99,6 +99,45 @@ The codebase uses mutation tracking to detect concurrent modifications during en
 - Track mutations on all container modifications
 - Match mutation tracking in public and private interfaces
 
+## Build and Test
+
+### Basic Commands
+
+1. Regular build:
+```bash
+unset MULLE_SDE_SANDBOX && mulle-sde craft -- --no-hook
+```
+
+2. Clean build (when dependencies need rebuild):
+```bash
+unset MULLE_SDE_SANDBOX && mulle-sde craft -g -- --no-hook
+```
+Note: `-g` is shortcut for `mulle-sde clean gravetidy`, only use when dependencies need rebuild
+
+3. After adding new files:
+```bash
+unset MULLE_SDE_SANDBOX && mulle-sde reflect
+```
+
+4. Build test environment (after library changes):
+```bash
+unset MULLE_SDE_SANDBOX && mulle-sde test craft
+```
+
+5. Run specific test:
+```bash
+unset MULLE_SDE_SANDBOX && mulle-sde test run test/rangemap/30_shift/shift.c
+```
+
+IMPORTANT: Always unset MULLE_SDE_SANDBOX before mulle-sde commands
+
+### Adding New Files
+
+1. Create new source files in appropriate directory (e.g., src/rangemap/)
+2. Include headers through "include.h" for public dependencies
+3. Run `mulle-sde reflect` to update build system
+4. Build with `mulle-sde craft`
+
 ## Coding Patterns
 
 - Underscore prefix versions for non-NULL checking variants

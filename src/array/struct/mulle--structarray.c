@@ -70,21 +70,23 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
                                        struct mulle_allocator *allocator)
 {
    size_t   available;
-   size_t   _size;
-   size_t   _used;
-   size_t         new_size;
-   size_t         needed_size;
-   size_t         old_size;
+   size_t   size;
+   size_t   used;
+   size_t   new_size;
+   size_t   needed_size;
+   size_t   old_size;
 
-   _size = _mulle__structarray_get_size( array);
-   _used = _mulle__structarray_get_count( array);
-   available = _size - _used;
+   assert( array->_sizeof_struct);
+
+   size = _mulle__structarray_get_size( array);
+   used = _mulle__structarray_get_count( array);
+   available = size - used;
    if( available < length)
    {
       // grow by default, if exceeds growth sizeto
       old_size    = _mulle__structarray_get_size_as_length( array);
       new_size    = (old_size ? old_size : array->_sizeof_struct) * 2;
-      needed_size = (_size + (length - available)) * array->_sizeof_struct;
+      needed_size = (size + (length - available)) * array->_sizeof_struct;
       if( needed_size > new_size)
          new_size = needed_size;
       _mulle__structarray_sizeto_length( array, new_size, allocator);
