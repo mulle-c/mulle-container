@@ -1,0 +1,17 @@
+Initial map:
+#0: 0,8 -> 0x1
+
+Removing middle section (2,4):
+Removed 0 values: 
+#0: 0,2 -> 0x1
+#1: 6,2 -> 0x1
+
+Removing partial overlapping section (1,3):
+Removed 0 values: 
+#0: 0,1 -> 0x1
+#1: 6,2 -> 0x1
+
+Removing non-existent range (10,2):
+Removed 0 values
+#0: 0,1 -> 0x1
+#1: 6,2 -> 0x1

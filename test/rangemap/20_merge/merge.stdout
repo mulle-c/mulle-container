@@ -1,0 +1,8 @@
+Left merge - merged value: 0x2
+#0: 0,4 -> 0x1
+Right merge - merged value: 0x4
+#0: 0,6 -> 0x1
+#1: 6,2 -> 0x3
+Three-way merge - merged value: 0x3
+#0: 0,4 -> 0x1
+#1: 4,2 -> 0x2
