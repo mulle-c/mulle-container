@@ -9,7 +9,6 @@
 #include <stddef.h>
 #include <assert.h>
 
-#include "mulle-qsort.h"
 
 //
 // This is a growing array of struct sized structs.
@@ -459,7 +458,7 @@ static inline void
    _mulle_qsort_r_inline( array->_storage,
                           _mulle__structarray_get_count( array),
                           array->_sizeof_struct,
-                          (mulle_qsort_cmp_t *) compare,
+                          (mulle_qsort_r_cmp_t *) compare,
                           userinfo);
 }
 
@@ -483,7 +482,7 @@ static inline void
    mulle_qsort_r( array->_storage,
                   _mulle__structarray_get_count( array),
                   array->_sizeof_struct,
-                  (mulle_qsort_cmp_t *) compare,
+                  (mulle_qsort_r_cmp_t *) compare,
                   userinfo);
 }
 

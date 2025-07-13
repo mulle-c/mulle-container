@@ -27,11 +27,11 @@ src/map/mulle-map.c
 src/map/pointer/mulle--pointermap-generic.c
 src/map/pointer/mulle--pointermap-struct.c
 src/mulle-container-callback.c
-src/mulle-qsort.c
 src/queue/mulle--pointerqueue.c
 src/queue/mulle-pointerqueue.c
 src/queue/struct/mulle--structqueue.c
 src/queue/struct/mulle-structqueue.c
+src/rangemap/mulle-rangemap.c
 src/rangeset/mulle--rangeset.c
 src/set/mulle--set.c
 src/set/mulle-set.c

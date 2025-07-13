@@ -36,7 +36,6 @@
 
 #include "include.h"
 #include "mulle-container-operation.h"
-#include "mulle-qsort.h"
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>
@@ -697,7 +696,7 @@ static inline void
    _mulle_qsort_r_inline( array->_storage,
                           _mulle__pointerarray_get_count( array),
                           sizeof( void *),
-                          (mulle_qsort_cmp_t *) compare,
+                          (mulle_qsort_r_cmp_t *) compare,
                           userinfo);
 }
 
@@ -721,7 +720,7 @@ static inline void
    mulle_qsort_r( array->_storage,
                   _mulle__pointerarray_get_count( array),
                   sizeof( void *),
-                  (mulle_qsort_cmp_t *) compare,
+                  (mulle_qsort_r_cmp_t *) compare,
                   userinfo);
 }
 
