@@ -5,9 +5,12 @@
 #include "mulle-container-math.h"
 
 
-void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
-                                          size_t new_size,
-                                          struct mulle_allocator *allocator)
+//
+// this is slightly preferable, because we don't have to divide so much
+//
+static void   _mulle__structarray_realloc_as_length( struct mulle__structarray *array,
+                                           size_t new_size,
+                                           struct mulle_allocator *allocator)
 {
    size_t   old_size;
 
@@ -44,12 +47,22 @@ void   _mulle__structarray_sizeto_length( struct mulle__structarray *array,
 }
 
 
+
+static void   _mulle__structarray_realloc( struct mulle__structarray *array,
+                                           size_t new_size,
+                                           struct mulle_allocator *allocator)
+{
+   return( _mulle__structarray_realloc_as_length( array, 
+                                               new_size * array->_sizeof_struct, allocator));
+}
+
+
 // Should also be usable for "_size to fit"
 void   _mulle__structarray_sizeto( struct mulle__structarray *array,
                                    size_t new_size,
                                    struct mulle_allocator *allocator)
 {
-   _mulle__structarray_sizeto_length( array, new_size * array->_sizeof_struct, allocator);
+   _mulle__structarray_realloc( array, new_size, allocator);
 }
 
 
@@ -61,7 +74,7 @@ void   _mulle__structarray_grow( struct mulle__structarray *array,
 
    old_size = _mulle__structarray_get_size_as_length( array);
    new_size = (old_size ? old_size : array->_sizeof_struct) * 2;
-   _mulle__structarray_sizeto_length( array, new_size, allocator);
+   _mulle__structarray_realloc_as_length( array, new_size, allocator);
 }
 
 
@@ -89,7 +102,7 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
       needed_size = (size + (length - available)) * array->_sizeof_struct;
       if( needed_size > new_size)
          new_size = needed_size;
-      _mulle__structarray_sizeto_length( array, new_size, allocator);
+      _mulle__structarray_realloc_as_length( array, new_size, allocator);
    }
    return( array->_curr);
 }
@@ -188,3 +201,82 @@ struct mulle_data
 
    return( data);
 }
+
+
+void   _mulle__structarray_insert_in_range( struct mulle__structarray *array,
+                                            struct mulle_range range,
+                                            void *items,
+                                            struct mulle_allocator *allocator)
+{
+   size_t count;
+   size_t new_count;
+   size_t size;
+   size_t new_size;
+
+   assert( range.length != (size_t) -1);
+   if( ! range.length)
+      return;
+
+   // Get current number of elements = (curr - storage) / sizeof_struct
+   count = _mulle__structarray_get_count( array);
+   assert( range.location <= count);
+
+   new_count = count + range.length;
+
+   size = _mulle__structarray_get_size( array);
+   if( new_count > size)
+   {
+      new_size = mulle_pow2round( new_count);
+      _mulle__structarray_realloc( array, new_size, allocator);
+   }
+
+   // Shift existing elements to right to make room
+   memmove(
+       (char *) array->_storage + (range.location + range.length) * array->_sizeof_struct,
+       (char *) array->_storage + range.location * array->_sizeof_struct,
+       (count - range.location) * array->_sizeof_struct);
+
+   //
+   // Copy new elements into place, so we assume the incoming buffer is properly
+   // aligned, when its a multiple, if its not a multiple we use array->_copyof_struct
+   // MEMO: or do we always copy only the last one like this ?
+   if( range.length == 1)
+      memcpy( (char *) array->_storage + range.location * array->_sizeof_struct,
+              items,
+              array->_copy_sizeof_struct);
+   else
+      memcpy( (char *) array->_storage + range.location * array->_sizeof_struct,
+              items,
+              range.length * array->_sizeof_struct);
+
+   // Update _curr pointer
+   array->_curr = (char *)array->_storage + new_count * array->_sizeof_struct;
+
+#if !defined(MULLE__CONTAINER_MISER_MODE) && defined(MULLE__CONTAINER_HAVE_MUTATION_COUNT)
+   array->_n_mutations++;
+#endif
+}
+
+
+
+void   _mulle__structarray_remove_in_range( struct mulle__structarray *array,
+                                            struct mulle_range range)
+{
+   size_t   count;
+   size_t   tail;
+
+   count  = _mulle__structarray_get_count( array);
+   tail   = range.location + range.length;
+   range  = mulle_range_validate_against_length( range, count);
+   memmove( _mulle__structarray_get( array, range.location),
+            _mulle__structarray_get( array, tail),
+            (count - tail) * array->_sizeof_struct);
+
+   array->_curr -= range.length;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
+}
+
+

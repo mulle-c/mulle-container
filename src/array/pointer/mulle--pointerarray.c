@@ -191,17 +191,64 @@ void
 }
 
 
+void  _mulle__pointerarray_insert_in_range( struct mulle__pointerarray *array,
+                                            struct mulle_range range,
+                                            void **pointers,
+                                            struct mulle_allocator *allocator)
+{
+   size_t   count;
+   size_t   new_count;
+   size_t   size;
+   size_t   new_size;
+   void     **p;
 
-size_t
-   _mulle__pointerarray_get_in_range( struct mulle__pointerarray *array,
-                                      struct mulle_range range,
-                                      void *buf)
+   if( range.length == -1)
+   {
+      range.length = 0;
+      for( p = pointers; *p; p++)
+         range.length++;
+   }
+
+   if( ! range.length)
+      return;
+
+   count = _mulle__pointerarray_get_count( array);
+   assert( range.location <= count);
+
+   new_count = count + range.length;
+   size      = _mulle__pointerarray_get_size( array);
+
+   if( new_count > size)
+   {
+      new_size = mulle_pow2round( new_count);
+      _mulle__pointerarray_realloc( array, new_size, allocator);
+   }
+
+   memmove( &array->_storage[ range.location + range.length],
+            &array->_storage[ range.location],
+            (count - range.location) * sizeof(void *));
+
+   memcpy( &array->_storage[ range.location], pointers, range.length * sizeof(void *));
+   array->_curr = &array->_storage[ new_count];
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
+}
+
+
+
+
+size_t   _mulle__pointerarray_get_in_range( struct mulle__pointerarray *array,
+                                            struct mulle_range range,
+                                            void *buf)
 {
    range = mulle_range_validate_against_length( range,
                                                 _mulle__pointerarray_get_count( array));
    memcpy( buf, &array->_storage[ range.location], range.length * sizeof( void *));
    return( range.length);
 }
+
 
 
 struct mulle_pointers

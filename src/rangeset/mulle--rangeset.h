@@ -193,8 +193,8 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert( struct mulle__rangeset *p,
-                                struct mulle_range range,
-                                struct mulle_allocator *allocator);
+                                 struct mulle_range range,
+                                 struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
@@ -211,8 +211,8 @@ void   _mulle__rangeset_grow( struct mulle__rangeset *p,
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__rangeset_insert( struct mulle__rangeset *p,
-                                struct mulle_range range,
-                                struct mulle_allocator *allocator);
+                                 struct mulle_range range,
+                                 struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST

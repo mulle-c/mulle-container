@@ -1,0 +1,11 @@
+struct_insert_in_range
+Test #1: Insert into empty array
+Array: {1,a} {2,b}
+Test #2: Insert at front
+Array: {10,x}  {20,y}  {1,a}  {2,b} 
+Test #3: Insert in middle
+Array: {10,x}  {20,y}  {100,m}  {200,n}  {1,a}  {2,b} 
+Test #4: Insert at back
+Array: {10,x}  {20,y}  {100,m}  {200,n}  {1,a}  {2,b}  {300,z} 
+Test #5: Insert single element into empty array
+Array: {500,s} 

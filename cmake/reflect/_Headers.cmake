@@ -91,7 +91,7 @@ src/queue/mulle--pointerqueue.h
 src/queue/mulle-pointerqueue.h
 src/queue/struct/mulle--structqueue.h
 src/queue/struct/mulle-structqueue.h
-src/rangemap/mulle-rangemap.h
+src/rangemap/mulle--rangemap.h
 src/rangeset/mulle--rangeset.h
 src/set/mulle--set.h
 src/set/mulle-set.h
