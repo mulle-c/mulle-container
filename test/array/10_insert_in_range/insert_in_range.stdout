@@ -1,0 +1,11 @@
+insert_in_range
+Test #1: Insert into empty array
+Array: A B
+Test #2: Insert at front
+Array: X Y A B
+Test #3: Insert in middle
+Array: X Y M N A B
+Test #4: Insert at back
+Array: X Y M N A B Z
+Test #5: Insert single element into empty array
+Array: S

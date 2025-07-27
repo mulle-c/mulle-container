@@ -12,6 +12,14 @@ then
    MULLE_VIRTUAL_ROOT="`PATH=/bin:/usr/bin pwd -P`"
    echo "Using ${MULLE_VIRTUAL_ROOT} as MULLE_VIRTUAL_ROOT for \
 your convenience" >&2
+
+   #
+   # create an identifier that changes with the location, the project is in
+   # usefule for related directories, that are placed outside of the
+   # project like maybe KITCHEN_DIR
+   #
+   MULLE_VIRTUAL_ROOT_ID="$(shasum -a 256 <<< "${MULLE_VIRTUAL_ROOT}")"
+   MULLE_VIRTUAL_ROOT_ID="${MULLE_VIRTUAL_ROOT_ID:1:12}"
 fi
 
 if [ -z "${MULLE_UNAME}" ]

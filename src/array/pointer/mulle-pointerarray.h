@@ -554,10 +554,61 @@ void   _mulle_pointerarray_remove( struct mulle_pointerarray *array,
 
 static inline
 void   mulle_pointerarray_remove( struct mulle_pointerarray *array,
-                                  void *p)
+                                   void *p)
 {
    if( array)
       _mulle_pointerarray_remove( array, p);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline
+void   _mulle_pointerarray_insert_in_range( struct mulle_pointerarray *array,
+                                            struct mulle_range range,
+                                            void **pointers,
+                                            struct mulle_allocator *allocator)
+{
+   _mulle__pointerarray_insert_in_range( (struct mulle__pointerarray *) array,
+                                         range,
+                                         pointers,
+                                         allocator);
+}
+
+
+static inline
+void   mulle_pointerarray_insert_in_range( struct mulle_pointerarray *array,
+                                            struct mulle_range range,
+                                            void **pointers,
+                                            struct mulle_allocator *allocator)
+{
+   if( array)
+      _mulle_pointerarray_insert_in_range( array, range, pointers, allocator);
+}
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline void
+   _mulle_pointerarray_insert( struct mulle_pointerarray *array,
+                                uintptr_t location,
+                                void *p,
+                                struct mulle_allocator *allocator)
+{
+   _mulle__pointerarray_insert( (struct mulle__pointerarray *) array,
+                                location,
+                                p,
+                                allocator);
+}
+
+
+MULLE_C_NONNULL_THIRD
+static inline void
+   mulle_pointerarray_insert( struct mulle_pointerarray *array,
+                               uintptr_t location,
+                               void *p,
+                               struct mulle_allocator *allocator)
+{
+   if( array)
+      _mulle_pointerarray_insert( array, location, p, allocator);
 }
 
 

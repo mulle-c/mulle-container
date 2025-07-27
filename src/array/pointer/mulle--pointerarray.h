@@ -603,15 +603,61 @@ int    _mulle__pointerarray_is_equal( struct mulle__pointerarray *array,
                                       struct mulle__pointerarray *other);
 
 
+
+MULLE__CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+void  _mulle__pointerarray_insert_in_range( struct mulle__pointerarray *array,
+                                            struct mulle_range range,
+                                            void **pointers,
+                                            struct mulle_allocator *allocator);
+
+
+static inline
+void   mulle__pointerarray_insert_in_range( struct mulle__pointerarray *array,
+                                            struct mulle_range range,
+                                            void **pointers,
+                                            struct mulle_allocator *allocator)
+{
+   if( array)
+      _mulle__pointerarray_insert_in_range( array, range, pointers, allocator);
+}
+
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline void
+   _mulle__pointerarray_insert( struct mulle__pointerarray *array,
+                                uintptr_t location,
+                                void *p,
+                                struct mulle_allocator *allocator)
+{
+   _mulle__pointerarray_insert_in_range( array, mulle_range_make( location, 1), &p, allocator);
+}
+
+
+MULLE_C_NONNULL_THIRD
+static inline void
+   mulle__pointerarray_insert( struct mulle__pointerarray *array,
+                               uintptr_t location,
+                               void *p,
+                               struct mulle_allocator *allocator)
+{
+   if( array)
+      _mulle__pointerarray_insert_in_range( array, mulle_range_make( location, 1), &p, allocator);
+}
+
+
+
+
+
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
                                              struct mulle_range range);
 
 static inline
-void
-   mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
-                                        struct mulle_range range)
+void   mulle__pointerarray_remove_in_range( struct mulle__pointerarray *array,
+                                            struct mulle_range range)
 {
    if( array)
       _mulle__pointerarray_remove_in_range( array, range);
@@ -639,6 +685,8 @@ void   _mulle__pointerarray_remove( struct mulle__pointerarray *array,
                                                mulle_range_make( i, 1));
    }
 }
+
+
 
 static inline
 void

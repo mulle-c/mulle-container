@@ -200,12 +200,22 @@ static inline void   mulle_structarray_reset( struct mulle_structarray *array)
 
 # pragma mark - petty accessors
 
-MULLE_C_NONNULL_FIRST
-static inline void **
-   _mulle_structarray_get_storage( struct mulle_structarray *array)
-{
-   return( _mulle__structarray_get_storage( (struct mulle__structarray *) array));
-}
+
+// MEMO: should not really use this to index into array, due to subtle alignment
+//       problems if you don't use _size_to
+// MULLE_C_NONNULL_FIRST
+// static inline void *
+//    _mulle_structarray_get_storage( struct mulle_structarray *array)
+// {
+//    return( _mulle__structarray_get_storage( (struct mulle__structarray *) array));
+// }
+//
+//
+// static inline void *
+//    mulle_structarray_get_storage( struct mulle_structarray *array)
+// {
+//    return( array ? _mulle__structarray_get_storage( (struct mulle__structarray *) array) : NULL);
+// }
 
 
 MULLE_C_NONNULL_FIRST
@@ -598,6 +608,24 @@ static inline void *
 
 MULLE_C_NONNULL_FIRST
 static inline void
+   _mulle_structarray_remove_in_range( struct mulle_structarray *array,
+                                       struct mulle_range range)
+{
+   _mulle__structarray_remove_in_range( (struct mulle__structarray *) array, range);
+}
+
+
+static inline void
+   mulle_structarray_remove_in_range( struct mulle_structarray *array,
+                                      struct mulle_range range)
+{
+   if( array)
+      _mulle__structarray_remove_in_range( (struct mulle__structarray *) array, range);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
    _mulle_structarray_remove_last( struct mulle_structarray *array)
 {
    _mulle__structarray_remove_last( (struct mulle__structarray *) array);
@@ -609,6 +637,53 @@ static inline void
 {
    if( array)
       _mulle_structarray_remove_last( array);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline void
+   _mulle_structarray_insert_in_range( struct mulle_structarray *array,
+                                       struct mulle_range range,
+                                       void *items)
+{
+   _mulle__structarray_insert_in_range( (struct mulle__structarray *) array,
+                                        range,
+                                        items,
+                                        array->allocator);
+}
+
+
+static inline void
+   mulle_structarray_insert_in_range( struct mulle_structarray *array,
+                                      struct mulle_range range,
+                                      void *items)
+{
+   if( array)
+      _mulle_structarray_insert_in_range( array, range, items);
+}
+
+
+MULLE_C_NONNULL_FIRST_THIRD
+static inline void
+   _mulle_structarray_insert( struct mulle_structarray *array,
+                              uintptr_t location,
+                              void *item)
+{
+   _mulle__structarray_insert( (struct mulle__structarray *) array,
+                               location,
+                               item,
+                               array->allocator);
+}
+
+
+MULLE_C_NONNULL_THIRD
+static inline void
+   mulle_structarray_insert( struct mulle_structarray *array,
+                             uintptr_t location,
+                             void *item)
+{
+   if( array)
+      _mulle_structarray_insert( array, location, item);
 }
 
 

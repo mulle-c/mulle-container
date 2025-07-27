@@ -1,6 +1,0 @@
-Initial map:
-#0: 2,2 -> 0x1
-#1: 6,2 -> 0x2
-
-Shift operations not yet implemented in public API
-Value at 2: 0x1

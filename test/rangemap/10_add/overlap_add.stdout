@@ -1,0 +1,17 @@
+Insert 10,5: Success
+#0: 10,5 -> 0x1
+Insert 20,5: Success
+#0: 10,5 -> 0x1
+#1: 20,5 -> 0x2
+Insert 12,3 (overlap): Failure
+#0: 10,5 -> 0x1
+#1: 20,5 -> 0x2
+Insert 8,5 (partial overlap): Failure
+#0: 10,5 -> 0x1
+#1: 20,5 -> 0x2
+Insert 9,8 (full overlap): Failure
+#0: 10,5 -> 0x1
+#1: 20,5 -> 0x2
+Insert 5,30 (contains existing): Failure
+#0: 10,5 -> 0x1
+#1: 20,5 -> 0x2
