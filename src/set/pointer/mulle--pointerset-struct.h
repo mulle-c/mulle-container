@@ -64,8 +64,8 @@ static inline size_t
 
 // fields are considered private
 #define _MULLE__POINTERSET_BASE  \
-   void     **_storage;         \
-   size_t   _count;             \
+   void     **_storage;          \
+   size_t   _count;              \
    size_t   _size
 
 #ifndef MULLE__CONTAINER_MISER_MODE

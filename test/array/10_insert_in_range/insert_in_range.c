@@ -19,7 +19,7 @@ static void  test_insert_in_range( void)
    pointers[ 0] = (void *) "A";
    pointers[ 1] = (void *) "B";
    range        = mulle_range_make( 0, 2);
-   _mulle__pointerarray_insert_in_range( &array, range, pointers, NULL);
+   mulle_pointerarray_insert_in_range( &array, range, pointers);
    assert( mulle_pointerarray_get_count( &array) == 2);
    assert( ! strcmp( _mulle_pointerarray_get( &array, 0), "A"));
    assert( ! strcmp( _mulle_pointerarray_get( &array, 1), "B"));
@@ -36,7 +36,7 @@ static void  test_insert_in_range( void)
    pointers[ 0] = (void *) "X";
    pointers[ 1] = (void *) "Y";
    range        = mulle_range_make( 0, 2);
-   _mulle__pointerarray_insert_in_range( &array, range, pointers, NULL);
+   mulle_pointerarray_insert_in_range( &array, range, pointers);
    assert( mulle_pointerarray_get_count( &array) == 4);
    assert( ! strcmp( _mulle_pointerarray_get( &array, 0), "X"));
    assert( ! strcmp( _mulle_pointerarray_get( &array, 1), "Y"));
@@ -55,7 +55,7 @@ static void  test_insert_in_range( void)
    pointers[ 0] = (void *) "M";
    pointers[ 1] = (void *) "N";
    range        = mulle_range_make( 2, 2);
-   _mulle__pointerarray_insert_in_range( &array, range, pointers, NULL);
+   mulle_pointerarray_insert_in_range( &array, range, pointers);
    assert( mulle_pointerarray_get_count( &array) == 6);
    assert( ! strcmp( _mulle_pointerarray_get( &array, 0), "X"));
    assert( ! strcmp( _mulle_pointerarray_get( &array, 1), "Y"));
@@ -76,7 +76,7 @@ static void  test_insert_in_range( void)
    printf( "Test #4: Insert at back\n");
    pointers[ 0] = (void *) "Z";
    range        = mulle_range_make( 6, 1);
-   _mulle__pointerarray_insert_in_range( &array, range, pointers, NULL);
+   mulle_pointerarray_insert_in_range( &array, range, pointers);
    assert( mulle_pointerarray_get_count( &array) == 7);
    assert( ! strcmp( _mulle_pointerarray_get( &array, 6), "Z"));
    printf( "Array: ");
@@ -93,7 +93,7 @@ static void  test_insert_in_range( void)
    mulle_pointerarray_reset( &array);
    pointers[ 0] = (void *) "S";
    range        = mulle_range_make( 0, 1);
-   _mulle__pointerarray_insert_in_range( &array, range, pointers, NULL);
+   mulle_pointerarray_insert_in_range( &array, range, pointers);
    assert( mulle_pointerarray_get_count( &array) == 1);
    assert( ! strcmp( _mulle_pointerarray_get( &array, 0), "S"));
    printf( "Array: ");

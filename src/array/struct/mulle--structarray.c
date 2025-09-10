@@ -250,7 +250,7 @@ void   _mulle__structarray_insert_in_range( struct mulle__structarray *array,
               range.length * array->_sizeof_struct);
 
    // Update _curr pointer
-   array->_curr = (char *)array->_storage + new_count * array->_sizeof_struct;
+   array->_curr = (char *) array->_storage + new_count * array->_sizeof_struct;
 
 #if !defined(MULLE__CONTAINER_MISER_MODE) && defined(MULLE__CONTAINER_HAVE_MUTATION_COUNT)
    array->_n_mutations++;
@@ -264,15 +264,21 @@ void   _mulle__structarray_remove_in_range( struct mulle__structarray *array,
 {
    size_t   count;
    size_t   tail;
+   size_t   length;
+
+   if( ! range.length)
+      return;
 
    count  = _mulle__structarray_get_count( array);
-   tail   = range.location + range.length;
    range  = mulle_range_validate_against_length( range, count);
-   memmove( _mulle__structarray_get( array, range.location),
-            _mulle__structarray_get( array, tail),
-            (count - tail) * array->_sizeof_struct);
+   tail   = mulle_range_get_max( range);
+   length = (count - tail) * array->_sizeof_struct;
+   if( length)
+      memmove( _mulle__structarray_get( array, range.location),
+               _mulle__structarray_get( array, tail),
+               length);
 
-   array->_curr -= range.length;
+   array->_curr = (char *) array->_curr - range.length * array->_sizeof_struct;
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
    array->_n_mutations++;

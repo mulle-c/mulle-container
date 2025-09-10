@@ -1,0 +1,20 @@
+Testing mulle--pointermap-struct.c functions
+Testing struct map init/done/reset
+Initialized map count: 0
+Initialized map size: 8
+Count after set: 1
+Retrieved value: value1
+Map is full: false
+Map is sparse: true
+Count after reset: 0
+Testing struct map create/destroy
+Created map with capacity 8, extra 16
+Map count: 0, size: 16
+Map destroyed
+Testing edge cases
+NULL safety count: 0
+NULL safety size: 0
+NULL is full: true
+NULL is sparse: false
+Created zero-capacity map
+All struct pointermap tests completed

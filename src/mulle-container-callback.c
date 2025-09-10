@@ -104,9 +104,9 @@ char   *mulle_container_valuecallback_no_description( struct mulle_container_val
    MULLE_C_UNUSED( callback);
    MULLE_C_UNUSED( p);
 
-   assert( p_allocator && *p_allocator);
+   assert( p_allocator);
 
-   *p_allocator = NULL;
+   *p_allocator = &mulle_allocator_stdlib_nofree;
    return( "???");
 }
 
@@ -141,7 +141,7 @@ char   *
 
    MULLE_C_UNUSED( callback);
 
-   assert( p_allocator && *p_allocator);
+   assert( p_allocator);
 
    snprintf( buf, sizeof( buf), "%d", (int) (intptr_t) p);
    return( mulle_allocator_strdup( *p_allocator, buf));
@@ -157,7 +157,7 @@ char   *
 
    MULLE_C_UNUSED( callback);
 
-   assert( p_allocator && *p_allocator);
+   assert( p_allocator);
 
    snprintf( buf, sizeof( buf), "%lld", (long long) (intptr_t) p);
    return( mulle_allocator_strdup( *p_allocator, buf));
@@ -173,7 +173,7 @@ char *
 
    MULLE_C_UNUSED( callback);
 
-   assert( p_allocator && *p_allocator);
+   assert( p_allocator);
 
    snprintf( buf, sizeof( buf), "%p", p);
    return( mulle_allocator_strdup( *p_allocator, buf));
@@ -202,7 +202,7 @@ char
                                                void *p,
                                                struct mulle_allocator **p_allocator)
 {
-   assert( p_allocator && *p_allocator);
+   assert( p_allocator);
 
    MULLE_C_UNUSED( callback);
 

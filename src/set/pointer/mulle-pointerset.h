@@ -170,6 +170,7 @@ void    mulle_pointerset_set( struct mulle_pointerset *set, void *p)
 }
 
 
+// returns 1 if insert succeeded
 static inline int
    mulle_pointerset_insert( struct mulle_pointerset *set, void *p)
 {

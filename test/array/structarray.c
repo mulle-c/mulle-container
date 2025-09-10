@@ -67,7 +67,7 @@ static void  simple( void)
    struct mulle_structarray                   *array;
    struct mulle_structarrayenumerator         rover;
    struct mulle_structarrayreverseenumerator  rrover;
-   size_t                               i;
+   size_t                                     i;
    void                                       *item;
 
    array = mulle_structarray_create( sizeof( struct demo_struct),
