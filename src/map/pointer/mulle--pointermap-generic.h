@@ -338,6 +338,9 @@ int    _mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
 
+   // MEMO: _mulle__pointermap_write_pair_generic will always return NULL on success
+   // as it returns the value not the key. If the pair->value is NULL you can not
+   // see a difference if the insert worked or not
    return( _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator) == NULL);
 }
 

@@ -1,0 +1,43 @@
+Testing structqueue edge cases and boundary conditions
+Test 1: NULL parameter handling
+  NULL queue parameter: no crash
+  NULL item parameter: no crash
+Test 2: Empty/uninitialized objects
+  Empty queue count: 0
+  Added to empty queue, count: 1
+Test 3: Boundary conditions
+  Queue with bucket size 1 - is full: 0
+  Added item, is full now: 1
+  Added to full queue, count: 2
+Test 4: Invalid parameters
+  Zero bucket size handled
+  Large bucket size handled
+Test 5: Memory allocation failures
+  Large capacity queue size: 1000000
+Test 6: Error conditions
+  Pop from empty queue: 0
+Test 7: FIFO behavior
+  Added item 0, count: 1
+  Added item 1, count: 2
+  Added item 2, count: 3
+  Added item 3, count: 4
+  Added item 4, count: 5
+  Popping items in FIFO order:
+    Popped: id=0, name=item0, value=0.0
+    Popped: id=1, name=item1, value=1.1
+    Popped: id=2, name=item2, value=2.2
+    Popped: id=3, name=item3, value=3.3
+    Popped: id=4, name=item4, value=4.4
+Test 8: Enumeration
+  Enumerating queue items:
+    Item: id=100, name=enum1, value=10.1
+    Item: id=200, name=enum2, value=20.2
+    Item: id=300, name=enum3, value=30.3
+Test 9: Reset operations
+  Before reset, count: 3
+  After reset, count: 0
+Test 10: Grow and shrink operations
+  Initial size: 5
+  After growth, size: 10
+  After shrink, size: 5
+All structqueue edge case tests completed

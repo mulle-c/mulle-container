@@ -306,5 +306,3 @@ void   _mulle__structqueue_destroy( struct mulle__structqueue *queue,
    mulle__structqueue_free( queue, allocator);
 }
 
-
-

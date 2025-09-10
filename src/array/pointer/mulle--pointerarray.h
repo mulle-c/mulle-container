@@ -631,7 +631,10 @@ static inline void
                                 void *p,
                                 struct mulle_allocator *allocator)
 {
-   _mulle__pointerarray_insert_in_range( array, mulle_range_make( location, 1), &p, allocator);
+   _mulle__pointerarray_insert_in_range( array,
+                                         mulle_range_make( location, 1),
+                                         &p,
+                                         allocator);
 }
 
 
@@ -643,7 +646,10 @@ static inline void
                                struct mulle_allocator *allocator)
 {
    if( array)
-      _mulle__pointerarray_insert_in_range( array, mulle_range_make( location, 1), &p, allocator);
+      _mulle__pointerarray_insert_in_range( array,
+                                            mulle_range_make( location, 1),
+                                            &p,
+                                            allocator);
 }
 
 

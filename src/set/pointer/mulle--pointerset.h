@@ -52,6 +52,7 @@ static inline void
 }
 
 
+// returns 1 if insert was successful
 MULLE_C_NONNULL_FIRST
 static inline int
    _mulle__pointerset_insert( struct mulle__pointerset *set,

@@ -1,0 +1,11 @@
+struct_remove_in_range
+Test #1: Remove from front
+{3,c} {4,d} {5,e}
+Test #2: Remove from middle
+{1,a} {2,b} {5,e}
+Test #3: Remove from back
+{1,a} {2,b} {3,c}
+Test #4: Remove all
+
+Test #5: Remove single element
+{1,a} {2,b} {4,d} {5,e}

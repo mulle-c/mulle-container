@@ -214,7 +214,7 @@ static inline int
                                              p,
                                              mulle_container_insert_e,
                                              callback,
-                                             allocator) == NULL);
+                                             allocator) == callback->notakey);
 }
 
 
