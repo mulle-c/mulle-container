@@ -74,6 +74,29 @@ void    _mulle__pointerset_init( struct mulle__pointerset *p,
 }
 
 
+void   _mulle__pointerset_init_with_static_pointers( struct mulle__pointerset *set,
+                                                     void **storage,
+                                                     size_t capacity)
+{
+   memset( set, 0, sizeof( *set));
+
+   assert( ! capacity || storage);
+
+   set->_storage         =
+   set->_initial_storage = storage;
+   set->_size            = mulle_pow2rounddown( capacity);
+
+   if( set->_size < MULLE__POINTERSET_MIN_SIZE)
+   {
+      assert( 0 && "capacity must be >= MULLE__POINTERSET_MIN_SIZE");
+      set->_size            = 0;
+      set->_initial_storage = NULL;
+   }
+
+   _mulle__pointerset_init_storage_generic( set->_initial_storage, capacity, mulle_not_a_pointer);
+}
+
+
 struct mulle__pointerset   *_mulle__pointerset_create( size_t capacity,
                                                        size_t extra,
                                                        struct mulle_allocator *allocator)
@@ -87,14 +110,15 @@ struct mulle__pointerset   *_mulle__pointerset_create( size_t capacity,
 
 
 void   _mulle__pointerset_done( struct mulle__pointerset *set,
-                                struct mulle_allocator *allocator)
+                                 struct mulle_allocator *allocator)
 {
-   mulle_allocator_free( allocator, set->_storage);
-#ifdef DEBUG   
-   mulle_memset_uint32( set, 0xDEADDEAD,sizeof( struct mulle__pointerset));
-#endif   
+    if( set->_storage != set->_initial_storage)
+       mulle_allocator_free( allocator, set->_storage);
+#ifdef DEBUG
+    mulle_memset_uint32( set, 0xDEADDEAD,sizeof( struct mulle__pointerset));
+#endif
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   set->_n_mutations++;
+    set->_n_mutations++;
 #endif
 }
 

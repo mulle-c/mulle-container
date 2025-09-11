@@ -48,7 +48,10 @@ static inline void
                            void *p,
                            struct mulle_allocator *allocator)
 {
-   _mulle__pointerset_set_generic( set, p, &mulle_container_keycallback_nonowned_pointer_or_null, allocator);
+   _mulle__pointerset_set_generic( set,
+                                   p,
+                                   &mulle_container_keycallback_nonowned_pointer_or_null,
+                                   allocator);
 }
 
 

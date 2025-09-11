@@ -45,13 +45,28 @@
 
 // suitable for use by mulle--set and mulle--pointerset
 
+void   _mulle__pointerset_init_storage_generic( void **buf,
+                                                size_t n,
+                                                void *notakey)
+{
+   void   **p;
+   void   **sentinel;
+
+   assert( n >= 2);
+   assert( mulle_is_pow2( n));
+
+   p        = &buf[ 0];
+   sentinel = &buf[ n];
+   while( p < sentinel)
+      *p++ = notakey;
+}
+
+
 void   **_mulle__pointerset_allocate_storage_generic( size_t n,
                                                       void *notakey,
                                                       struct mulle_allocator *allocator)
 {
    void   **buf;
-   void   **p;
-   void   **sentinel;
 
    assert( n >= 2);
    assert( mulle_is_pow2( n));
@@ -59,11 +74,8 @@ void   **_mulle__pointerset_allocate_storage_generic( size_t n,
    if( notakey == NULL)
       return( mulle_allocator_calloc( allocator, n, sizeof( void *)));
 
-   buf      = mulle_allocator_malloc( allocator, n * sizeof( void *));
-   p        = &buf[ 0];
-   sentinel = &buf[ n];
-   while( p < sentinel)
-      *p++ = notakey;
+   buf = mulle_allocator_malloc( allocator, n * sizeof( void *));
+   _mulle__pointerset_init_storage_generic( buf, n, notakey);
 
    return( buf);
 }
@@ -170,7 +182,8 @@ static void   grow_generic( struct mulle__pointerset *set,
 
    buf = _mulle__pointerset_allocate_storage_generic( new_size, callback->notakey, allocator);
    copy_storage_generic( buf, new_size, set->_storage, set->_size, callback);
-   mulle_allocator_free( allocator, set->_storage);
+   if( set->_storage != set->_initial_storage)
+      mulle_allocator_free( allocator, set->_storage);
 
    set->_storage = buf;
    set->_size    = new_size;
@@ -428,7 +441,8 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
 
    buf = _mulle__pointerset_allocate_storage_generic( new_size, callback->notakey, allocator);
    copy_storage_generic( buf, new_size, set->_storage, set->_size, callback);
-   mulle_allocator_free( allocator, set->_storage);
+   if( set->_storage != set->_initial_storage)
+      mulle_allocator_free( allocator, set->_storage);
 
    set->_storage = buf;
    set->_size    = new_size;
