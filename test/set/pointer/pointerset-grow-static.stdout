@@ -1,0 +1,15 @@
+Test: pointerset growing from static storage
+Initial count: 0
+Initial size: 4
+After adding 0x1000, count: 1, size: 4
+After adding 0x1001, count: 2, size: 4
+After adding 0x1002, count: 3, size: 4
+After adding 0x1003, count: 4, size: 8
+After adding 0x1004, count: 5, size: 8
+Verifying all pointers:
+Get 0x1000: found
+Get 0x1001: found
+Get 0x1002: found
+Get 0x1003: found
+Get 0x1004: found
+Test completed successfully

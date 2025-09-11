@@ -1,0 +1,8 @@
+Test: static pointerset initialization
+Initial count: 0
+Initial size: 16
+After adding 0x1234, count: 1
+After adding 0x5678, count: 2
+Get 0x1234: found
+Get 0x5678: found
+Test completed successfully

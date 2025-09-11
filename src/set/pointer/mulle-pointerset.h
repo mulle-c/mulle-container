@@ -73,8 +73,24 @@ static inline void    mulle_pointerset_init( struct mulle_pointerset *set,
                                              size_t capacity,
                                              struct mulle_allocator *allocator)
 {
-   if( set)
-      _mulle_pointerset_init( set, capacity, allocator);
+    if( set)
+       _mulle_pointerset_init( set, capacity, allocator);
+}
+
+
+static inline void    
+   mulle_pointerset_init_with_static_pointers( struct mulle_pointerset *set,
+                                               void **storage,
+                                               size_t capacity,
+                                               struct mulle_allocator *allocator)
+{
+    if( set)
+    {
+       _mulle__pointerset_init_with_static_pointers( (struct mulle__pointerset *) set,
+                                                     storage,
+                                                     capacity);
+      set->allocator = allocator;
+    }
 }
 
 

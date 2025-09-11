@@ -57,8 +57,9 @@ static inline int   mulle_is_pow2( size_t x)
 
 //
 // 0 promotes to 1 here for these purposes
+// this rounds up
 //
-static inline uint32_t   mulle_pow2round_32( uint32_t v)
+static inline uint32_t   mulle_pow2roundup_32( uint32_t v)
 {
    v--;
    v |= v >> 1;
@@ -71,7 +72,7 @@ static inline uint32_t   mulle_pow2round_32( uint32_t v)
    return( v ? v : 1);
 }
 
-static inline uint64_t   mulle_pow2round_64( uint64_t v)
+static inline uint64_t   mulle_pow2roundup_64( uint64_t v)
 {
    v--;
    v |= v >> 1;
@@ -86,12 +87,70 @@ static inline uint64_t   mulle_pow2round_64( uint64_t v)
 }
 
 
-static inline size_t   mulle_pow2round( size_t v)
+// this rounds up
+static inline size_t   mulle_pow2roundup( size_t v)
 {
    if( sizeof( size_t) >= sizeof( uint64_t))
-      return( (size_t) mulle_pow2round_64( (uint64_t) v));
-   return( (size_t) mulle_pow2round_32( (uint32_t) v));
+      return( (size_t) mulle_pow2roundup_64( (uint64_t) v));
+   return( (size_t) mulle_pow2roundup_32( (uint32_t) v));
 }
+
+
+
+static inline uint32_t   mulle_pow2rounddown_32( uint32_t v)
+{
+   uint32_t r = v;
+   r |= r >> 1;
+   r |= r >> 2;
+   r |= r >> 4;
+   r |= r >> 8;
+   r |= r >> 16;
+
+   return r - (r >> 1);
+}
+
+static inline uint64_t   mulle_pow2rounddown_64( uint64_t v)
+{
+   uint64_t r = v;
+   r |= r >> 1;
+   r |= r >> 2;
+   r |= r >> 4;
+   r |= r >> 8;
+   r |= r >> 16;
+   r |= r >> 32;
+
+   return r - (r >> 1);
+}
+
+static inline size_t   mulle_pow2rounddown( size_t v)
+{
+   if( sizeof( size_t) >= sizeof( uint64_t))
+      return (size_t) mulle_pow2rounddown_64( (uint64_t) v);
+   return (size_t) mulle_pow2rounddown_32( (uint32_t) v);
+}
+
+
+
+// compatibility:
+
+static inline uint64_t   mulle_pow2round_32( uint32_t v)
+{
+   return( mulle_pow2roundup_32( v));
+}
+
+
+static inline uint64_t   mulle_pow2round_64( uint64_t v)
+{
+   return( mulle_pow2roundup_64( v));
+}
+
+
+static inline size_t   mulle_pow2round( size_t v)
+{
+   return( mulle_pow2roundup( v));
+}
+
+
 
 #endif
 

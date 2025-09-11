@@ -32,8 +32,11 @@
 
 #include "include.h"
 
+#include "mulle-container-math.h"
 #include "mulle-container-operation.h"
 #include "mulle-container-callback-global.h"
+
+#include <string.h>
 
 
 #define MULLE__POINTERSET_FILL_SHIFT    2
@@ -63,10 +66,11 @@ static inline size_t
  */
 
 // fields are considered private
-#define _MULLE__POINTERSET_BASE  \
-   void     **_storage;          \
-   size_t   _count;              \
-   size_t   _size
+#define _MULLE__POINTERSET_BASE   \
+    void     **_storage;          \
+    void     **_initial_storage;  \
+    size_t   _count;              \
+    size_t   _size               
 
 #ifndef MULLE__CONTAINER_MISER_MODE
 #define MULLE__POINTERSET_BASE          \
@@ -100,6 +104,13 @@ MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_init( struct mulle__pointerset *set,
                                  size_t capacity,
                                  struct mulle_allocator *allocator);
+
+MULLE_C_NONNULL_FIRST
+void
+   _mulle__pointerset_init_with_static_pointers( struct mulle__pointerset *set,
+                                                 void **storage,
+                                                 size_t capacity);
+
 
 MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_done( struct mulle__pointerset *set,
