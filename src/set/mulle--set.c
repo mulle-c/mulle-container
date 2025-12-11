@@ -169,7 +169,9 @@ char   *_mulle__set_describe( struct mulle__set *set,
       memcpy( &result[ len], s, s_len);
       len += s_len;
 
-      mulle_allocator_free( value_allocator, s);
+      // else it static
+      if( value_allocator)
+         _mulle_allocator_free( value_allocator, s);
    }
    mulle__setenumerator_done( &rover);
 

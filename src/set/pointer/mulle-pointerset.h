@@ -47,6 +47,15 @@ struct mulle_pointerset
       .allocator = xallocator              \
    })
 
+// MEMO: not possible because its a hashtable, duh!
+//#define MULLE_POINTERSET_FLEXIBLE_DATA( pointers, count, xallocator)  \
+//   ((struct mulle_pointerset)                                         \
+//   {                                                                  \
+//      ._storage         = pointers,                                   \
+//      ._initial_storage = pointers,                                   \
+//      ._size            = count,                                      \
+//      ._allocator       = .xallocator                                 \
+//   })
 
 static inline struct mulle_pointerset  *
    mulle_pointerset_alloc( struct mulle_allocator *allocator)
@@ -56,6 +65,7 @@ static inline struct mulle_pointerset  *
    set = mulle_allocator_malloc( allocator, sizeof( struct mulle_pointerset));
    return( set);
 }
+
 
 // if capacity is 0, this just does a memset 0
 MULLE_C_NONNULL_FIRST
@@ -263,6 +273,7 @@ struct mulle_pointerset  *mulle_pointerset_copy( struct mulle_pointerset *set);
       for( int  name ## __j = 0;    /* break protection */  \
            name ## __j < 1;                                 \
            name ## __j++)
+
 
 //
 // API still incomplete, borrow from inferior data structure.

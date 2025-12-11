@@ -527,8 +527,8 @@ static inline void
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 size_t   _mulle__structarray_set_count( struct mulle__structarray *array,
-                                              size_t count,
-                                              struct mulle_allocator *allocator);
+                                        size_t count,
+                                        struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST

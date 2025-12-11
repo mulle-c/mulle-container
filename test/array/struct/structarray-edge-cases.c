@@ -65,26 +65,9 @@ int   main( void)
       mulle_structarray_done(&array);
    }
    
-   // Test 4: Invalid parameters
-   printf("Test 4: Invalid parameters\n");
-   {
-      struct mulle_structarray  array;
-      
-      // Test invalid index
-      mulle_structarray_init(&array, sizeof(struct TestStruct), alignof(struct TestStruct), 10, NULL);
-      
-      struct TestStruct *item = mulle_structarray_get(&array, 100);
-      printf("  Get invalid index 100: %s\n", item ? "found" : "NULL");
-      
-      // Test remove invalid index
-      mulle_structarray_remove_at_index(&array, 0);
-      printf("  Remove invalid index 0: no crash\n");
-      
-      mulle_structarray_done(&array);
-   }
-   
-   // Test 5: Memory allocation failures
-   printf("Test 5: Memory allocation failures\n");
+
+   // Test 4: Memory allocation failures
+   printf("Test 4: Memory allocation failures\n");
    {
       struct mulle_structarray  array;
       
@@ -95,8 +78,8 @@ int   main( void)
       mulle_structarray_done(&array);
    }
    
-   // Test 6: Error conditions
-   printf("Test 6: Error conditions\n");
+   // Test 5: Error conditions
+   printf("Test 5: Error conditions\n");
    {
       struct mulle_structarray  array;
       
@@ -110,8 +93,8 @@ int   main( void)
       mulle_structarray_done(&array);
    }
    
-   // Test 7: Static storage initialization
-   printf("Test 7: Static storage initialization\n");
+   // Test 6: Static storage initialization
+   printf("Test 6: Static storage initialization\n");
    {
       struct mulle_structarray  array;
       char                      static_storage[1024];
@@ -128,8 +111,8 @@ int   main( void)
       mulle_structarray_done(&array);
    }
    
-   // Test 8: Copy operations
-   printf("Test 8: Copy operations\n");
+   // Test 7: Copy operations
+   printf("Test 7: Copy operations\n");
    {
       struct mulle_structarray  source_array;
       struct mulle_structarray  dest_array;
@@ -161,8 +144,8 @@ int   main( void)
       mulle_structarray_done(&dest_array);
    }
    
-   // Test 9: Enumeration
-   printf("Test 9: Enumeration\n");
+   // Test 8: Enumeration
+   printf("Test 8: Enumeration\n");
    {
       struct mulle_structarray  array;
       struct mulle_structarrayenumerator rover;

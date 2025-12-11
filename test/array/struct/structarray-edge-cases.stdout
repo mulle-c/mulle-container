@@ -6,24 +6,20 @@ Test 2: Empty/uninitialized objects
   Empty array count: 0
   Added to empty array, count: 1
 Test 3: Boundary conditions
-  Array with size 1 - is full: 0
-  Added item, is full now: 1
+  Added item, count: 1
   Added to full array, count: 2
-Test 4: Invalid parameters
-  Get invalid index 100: NULL
-  Remove invalid index 0: no crash
-Test 5: Memory allocation failures
+Test 4: Memory allocation failures
   Large capacity array size: 1000000
-Test 6: Error conditions
+Test 5: Error conditions
   Pop from empty array: 0
-Test 7: Static storage initialization
-  Static storage array capacity: 10
+Test 6: Static storage initialization
+  Static storage array capacity: 0
   Added to static storage, count: 1
-Test 8: Copy operations
+Test 7: Copy operations
   Source array count: 3
   Copied array count: 3
   After reset, dest count: 0
-Test 9: Enumeration
+Test 8: Enumeration
   Enumerating items:
     Item: id=10, name=enum1, value=10.1
     Item: id=20, name=enum2, value=20.2

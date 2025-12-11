@@ -39,6 +39,7 @@
 #include <limits.h>
 #include <stddef.h>
 #include <string.h>
+#include <mulle-c11/mulle-c11-align.h>
 
 #include <mulle-allocator/mulle-allocator.h>
 

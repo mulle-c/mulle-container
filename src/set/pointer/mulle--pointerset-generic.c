@@ -202,10 +202,10 @@ static uintptr_t  _find_index_generic( void  **storage,
                                        struct mulle_container_keycallback *callback)
 {
    mulle_container_keycallback_is_equal_t   *f;
-   void           *param1;
-   void           *param2;
-   void           *notakey;
-   size_t   mask;
+   void                                     *param1;
+   void                                     *param2;
+   void                                     *notakey;
+   size_t                                   mask;
 
    f       = callback->is_equal;
    param1  = callback;
@@ -454,18 +454,18 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator)
 {
-   uintptr_t      found;
-   uintptr_t      hash;
-   size_t         dst_index;
-   size_t         hole_index;
-   size_t         i;
-   size_t         mask;
-   size_t         search_start;
-   size_t         size;
-   void           *notakey;
-   void           *q;
+   uintptr_t   found;
+   uintptr_t   hash;
+   size_t      dst_index;
+   size_t      hole_index;
+   size_t      i;
+   size_t      mask;
+   size_t      search_start;
+   size_t      size;
+   void        *notakey;
+   void        *q;
 #ifndef MULLE__CONTAINER_MUTATION_NDEBUG
-   uintptr_t      memo_set = set->_n_mutations;
+   uintptr_t   memo_set = set->_n_mutations;
 #endif
 
    if( ! set->_count)

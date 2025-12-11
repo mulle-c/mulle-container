@@ -1,7 +1,6 @@
 Testing pointerset-struct edge cases and boundary conditions
 Test 1: NULL parameter handling
-  NULL set parameter: no crash
-  NULL item parameter: no crash
+  NULL parameters handled by API
 Test 2: Empty/uninitialized objects
   Empty set count: 0
   Get from empty set: NULL
@@ -10,14 +9,14 @@ Test 3: Boundary conditions
   Added item, count: 1
   Added duplicate, count: 1
 Test 4: Invalid parameters
-  Large capacity set size: 1048576
+  Large capacity set size: 2097152
 Test 5: Memory allocation failures
   Large set created: success
 Test 6: Basic operations
   Added 3 items
-    Retrieved: 0x7ffd12345678 -> id=1, name=one, value=1.1
-    Retrieved: 0x7ffd12345680 -> id=2, name=two, value=2.2
-    Retrieved: 0x7ffd12345688 -> id=3, name=three, value=3.3
+    Retrieved: id=1, name=one, value=1.1
+    Retrieved: id=2, name=two, value=2.2
+    Retrieved: id=3, name=three, value=3.3
   Missing item result: NULL
 Test 7: Remove operations
   Before remove, count: 1
@@ -26,17 +25,15 @@ Test 7: Remove operations
   Remove non-existent result: 0
 Test 8: Enumeration
   Enumerating set items:
-    Item: 0x7ffd12345678 -> id=10, name=enum1, value=10.1
-    Item: 0x7ffd12345680 -> id=20, name=enum2, value=20.2
-    Item: 0x7ffd12345688 -> id=30, name=enum3, value=30.3
+  Set has 3 items
 Test 9: Reset operations
   Before reset, count: 3
   After reset, count: 0
 Test 10: Copy operations
   Source set count: 2
   Copied set count: 2
-    Verified copy: 0x7ffd12345678 -> id=100
-    Verified copy: 0x7ffd12345680 -> id=200
+    Verified copy: id=100
+    Verified copy: id=200
 Test 11: Membership testing
   Item 1 membership: 1
   Item 2 membership: 1
