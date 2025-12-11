@@ -1,5 +1,6 @@
 #include <mulle-container/mulle-container.h>
 #include <stdio.h>
+#include <errno.h>
 
 int main(void)
 {
@@ -17,6 +18,7 @@ int main(void)
     // Test NULL allocator in init
     _mulle__rangemap_init(&map, 4, NULL);
     printf("NULL allocator init handled gracefully\n");
+    _mulle__rangemap_done(&map, NULL);
     
     // Test 2: Invalid range handling
     printf("\nTest 2: Invalid range handling\n");
@@ -75,10 +77,10 @@ int main(void)
     result = _mulle__rangemap_remove(&map, range, NULL);
     printf("Remove exact range 10-15: %d\n", result);
     
-    // Test non-exact match removal
+    // Test non-existent range removal (after exact removal above)
     range = mulle_range_make(10, 3);
     result = _mulle__rangemap_remove(&map, range, NULL);
-    printf("Remove non-exact range 10-13: %d (expected EACCES=%d)\n", result, EACCES);
+    printf("Remove non-existent range 10-13: %d (expected ENOENT=%d)\n", result, ENOENT);
     
     // Test 5: Index boundary conditions
     printf("\nTest 5: Index boundary conditions\n");

@@ -20,8 +20,8 @@ Type               | Usage
                    | `mulle_not_found`)
 
 MEMO: so usually get_count should return `unsigned int` unless the
-data structure holds bytes size info. For ... reasons `unsigned int` the count
-is more often than not also `size_t`...
+data structure holds bytes size info, then use `size_`. For ... reasons
+`unsigned int` the count is more often than not also `size_t`...
 
 ## Struct datatypes
 

@@ -75,3 +75,4 @@ CMakeLists.txt.bak
 .mulle/etc/make/build-dir
 .idea/
 vgcore.*
+test*/**/*.test.*

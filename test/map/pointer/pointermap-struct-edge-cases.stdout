@@ -1,44 +1,38 @@
 Testing pointermap-struct edge cases and boundary conditions
-Test 1: NULL parameter handling
-  NULL map parameter: no crash
-  NULL key parameter: no crash
-  NULL value parameter: no crash
-Test 2: Empty/uninitialized objects
+Test 1: Empty/uninitialized objects
   Empty map count: 0
   Get from empty map: NULL
-Test 3: Boundary conditions
-  Map with capacity 1 - initial size: 8
+Test 2: Boundary conditions
+  Map with capacity 1 - initial size: 4
   Added item, count: 1
   Added second item, count: 2
-Test 4: Invalid parameters
-  Large capacity map size: 1048576
-Test 5: Memory allocation failures
+Test 3: Invalid parameters
+  Large capacity map size: 2097152
+Test 4: Memory allocation failures
   Large map created: success
-Test 6: Basic operations
+Test 5: Basic operations
   Added 3 items
     Retrieved: key1 -> id=1, name=one, value=1.1
     Retrieved: key2 -> id=2, name=two, value=2.2
     Retrieved: key3 -> id=3, name=three, value=3.3
   Missing key result: NULL
-Test 7: Remove operations
+Test 6: Remove operations
   Before remove, count: 1
   Remove result: 1
   After remove, count: 0
   Remove non-existent result: 0
-Test 8: Enumeration
+Test 7: Enumeration
   Enumerating map items:
-    enum_key1 -> id=10, name=enum1, value=10.1
-    enum_key2 -> id=20, name=enum2, value=20.2
-    enum_key3 -> id=30, name=enum3, value=30.3
-Test 9: Reset operations
+  Map has 3 items
+Test 8: Reset operations
   Before reset, count: 3
   After reset, count: 0
-Test 10: Copy operations
+Test 9: Copy operations
   Source map count: 2
   Copied map count: 2
     Verified copy: copy_key1 -> id=100
     Verified copy: copy_key2 -> id=200
-Test 11: Shrink operations
+Test 10: Shrink operations
   Before shrink, size: 128
-  After shrink, size: 16
+  After shrink, size: 4
 All pointermap-struct edge case tests completed

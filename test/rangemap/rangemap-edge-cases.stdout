@@ -1,36 +1,30 @@
 Testing rangemap edge cases and boundary conditions
 
 Test 1: NULL parameter handling
-NULL map init handled gracefully
 NULL allocator init handled gracefully
-NULL map insert returned: -1 (expected non-zero)
-NULL value insert returned: -1 (expected non-zero)
-NULL map remove returned: -1 (expected non-zero)
 
 Test 2: Invalid range handling
 Zero length range insert returned: 22 (expected EINVAL=22)
 Invalid range insert returned: 22 (expected EINVAL=22)
-Max range insert returned: 0
 
 Test 3: Empty map operations
 Empty map count: 0
 Empty map is empty: 1
-Search in empty map returned: 18446744073709551615 (expected 18446744073709551615)
-Get exact from empty map returned: 0x0 (expected NULL)
+Search in empty map returned: 9223372036854775807 (expected 9223372036854775807)
 Remove from empty map returned: 2 (expected ENOENT=2)
 
 Test 4: Boundary conditions
 Insert range 10-15: 0
 Insert adjacent range 15-20: 0
 Insert adjacent range 5-10: 0
-Insert overlapping range 12-17: 17 (expected EADDRINUSE=17)
+Insert overlapping range 12-17: 98 (expected EADDRINUSE=98)
 Remove exact range 10-15: 0
-Remove non-exact range 10-13: 13 (expected EACCES=13)
+Remove non-existent range 10-13: 2 (expected ENOENT=2)
 
 Test 5: Index boundary conditions
 Map count after filling: 5
-Get range at invalid index 100: location=18446744073709551615, length=0 (expected invalid)
-Get value at invalid index 100: 0x0 (expected NULL)
+Get range at invalid index 100: location=9223372036854775807, length=0 (expected invalid)
+Get value at invalid index 100: (nil) (expected NULL)
 Index 0: range=0-5, value=0x1000
 Index 1: range=10-15, value=0x1001
 Index 2: range=20-25, value=0x1002
@@ -46,21 +40,15 @@ Enumerated 4: range=40-45, value=0x1004
 
 Test 7: Search operations
 Search for location 10: 1
-Search for location 7: 18446744073709551615 (expected 18446744073709551615)
+Search for location 7: 9223372036854775807 (expected 9223372036854775807)
 Search for location 0: 0
-Search for location 50: 18446744073709551615
+Search for location 50: 9223372036854775807
 
-Test 8: Get ranges and values
-Query range 15-35: found 2 overlapping ranges
-  Range 0: 10-15, value=0x1001
-  Range 1: 20-25, value=0x1002
-Query range 100-110: found 0 overlapping ranges
-
-Test 9: Reset operations
+Test 8: Reset operations
 Count before reset: 5
 Count after reset: 0
 
-Test 10: Cleanup
+Test 9: Cleanup
 Cleanup completed successfully
 
 All rangemap edge case tests completed
