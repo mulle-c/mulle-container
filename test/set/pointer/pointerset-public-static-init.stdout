@@ -1,0 +1,8 @@
+Testing mulle_pointerset_init_with_static_pointers
+Initial count: 0
+Initial size: 8
+After adding 0x1234, count: 1
+After adding 0x5678, count: 2
+Found 0x1234: YES
+Found 0x5678: YES
+Found 0x9ABC: NO

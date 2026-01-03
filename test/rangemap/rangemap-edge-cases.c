@@ -1,6 +1,19 @@
 #include <mulle-container/mulle-container.h>
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
+
+static const char *errno_name(int err)
+{
+   switch (err)
+   {
+   case 0:          return "0";
+   case EINVAL:     return "EINVAL";
+   case ENOENT:     return "ENOENT";
+   case EADDRINUSE: return "EADDRINUSE";
+   default:         return "UNKNOWN";
+   }
+}
 
 int main(void)
 {
@@ -28,12 +41,12 @@ int main(void)
     // Test zero length range
     range = mulle_range_make(10, 0);
     result = _mulle__rangemap_insert(&map, range, (void *)0x1234, NULL);
-    printf("Zero length range insert returned: %d (expected EINVAL=%d)\n", result, EINVAL);
+    printf("Zero length range insert returned: %s (expected EINVAL)\n", errno_name(result));
     
     // Test invalid range
     range = mulle_range_make(20, 0);
     result = _mulle__rangemap_insert(&map, range, (void *)0x1234, NULL);
-    printf("Invalid range insert returned: %d (expected EINVAL=%d)\n", result, EINVAL);
+    printf("Invalid range insert returned: %s (expected EINVAL)\n", errno_name(result));
     
     // Test 3: Empty map operations
     printf("\nTest 3: Empty map operations\n");
@@ -49,7 +62,7 @@ int main(void)
     // Remove from empty map
     range = mulle_range_make(100, 10);
     result = _mulle__rangemap_remove(&map, range, NULL);
-    printf("Remove from empty map returned: %d (expected ENOENT=%d)\n", result, ENOENT);
+    printf("Remove from empty map returned: %s (expected ENOENT)\n", errno_name(result));
     
     // Test 4: Boundary conditions
     printf("\nTest 4: Boundary conditions\n");
@@ -57,30 +70,30 @@ int main(void)
     // Test adjacent ranges
     range = mulle_range_make(10, 5);
     result = _mulle__rangemap_insert(&map, range, (void *)0x1000, NULL);
-    printf("Insert range 10-15: %d\n", result);
+    printf("Insert range 10-15: %s\n", errno_name(result));
     
     range = mulle_range_make(15, 5);
     result = _mulle__rangemap_insert(&map, range, (void *)0x2000, NULL);
-    printf("Insert adjacent range 15-20: %d\n", result);
+    printf("Insert adjacent range 15-20: %s\n", errno_name(result));
     
     range = mulle_range_make(5, 5);
     result = _mulle__rangemap_insert(&map, range, (void *)0x3000, NULL);
-    printf("Insert adjacent range 5-10: %d\n", result);
+    printf("Insert adjacent range 5-10: %s\n", errno_name(result));
     
     // Test overlapping ranges
     range = mulle_range_make(12, 5);
     result = _mulle__rangemap_insert(&map, range, (void *)0x4000, NULL);
-    printf("Insert overlapping range 12-17: %d (expected EADDRINUSE=%d)\n", result, EADDRINUSE);
+    printf("Insert overlapping range 12-17: %s (expected EADDRINUSE)\n", errno_name(result));
     
     // Test exact match removal
     range = mulle_range_make(10, 5);
     result = _mulle__rangemap_remove(&map, range, NULL);
-    printf("Remove exact range 10-15: %d\n", result);
+    printf("Remove exact range 10-15: %s\n", errno_name(result));
     
     // Test non-existent range removal (after exact removal above)
     range = mulle_range_make(10, 3);
     result = _mulle__rangemap_remove(&map, range, NULL);
-    printf("Remove non-existent range 10-13: %d (expected ENOENT=%d)\n", result, ENOENT);
+    printf("Remove non-existent range 10-13: %s (expected ENOENT)\n", errno_name(result));
     
     // Test 5: Index boundary conditions
     printf("\nTest 5: Index boundary conditions\n");
@@ -92,7 +105,7 @@ int main(void)
         range = mulle_range_make(i * 10, 5);
         result = _mulle__rangemap_insert(&map, range, (void *)(uintptr_t)(0x1000 + i), NULL);
         if (result != 0) {
-            printf("Failed to insert range %d: %d\n", i, result);
+            printf("Failed to insert range %d: %s\n", i, errno_name(result));
             break;
         }
     }
@@ -139,7 +152,7 @@ int main(void)
     
     // Search for non-existing location
     index = _mulle__rangemap_search(&map, 7);
-    printf("Search for location 7: %zu (expected %zu)\n", index, mulle_not_found_e);
+    printf("Search for location 7: %zu (expected mulle_not_found_e)\n", index);
     
     // Search at boundaries
     index = _mulle__rangemap_search(&map, 0);

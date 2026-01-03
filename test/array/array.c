@@ -215,11 +215,13 @@ static void   simple( void)
    struct mulle_arrayenumerator    rover;
    void                            *item;
    int                             i;
+   char                            *s;
 
    mulle_array_do( array, &mulle_container_keycallback_copied_cstring)
    {
-      mulle_array_add( array, "VfL");
-      assert("VfL" != mulle_array_get( array, 0)); // must have been copied
+      s = "VfL";
+      mulle_array_add( array, s);
+      assert(s != mulle_array_get( array, 0)); // must have been copied
 
       mulle_array_add( array, "Bochum");
       mulle_array_add( array, "1848");

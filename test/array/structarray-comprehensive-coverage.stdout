@@ -1,0 +1,62 @@
+Testing structarray comprehensive coverage
+Testing structarray basic operations
+Initial array - count: 0, size: 4
+Element size: 48
+After adding 3 items - count: 3
+Retrieved item at index 0: id=1, name=first, value=1.1
+Retrieved item at index 2: id=3, name=third, value=3.3
+First item: id=1, name=first, value=1.1
+Last item: id=3, name=third, value=3.3
+Testing structarray pop and set operations
+Initial count: 3
+Popped item: id=30, name=thirty, value=30.0
+Count after pop: 2
+After set at index 1: id=99, name=ninety-nine, value=99.9
+Pop from empty array: failed (expected)
+Testing structarray insert and remove operations
+Initial count: 2
+After insert at index 1 - count: 3
+Item 0: id=1, name=first, value=1.0
+Item 1: id=2, name=second, value=2.0
+Item 2: id=3, name=third, value=3.0
+After remove at index 1 - count: 2
+After remove last - count: 1
+Testing structarray guarantee and reserve operations
+Initial size: 2
+Guarantee succeeded
+Size after guarantee: 10
+Added guaranteed item, count: 1
+Reserved and wrote item directly, count: 2
+Advanced by 2, count: 4
+Testing structarray with static storage
+Initialized with static storage, size: 0
+Count after adding 2 items: 2
+Retrieved from static storage: id=1, name=static1, value=1.0
+Testing structarray sorting operations
+Before sorting (count 5):
+  Item 0: id=30, name=thirty
+  Item 1: id=10, name=ten
+  Item 2: id=50, name=fifty
+  Item 3: id=20, name=twenty
+  Item 4: id=40, name=forty
+After sorting:
+  Item 0: id=10, name=ten
+  Item 1: id=20, name=twenty
+  Item 2: id=30, name=thirty
+  Item 3: id=40, name=forty
+  Item 4: id=50, name=fifty
+Testing structarray edge cases
+Get first from empty array: NULL (expected)
+Get last from empty array: NULL (expected)
+Get lenient from empty array: found
+Get lenient at valid index 0: found
+Get lenient at invalid index 10: NULL (expected)
+Get current pointer: found
+Used as length: 48
+Size as length: 48
+Testing structarray zero and count operations
+Initial count: 2
+Count after zero_to_count(5): 5
+Count after set_count(3): 3 (returned: 0)
+Size after size_to_fit: 3
+All structarray coverage tests completed
