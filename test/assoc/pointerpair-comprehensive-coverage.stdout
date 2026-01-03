@@ -1,0 +1,45 @@
+Testing pointerpair comprehensive coverage
+Testing pointerpair basic operations
+Created pair1: key=key1, value=value1
+Created pair2: key=key2, value=value2
+Invalid pair check: invalid
+Valid pair1 check: valid
+Valid pair2 check: valid
+Testing pointerpair comparison functions
+Pointer compare pair1 vs pair2: -256
+Pointer compare pair1 vs pair3 (same key): 0
+Intptr compare pair1 vs pair2: -10
+Intptr compare pair1 vs pair3 (same key): 0
+String compare 'apple' vs 'banana': -1
+String compare 'apple' vs 'apple': 0
+Testing pointerpair search functions
+Binary search for 'cherry': index 2
+Binary search for 'grape' (not found): index -1
+Binary search for 'apple' (first): index 0
+Binary search for 'elderberry' (last): index 4
+Binary search or less for 'coconut': index 2
+Testing pointerpairarray basic operations
+Initial array - count: 0, size: 0
+After adding 3 pairs - count: 3
+Retrieved pair at index 0: key=key1, value=value1
+Retrieved pair at index 2: key=key3, value=value3
+Last pair: key=key3, value=value3
+Popped pair: key=key3, value=value3
+After pop - count: 2
+Testing pointerpairarray search and find
+Found 'banana' at index: 1
+Found 'banana' with string compare at index: 1
+'grape' not found (expected)
+Testing pointerpairarray enumerator
+Enumerated pair 0: key=first, value=value1
+Enumerated pair 1: key=second, value=value2
+Enumerated pair 2: key=third, value=value3
+Testing pointerpairarray edge cases
+Pop from empty array - invalid: yes
+Get last from empty array - invalid: yes
+After guaranteed add - count: 1
+After reset - count: 0
+Testing pointerpair retain/release
+Created pair for retain/release test: key=test_key, value=test_value
+Retain/release API structure tested (callbacks would be needed for full test)
+All pointerpair coverage tests completed

@@ -1,0 +1,48 @@
+Testing mulle--rangemap comprehensive coverage
+Testing rangemap basic operations
+Initialized rangemap, count: 0
+Successfully inserted range1
+After adding range1, count: 1
+Successfully inserted range2
+After adding range2, count: 2
+Successfully inserted range3
+After adding range3, count: 3
+Search at location 12: value1
+Search at location 21: value2
+Search at location 0: not found
+Search at location 18 (gap): not found
+Testing rangemap overlapping ranges
+Added base range 10-19, count: 1
+Added overlap1 5-12, count: 1
+Added overlap2 15-22, count: 1
+Added inside 12-14, count: 1
+Added outside 25-29, count: 2
+Search at 10: base
+Search at 15: base
+Search at 27: outside
+Testing rangemap remove operations
+Inserted range1
+Inserted range2
+Initial setup, count: 2
+Before remove - search at 12: range1
+Successfully removed range1
+After remove, count: 1
+After remove - search at 12: not found
+Testing rangemap edge cases
+Added single location, count: 1
+Added large range, count: 2
+Search at 0: not found
+Search at 100: single
+Search at 1500: large
+Search at 2500 (beyond): not found
+Testing rangemap boundary conditions
+Added adjacent ranges, count: 3
+Search at 4 (before): not found
+Search at 5 (start): touching
+Search at 9 (end): touching
+Search at 10 (next start): adj1
+Search at 14 (end): adj1
+Search at 15 (adjacent start): adj2
+Search at 19 (final end): adj2
+Search at 20 (beyond): not found
+All rangemap coverage tests completed

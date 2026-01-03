@@ -4,22 +4,22 @@ Test 1: NULL parameter handling
 NULL allocator init handled gracefully
 
 Test 2: Invalid range handling
-Zero length range insert returned: 22 (expected EINVAL=22)
-Invalid range insert returned: 22 (expected EINVAL=22)
+Zero length range insert returned: EINVAL (expected EINVAL)
+Invalid range insert returned: EINVAL (expected EINVAL)
 
 Test 3: Empty map operations
 Empty map count: 0
 Empty map is empty: 1
 Search in empty map returned: 9223372036854775807 (expected 9223372036854775807)
-Remove from empty map returned: 2 (expected ENOENT=2)
+Remove from empty map returned: ENOENT (expected ENOENT)
 
 Test 4: Boundary conditions
 Insert range 10-15: 0
 Insert adjacent range 15-20: 0
 Insert adjacent range 5-10: 0
-Insert overlapping range 12-17: 98 (expected EADDRINUSE=98)
+Insert overlapping range 12-17: EADDRINUSE (expected EADDRINUSE)
 Remove exact range 10-15: 0
-Remove non-existent range 10-13: 2 (expected ENOENT=2)
+Remove non-existent range 10-13: ENOENT (expected ENOENT)
 
 Test 5: Index boundary conditions
 Map count after filling: 5
@@ -40,7 +40,7 @@ Enumerated 4: range=40-45, value=0x1004
 
 Test 7: Search operations
 Search for location 10: 1
-Search for location 7: 9223372036854775807 (expected 9223372036854775807)
+Search for location 7: 9223372036854775807 (expected mulle_not_found_e)
 Search for location 0: 0
 Search for location 50: 9223372036854775807
 
