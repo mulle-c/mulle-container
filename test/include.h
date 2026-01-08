@@ -8,7 +8,6 @@
 
 #include <mintomic/mintomic.h>
 #include <mulle-allocator/mulle-allocator.h>
-#include <mulle-atexit/mulle-atexit.h>
 #include <mulle-atinit/mulle-atinit.h>
 #include <mulle-c11/mulle-c11.h>
 #include <mulle-container/mulle-container.h>

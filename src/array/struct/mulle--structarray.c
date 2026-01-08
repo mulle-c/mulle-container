@@ -52,8 +52,8 @@ static void   _mulle__structarray_realloc( struct mulle__structarray *array,
                                            size_t new_size,
                                            struct mulle_allocator *allocator)
 {
-   return( _mulle__structarray_realloc_as_length( array, 
-                                               new_size * array->_sizeof_struct, allocator));
+   _mulle__structarray_realloc_as_length( array,
+                                          new_size * array->_sizeof_struct, allocator);
 }
 
 

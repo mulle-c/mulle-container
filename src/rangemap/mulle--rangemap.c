@@ -106,7 +106,7 @@ int   _mulle__rangemap_insert( struct mulle__rangemap *map,
       ranges = _mulle__rangemap_get_ranges( map);
    }
 
-   index  = _mulle_range_hole_bsearch( ranges, map->_length, range.location);
+   index  = _mulle_range_hole_bsearch( ranges, (unsigned int) map->_length, range.location);
 
    // Move everything up to make space for the new range
    memmove( &ranges[ index + 1],
@@ -116,7 +116,7 @@ int   _mulle__rangemap_insert( struct mulle__rangemap *map,
    values = _mulle__rangemap_get_values( map);
    memmove( &values[ index + 1],
             &values[ index],
-            (map->_length - index) * sizeof( void *));
+            (size_t) (map->_length - index) * sizeof( void *));
 
    // Insert new range and value
    ranges[ index] = range;
@@ -141,6 +141,9 @@ int   _mulle__rangemap_remove( struct mulle__rangemap *map,
    size_t               index;
    size_t               n;
 
+   // TODO: yikes ... should change API but dont wanna
+   MULLE_C_UNUSED( allocator);
+
    if( ! range.length || ! mulle_range_is_valid( range))
       return( EINVAL);
 
@@ -161,9 +164,9 @@ int   _mulle__rangemap_remove( struct mulle__rangemap *map,
    if( n)
    {
       memmove( &ranges[ index], &ranges[ index + 1],
-               (map->_length - index) * sizeof( struct mulle_range));
+               (size_t) (map->_length - index) * sizeof( struct mulle_range));
       memmove( &values[ index], &values[ index + 1],
-               (map->_length - index) * sizeof( void *));
+               (size_t) (map->_length - index) * sizeof( void *));
    }
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
@@ -199,6 +202,7 @@ uintptr_t
    if( ! curr)
       return( 0);
 
+   found_count = 0;
    // Scan forward intersecting ranges
    for( i = (uintptr_t) (curr - ranges); i < map->_length; i++)
    {
@@ -272,6 +276,8 @@ void   *_mulle__rangemap_get_exact( struct mulle__rangemap *map,
 void   _mulle__rangemap_reset( struct mulle__rangemap *map,
                                struct mulle_allocator *allocator)
 {
+   MULLE_C_UNUSED( allocator);
+
    map->_length = 0;
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT

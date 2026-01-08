@@ -202,7 +202,7 @@ void  _mulle__pointerarray_insert_in_range( struct mulle__pointerarray *array,
    size_t   new_size;
    void     **p;
 
-   if( range.length == -1)
+   if( range.length == (uintptr_t) -1)
    {
       range.length = 0;
       for( p = pointers; *p; p++)
