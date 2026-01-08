@@ -48,14 +48,15 @@ struct mulle_pointerset
    })
 
 // MEMO: not possible because its a hashtable, duh!
-//#define MULLE_POINTERSET_FLEXIBLE_DATA( pointers, count, xallocator)  \
-//   ((struct mulle_pointerset)                                         \
-//   {                                                                  \
-//      ._storage         = pointers,                                   \
-//      ._initial_storage = pointers,                                   \
-//      ._size            = count,                                      \
-//      ._allocator       = .xallocator                                 \
-//   })
+/* #define MULLE_POINTERSET_FLEXIBLE_DATA( pointers, count, xallocator)
+ *   ((struct mulle_pointerset)
+ *   {
+ *      ._storage         = pointers,
+ *      ._initial_storage = pointers,
+ *      ._size            = count,
+ *      ._allocator       = .xallocator
+ *   })
+ */
 
 static inline struct mulle_pointerset  *
    mulle_pointerset_alloc( struct mulle_allocator *allocator)

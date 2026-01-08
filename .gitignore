@@ -76,3 +76,7 @@ CMakeLists.txt.bak
 .idea/
 vgcore.*
 test*/**/*.test.*
+/*.md
+!/AGENTS.md
+!/README.md
+build-*/
