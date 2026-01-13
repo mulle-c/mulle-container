@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.13...99.99)
 
-project( mulle-container VERSION 10.0.0 LANGUAGES C)
+project( mulle-container VERSION 10.1.0 LANGUAGES C)
 
 
 ### mulle-sde environment
