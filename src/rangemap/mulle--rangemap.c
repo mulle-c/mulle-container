@@ -298,10 +298,10 @@ void   _mulle__rangemap_print( struct mulle__rangemap *map,
 
    for( i = 0; i < map->_length; i++)
    {
-      fprintf( fp, "#%lu: %lu,%lu -> %p\n",
+      fprintf( fp, "#%lu: %lu,%lu -> 0x%lx\n",
               (unsigned long) i,
               (unsigned long) ranges[ i].location,
               (unsigned long) ranges[ i].length,
-              values[ i]);
+              (unsigned long) (uintptr_t) values[ i]);
    }
 }

@@ -281,6 +281,7 @@ uintptr_t
                                               struct mulle_range range,
                                               struct mulle_container_keyvaluecallback *callback);
 
+MULLE__CONTAINER_GLOBAL
 uintptr_t
    _mulle_pointerpair_find_in_range_compare( struct mulle_pointerpair *buf,
                                              struct mulle_pointerpair search,

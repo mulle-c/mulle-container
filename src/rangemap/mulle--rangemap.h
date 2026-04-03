@@ -70,11 +70,13 @@ struct mulle__rangemap
 };
 
 
-
+MULLE__CONTAINER_GLOBAL
 void   _mulle__rangemap_init( struct mulle__rangemap *map,
                               size_t capacity,
                               struct mulle_allocator *allocator);
 
+
+MULLE__CONTAINER_GLOBAL
 void   _mulle__rangemap_done( struct mulle__rangemap *map,
                               struct mulle_allocator *allocator);
 
@@ -100,13 +102,12 @@ static inline size_t  _mulle__rangemap_get_count( struct mulle__rangemap *map)
    return( map->_length);
 }
 
+
 MULLE_C_NONNULL_FIRST
 static inline int  _mulle__rangemap_is_empty( struct mulle__rangemap *map)
 {
    return( map->_length == 0);
 }
-
-
 
 
 MULLE_C_NONNULL_FIRST
@@ -138,6 +139,7 @@ static inline void   *_mulle__rangemap_get_value( struct mulle__rangemap *map,
 
 //
 // returns 0 on success
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 int   _mulle__rangemap_insert( struct mulle__rangemap *map,
                                struct mulle_range range,
@@ -147,6 +149,7 @@ int   _mulle__rangemap_insert( struct mulle__rangemap *map,
 // the range must match exactly
 // returns 0 on success
 //
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 int    _mulle__rangemap_remove( struct mulle__rangemap *map,
                                 struct mulle_range range,
@@ -197,6 +200,7 @@ struct mulle__rangemapenumerator
            (void *) 0x1                                        \
         )                                                      \
       )                                                        \
+      MULLE_C_CONFINED_LOOP                                    \
       for( int  name ## __j = 0;    /* break protection */     \
            name ## __j < 1;                                    \
            name ## __j++)

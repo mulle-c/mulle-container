@@ -289,7 +289,7 @@ static inline void
 }
 
 
-
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
                                        struct mulle_container_keycallback *callback,
@@ -297,6 +297,7 @@ struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
 
 #pragma mark - debugging
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 char   *_mulle__set_describe( struct mulle__set *set,
                               struct mulle_container_keycallback *callback,

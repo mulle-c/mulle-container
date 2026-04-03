@@ -15,7 +15,7 @@ static void   random_key( char  key[ 5])
 }
 
 
-#define CALLBACK   &mulle_container_keycallback_copied_cstring
+#define KEY_CALLBACK   &mulle_container_keycallback_copied_cstring
 
 static void   simple_fill_test()
 {
@@ -23,22 +23,22 @@ static void   simple_fill_test()
    struct mulle__set   *set;
    size_t        i;
 
-   set = _mulle__set_create( 128, 0, CALLBACK, NULL);
+   set = _mulle__set_create( 128, 0, KEY_CALLBACK, NULL);
 
    printf( "%ld\n", (long) _mulle__set_get_count( set));
 
    for( i = 0; i < 100000; i++)
    {
       random_key( key);
-      _mulle__set_set( set, key, CALLBACK, NULL);
+      _mulle__set_set( set, key, KEY_CALLBACK, NULL);
    }
 
-   _mulle__set_reset( set, CALLBACK, NULL);
+   _mulle__set_reset( set, KEY_CALLBACK, NULL);
 
    printf( "%ld\n", (long) _mulle__set_get_count( set));
-   _mulle__set_set( set, key, CALLBACK, NULL);
+   _mulle__set_set( set, key, KEY_CALLBACK, NULL);
    printf( "%ld\n", (long) _mulle__set_get_count( set));
-   _mulle__set_destroy( set, CALLBACK, NULL);
+   _mulle__set_destroy( set, KEY_CALLBACK, NULL);
 }
 
 

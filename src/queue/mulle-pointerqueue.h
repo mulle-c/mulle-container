@@ -391,6 +391,7 @@ static inline void   mulle_pointerqueueenumerator_done( struct mulle_pointerqueu
            (void *) 0x1                                                 \
         )                                                               \
       )                                                                 \
+      MULLE_C_CONFINED_LOOP                                             \
       for( int  name ## __j = 0;    /* break protection */              \
            name ## __j < 1;                                             \
            name ## __j++)
@@ -398,14 +399,14 @@ static inline void   mulle_pointerqueueenumerator_done( struct mulle_pointerqueu
 
 // created by make-container-for.sh src/set/pointer/mulle-pointerqueue.c
 
-#define mulle_pointerqueue_for( name, item)                                               \
-   assert( sizeof( item) == sizeof( void *));                                             \
-   for( struct mulle_pointerqueueenumerator                                               \
-           rover__ ## item = mulle_pointerqueue_enumerate( name),                         \
+#define mulle_pointerqueue_for( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                            \
+   for( struct mulle_pointerqueueenumerator                                              \
+           rover__ ## item = mulle_pointerqueue_enumerate( name),                        \
            *rover__  ## item ## __i = (void *) 0;                                        \
         ! rover__  ## item ## __i;                                                       \
         rover__ ## item ## __i = (_mulle_pointerqueueenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                           \
+                                   (void *) 1))                                          \
       while( _mulle_pointerqueueenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif

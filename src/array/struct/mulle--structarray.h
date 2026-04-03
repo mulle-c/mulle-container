@@ -489,12 +489,11 @@ static inline void
 }
 
 
-
-void
-   mulle__structarray_add_structarray( struct mulle__structarray *array,
-                                       struct mulle__structarray *other,
-                                       struct mulle_range range,
-                                       struct mulle_allocator *allocator);
+MULLE__CONTAINER_GLOBAL
+void   mulle__structarray_add_structarray( struct mulle__structarray *array,
+                                           struct mulle__structarray *other,
+                                           struct mulle_range range,
+                                           struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_FIRST
 static inline void *
@@ -591,6 +590,7 @@ static inline void
 
 
 // the returned data is always allocated even if storage is still static
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle_data
    _mulle__structarray_extract_data( struct mulle__structarray *array,
@@ -793,6 +793,7 @@ static inline void
         )                                                                     \
       )                                                                       \
                                                                               \
+      MULLE_C_CONFINED_LOOP                                                   \
       for( int  name ## __j = 0;    /* break protection */                    \
            name ## __j < 1;                                                   \
            name ## __j++)
@@ -813,6 +814,7 @@ static inline void
         )                                                                     \
       )                                                                       \
                                                                               \
+      MULLE_C_CONFINED_LOOP                                                   \
       for( int  name ## __j = 0;    /* break protection */                    \
            name ## __j < 1;                                                   \
            name ## __j++)

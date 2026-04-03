@@ -37,14 +37,17 @@
 // remove stuff from the pointerset. The standard mulle-pointerset user is
 // "unaware" that a callback is used during storage I/O.
 //
+MULLE__CONTAINER_GLOBAL
 void   _mulle__pointerset_init_storage_generic( void **buf,
                                                 size_t n,
                                                 void *notakey);
 
+MULLE__CONTAINER_GLOBAL
 void   **_mulle__pointerset_allocate_storage_generic( size_t n,
                                                       void *notakey,
                                                       struct mulle_allocator *allocator);
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerset_release_all( struct mulle__pointerset *set,
                                        struct mulle_container_keycallback *callback,
@@ -176,6 +179,7 @@ static inline void   _mulle__pointerset_keycallback_release( struct mulle__point
 #endif
 
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   _mulle__pointerset_reset_generic( struct mulle__pointerset *set,
                                          void *notakey);
@@ -188,6 +192,7 @@ void  _mulle__pointerset_set_generic( struct mulle__pointerset *set,
                                       struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator)
 {
+   MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
                                              void *p,
                                              enum mulle_container_write_mode mode,
@@ -208,6 +213,7 @@ static inline int
                                       struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator)
 {
+   MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
                                              void *p,
                                              enum mulle_container_write_mode mode,
@@ -229,13 +235,14 @@ static inline void *
                                         struct mulle_container_keycallback *callback,
                                         struct mulle_allocator *allocator)
 {
-   void  *old;
-
+   MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
                                              void *p,
                                              enum mulle_container_write_mode mode,
                                              struct mulle_container_keycallback *callback,
                                              struct mulle_allocator *allocator);
+   void  *old;
+
 
    old = _mulle__pointerset_write_generic( set,
                                            p,
@@ -247,6 +254,7 @@ static inline void *
 
 
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointerset_get_generic( struct mulle__pointerset *set,
                                         void *key,
@@ -262,16 +270,22 @@ static inline int
    return( _mulle__pointerset_get_generic( set, p, callback) != callback->notakey);
 }
 
+
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
                                           struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator);
 
+
+MULLE__CONTAINER_GLOBAL
 int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
                                          void *p,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator);
 
+
+MULLE__CONTAINER_GLOBAL
 void   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
                                               struct mulle__pointerset *src,
                                               struct mulle_container_keycallback *callback,
@@ -281,6 +295,7 @@ void   _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
 // dst will be clobbered with the intersection of a and b
 // dst can be the same as a,
 //
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_FOURTH
 void   _mulle__pointerset_intersect_generic( struct mulle__pointerset *dst,
                                              struct mulle__pointerset *a,
@@ -288,6 +303,7 @@ void   _mulle__pointerset_intersect_generic( struct mulle__pointerset *dst,
                                              struct mulle_container_keycallback *callback,
                                              struct mulle_allocator *allocator);
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_FOURTH
 void   _mulle__pointerset_union_generic( struct mulle__pointerset *dst,
                                          struct mulle__pointerset *a,
@@ -393,10 +409,12 @@ static inline int
    }
 }
 
+
 static inline void   _mulle__genericpointersetenumerator_done( struct mulle__genericpointersetenumerator *rover)
 {
    MULLE_C_UNUSED( rover);
 }
+
 
 static inline void   mulle__genericpointersetenumerator_done( struct mulle__genericpointersetenumerator *rover)
 {

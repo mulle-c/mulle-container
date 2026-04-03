@@ -143,20 +143,21 @@ struct mulle__pointerset  *
            (void *) 0x1                                          \
         )                                                        \
       )                                                          \
+      MULLE_C_CONFINED_LOOP                                      \
       for( int  name ## __j = 0;    /* break protection */       \
            name ## __j < 1;                                      \
            name ## __j++)
 
 // created by make-container-for.sh src/set/pointer/mulle--pointerset.c
 
-#define mulle__pointerset_for( name, item)                                               \
-   assert( sizeof( item) == sizeof( void *));                                            \
-   for( struct mulle__pointersetenumerator                                               \
-           rover__ ## item = mulle__pointerset_enumerate( name),                         \
+#define mulle__pointerset_for( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                           \
+   for( struct mulle__pointersetenumerator                                              \
+           rover__ ## item = mulle__pointerset_enumerate( name),                        \
            *rover__  ## item ## __i = (void *) 0;                                       \
         ! rover__  ## item ## __i;                                                      \
         rover__ ## item ## __i = (_mulle__pointersetenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                          \
+                                   (void *) 1))                                         \
       while( _mulle__pointersetenumerator_next( &rover__ ## item, (void **) &item))
 
 

@@ -158,6 +158,10 @@ void   _mulle__assoc_remove( struct mulle__assoc *assoc,
 }
 
 
+// Compare two assocs for equality
+// Keys are compared using callback->keycallback.is_equal
+// Values: If a compare function is provided, it's used for equality (compare == 0)
+//         Otherwise, values are compared by pointer equality (p->value == q->value)
 int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
                                struct mulle__assoc *other,
                                struct mulle_container_keyvaluecallback *callback,
@@ -180,12 +184,26 @@ int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
 
    p = assoc->_storage;
    q = other->_storage;
-   for( i = 0; i < n; i++)
+   
+   // If we have a compare function, use it for equality (compare == 0 means equal)
+   if( compare)
    {
-      if( p->value != q->value)
-         return( 0);
-      if( ! (callback->keycallback.is_equal)( &callback->keycallback, p->key, q->key))
-         return( 0);
+      for( i = 0; i < n; i++, p++, q++)
+      {
+         if( compare( p, q, userinfo) != 0)
+            return( 0);
+      }
+   }
+   else
+   {
+      // No compare function: check keys with callback, values with pointer equality
+      for( i = 0; i < n; i++, p++, q++)
+      {
+         if( p->value != q->value)
+            return( 0);
+         if( ! (callback->keycallback.is_equal)( &callback->keycallback, p->key, q->key))
+            return( 0);
+      }
    }
 
    return( 1);

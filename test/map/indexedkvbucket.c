@@ -17,6 +17,7 @@ static void   random_key( char  key[ 5])
 
 struct mulle_container_keyvaluecallback   _CALLBACK;
 
+#undef CALLBACK
 #define CALLBACK   &_CALLBACK
 
 static void   simple_fill_test()

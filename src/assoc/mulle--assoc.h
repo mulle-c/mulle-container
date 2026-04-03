@@ -271,6 +271,7 @@ int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
                                void *userinfo);
 
 // if you add notakey, it leads to abort / assert
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__assoc_add( struct mulle__assoc *assoc,
                            void *key,
@@ -824,6 +825,7 @@ int   _mulle__assoc_member( struct mulle__assoc *assoc,
            (void *) 0x1                                               \
         )                                                             \
       )                                                               \
+      MULLE_C_CONFINED_LOOP                                           \
       for( int  name ## __j = 0;    /* break protection */            \
            name ## __j < 1;                                           \
            name ## __j++)
@@ -832,17 +834,17 @@ int   _mulle__assoc_member( struct mulle__assoc *assoc,
 
 // created by make-container-for.sh src/assoc/mulle--assoc.c
 
-#define mulle__assoc_for( name, callback, key, value)                                                           \
-   assert( sizeof( key) == sizeof( void *));                                                                    \
-   assert( sizeof( value) == sizeof( void *));                                                                  \
-   for( struct mulle__assocenumerator                                                                           \
-           rover__ ## key ## __ ## value = mulle__assoc_enumerate( name, callback),                             \
+#define mulle__assoc_for( name, callback, key, value)                                                          \
+   assert( sizeof( key) == sizeof( void *));                                                                   \
+   assert( sizeof( value) == sizeof( void *));                                                                 \
+   for( struct mulle__assocenumerator                                                                          \
+           rover__ ## key ## __ ## value = mulle__assoc_enumerate( name, callback),                            \
            *rover__  ## key ## __ ## value ## __i = (void *) 0;                                                \
         ! rover__  ## key ## __ ## value ## __i;                                                               \
         rover__ ## key ## __ ## value ## __i = (_mulle__assocenumerator_done( &rover__ ## key ## __ ## value), \
-                                              (void *) 1))                                                      \
-      while( _mulle__assocenumerator_next( &rover__ ## key ## __ ## value,                                      \
-                                           (void **) &key,                                                           \
+                                              (void *) 1))                                                     \
+      while( _mulle__assocenumerator_next( &rover__ ## key ## __ ## value,                                     \
+                                           (void **) &key,                                                     \
                                            (void **) &value))
 
 

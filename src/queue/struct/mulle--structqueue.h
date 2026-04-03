@@ -273,13 +273,15 @@ static inline struct mulle__structqueueenumerator
 }
 
 
+MULLE__CONTAINER_GLOBAL
+int   __mulle__structqueueenumerator_next( struct mulle__structqueueenumerator *,
+                                           void **item);
+
 MULLE_C_NONNULL_FIRST_SECOND
 static inline int
    _mulle__structqueueenumerator_next( struct mulle__structqueueenumerator *rover,
                                        void **item)
 {
-   extern int   __mulle__structqueueenumerator_next( struct mulle__structqueueenumerator *,
-                                                     void **item);
    struct mulle__structqueue  *queue;
    size_t                limit;
    size_t                offset;

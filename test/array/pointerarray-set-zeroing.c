@@ -28,7 +28,7 @@ static void  run_random( void)
 
    for( i = 0; i < 1000; i++)
    {
-      index = random() % 10000;
+      index = rand() % 10000;
       mulle_pointerarray_set_zeroing( array, index, (void *) (intptr_t) (index + 1));
    }
 

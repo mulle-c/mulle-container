@@ -1,0 +1,6 @@
+Owned pointers - retains: 1, releases: 1
+Nonowned pointers - retains: 1, releases: 1
+NULL callback - retains: 0, releases: 0
+Value callback - retains: 1, releases: 0
+Copied cstrings - retains: 1, releases: 1
+Callback utility tests passed

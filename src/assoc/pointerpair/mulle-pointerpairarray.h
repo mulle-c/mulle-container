@@ -523,13 +523,13 @@ static inline void
 //
 // TODO: Use standard key, value for this ?
 //
-#define mulle_pointerpairarray_for( name, pair)                                               \
-   for( struct mulle_pointerpairarrayenumerator                                               \
-           rover__ ## pair = mulle_pointerpairarray_enumerate( name),                         \
+#define mulle_pointerpairarray_for( name, pair)                                              \
+   for( struct mulle_pointerpairarrayenumerator                                              \
+           rover__ ## pair = mulle_pointerpairarray_enumerate( name),                        \
            *rover__  ## pair ## __i = (void *) 0;                                            \
         ! rover__  ## pair ## __i;                                                           \
         rover__ ## pair ## __i = (_mulle_pointerpairarrayenumerator_done( &rover__ ## pair), \
-                                   (void *) 1))                                               \
+                                   (void *) 1))                                              \
       while( _mulle_pointerpairarrayenumerator_next( &rover__ ## pair, &pair))
 
 

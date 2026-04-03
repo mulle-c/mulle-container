@@ -365,6 +365,7 @@ void    _mulle__array_add_guaranteed( struct mulle__array *array,
 }
 
 // if you add notakey, it leads to abort / assert
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__array_add( struct mulle__array *array,
                            void  *p,
@@ -763,6 +764,7 @@ static inline void
 /*
  *
  */
+MULLE__CONTAINER_GLOBAL
 int   mulle__array_member( struct mulle__array *array,
                            void *p,
                            struct mulle_container_keycallback *callback);
@@ -782,6 +784,7 @@ int   mulle__array_member( struct mulle__array *array,
            (void *) 0x1                                               \
         )                                                             \
       )                                                               \
+      MULLE_C_CONFINED_LOOP                                           \
       for( int  name ## __j = 0;    /* break protection */            \
            name ## __j < 1;                                           \
            name ## __j++)
@@ -800,34 +803,37 @@ int   mulle__array_member( struct mulle__array *array,
            (void *) 0x1                                               \
         )                                                             \
       )                                                               \
+      MULLE_C_CONFINED_LOOP                                           \
       for( int  name ## __j = 0;    /* break protection */            \
            name ## __j < 1;                                           \
            name ## __j++)
 
 
 // created by make-container-for.sh src/array/mulle--array.c
-
-#define mulle__array_for( name, callback, item)                                     \
-   assert( sizeof( item) == sizeof( void *));                                       \
-   for( struct mulle__arrayenumerator                                               \
-           rover__ ## item = mulle__array_enumerate( name, callback),               \
+// MEMO: why is this not a MULLE_C_CONFINED_LOOP, because the enumerator_done
+//       is a nop. All enumerator_done so far have been nops. Still loathe
+//       to kill them tough.
+#define mulle__array_for( name, callback, item)                                    \
+   assert( sizeof( item) == sizeof( void *));                                      \
+   for( struct mulle__arrayenumerator                                              \
+           rover__ ## item = mulle__array_enumerate( name, callback),              \
            *rover__  ## item ## __i = (void *) 0;                                  \
         ! rover__  ## item ## __i;                                                 \
         rover__ ## item ## __i = (_mulle__arrayenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                     \
+                                   (void *) 1))                                    \
       while( _mulle__arrayenumerator_next( &rover__ ## item, (void **) &item))
 
 
 // created by make-container-for.sh --reverse src/array/mulle--array.c
 
-#define mulle__array_for_reverse( name, callback, item)                                    \
-   assert( sizeof( item) == sizeof( void *));                                              \
-   for( struct mulle__arrayreverseenumerator                                               \
-           rover__ ## item = mulle__array_reverseenumerate( name, callback),               \
+#define mulle__array_for_reverse( name, callback, item)                                   \
+   assert( sizeof( item) == sizeof( void *));                                             \
+   for( struct mulle__arrayreverseenumerator                                              \
+           rover__ ## item = mulle__array_reverseenumerate( name, callback),              \
            *rover__  ## item ## __i = (void *) 0;                                         \
         ! rover__  ## item ## __i;                                                        \
         rover__ ## item ## __i = (_mulle__arrayreverseenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                            \
+                                   (void *) 1))                                           \
       while( _mulle__arrayreverseenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif

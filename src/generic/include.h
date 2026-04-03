@@ -43,15 +43,19 @@
 
 #include "_mulle-container-include.h"
 
-#ifdef MULLE__CONTAINER_BUILD
-# define MULLE__CONTAINER_GLOBAL    MULLE_C_GLOBAL
+#if defined( MULLE__CONTAINER_BUILD) || defined( MULLE__CORE_BUILD)
+# define MULLE__CONTAINER_GLOBAL        MULLE_C_GLOBAL
+# define MULLE__CONTAINER_GLOBAL_VAR    MULLE_C_GLOBAL_VAR
 #else
 # if defined( MULLE_CONTAINER_INCLUDE_DYNAMIC) || (defined( MULLE_INCLUDE_DYNAMIC) && ! defined( MULLE_CONTAINER_INCLUDE_STATIC))
-#  define MULLE__CONTAINER_GLOBAL   MULLE_C_EXTERN_GLOBAL
+#  define MULLE__CONTAINER_GLOBAL       MULLE_C_EXTERN_GLOBAL
 # else
-#  define MULLE__CONTAINER_GLOBAL   extern
+#  define MULLE__CONTAINER_GLOBAL       extern
 # endif
+# define MULLE__CONTAINER_GLOBAL_VAR
 #endif
+
+
 
 
 /* You can add some more include statements here */

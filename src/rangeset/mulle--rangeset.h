@@ -365,6 +365,7 @@ struct mulle_range
            (void *) 0x1                                        \
         )                                                      \
       )                                                        \
+      MULLE_C_CONFINED_LOOP                                    \
       for( int  name ## __j = 0;    /* break protection */     \
            name ## __j < 1;                                    \
            name ## __j++)
@@ -383,6 +384,7 @@ struct mulle_range
            (void *) 0x1                                             \
         )                                                           \
       )                                                             \
+      MULLE_C_CONFINED_LOOP                                         \
       for( int  name ## __j = 0;    /* break protection */          \
            name ## __j < 1;                                         \
            name ## __j++)

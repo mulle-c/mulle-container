@@ -191,6 +191,7 @@ static inline int   mulle_uniquepointerarray_member( struct mulle_uniquepointera
            (void *) 0x1                                           \
         )                                                         \
       )                                                           \
+      MULLE_C_CONFINED_LOOP                                       \
       for( int  name ## __j = 0;    /* break protection */        \
            name ## __j < 1;                                       \
            name ## __j++)
@@ -209,6 +210,7 @@ static inline int   mulle_uniquepointerarray_member( struct mulle_uniquepointera
            (void *) 0x1                                                         \
         )                                                                       \
       )                                                                         \
+      MULLE_C_CONFINED_LOOP                                                     \
       for( int  name ## __j = 0;    /* break protection */                      \
            name ## __j < 1;                                                     \
            name ## __j++)
