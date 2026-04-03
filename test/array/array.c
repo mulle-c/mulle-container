@@ -482,7 +482,7 @@ static void   copy_array( void)
 static void   find( void)
 {
    struct mulle_array   array;
-   unsigned long        found;
+   uintptr_t            found;
    char                 *s1;
    char                 *s2;
    char                 *s3;

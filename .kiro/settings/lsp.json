@@ -1,0 +1,19 @@
+{
+  "languages": {
+    "objc": {
+      "name": "mulle-clangd",
+      "command": "/opt/mulle-clang-project/latest/bin/mulle-clangd",
+      "args": ["--background-index", "--compile-commands-dir=dependency/Debug"],
+      "file_extensions": ["c", "m", "h", "aam", "nm", "nh"],
+      "project_patterns": [ ".mulle", "CMakeLists.txt", "compile_commands.json", "Makefile"],
+      "exclude_patterns": ["**/test/**", "**/research/**", "**/old/**"],
+      "multi_workspace": false,
+      "initialization_options": {
+        "mulle-clangd": {
+          "fallbackFlags": ["-std=c11"]
+        }
+      },
+      "request_timeout_secs": 240
+    }
+  }
+}

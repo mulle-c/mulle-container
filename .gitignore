@@ -80,3 +80,6 @@ test*/**/*.test.*
 !/AGENTS.md
 !/README.md
 build-*/
+mulle_ta_trace.txt
+.roam
+.graveyard

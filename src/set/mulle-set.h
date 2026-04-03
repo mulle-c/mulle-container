@@ -244,6 +244,7 @@ static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 }
 
 
+MULLE__CONTAINER_GLOBAL
 void   mulle_set_add_set( struct mulle_set *set, struct mulle_set *other);
 
 
@@ -423,6 +424,7 @@ static inline void   mulle_setenumerator_done( struct mulle_setenumerator *rover
            (void *) 0x1                                           \
         )                                                         \
       )                                                           \
+      MULLE_C_CONFINED_LOOP                                       \
       for( int  name ## __j = 0;    /* break protection */        \
            name ## __j < 1;                                       \
            name ## __j++)

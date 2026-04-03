@@ -238,13 +238,16 @@ static inline struct mulle__pointerqueueenumerator
 }
 
 
+MULLE__CONTAINER_GLOBAL
+int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *,
+                                            void **item);
+
+
 MULLE_C_NONNULL_FIRST_SECOND
 static inline int
    _mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover,
                                         void **item)
 {
-   extern int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *,
-                                                      void **item);
    struct mulle__pointerqueue  *queue;
    size_t                limit;
 
@@ -293,6 +296,7 @@ static inline void   mulle__pointerqueueenumerator_done( struct mulle__pointerqu
            (void *) 0x1                                            \
         )                                                          \
       )                                                            \
+      MULLE_C_CONFINED_LOOP                                        \
       for( int  name ## __j = 0;    /* break protection */         \
            name ## __j < 1;                                        \
            name ## __j++)
@@ -301,14 +305,14 @@ static inline void   mulle__pointerqueueenumerator_done( struct mulle__pointerqu
 
 // created by make-container-for.sh src/set/pointer/mulle--pointerqueue.c
 
-#define mulle__pointerqueue_for( name, item)                                               \
-   assert( sizeof( item) == sizeof( void *));                                              \
-   for( struct mulle__pointerqueueenumerator                                               \
-           rover__ ## item = mulle__pointerqueue_enumerate( name),                         \
+#define mulle__pointerqueue_for( name, item)                                              \
+   assert( sizeof( item) == sizeof( void *));                                             \
+   for( struct mulle__pointerqueueenumerator                                              \
+           rover__ ## item = mulle__pointerqueue_enumerate( name),                        \
            *rover__  ## item ## __i = (void *) 0;                                         \
         ! rover__  ## item ## __i;                                                        \
         rover__ ## item ## __i = (_mulle__pointerqueueenumerator_done( &rover__ ## item), \
-                                   (void *) 1))                                            \
+                                   (void *) 1))                                           \
       while( _mulle__pointerqueueenumerator_next( &rover__ ## item, (void **) &item))
 
 

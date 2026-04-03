@@ -336,6 +336,7 @@ static inline struct mulle_pointerpair
 }
 
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 size_t
    _mulle__pointerpairarray_get_in_range( struct mulle__pointerpairarray *array,
@@ -590,6 +591,7 @@ static inline void
            (void *) 0x1                                                \
         )                                                              \
       )                                                                \
+      MULLE_C_CONFINED_LOOP                                            \
       for( int  name ## __j = 0;    /* break protection */             \
            name ## __j < 1;                                            \
            name ## __j++)

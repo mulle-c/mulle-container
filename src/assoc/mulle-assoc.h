@@ -513,6 +513,12 @@ static inline void   mulle_assoc_reset( struct mulle_assoc *assoc)
 
 
 // will use callbacks of assoc to determine equality
+// Check if two assocs are equal
+// Keys are compared using the keycallback's is_equal function
+// Values: If the assoc has a compare function, it's used for equality
+//         Otherwise, values are compared by pointer equality only
+// For copied values (e.g., copied_cstring), provide a compare function
+// that compares both key and value content (e.g., _mulle_pointerpair_compare_string_key)
 static inline int   mulle_assoc_is_equal( struct mulle_assoc *assoc,
                                           struct mulle_assoc *other)
 {
@@ -783,6 +789,7 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
            (void *) 0x1                                                      \
         )                                                                    \
       )                                                                      \
+      MULLE_C_CONFINED_LOOP                                                  \
       for( int  name ## __j = 0;    /* break protection */                   \
            name ## __j < 1;                                                  \
            name ## __j++)
@@ -791,17 +798,17 @@ static inline void   mulle_assocenumerator_done( struct mulle_assocenumerator *r
 
 // created by make-container-for.sh src/assoc/mulle-assoc.c
 
-#define mulle_assoc_for( name, key, value)                                                                     \
-   assert( sizeof( key) == sizeof( void *));                                                                   \
-   assert( sizeof( value) == sizeof( void *));                                                                 \
-   for( struct mulle_assocenumerator                                                                           \
-           rover__ ## key ## __ ## value = mulle_assoc_enumerate( name),                                       \
+#define mulle_assoc_for( name, key, value)                                                                    \
+   assert( sizeof( key) == sizeof( void *));                                                                  \
+   assert( sizeof( value) == sizeof( void *));                                                                \
+   for( struct mulle_assocenumerator                                                                          \
+           rover__ ## key ## __ ## value = mulle_assoc_enumerate( name),                                      \
            *rover__  ## key ## __ ## value ## __i = (void *) 0;                                               \
         ! rover__  ## key ## __ ## value ## __i;                                                              \
         rover__ ## key ## __ ## value ## __i = (_mulle_assocenumerator_done( &rover__ ## key ## __ ## value), \
-                                              (void *) 1))                                                     \
-      while( _mulle_assocenumerator_next( &rover__ ## key ## __ ## value,                                      \
-                                      (void **) &key,                                                          \
+                                              (void *) 1))                                                    \
+      while( _mulle_assocenumerator_next( &rover__ ## key ## __ ## value,                                     \
+                                      (void **) &key,                                                         \
                                       (void **) &value))
 
 

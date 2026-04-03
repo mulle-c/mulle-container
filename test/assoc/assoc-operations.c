@@ -58,13 +58,13 @@ static void  test_index_access( void)
    mulle_assoc_set( assoc, (void *) 3, (void *) 30);
 
    pair = mulle_assoc_get_at_index( assoc, 0);
-   printf( "Index 0: key=%ld value=%ld\n", (long) pair.key, (long) pair.value);
+   printf( "Index 0: key=%td value=%td\n", (intptr_t) pair.key, (intptr_t) pair.value);
 
    // Replace key=1 at index 0 with key=2,value=20
    // After sorting, key=2 should be at index 1 since keys are [1,2,3]
    mulle_assoc_set_at_index( assoc, 0, (void *) 2, (void *) 20);
    pair = mulle_assoc_get_at_index( assoc, 1);  // Check index 1 where key=2 should be
-   printf( "After set index 0: key=%ld value=%ld\n", (long) pair.key, (long) pair.value);
+   printf( "After set index 0: key=%td value=%td\n", (intptr_t) pair.key, (intptr_t) pair.value);
 
    mulle_assoc_destroy( assoc);
 }

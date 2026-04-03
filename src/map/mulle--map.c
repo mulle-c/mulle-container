@@ -94,9 +94,9 @@ static inline void _mulle__map_free_storage( struct mulle__map *map,
 }
 
 
-void   _mulle__map_release_all( struct mulle__map *map,
-                                struct mulle_container_keyvaluecallback *callback,
-                                struct mulle_allocator *allocator)
+static void   _mulle__map_release_all( struct mulle__map *map,
+                                       struct mulle_container_keyvaluecallback *callback,
+                                       struct mulle_allocator *allocator)
 {
    struct mulle__mapenumerator   rover;
    struct mulle_pointerpair      *pair;

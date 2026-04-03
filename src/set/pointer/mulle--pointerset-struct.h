@@ -90,21 +90,25 @@ struct mulle__pointerset
 
 #pragma mark - setup and takedown
 
+MULLE__CONTAINER_GLOBAL
 struct mulle__pointerset   *_mulle__pointerset_create( size_t capacity,
                                                        size_t extra,
                                                        struct mulle_allocator *allocator);
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
                                     struct mulle_allocator *allocator);
 
 
 // if capacity is 0, this just does a memset 0
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_init( struct mulle__pointerset *set,
                                  size_t capacity,
                                  struct mulle_allocator *allocator);
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void
    _mulle__pointerset_init_with_static_pointers( struct mulle__pointerset *set,
@@ -112,6 +116,7 @@ void
                                                  size_t capacity);
 
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void    _mulle__pointerset_done( struct mulle__pointerset *set,
                                  struct mulle_allocator *allocator);
@@ -119,6 +124,7 @@ void    _mulle__pointerset_done( struct mulle__pointerset *set,
 
 #pragma mark - copying
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 struct mulle__pointerset   *_mulle__pointerset_copy( struct mulle__pointerset *set,
                                                      struct mulle_allocator *allocator);
@@ -175,6 +181,7 @@ static inline int  _mulle__pointerset_is_sparse( struct mulle__pointerset *set)
 
 #pragma mark - operations
 
+MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__pointerset_get( struct mulle__pointerset *set,
                                 void *p);
@@ -269,6 +276,7 @@ static inline void   _mulle__pointersetenumerator_done( struct mulle__pointerset
 {
    MULLE_C_UNUSED( rover);
 }
+
 
 static inline void   mulle__pointersetenumerator_done( struct mulle__pointersetenumerator *rover)
 {

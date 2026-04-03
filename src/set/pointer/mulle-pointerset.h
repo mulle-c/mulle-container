@@ -271,6 +271,7 @@ struct mulle_pointerset  *mulle_pointerset_copy( struct mulle_pointerset *set);
            (void *) 0x1                                     \
         )                                                   \
       )                                                     \
+      MULLE_C_CONFINED_LOOP                                 \
       for( int  name ## __j = 0;    /* break protection */  \
            name ## __j < 1;                                 \
            name ## __j++)
@@ -286,10 +287,11 @@ struct mulle_pointerset  *mulle_pointerset_copy( struct mulle_pointerset *set);
 #define mulle_pointerset_for( set, item)                                                                                     \
    assert( sizeof( item) == sizeof( void *));                                                                                \
    for( struct mulle__pointersetenumerator rover__ ## item = mulle__pointerset_enumerate( (struct mulle__pointerset *) set); \
-        *rover__  ## item ## __i = (void *) 0;                                                                              \
-        ! rover__  ## item ## __i;                                                                                          \
-        rover__ ## item ## __i   = (_mulle__pointersetenumerator_done( &rover__ ## item), (void *) 1))                      \
+        *rover__  ## item ## __i = (void *) 0;                                                                               \
+        ! rover__  ## item ## __i;                                                                                           \
+        rover__ ## item ## __i   = (_mulle__pointersetenumerator_done( &rover__ ## item), (void *) 1))                       \
                                                                                                                              \
+      MULLE_C_CONFINED_LOOP                                                                                                  \
       while(_mulle__pointersetenumerator_next( &rover__ ## item, (void **) &item))
 
 #endif

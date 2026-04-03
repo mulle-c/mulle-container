@@ -304,11 +304,8 @@ static inline int
 }
 
 
-static inline int
-   _mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback)
-{
-   return( callback->release != mulle_container_valuecallback_nop);
-}
+MULLE__CONTAINER_GLOBAL
+int   _mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback);
 
 
 static inline int

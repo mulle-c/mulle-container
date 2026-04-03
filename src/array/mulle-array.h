@@ -47,6 +47,7 @@
 //
 // You can not insert callback->notakey. If a value doesn't exist, you will
 // get back callback->notakey as "not found" (not necessarily NULL).
+// MEMO: It's a keycallback because we do equality checks.
 //
 // You can use the mulle_container_keycallback_int callbacks to store "int"
 // into mulle-array and use mulle_int_as_pointer() and mulle_pointer_as_int()
@@ -817,6 +818,7 @@ static inline void
            (void *) 0x1                                                      \
         )                                                                    \
       )                                                                      \
+      MULLE_C_CONFINED_LOOP                                                  \
       for( int  name ## __j = 0;    /* break protection */                   \
            name ## __j < 1;                                                  \
            name ## __j++)
@@ -835,6 +837,7 @@ static inline void
            (void *) 0x1                                                         \
         )                                                                       \
       )                                                                         \
+      MULLE_C_CONFINED_LOOP                                                     \
       for( int  name ## __j = 0;    /* break protection */                      \
            name ## __j < 1;                                                     \
            name ## __j++)

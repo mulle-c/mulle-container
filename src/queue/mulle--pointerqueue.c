@@ -35,11 +35,6 @@
 #include "include-private.h"
 
 
-int   __mulle__pointerqueueenumerator_next( struct mulle__pointerqueueenumerator *rover,
-                                            void **item);
-
-
-
 struct mulle__pointerqueuebucket *
    _mulle__pointerqueue_new_bucket( struct mulle__pointerqueue *queue,
                                     struct mulle_allocator *allocator)

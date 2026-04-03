@@ -111,6 +111,7 @@ static void  test_insert_in_range( void)
 
 static void  run_test( void (*f)( void), char *name)
 {
+   mulle_testallocator_set_tracelevel( 2);
    mulle_testallocator_reset();
    printf( "%s\n", name);
    (f)();

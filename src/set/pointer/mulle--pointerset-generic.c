@@ -356,10 +356,10 @@ static void   *
    return( notakey);
 }
 
-
-void   *_mulle__pointerset__get_generic( struct mulle__pointerset *set,
-                                         void *key,
-                                         struct mulle_container_keycallback *callback)
+// MEMO: could be global
+static void   *_mulle__pointerset__get_generic( struct mulle__pointerset *set,
+                                                void *key,
+                                                struct mulle_container_keycallback *callback)
 {
    uintptr_t   hash;
    size_t      i;

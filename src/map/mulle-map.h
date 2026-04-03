@@ -431,6 +431,7 @@ static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
 }
 
 
+MULLE__CONTAINER_GLOBAL
 void   mulle_map_add_map( struct mulle_map *map, struct mulle_map *other);
 
 
@@ -558,6 +559,7 @@ static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover
            (void *) 0x1                                           \
         )                                                         \
       )                                                           \
+      MULLE_C_CONFINED_LOOP                                       \
       for( int  name ## __j = 0;    /* break protection */        \
            name ## __j < 1;                                       \
            name ## __j++)
