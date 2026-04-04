@@ -9,7 +9,8 @@
       user="mulle-c";
       repo="mulle-container";
       homepage="https://github.com/mulle-c/mulle-container";
-      license="BSD-3-Clause";
+            version="10.1.1";
+license="BSD-3-Clause";
    };
    dependencies =
    (
