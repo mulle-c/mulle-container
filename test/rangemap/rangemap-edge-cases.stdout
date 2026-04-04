@@ -24,19 +24,19 @@ Remove non-existent range 10-13: ENOENT (expected ENOENT)
 Test 5: Index boundary conditions
 Map count after filling: 5
 Get range at invalid index 100: location=9223372036854775807, length=0 (expected invalid)
-Get value at invalid index 100: 0000000000000000 (expected NULL)
-Index 0: range=0-5, value=0000000000001000
-Index 1: range=10-15, value=0000000000001001
-Index 2: range=20-25, value=0000000000001002
-Index 3: range=30-35, value=0000000000001003
-Index 4: range=40-45, value=0000000000001004
+Get value at invalid index 100: 0x0 (expected NULL)
+Index 0: range=0-5, value=0x1000
+Index 1: range=10-15, value=0x1001
+Index 2: range=20-25, value=0x1002
+Index 3: range=30-35, value=0x1003
+Index 4: range=40-45, value=0x1004
 
 Test 6: Enumeration
-Enumerated 0: range=0-5, value=0000000000001000
-Enumerated 1: range=10-15, value=0000000000001001
-Enumerated 2: range=20-25, value=0000000000001002
-Enumerated 3: range=30-35, value=0000000000001003
-Enumerated 4: range=40-45, value=0000000000001004
+Enumerated 0: range=0-5, value=0x1000
+Enumerated 1: range=10-15, value=0x1001
+Enumerated 2: range=20-25, value=0x1002
+Enumerated 3: range=30-35, value=0x1003
+Enumerated 4: range=40-45, value=0x1004
 
 Test 7: Search operations
 Search for location 10: 1

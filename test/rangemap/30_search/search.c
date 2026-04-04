@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
       {
          value = _mulle__rangemap_get_value( &map, index);
          range = _mulle__rangemap_get_range( &map, index);
-         printf( "%td -> range: %td,%td value: %p\n",
-                i, range.location, range.length, value);
+         printf( "%td -> range: %td,%td value: 0x%llx\n",
+                i, range.location, range.length, (unsigned long long) (uintptr_t) value);
       }
       else
          printf( "%td -> not found\n", i);

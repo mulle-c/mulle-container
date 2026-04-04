@@ -28,3 +28,15 @@ export MULLE_EMULATOR__WINDOWS="WINEDEBUG=fixme-all,err-all wine"
 export MULLE_CRAFT_CROSS_COMPILER_ROOT__WINDOWS="/opt/mulle-clang-project-windows/latest"
 
 
+#
+#
+#
+export MULLE_CRAFT_PLATFORMS="${MULLE_UNAME}:windows"
+
+
+#
+#
+#
+export MULLE_SOURCETREE_PLATFORMS="${MULLE_UNAME}:windows"
+
+

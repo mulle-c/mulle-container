@@ -118,14 +118,14 @@ int main(void)
            range.location, range.length);
     
     value = _mulle__rangemap_get_value(&map, 100);
-    printf("Get value at invalid index 100: %p (expected NULL)\n", value);
+    printf("Get value at invalid index 100: 0x%llx (expected NULL)\n", (unsigned long long) (uintptr_t) value);
     
     // Test valid indices
     for (int i = 0; i < 5; i++) {
         range = _mulle__rangemap_get_range(&map, i);
         value = _mulle__rangemap_get_value(&map, i);
-        printf("Index %d: range=%zu-%zu, value=%p\n", 
-               i, range.location, range.location + range.length, value);
+        printf("Index %d: range=%zu-%zu, value=0x%llx\n", 
+               i, range.location, range.location + range.length, (unsigned long long) (uintptr_t) value);
     }
     
     // Test 6: Enumeration
@@ -138,9 +138,9 @@ int main(void)
     
     rover = _mulle__rangemap_enumerate(&map);
     while (_mulle__rangemapenumerator_next(&rover, &enum_range, &enum_value)) {
-        printf("Enumerated %d: range=%zu-%zu, value=%p\n", 
+        printf("Enumerated %d: range=%zu-%zu, value=0x%llx\n", 
                count++, enum_range.location, 
-               enum_range.location + enum_range.length, enum_value);
+               enum_range.location + enum_range.length, (unsigned long long) (uintptr_t) enum_value);
     }
     
     // Test 7: Search operations

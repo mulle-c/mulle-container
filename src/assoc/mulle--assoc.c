@@ -327,6 +327,7 @@ void _mulle__assoc_copy_items( struct mulle__assoc *dst,
 
    memcpy( p, src->_storage, n * sizeof( struct mulle_pointerpair));
 
+   // check if we need to call at all
    if( mulle_container_keyvaluecallback_retains( callback))
    {  
       while( p < sentinel)

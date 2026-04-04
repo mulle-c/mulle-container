@@ -86,11 +86,6 @@ void   mulle_container_valuecallback_nop( struct mulle_container_valuecallback *
 }
 
 
-int   _mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback)
-{
-   return( callback->release != mulle_container_valuecallback_nop);
-}
-
 
 void   *mulle_container_valuecallback_self( struct mulle_container_valuecallback *callback,
                                             void *p,
@@ -181,7 +176,8 @@ char *
 
    assert( p_allocator);
 
-   snprintf( buf, sizeof( buf), "%p", p);
+   // %p is platform dependent, and we don't wanna pull in mulle_sprintf here
+   snprintf( buf, sizeof( buf), "0x%llx", (unsigned long long) (uintptr_t) p);
    return( mulle_allocator_strdup( *p_allocator, buf));
 }
 
@@ -237,6 +233,43 @@ int
    assert( a && b);
    return( ! strcmp( a, b));
 }
+
+
+#ifdef _WIN32
+int
+   _mulle_container_keycallback_isbitequals( struct mulle_container_keycallback *callback)
+{
+   return( callback->is_equal == mulle_container_keycallback_pointer_is_equal  ||
+           callback->is_equal == mulle_container_keycallback_intptr_is_equal);
+}
+
+int
+   _mulle_container_keycallback_retains( struct mulle_container_keycallback *callback)
+{
+   return( callback->retain != mulle_container_keycallback_self);
+}
+
+
+int
+   _mulle_container_keycallback_releases( struct mulle_container_keycallback *callback)
+{
+   return( callback->release != mulle_container_keycallback_nop);
+}
+
+
+int
+   _mulle_container_valuecallback_retains( struct mulle_container_valuecallback *callback)
+{
+   return( callback->retain != mulle_container_valuecallback_self);
+}
+
+
+int   
+   _mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback)
+{
+   return( callback->release != mulle_container_valuecallback_nop);
+}
+#endif
 
 
 MULLE__CONTAINER_GLOBAL_VAR
@@ -302,7 +335,6 @@ struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer =
    .notakey  = NULL,
    .userinfo = NULL
 };
-
 
 
 /**/

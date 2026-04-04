@@ -35,21 +35,21 @@
 
 
 // notakey is mulle_not_an_int
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_int;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_int;
 // notakey is mulle_not_an_intptr
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_intptr;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_intptr;
 // notakey is NULL
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_copied_cstring;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_copied_cstring;
 // notakey is NULL
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_cstring;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_nonowned_cstring;
 // notakey is NULL
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_cstring;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_owned_cstring;
 // notakey is NULL
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_nonowned_pointer;
 // notakey is NULL
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_owned_pointer;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_owned_pointer;
 // notakey is mulle_not_a_pointer
-MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback   mulle_container_keycallback_nonowned_pointer_or_null;
+MULLE__CONTAINER_GLOBAL struct mulle_container_keycallback     mulle_container_keycallback_nonowned_pointer_or_null;
 
 MULLE__CONTAINER_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_int;
 MULLE__CONTAINER_GLOBAL struct mulle_container_valuecallback   mulle_container_valuecallback_intptr;

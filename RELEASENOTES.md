@@ -1,25 +1,13 @@
-## 10.1.0
-
-feature: add static storage support for pointerset
-
-* support static storage for ``mulle_pointerset``
-* improved alignment of function parameters in structarray and pointerset
-* added insert functionality to `mulle--pointerarray` and `mulle--structarray`
+### 10.1.1
 
 
 
 
 
-* improved alignment of function parameters in structarray and pointerset
-* standardized whitespace in generic set operations
-
-
-* support static storage for `mulle_pointerset`
-
-
-* completely redid mulle-rangemap again, dump the vibecoding
-* added insert functionality to mulle--pointerarray and mulle--structarray (may need to code this in mulle-array still ?)
 
 
 
-* moved qsort to mulle-data
+* assoc comparisons now honor an optional value-compare callback when checking equality between two assocs; falls back to pointer equality otherwise
+* reduce exported/internal symbol surface (make map release and pointerset get helpers static) — **BREAKING** for code relying on those internal symbols
+* rangemap diagnostics print pointer values as hex with proper `uintptr_t` casts for portability
+* remove obsolete pointerqueue enumerator declaration

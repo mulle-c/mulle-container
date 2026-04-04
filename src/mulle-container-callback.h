@@ -276,6 +276,25 @@ static inline void
    ((mulle_container_keycallback_describe_t *)  mulle_container_valuecallback_no_description)
 
 
+// MEMO: on windows with DLLs this sweet static inline pointer comparison doesn't work 
+//       because of DLL stubs (guess). 
+
+#ifdef _WIN32   
+MULLE__CONTAINER_GLOBAL int
+   _mulle_container_keycallback_isbitequals( struct mulle_container_keycallback *callback);
+
+MULLE__CONTAINER_GLOBAL int
+   _mulle_container_keycallback_retains( struct mulle_container_keycallback *callback);
+
+MULLE__CONTAINER_GLOBAL int
+   _mulle_container_keycallback_releases( struct mulle_container_keycallback *callback);
+
+MULLE__CONTAINER_GLOBAL int
+   _mulle_container_valuecallback_retains( struct mulle_container_valuecallback *callback);
+
+MULLE__CONTAINER_GLOBAL int   
+   _mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback);
+#else
 static inline int
    _mulle_container_keycallback_isbitequals( struct mulle_container_keycallback *callback)
 {
@@ -304,10 +323,17 @@ static inline int
 }
 
 
-MULLE__CONTAINER_GLOBAL
-int   _mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback);
+static inline int   
+   _mulle_container_valuecallback_releases( struct mulle_container_valuecallback *callback)
+{
+   return( callback->release != mulle_container_valuecallback_nop);
+}
+#endif
 
 
+// query this as a short cut to avoid calling the callbacks
+// This can pay off in a loop, where you check the callback once and then 
+// loop over elements
 static inline int
    mulle_container_keyvaluecallback_retains( struct mulle_container_keyvaluecallback *callback)
 {
@@ -328,7 +354,6 @@ static inline int
    return( _mulle_container_keycallback_releases( &callback->keycallback) ||
            _mulle_container_valuecallback_releases( &callback->valuecallback));
 }
-
 
 #endif
 
