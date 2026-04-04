@@ -1,7 +1,7 @@
 #
 #
 #
-export MULLE_CRAFT_PLATFORMS="${MULLE_UNAME}"
+export MULLE_CRAFT_PLATFORMS="${MULLE_UNAME}:windows"
 
 
 #

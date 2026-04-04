@@ -5,11 +5,11 @@ Map contents:
 Search results:
 0 -> not found
 1 -> not found
-2 -> range: 2,2 value: 0000000000000001
-3 -> range: 2,2 value: 0000000000000001
+2 -> range: 2,2 value: 0x1
+3 -> range: 2,2 value: 0x1
 4 -> not found
 5 -> not found
-6 -> range: 6,2 value: 0000000000000002
-7 -> range: 6,2 value: 0000000000000002
+6 -> range: 6,2 value: 0x2
+7 -> range: 6,2 value: 0x2
 8 -> not found
 9 -> not found
