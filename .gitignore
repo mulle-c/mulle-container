@@ -84,3 +84,5 @@ mulle_ta_trace.txt
 .roam
 .graveyard
 *.tmp.*
+*.test.*
+.idea
