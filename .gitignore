@@ -18,7 +18,6 @@ malloc-error/
 .vscode/
 
 TODO.md
-dox/
 
 environment-os-*.sh
 environment-host-*.sh
@@ -86,3 +85,4 @@ mulle_ta_trace.txt
 *.tmp.*
 *.test.*
 .idea
+asset/dox/.last_commit

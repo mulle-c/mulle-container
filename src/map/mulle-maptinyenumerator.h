@@ -1,7 +1,10 @@
 //
+//  mulle-maptinyenumerator.h
 //  mulle-container
 //
-//  Copyright (C) 2011-2025 Nat!, Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2025 Nat! - Mulle kybernetiK.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -63,6 +66,8 @@ static inline struct mulle_maptinyenumerator
    struct mulle__maptinyenumerator   tmp;
 
    tmp = mulle__map_tinyenumerate_nil( (struct mulle__map *) map);
+   // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2 optimizer on
+   // this memcpy(). CI lowers MSVC to /O1, so no code workaround is needed.
    memcpy( &rover, &tmp, sizeof( struct mulle__maptinyenumerator));
    return( rover);
 }

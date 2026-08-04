@@ -1,8 +1,10 @@
 //
+//  mulle--map.c
 //  mulle-container
 //
-//  Created by Nat! on 03/11/15.
-//  Copyright (C) 2011 Nat!, Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -225,6 +227,9 @@ char   *_mulle__map_describe( struct mulle__map *map,
 
       if( separate)
       {
+         // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2
+         // optimizer on memcpy() here. CI lowers MSVC to /O1, so no code
+         // workaround is needed.
          memcpy( &result[ len], ", ", 2);
          len   += 2;
       }
@@ -232,6 +237,9 @@ char   *_mulle__map_describe( struct mulle__map *map,
       memcpy( &result[ len], key, key_len);
       len += key_len;
 
+      // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2
+      // optimizer on memcpy() here. CI lowers MSVC to /O1, so no code
+      // workaround is needed.
       memcpy( &result[ len], " = ", 3);
       len += 3;
 

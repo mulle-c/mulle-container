@@ -1,9 +1,11 @@
+//
+//  mulle-container-callback.c
 //  mulle-container
 //
-//  Created by Nat! on 24.03.15.
-//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2018 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2015 Codeon GmbH.
 //  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -31,8 +33,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
-
 #include "mulle-container-callback.h"
 
 #include "include-private.h"

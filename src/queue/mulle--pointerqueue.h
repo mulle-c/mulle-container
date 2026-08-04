@@ -1,8 +1,10 @@
 //
-//  mulle-pointerqueue.h
+//  mulle--pointerqueue.h
 //  mulle-container
 //
-//  Copyright (c) 2011 Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -48,9 +50,9 @@ struct mulle__pointerqueuebucket;
    struct mulle__pointerqueuebucket   *_spares;          \
    struct mulle__pointerqueuebucket   *_read;            \
    struct mulle__pointerqueuebucket   *_write;           \
-   size_t                       _count;            \
-   size_t                       _read_index;       \
-   size_t                       _write_index;      \
+   size_t                             _count;            \
+   size_t                             _read_index;       \
+   size_t                             _write_index;      \
                                                          \
    unsigned short                     _bucket_size;      \
    unsigned short                     _spare_allowance

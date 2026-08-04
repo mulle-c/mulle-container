@@ -1,8 +1,10 @@
 //
+//  mulle--map.h
 //  mulle-container
 //
-//  Created by Nat! on 03/11/15.
-//  Copyright (C) 2011 Nat!, Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -652,6 +654,8 @@ static inline struct mulle__mapenumerator
    struct mulle__genericpointermapenumerator   tmp;
 
    tmp = mulle__pointermap_enumerate_generic( (struct mulle__pointermap *) map, callback);
+   // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2 optimizer on
+   // this memcpy(). CI lowers MSVC to /O1, so no code workaround is needed.
    memcpy( &rover, &tmp, sizeof( struct mulle__genericpointermapenumerator));
    return( rover);
 }

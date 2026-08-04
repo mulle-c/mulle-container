@@ -1,10 +1,11 @@
-//  mulle-container-math
+//
+//  mulle-container-math.h
 //  mulle-container
 //
-//  Created by Nat! on 27.10.19.
 //  Copyright (c) 2019 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2019 Codeon GmbH.
 //  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
