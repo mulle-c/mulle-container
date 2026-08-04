@@ -1,5 +1,10 @@
-//  _mulle_array.c
+//
+//  mulle--array.c
 //  mulle-container
+//
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +32,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #include "mulle--array.h"
 
 #include "include-private.h"
@@ -408,6 +412,9 @@ char   *_mulle__array_describe( struct mulle__array *array,
 
       if( separate)
       {
+         // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2
+         // optimizer on memcpy() here. CI lowers MSVC to /O1, so no code
+         // workaround is needed.
          memcpy( &result[ len], ", ", 2);
          len   += 2;
       }

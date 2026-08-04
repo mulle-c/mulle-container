@@ -1,8 +1,10 @@
 //
-//  mulle-pointerqueue.h
+//  mulle--pointerqueue.c
 //  mulle-container
 //
-//  Copyright (c) 2011 Mulle kybernetiK. All rights reserved.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:

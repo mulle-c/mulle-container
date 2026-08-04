@@ -1,5 +1,10 @@
-//  _mulle_assoc.c
+//
+//  mulle--assoc.c
 //  mulle-container
+//
+//  Copyright (c) 2023 Nat! - Mulle kybernetiK.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +32,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #include "mulle--assoc.h"
 
 #include "include-private.h"
@@ -662,27 +666,39 @@ char   *_mulle__assoc_describe( struct mulle__assoc *assoc,
       separate  = result != NULL;
       result    = mulle_allocator_realloc( allocator,
                                            result,
-                                           len + (separate * 2) + 2 + key_len + 1 \
+                                           len + (separate * 2) + 2 + key_len + 1
                                             + 2 + value_len + 2 + 1);
 
       if( separate)
       {
+         // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2
+         // optimizer on memcpy() here. CI lowers MSVC to /O1, so no code
+         // workaround is needed.
          memcpy( &result[ len], ", ", 2);
          len   += 2;
       }
 
+      // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2
+      // optimizer on memcpy() here. CI lowers MSVC to /O1, so no code
+      // workaround is needed.
       memcpy( &result[ len], "{ ", 2);
       len   += 2;
 
       memcpy( &result[ len], key, key_len);
       len += key_len;
 
+      // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2
+      // optimizer on memcpy() here. CI lowers MSVC to /O1, so no code
+      // workaround is needed.
       memcpy( &result[ len], ", ", 2);
       len   += 2;
 
       memcpy( &result[ len], value, value_len);
       len += value_len;
 
+      // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2
+      // optimizer on memcpy() here. CI lowers MSVC to /O1, so no code
+      // workaround is needed.
       memcpy( &result[ len], " }", 2);
       len   += 2;
 

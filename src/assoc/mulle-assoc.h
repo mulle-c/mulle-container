@@ -2,10 +2,10 @@
 //  mulle-assoc.h
 //  mulle-container
 //
-//  Created by Nat! on 04/11/15.
-//  Copyright (c) 2015 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2023 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2015 Codeon GmbH.
 //  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -33,7 +33,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #ifndef mulle_assoc_h__
 #define mulle_assoc_h__
 

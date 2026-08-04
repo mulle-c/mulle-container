@@ -20,6 +20,11 @@ Some data structures utilize callbacks that are compatible to OS X's
 
 
 
+
+## Documentation & Guides
+
+* [API Summary](asset/dox/api/toc)
+
 ## Data Structures
 
 The names of the functions are consistent. Each function is a **verb**
