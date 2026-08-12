@@ -1,0 +1,9 @@
+insert 1000 disjoint:
+  calloc=0 realloc=11 free=0 live=1
+  rangecount: 1000
+insert 1000 overlapping:
+  calloc=0 realloc=1 free=0 live=1
+  rangecount: 1
+insert 1000 disjoint, remove every other:
+  calloc=0 realloc=11 free=0 live=1
+  rangecount: 500

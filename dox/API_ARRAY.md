@@ -1,7 +1,7 @@
 # `mulle_array`
 
 `mulle_array` is a container that uses `mulle_container_keycallback` for
-the management of it's elements.
+the management of its elements.
 Internally it uses a C array of void * pointers, that is grown with `realloc`.
 
 ![](../pix/mulle-array.svg)
@@ -63,7 +63,7 @@ Setup array. Array will typically be stack based, if this function is called.
 void   mulle_array_done( struct mulle_array *array)
 ```
 
-Free internal resources of array. Don't use it aftewards, except for calling init again.
+Free internal resources of array. Don't use it afterwards, except for calling init again.
 
 
 ### Accessors
@@ -322,7 +322,7 @@ items left, returns 0 and leaves item unchanged!
 void   * mulle_arrayenumerator_done( struct mulle_arrayenumerator *rover)
 ```
 
-Marks the end of the lifetime of the enumerator. It's use is merely conventional.
+Marks the end of the lifetime of the enumerator. Its use is merely conventional.
 
 
 ## `mulle_arrayreverseenumerator` Functions
@@ -343,7 +343,7 @@ items left, returns 0 and leaves item unchanged!
 static inline void   * mulle_arrayreverseenumerator_done( struct mulle_arrayreverseenumerator *rover)
 ```
 
-Marks the end of the lifetime of the enumerator. It's use is merely conventional.
+Marks the end of the lifetime of the enumerator. Its use is merely conventional.
 
 ## Includes
 

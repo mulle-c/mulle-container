@@ -66,7 +66,7 @@ struct mulle_array
 
 
 #define MULLE_ARRAY_DATA( storage, count, xcallback, xallocator) \
-   ((struct mulle_pointerarray)                                  \
+   ((struct mulle_array)                                         \
    {                                                             \
       ._storage         = (storage),                             \
       ._curr            = (storage),                             \

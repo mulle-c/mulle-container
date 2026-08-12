@@ -633,64 +633,6 @@ uintptr_t   _mulle__rangeset_search_location( struct mulle__rangeset *p,
       break;
    }
    return( mulle_not_found_e);
-
-#if 0
-   struct mulle_range   *curr;
-   uintptr_t            closest;
-
-   curr  = _mulle__rangeset_search_nearest_p( p, location);
-   if( ! curr)
-      return( mulle_not_found_e);
-
-   if( op & mulle_rangeset_equal)
-   {
-      if( mulle_range_contains_location( *curr, location))
-         return( location);
-      op &= ~mulle_rangeset_equal;
-   }
-
-   switch( op)
-   {
-   case mulle_rangeset_less_than :
-      if( location)
-      {
-         // we have the nearest range already,
-         // but it could be above location, which makes it useless
-         // so we may need to go one downi
-         if( mulle_range_greater_than_or_equal_to_location( *curr, location))
-         {
-            if( curr == p->_ranges)
-               return( mulle_not_found_e);
-            --curr;
-         }
-         if( mulle_range_contains_location( *curr, location - 1))
-            return( location - 1);
-         return( mulle_range_get_max( *curr));
-      }
-      break;
-
-   case mulle_rangeset_greater_than :
-      if( location <= mulle_range_location_max)
-      {
-         // we have the nearest range already,
-         // but it could be the below location, which makes it useless
-         // so we may need to go one up
-         if( mulle_range_less_than_or_equal_to_location( *curr, location))
-         {
-            ++curr;
-            if( curr == &p->_ranges[ p->_length])
-               return( mulle_not_found_e);
-         }
-         if( mulle_range_contains_location( *curr, location + 1))
-            return( location + 1);
-         return( mulle_range_get_min( *curr));
-      }
-      // fall thru
-   default:
-      break;
-   }
-   return( mulle_not_found_e);
-#endif
 }
 
 
@@ -817,6 +759,9 @@ void   _mulle__rangeset_shift( struct mulle__rangeset *p,
    }
 
    found = _mulle__rangeset_search_nearest_p( p, location);
+   if( ! found)
+      return;
+
    if( mulle_range_contains_location( *found, location) && found->location < location)
    {
       // first delta up all the rest
@@ -842,9 +787,9 @@ void   _mulle__rangeset_shift( struct mulle__rangeset *p,
    {
       // there is a possibility that we need to coalesce found with prev
       // here as the shift doesn't check
-      prev = found - 1;
-      if( prev >= p->_ranges)
+      if( found != p->_ranges)
       {
+         prev = found - 1;
          if( mulle_range_get_max( *prev) == found->location)
          {
             prev->length += found->length;

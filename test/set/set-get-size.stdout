@@ -1,0 +1,3 @@
+mulle_set_get_size( NULL): 0
+mulle_set_get_size( empty set): 16
+passed

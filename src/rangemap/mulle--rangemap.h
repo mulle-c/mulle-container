@@ -165,6 +165,34 @@ uintptr_t  _mulle__rangemap_search( struct mulle__rangemap *map,
                                     uintptr_t location);
 
 
+//
+// returns the number of ranges that intersect with the given range.
+// out_ranges and out_values may be NULL, if the respective data is
+// not wanted. At most max_out entries are written to each array,
+// the return value is the number of intersecting ranges (which may
+// be larger than max_out).
+//
+MULLE__CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+uintptr_t   _mulle__rangemap_get_ranges_values( struct mulle__rangemap *map,
+                                                struct mulle_range range,
+                                                uintptr_t max_out,
+                                                struct mulle_range *out_ranges,
+                                                void **out_values);
+
+
+//
+// returns the value for the exact matching range, or NULL if the
+// range is not present. Sets errno to ENOENT if the range is not
+// found, and to EINVAL if an intersecting (but not equal) range is
+// found.
+//
+MULLE__CONTAINER_GLOBAL
+MULLE_C_NONNULL_FIRST
+void   *_mulle__rangemap_get_exact( struct mulle__rangemap *map,
+                                    struct mulle_range range);
+
+
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST

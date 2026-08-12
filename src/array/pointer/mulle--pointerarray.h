@@ -133,6 +133,10 @@ static inline void
    array->_initial_storage = storage;
    array->_curr            = array->_storage;
    array->_sentinel        = &array->_curr[ capacity];
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations     = 0;
+#endif
 }
 
 

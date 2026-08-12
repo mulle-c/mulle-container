@@ -62,7 +62,7 @@
 //
 #ifndef INTPTR_MAX
 //# if defined( _WIN32) || defined( _WIN64)
-   typedef ptrdiff_t  intptr_t
+   typedef ptrdiff_t  intptr_t;
 #  define INTPTR_MIN   PTRDIFF_MIN
 #  define INTPTR_MAX   PTRDIFF_MAX
 //# else
@@ -81,7 +81,12 @@ enum mulle_container_write_mode
 // moved to mulle-data! but kept same
 // #define mulle_not_found_e     ((uintptr_t) INTPTR_MAX)
 
-// Use this for "notakey" pointer to differentiate valid pointers & NULL
+// Use this for "notakey" pointer to differentiate valid pointers & NULL.
+// This sentinel value (INTPTR_MIN) does not correspond to any valid heap,
+// stack, or mmap'd address on supported platforms. Operating systems reserve
+// the address range around INTPTR_MIN for kernel space (or leave it unmapped),
+// so no conforming allocator will ever return this value.
+//
 #define mulle_not_a_pointer   ((void *) INTPTR_MIN)
 
 // Use this for "notakey" pointer to differentiate valid int keys

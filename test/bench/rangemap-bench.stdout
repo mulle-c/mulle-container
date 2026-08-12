@@ -1,0 +1,7 @@
+insert 1000:
+  calloc=0 realloc=10 free=0 live=1
+  count: 1000
+search: hits=1000
+insert 1000, remove every other:
+  calloc=0 realloc=10 free=0 live=1
+  count: 500

@@ -1,0 +1,5 @@
+count before: 3
+count after remove_in_range(0, 100): 0
+count before: 5
+count after remove_in_range(2, 100): 2
+passed

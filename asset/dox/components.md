@@ -58,7 +58,6 @@
 **When to use:**
 - Need membership testing with custom equality? → `mulle_set`
 - Just tracking pointer identity? → `mulle_pointerset`
-- Fewer than ~100 items? → Consider sorted array (`mulle__uniquepointerarray`) instead
 
 ### Queues — FIFO Bucket-Chained Storage
 
@@ -88,8 +87,4 @@
 | `mulle_container_valuecallback` | `src/mulle-container-callback.h` | Value callback: copy, free (no hash/equality needed) |
 | `mulle_container_keyvaluecallback` | `src/mulle-container-callback.h` | Combined key + value callback pair for maps |
 
-### Obsolete
 
-| Component | Location | Status |
-|-----------|----------|--------|
-| `mulle__uniquepointerarray` | `obsolete/uniquepointer/` | Deprecated. Sorted pointer array used as set. |

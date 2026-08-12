@@ -1,0 +1,4 @@
+insert 1000:
+  calloc=0 realloc=10 free=9 live=1
+  count: 1000 size: 2048
+get: hits=1000

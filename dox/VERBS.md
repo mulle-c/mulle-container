@@ -1,6 +1,6 @@
 # Verbs
 
-Genreally verbs act on the first paramater of the function call.
+Generally verbs act on the first parameter of the function call.
 (e.g. mulle_map_get( map)). If that is not the case the verb is
 prefixed with the scope of the get. That could be "threadget" for
 example for accessing threadlocal storage.
@@ -37,7 +37,7 @@ example for accessing threadlocal storage.
 | `get_count`          | get number of elements
 | `get_size`           | get current container size as number of elements
 |                      | for byte oriented this is same as get_size_as_length
-|                      | there for get_size_as_length is often ommitted
+|                      | there for get_size_as_length is often omitted
 | `get_size_as_length` | get current container size as char units (bytes)
 | `get_length`         | get size of character or byte data (always in char units)
 | `get_allocator`      | return the mulle-allocator associated with the struct

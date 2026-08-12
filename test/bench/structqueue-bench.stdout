@@ -1,0 +1,12 @@
+add 1000 (bucket_size=16):
+  calloc=0 realloc=63 free=0 live=63
+  count: 1000
+pop 1000:
+  calloc=0 realloc=63 free=62 live=1
+  count: 0
+add 1000 (bucket_size=64):
+  calloc=0 realloc=16 free=0 live=16
+  count: 1000
+pop 1000:
+  calloc=0 realloc=16 free=15 live=1
+  count: 0

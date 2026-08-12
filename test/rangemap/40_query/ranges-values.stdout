@@ -1,0 +1,19 @@
+== get_ranges_values ==
+invalid range: 0
+empty map: 0
+all intersecting: 3
+  0: 10,5 -> 0x1
+  1: 20,5 -> 0x2
+  2: 30,5 -> 0x3
+max_out 2 returned: 3, wrote 10,20
+single: 1
+non-intersecting: 0
+NULL out_ranges: 3, values[ 0]=0x1
+NULL out_values: 3, ranges[ 0]=10,5
+== get_exact ==
+exact: 0x2
+missing: 0x0 errno=2 (No such file or directory)
+overlap: 0x0 errno=22 (Invalid argument)
+== remove invalid ==
+remove zero length: 22
+remove invalid location: 22
