@@ -1,0 +1,7 @@
+add 1000 from capacity 0:
+  calloc=0 realloc=10 free=0 live=2
+  count: 1000 size: 1024
+add 1000 preallocated:
+  calloc=0 realloc=2 free=0 live=2
+  count: 1000 size: 1000
+member: hits=1000 (linear scan, 2000 lookups)

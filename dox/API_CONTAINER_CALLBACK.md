@@ -10,19 +10,19 @@ This has the advantage, that memory management can be handled by the container.
 | Callback                            | Description
 |-------------------------------------|--------------------------------
 | `mulle_container_keycallback_int` `mulle_container_valuecallback_int`  | store any **`int`** except `mulle_not_an_int` (`INT_MIN`)
-| `mulle_container_keycallback_intptr ` `mulle_container_valuecallback_intptr`  | store any **`intptr_t`** except `mulle_not_an_intptr` (`INTPTR_MIN`)
+| `mulle_container_keycallback_intptr` `mulle_container_valuecallback_intptr`  | store any **`intptr_t`** except `mulle_not_an_intptr` (`INTPTR_MIN`)
 | `mulle_container_keycallback_nonowned_pointer` `mulle_container_valuecallback_nonowned_pointer`  | store any **`void *`** except NULL.
 | `mulle_container_keycallback_nonowned_cstring` `mulle_container_valuecallback_nonowned_cstring`  | store any **`char *`** except NULL.
 | `mulle_container_keycallback_nonowned_pointer_or_null` | store any **`void *`** except `mulle_not_an_intptr` (`(void *) INTPTR_MIN`)
 
-Keys are `void *`. All values are possible except `mulle_container_not_a_pointer_key`.
+Keys are `void *`. All values are possible except `mulle_not_a_pointer`.
 
 
 ## Overview of callbacks that free
 
 | Callback                            | Description
 |-------------------------------------|--------------------------------
-| `mulle_container_keycallback_owned_pointer` `mulle_container_valuecallback_owned_pointer`  | store any **`void *`** | except NULL. Items will be freed when removed.
+| `mulle_container_keycallback_owned_pointer` `mulle_container_valuecallback_owned_pointer`  | store any **`void *`** except NULL. Items will be freed when removed.
 | `mulle_container_keycallback_owned_cstring` `mulle_container_valuecallback_owned_cstring`  | store any **`char *`** except NULL. Items will be freed when removed.
 
 
@@ -36,7 +36,7 @@ Keys are `void *`. All values are possible except `mulle_container_not_a_pointer
 
 ## Callbacks
 
-### `mulle_container_keycallback_intp`
+### `mulle_container_keycallback_int`
 
 Keys are **int**. All values are possible except `mulle_not_an_int`.
 
@@ -67,13 +67,13 @@ Keys are **`void *`**. All values are possible except NULL. The key is then owne
 > The difference to `mulle_container_keycallback_owned_cstring` is in `.hash` and `.describe`.
 
 
-### `mulle_container_keycallback_nonowned_pointer_or_null `
+### `mulle_container_keycallback_nonowned_pointer_or_null`
 
-Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`.
+Keys are **`void *`**. All values are possible except `mulle_not_a_pointer`.
 
-### `mulle_container_keycallback_pointer_or_null `
+### `mulle_container_keycallback_pointer_or_null`
 
-Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`. The key is then owned by the container and will be freed by the container, when it is not used anymore.
+Keys are **`void *`**. All values are possible except `mulle_not_a_pointer`. The key is then owned by the container and will be freed by the container, when it is not used anymore.
 
 
 
@@ -105,7 +105,7 @@ This struct is mostly a collection of function pointers. The paramter `p` indica
 | `.retain`           | is an operation to transfer ownership of `p` to the container using `allocator`.
 | `.release`          | is an operation to yield ownership of `p` from the container using `allocator`.
 | `.describe`         | is debugging operation that returns a UTF8 string created with `allocator`.
-| `.not_a_key_marker` | if the container desires to store 0/nil, this value will be used as a marke for an empty slot | instead.
+| `.not_a_key_marker` | if the container desires to store 0/nil, this value will be used as a marker for an empty slot instead.
 | `.userinfo`         | a place to store something for the user
 
 
@@ -150,15 +150,15 @@ A combination of both structs.
 
 #### `mulle_not_an_int`
 
-This macro is defined as `INT_MIN` (currently).
+This macro is defined as `((void *) INTPTR_MIN)` (currently).
 
 #### `mulle_not_an_intptr`
 
-This macro is defined as `INTPTR_MIN` (currently).
+This macro is defined as `((void *) INTPTR_MIN)` (currently).
 
-#### `mulle_container_not_a_pointer_key`
+#### `mulle_not_a_pointer`
 
-This macro is defined as `UINTPTR_MAX` (currently).
+This macro is defined as `((void *) INTPTR_MIN)` (currently).
 
 #### `mulle_container_keycallback_self`
 
@@ -289,13 +289,13 @@ Keys are **`void *`**. All values are possible except NULL.
 Keys are **`void *`**. All values are possible except NULL. The key is then owned by the container and will be freed eventually.
 
 
-### `mulle_container_keycallback_nonowned_pointer_or_null `
+### `mulle_container_keycallback_nonowned_pointer_or_null`
 
-Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`.
+Keys are **`void *`**. All values are possible except `mulle_not_a_pointer`.
 
-### `mulle_container_keycallback_pointer_or_null `
+### `mulle_container_keycallback_pointer_or_null`
 
-Keys are **`void *`**. All values are possible except `mulle_container_not_a_pointer_key`. The key is then owned by the container and will be freed by the container, when it is not used anymore.
+Keys are **`void *`**. All values are possible except `mulle_not_a_pointer`. The key is then owned by the container and will be freed by the container, when it is not used anymore.
 
 ---
 

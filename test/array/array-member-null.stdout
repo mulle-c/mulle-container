@@ -1,0 +1,3 @@
+mulle_array_member( NULL, 0x1): 0
+mulle_array_member( NULL, NULL): 0
+passed

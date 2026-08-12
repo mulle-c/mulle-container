@@ -1,0 +1,5 @@
+Before shrink_to_fit: size=4 length=1
+After shrink_to_fit: size=1 length=1
+After re-insert: size=2 length=2
+#0: 0,5
+#1: 30,3

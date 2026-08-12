@@ -1,0 +1,4 @@
+add 1000 (shuffled):
+  calloc=1 realloc=11 free=0 live=2
+  count: 1000
+qsort: comparisons=9061 sorted=1

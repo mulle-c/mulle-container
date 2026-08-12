@@ -51,9 +51,9 @@ void   mulle_pointerarray_init( struct mulle_pointerarray *array,
                                 struct mulle_allocator *allocator)
 ```
 
-Initialize an unused `set` with `notapointer` and `allocator`. With capacity you can specify an initial size of the array.
+Initialize an unused `array` with `notapointer` and `allocator`. With capacity you can specify an initial size of the array.
 
-`notakey` is usually NULL, but if you want to store NULLs in the pointerarray, then you could use `mulle_container_not_a_pointer_key`.
+`notakey` is usually NULL, but if you want to store NULLs in the pointerarray, then you could use `mulle_not_a_pointer`.
 
 `allocator` is a mulle-allocator. It can be NULL for the default allocator. 
 

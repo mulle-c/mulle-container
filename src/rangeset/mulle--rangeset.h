@@ -201,7 +201,7 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle__rangeset_shrink_to_fit( struct mulle__rangeset *p,
                                                      struct mulle_allocator *allocator)
 {
-   if( p->_length > p->_size && p->_ranges != p->_initial_storage)
+   if( p->_length < p->_size && p->_ranges != p->_initial_storage)
    {
       p->_ranges = mulle_allocator_realloc_strict( allocator,
                                                    p->_ranges,

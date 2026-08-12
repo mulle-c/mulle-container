@@ -1,7 +1,7 @@
 # `mulle_map`
 
 `mulle_map` is a container that uses `mulle_container_keyvaluecallback`
-the management of it's elements. 
+the management of its elements. 
 
 ## Types
 
@@ -61,7 +61,7 @@ void   mulle_map_init( struct mulle_map *map,
                        struct mulle_allocator *allocator)
 ```
 
-Initalize a `map` to hold initially `capacity` items. Use `callback` to
+Initialize a `map` to hold initially `capacity` items. Use `callback` to
 manage items and `allocator` to manage the map itself.
 
 The callback is NOT copied. It's usually best to keep it in static storage.

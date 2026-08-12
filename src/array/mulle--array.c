@@ -422,7 +422,7 @@ char   *_mulle__array_describe( struct mulle__array *array,
       memcpy( &result[ len], key, key_len);
       len += key_len;
 
-      if( allocator)
+      if( key_allocator)
          mulle_allocator_free( key_allocator, key);
    }
 

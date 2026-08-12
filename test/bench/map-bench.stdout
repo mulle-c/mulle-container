@@ -1,0 +1,7 @@
+insert 1000:
+  calloc=0 realloc=11 free=9 live=2
+  count: 1000 size: 2048
+lookup: hits=1000
+insert 1000, remove half:
+  calloc=0 realloc=11 free=9 live=2
+  count: 500 size: 2048

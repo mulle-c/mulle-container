@@ -1,0 +1,12 @@
+add 1000 from capacity 0:
+  calloc=0 realloc=9 free=0 live=1
+  count: 1000 size: 1024
+add 1000 preallocated:
+  calloc=0 realloc=1 free=0 live=1
+  count: 1000 size: 1000
+remove_in_range front half:
+  calloc=0 realloc=1 free=0 live=1
+  count: 500 size: 1000
+insert_in_range 8 at 4:
+  calloc=0 realloc=2 free=0 live=1
+  count: 1008 size: 1024

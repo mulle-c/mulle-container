@@ -70,10 +70,10 @@ void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,
       return;
 
    if( compare == _mulle_pointerpair_compare_pointer_key)
-      _mulle_pointerpair_qsort_compare_string_key( buf, n, userinfo);
+      _mulle_pointerpair_qsort_compare_pointer_key( buf, n, userinfo);
    else
       if( compare == _mulle_pointerpair_compare_string_key)
-         _mulle_pointerpair_qsort_compare_pointer_key( buf, n, userinfo);
+         _mulle_pointerpair_qsort_compare_string_key( buf, n, userinfo);
       else
          _mulle_qsort_r_inline( buf,
                                 n,

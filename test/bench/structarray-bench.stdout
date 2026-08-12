@@ -1,0 +1,6 @@
+add 1000 from capacity 0:
+  calloc=0 realloc=10 free=0 live=1
+  count: 1000
+add 1000 reserved:
+  calloc=0 realloc=1 free=0 live=1
+  count: 1000

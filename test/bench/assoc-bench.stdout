@@ -1,0 +1,14 @@
+insert 1000 (sorted): sort-on-demand comparisons=3013
+  calloc=0 realloc=12 free=0 live=2
+  count: 1000 size: 1024 sorted: 1
+insert 1000 (reverse): sort-on-demand comparisons=4024
+  calloc=0 realloc=12 free=0 live=2
+  count: 1000 size: 1024 sorted: 1
+insert 1000 (shuffled): sort-on-demand comparisons=3013
+  calloc=0 realloc=12 free=0 live=2
+  count: 1000 size: 1024 sorted: 1
+insert 1000 (shuffled): sort-on-demand comparisons=3013
+  calloc=0 realloc=12 free=0 live=2
+  count: 1000 size: 1024 sorted: 1
+lookup 1000 (sorted): hits=1000 comparisons=11991
+lookup 1000 (reverse): hits=1000 comparisons=11991

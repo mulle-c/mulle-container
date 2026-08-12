@@ -132,7 +132,7 @@ static inline void   mulle_structarray_init( struct mulle_structarray *array,
                                allocator);
 }
 
-#define mulle_structarray_init_default( type)   \
+#define mulle_structarray_init_default( array, type)   \
    mulle_structarray_init( array, sizeof( type), alignof( type), 8, NULL)
 
 

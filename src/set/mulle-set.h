@@ -125,7 +125,7 @@ static inline size_t   mulle_set_get_count( struct mulle_set *set)
 }
 
 
-static inline size_t   mulle_set_get_size( struct mulle__set *set)
+static inline size_t   mulle_set_get_size( struct mulle_set *set)
 {
    return( set ? _mulle__set_get_size( (struct mulle__set *) set) : 0);
 }

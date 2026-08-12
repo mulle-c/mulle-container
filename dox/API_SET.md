@@ -52,7 +52,7 @@ void   mulle_set_init( struct mulle_set *set,
                        struct mulle_allocator *allocator);
 ```
 
-Initialize an unused `set` with `callback` and `allocator`. With capacity you can specify an intital size of the set.
+Initialize an unused `set` with `callback` and `allocator`. With capacity you can specify an initial size of the set.
 
 `allocator` is a mulle-allocator. It can be NULL for the default allocator. 
 

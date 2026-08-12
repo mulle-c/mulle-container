@@ -16,7 +16,7 @@ Some data structures utilize callbacks that are compatible to OS X's
 
 | Release Version                                       | Release Notes  | AI Documentation
 |-------------------------------------------------------|----------------|---------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg)](//github.com/mulle-c/mulle-container/actions) ![Coverage](https://img.shields.io/badge/coverage-81%25%C2%A0-goldenrod) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-container](https://deepwiki.com/mulle-c/mulle-container)
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg)](//github.com/mulle-c/mulle-container/actions) ![Coverage](https://img.shields.io/badge/coverage-92%25%C2%A0-seagreen) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-container](https://deepwiki.com/mulle-c/mulle-container)
 
 
 
@@ -32,7 +32,7 @@ that is prefixed with the name of the data structure it handles. So for example
 the `get` function for `mulle_array` is `mulle_array_get`. The first parameter,
 - except for creation functions - is always the container itself.
 
-Check out [SYNTAX.md](//github.come/mulle-c/mulle-c11/dox/SYNTAX.md) for a
+Check out [SYNTAX.md](//github.com/mulle-c/mulle-c11/dox/SYNTAX.md) for a
 somewhat formal explanation and [VERBS.md](dox/VERBS.md) for a list of common
 verbs being employed.
 
@@ -40,6 +40,30 @@ The various underscore prefixed functions may `assert` their parameters, but
 when compiled for "Release" there will be no runtime checks. The non
 underscore functions protect themselves against NULL pointers.
 For development it is wise, to use a debug version of the library.
+
+
+### Performance relative to plain C
+
+Absolute ns/op numbers are meaningless without a reference, so this
+project's benchmarks ([`test/bench/`](test/bench/README.md)) measure
+mulle-container containers **against plain-C baselines** on the same
+machine, same data, same hash function. The "Performance" notes in the
+individual sections below quote measured ratios against these baselines:
+
+| Baseline              | What it is                                       | Compared to          |
+|-----------------------|--------------------------------------------------|----------------------|
+| raw C array           | `void *[]`, unchecked index, `realloc` growth    | pointer/struct arrays|
+| khash-style hashtable | classic open addressing, linear probing, 75 % load | map, set          |
+
+A ratio of 1.0 means a mulle-container container costs exactly what the
+equivalent hand-rolled C code costs. Above 1.0 is the price you pay for
+NULL-safety, allocator indirection and generic callbacks; below 1.0
+means the container's tuning (growth policy, load factor) beats the
+naive baseline. Measured on a release build with
+[`head-to-head-bench`](test/bench/README.md); ballpark figures, not
+microbenchmark-grade measurements. (Sorted-structure lookups like
+`mulle_assoc` are compared against C `qsort` + `bsearch` in the crossover
+benchmark instead.)
 
 
 ### Arrays
@@ -65,6 +89,14 @@ basis for a `NSMutableArray` implementation (but isn't currently).
 
 There is also an [API Documentation](dox/API_ARRAY.md).
 
+> **Performance**: compared to a raw C array, `add` costs about the same
+> (~1.0x) and `get` is a single load. The NULL-safe getter is `static
+> inline`, so when the container is init'd and used in the same function
+> the compiler inlines it and folds the NULL guard away - it becomes
+> literally `array->_storage[ i]`, identical to an unchecked raw array
+> index. The `member` lookup is a linear scan, so for membership tests of
+> larger collections use a set instead (see [Sets](#sets)).
+
 
 ##### `mulle__array` conveniently stores managed pointers with minimal overhead
 
@@ -82,6 +114,12 @@ managed (e.g. freed when removed from storage), like mulle-array does.
 
 ![](pix/mulle-pointerarray.svg)
 
+> **Performance**: the closest thing to a raw C array this library offers.
+> `add` is within noise of a `realloc`-based raw array (~1.0x) and the
+> double-underscore `get` is literally `array->_storage[ i]` with no check
+> at all - identical to an unchecked index. No callbacks, no allocation
+> per element.
+
 
 ##### `mulle__pointerarray` stores pointers with minimal overhead
 
@@ -92,38 +130,7 @@ It can be convenient for quickly building up lots of C arrays of `void *`.
 
 
 
-##### flexarray, a replacement for alloca
-
-The `mulle_flexarray` can be used as an replacement for `alloca`. The problem
-with `alloca` is always two-fold. 1.) It's non-standard and not available on
-all platforms. 2.) The amount of memory to `alloca` may exceed the available
-stack space. The `mulle_flexarray` solves this problem by using a small amount
-of stack space for low memory scenarios and moving to `malloc`, when it's
-needed.
-
-Example:
-
-``` c
- void  foo( int n, int *data)
-{
-   mulle_flexarray_do( copy, int, 32, n)
-   {
-      memcpy( copy, data, n * sizeof( int));    // using copy here for something
-   }
-}
-```
-
-
 #### Special Arrays
-
-##### `mulle__uniquepointerarray` keeps unmanaged sorted pointers for reference
-
-`mulle__uniquepointerarray` is based on `mulle__pointerarray`. It keeps its
-elements of `void *` in an array in sorted order for searching by pointer
-equality. The sorting is done lazily. It's use is as a set. It's
-advantage over a hashtable set are low memory requirement and superior
-performance for smaller quantities.
-
 
 ##### `mulle__rangeset` stores selected elements of an array
 
@@ -147,12 +154,22 @@ that `mulle_rangeset` can ensure that
 
 It could be the basis for an `NSIndexSet`.
 
+> **Performance**: insert is a binary search for the insertion point,
+> plus a `memmove` of the trailing ranges when inserting in the middle
+> (appending at the end measured ~70 ns at n=100000 in release, i.e.
+> bsearch plus a null shift). Overlapping ranges coalesce, so the
+> structure stays compact.
+
 
 #### `mulle_structarray` stores any kind of C type with proper alignment
 
 This is a variant of `mulle_pointerarray`, but instead of using `void *` you
 can specify any C type as the element size. This can be useful for building
 arrays of `float` or any kind of `struct` for example.
+
+> **Performance**: same cost model as `mulle_pointerarray` (contiguous
+> storage, no callbacks), but elements are copied in by value, so `add`
+> costs one `memcpy` of `sizeof(element)` on top.
 
 
 #### Associative Arrays
@@ -165,6 +182,11 @@ map, order of addition is preserved and the space requirement is lower. But
 it is slow in searches.
 
 ![](pix/mulle-pointerpairarray.svg)
+
+> **Performance**: like a C array of two-pointer pairs - append is as
+> cheap as array `add`, but lookup is O(n) (or O(log n) after the explicit
+> `qsort`). Use it for small, ordered collections; use a map for large,
+> unordered ones.
 
 ##### `mulle__pointerpairarray` stores key/value pairs with minimal overhead
 
@@ -179,6 +201,11 @@ it chains buckets of `void *` together. This makes large quantities of
 additions pretty much as fast as possible.
 
 ![](pix/mulle--pointerqueue.svg)
+
+> **Performance**: `add` and `pop` are pointer moves into preallocated
+> buckets - measured at the same cost as raw array operations (single
+> digit ns), with no `realloc` ever, so cost stays flat regardless of
+> size. The tradeoff is one small allocation per bucket (16 or 64 slots).
 
 > Filled cells indicate a cell containing a pointer value. All values are
 > possible, so there are no holes.
@@ -198,6 +225,10 @@ It is the basis for the `NSAutoreleasePool` implementation.
 A key difference to `mulle_structarray` is, that maintaining pointers to
 `mulle__structqueue` elements are possible, whereas `mulle_structarray`
 elements may get reorganised.
+
+> **Performance**: same bucket-chained cost model as `mulle__pointerqueue`,
+> plus one `memcpy` of `sizeof(element)` per `add`/`pop`. Stable element
+> addresses come at no lookup cost.
 
 
 ### Hashtables
@@ -230,6 +261,12 @@ can be copied/freed or reference counted using callbacks organized in a
 
 ![](pix/mulle-map.svg)
 
+> **Performance**: compared to a hand-rolled khash-style open-addressing
+> table with the same hash function, `set` measured ~0.85-1.2x and `get`
+> ~1.2x across runs (the range reflects measurement noise). With the
+> intptr/pointer callbacks the generic callback layer costs little; the
+> NULL-safety and the callback indirection are the main extras.
+
 > The contigous memory is split into two equal sized parts "KEYS" and "VALUES".
 > Gray cells indicate a "hole", they contain **notakey**. The corresponding
 > value is undefined (white).
@@ -244,7 +281,8 @@ can be copied/freed or reference counted using callbacks organized in a
 ##### `mulle__map` stores managed keys and values with minimal overhead
 
 This is `mulle_map` minus the `allocator` and the `callback`. It is the basis
-for the `NSMutableDictionary` implementation.
+for the `NSMutableDictionary` implementation. Performance is the same as
+`mulle_map` with intptr/pointer callbacks.
 
 ![](pix/mulle--map.svg)
 
@@ -269,11 +307,19 @@ quantities. (ca. > 100)
 
 ![](pix/mulle-set.svg)
 
+> **Performance**: the best ratio of the whole family. `set` (insert)
+> measured ~0.6-1.2x of a khash-style table and `member` ~1.0-1.3x
+> (ranges include noise). The crossover benchmark shows the set beating
+> a linear array scan from n=10 on, and it stays flat (~9-19 ns) up to
+> n=100000 while the array scan grows linearly to tens of microseconds.
+
 #### `mulle__set` stores managed pointers with minimal overhead
 
 The `mulle__set` is a `mulle_set` without the `allocator` and the `callback`.
 
 ![](pix/mulle--set.svg)
+
+> **Performance**: same as `mulle_set` with pointer/intptr callbacks.
 
 
 ##### `mulle__pointerset` stores unmanaged pointers with minimal overhead
@@ -284,6 +330,10 @@ comparing pointers with `==` and holes are always filled with
 by `mulle__pointerset`.
 
 ![](pix/mulle--pointerset.svg)
+
+> **Performance**: the fastest membership test in the library - no hash
+> function call at all (pointer identity hashing), just an index
+> computation. Use it when `==` equality on raw pointers is all you need.
 
 
 
@@ -388,80 +438,44 @@ _mulle__pointerset_count_zeroes_generic(mulle__pointerset*, mulle_container_keyc
 
 
 
-## Quickstart
-
-Install [mulle-core developer](https://github.com/MulleFoundation/foundation-developer?tab=readme-ov-file#install)
-then:
-
-
-``` sh
-mulle-sde init -d my-project -m mulle-core/c-developer executable
-cd my-project
-mulle-sde vibecoding on
-mulle-sde run
-```
-
-You are done, skip the following "Add" step.
-
-
 ## Add
 
-**This project is a component of the [mulle-core](//github.com/mulle-core/mulle-core) library.
-As such you usually will *not* add or install it individually, unless you
-specifically do not want to link against `mulle-core`.**
+mulle-container is a component of the [mulle-core](//github.com/mulle-core/mulle-core) library. So in your code include the mulle-core umbrella header:
 
-
-### Add as an individual component
-
-Use [mulle-sde](//github.com/mulle-sde) to add mulle-container to your project:
-
-``` sh
-mulle-sde add github:mulle-c/mulle-container
+``` c
+#include <mulle-core/mulle-core.h>
 ```
 
-To only add the sources of mulle-container with dependency
-sources use [clib](https://github.com/clibs/clib):
+### Add mulle-core to a cmake and git project
 
-
-``` sh
-clib install --out src/mulle-c mulle-c/mulle-container
+``` bash
+git submodule add https://github.com/mulle-core/mulle-core.git mulle-core
 ```
 
-Add `-isystem src/mulle-c` to your `CFLAGS` and compile all the sources that were downloaded with your project.
+Add this to your `CMakeLists.txt`:
 
-
-## Install
-
-Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-container and all dependencies:
-
-``` sh
-mulle-sde install --prefix /usr/local \
-   https://github.com/mulle-c/mulle-container/archive/latest.tar.gz
+``` cmake
+add_subdirectory( mulle-core)
+target_link_libraries( ${PROJECT_NAME} PRIVATE mulle-core)
 ```
 
-### Legacy Installation
 
-Install the requirements:
-
-| Requirements                                 | Description
-|----------------------------------------------|-----------------------
-| [mulle-allocator](https://github.com/mulle-c/mulle-allocator)             | 🔄 Flexible C memory allocation scheme
-| [mulle-data](https://github.com/mulle-c/mulle-data)             | #️⃣ A collection of hash functions
-
-Download the latest [tar](https://github.com/mulle-c/mulle-container/archive/refs/tags/latest.tar.gz) or [zip](https://github.com/mulle-c/mulle-container/archive/refs/tags/latest.zip) archive and unpack it.
-
-Install **mulle-container** into `/usr/local` with [cmake](https://cmake.org):
+### Add mulle-core to a mulle-sde project
 
 ``` sh
-PREFIX_DIR="/usr/local"
-cmake -B build                               \
-      -DMULLE_SDK_PATH="${PREFIX_DIR}"       \
-      -DCMAKE_INSTALL_PREFIX="${PREFIX_DIR}" \
-      -DCMAKE_PREFIX_PATH="${PREFIX_DIR}"    \
-      -DCMAKE_BUILD_TYPE=Release &&
-cmake --build build --config Release &&
-cmake --install build --config Release
+mulle-sde add github:mulle-core/mulle-core
 ```
+
+### Embed mulle-container with clib
+
+``` sh
+clib install --out src mulle-c/mulle-container
+```
+
+Append `src` to your include path (e.g. add `-isystem src`  to your `CFLAGS`)
+and compile all the sources that were downloaded.
+
+
 
 
 ## Author
