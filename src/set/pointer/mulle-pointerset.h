@@ -186,7 +186,7 @@ static inline int   mulle_pointerset_is_sparse( struct mulle_pointerset *set)
 //
 
 static inline
-void *    mulle_pointerset_get( struct mulle_pointerset *set, void *p)
+void *    mulle_pointerset_get( struct mulle_pointerset *set, const void *p)
 {
    if( ! set)
       return( NULL);

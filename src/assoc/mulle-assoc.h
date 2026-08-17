@@ -292,7 +292,7 @@ static inline void   *mulle_assoc_get_notakey( struct mulle_assoc *assoc)
 //
 static inline uintptr_t
    mulle_assoc_find_in_range( struct mulle_assoc *assoc,
-                              void *key,
+                              const void *key,
                               struct mulle_range range)
 {
    return( mulle__assoc_find_in_range( (struct mulle__assoc *) assoc,
@@ -304,7 +304,7 @@ static inline uintptr_t
 }
 
 static inline uintptr_t
-   mulle_assoc_find( struct mulle_assoc *assoc, void *key)
+   mulle_assoc_find( struct mulle_assoc *assoc, const void *key)
 {
    return( mulle__assoc_find( (struct mulle__assoc *) assoc,
                               key,
@@ -330,7 +330,7 @@ static inline uintptr_t
 
 
 static inline
-void   *_mulle_assoc_get( struct mulle_assoc *assoc, void *key)
+void   *_mulle_assoc_get( struct mulle_assoc *assoc, const void *key)
 {
    return( _mulle__assoc_get( (struct mulle__assoc *) assoc,
                               key,
@@ -339,7 +339,7 @@ void   *_mulle_assoc_get( struct mulle_assoc *assoc, void *key)
 }
 
 static inline
-void   *mulle_assoc_get( struct mulle_assoc *assoc, void *key)
+void   *mulle_assoc_get( struct mulle_assoc *assoc, const void *key)
 {
    if( ! assoc)
       return( NULL);
@@ -469,7 +469,7 @@ static inline void   mulle_assoc_remove_in_range( struct mulle_assoc *assoc,
 
 // removal can change sort order
 static inline void   _mulle_assoc_remove( struct mulle_assoc *assoc,
-                                          void *key)
+                                          const void *key)
 {
    _mulle__assoc_remove( (struct mulle__assoc *) assoc,
                          key,
@@ -481,7 +481,7 @@ static inline void   _mulle_assoc_remove( struct mulle_assoc *assoc,
 
 
 static inline void   mulle_assoc_remove( struct mulle_assoc *assoc,
-                                         void *key)
+                                         const void *key)
 {
    if( assoc)
    {
@@ -680,7 +680,7 @@ static inline char
 // sorted yet (recent edit), but as a bonus it doesn't need to sort the
 // array before executing.
 static inline int   mulle_assoc_member( struct mulle_assoc *assoc,
-                                        void *key)
+                                        const void *key)
 {
    if( ! assoc)
       return( 0);

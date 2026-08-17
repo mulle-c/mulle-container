@@ -121,7 +121,7 @@ void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
 }
 
 void   _mulle__assoc_remove( struct mulle__assoc *assoc,
-                             void *key,
+                             const void *key,
                              struct mulle_container_keyvaluecallback *callback,
                              mulle_pointerpair_compare_t *compare,
                              void *userinfo,
@@ -353,7 +353,7 @@ void _mulle__assoc_copy_items( struct mulle__assoc *dst,
 
 static uintptr_t
    _mulle__assoc_find_in_range_unsorted( struct mulle__assoc *assoc,
-                                         void *key,
+                                         const void *key,
                                          struct mulle_range range,
                                          struct mulle_container_keyvaluecallback *callback)
 {
@@ -388,7 +388,7 @@ static uintptr_t
 
 uintptr_t
     _mulle__assoc_find_in_range( struct mulle__assoc *assoc,
-                                 void *key,
+                                 const void *key,
                                  struct mulle_range range,
                                  struct mulle_container_keyvaluecallback *callback,
                                  mulle_pointerpair_compare_t *compare,
@@ -399,7 +399,7 @@ uintptr_t
 }
 
 int   _mulle__assoc_member( struct mulle__assoc *assoc,
-                           void *key,
+                           const void *key,
                            struct mulle_container_keyvaluecallback *callback)
 {
    uintptr_t   result;
@@ -410,7 +410,7 @@ int   _mulle__assoc_member( struct mulle__assoc *assoc,
 
 
 void   *_mulle__assoc_get( struct mulle__assoc *assoc,
-                           void *key,
+                           const void *key,
                            mulle_pointerpair_compare_t *compare,
                            void *userinfo)
 {
@@ -419,7 +419,7 @@ void   *_mulle__assoc_get( struct mulle__assoc *assoc,
 
    _mulle__assoc_qsort_r_if_needed( assoc, compare, userinfo);
 
-   search = mulle_pointerpair_make(key, NULL);
+   search = mulle_pointerpair_make( (void *) key, NULL);
    index = _mulle_pointerpair_bsearch( assoc->_storage,
                                        assoc->_curr - assoc->_storage,
                                        search,

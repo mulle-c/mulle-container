@@ -44,7 +44,7 @@
 
 uintptr_t
    mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback,
-                                             void *p)
+                                             const void *p)
 {
    MULLE_C_UNUSED( callback);
 
@@ -55,8 +55,8 @@ uintptr_t
 // just here so that we can distinguish between this and pointer types
 int
    mulle_container_keycallback_intptr_is_equal( struct mulle_container_keycallback *callback,
-                                                void *a,
-                                                void *b)
+                                                const void *a,
+                                                const void *b)
 {
    MULLE_C_UNUSED( callback);
 
@@ -67,8 +67,8 @@ int
 
 int
    mulle_container_keycallback_pointer_is_equal( struct mulle_container_keycallback *callback,
-                                                 void *a,
-                                                 void *b)
+                                                 const void *a,
+                                                 const void *b)
 {
    MULLE_C_UNUSED( callback);
 
@@ -215,7 +215,7 @@ char
 
 uintptr_t
    mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *callback,
-                                             void *s)
+                                             const void *s)
 {
    MULLE_C_UNUSED( callback);
 
@@ -225,8 +225,8 @@ uintptr_t
 
 int
    mulle_container_keycallback_cstring_is_equal( struct mulle_container_keycallback *callback,
-                                                 void *a,
-                                                 void *b)
+                                                 const void *a,
+                                                 const void *b)
 {
    MULLE_C_UNUSED( callback);
 

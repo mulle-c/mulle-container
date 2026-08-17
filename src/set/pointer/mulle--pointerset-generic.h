@@ -65,7 +65,7 @@ void   _mulle__pointerset_release_all( struct mulle__pointerset *set,
 
 static inline uintptr_t   _mulle__pointerset_keycallback_hash( struct mulle__pointerset *set,
                                                                struct mulle_container_keycallback *callback,
-                                                               void *a)
+                                                               const void *a)
 {
    uintptr_t   memo_set;
    uintptr_t   hash;
@@ -79,8 +79,8 @@ static inline uintptr_t   _mulle__pointerset_keycallback_hash( struct mulle__poi
 
 static inline int   _mulle__pointerset_keycallback_equal( struct mulle__pointerset *set,
                                                           struct mulle_container_keycallback *callback,
-                                                          void *a,
-                                                          void *b)
+                                                          const void *a,
+                                                          const void *b)
 {
    uintptr_t   memo_set;
    int         is_equal;
@@ -138,7 +138,7 @@ static inline char   *_mulle__pointerset_keycallback_describe( struct mulle__poi
 
 static inline uintptr_t   _mulle__pointerset_keycallback_hash( struct mulle__pointerset *set,
                                                                struct mulle_container_keycallback *callback,
-                                                               void *a)
+                                                               const void *a)
 {
    uintptr_t   hash;
 
@@ -151,8 +151,8 @@ static inline uintptr_t   _mulle__pointerset_keycallback_hash( struct mulle__poi
 
 static inline int   _mulle__pointerset_keycallback_equal( struct mulle__pointerset *set,
                                                           struct mulle_container_keycallback *callback,
-                                                          void *a,
-                                                          void *b)
+                                                          const void *a,
+                                                          const void *b)
 {
    MULLE_C_UNUSED( set);
 
@@ -262,14 +262,14 @@ static inline void *
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointerset_get_generic( struct mulle__pointerset *set,
-                                        void *key,
+                                        const void *key,
                                         struct mulle_container_keycallback *callback);
 
 
 MULLE_C_NONNULL_FIRST_THIRD
 static inline int
    _mulle__pointerset_member_generic( struct mulle__pointerset *set,
-                                      void *p,
+                                      const void *p,
                                       struct mulle_container_keycallback *callback)
 {
    return( _mulle__pointerset_get_generic( set, p, callback) != callback->notakey);
@@ -285,7 +285,7 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
 
 MULLE__CONTAINER_GLOBAL
 int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
-                                         void *p,
+                                         const void *p,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator);
 

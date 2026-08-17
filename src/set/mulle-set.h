@@ -134,7 +134,7 @@ static inline size_t   mulle_set_get_size( struct mulle_set *set)
 
 #pragma mark - operations
 
-static inline void   *mulle_set_get( struct mulle_set *set, void *p)
+static inline void   *mulle_set_get( struct mulle_set *set, const void *p)
 {
    return( set ? _mulle__set_get( (struct mulle__set *) set, p, set->callback) : NULL);
 }
@@ -142,14 +142,14 @@ static inline void   *mulle_set_get( struct mulle_set *set, void *p)
 
 MULLE_C_NONNULL_FIRST
 static inline int
-   _mulle_set_member( struct mulle_set *set, void *p)
+   _mulle_set_member( struct mulle_set *set, const void *p)
 {
    return( _mulle__set_member( (struct mulle__set *) set, p, set->callback));
 }
 
 
 static inline int
-   mulle_set_member( struct mulle_set *set, void *p)
+   mulle_set_member( struct mulle_set *set, const void *p)
 {
    if( set)
       return( _mulle_set_member( set, p));
@@ -157,7 +157,7 @@ static inline int
 }
 
 
-static inline void   mulle_set_remove( struct mulle_set *set, void *p)
+static inline void   mulle_set_remove( struct mulle_set *set, const void *p)
 {
    if( set)
       _mulle__set_remove( (struct mulle__set *) set, p, set->callback, set->allocator);

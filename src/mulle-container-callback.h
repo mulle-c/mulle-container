@@ -59,11 +59,11 @@ struct mulle_container_keycallback;
 
 typedef uintptr_t
    mulle_container_keycallback_hash_t( struct mulle_container_keycallback *callback,
-                                       void *p);
+                                       const void *p);
 typedef int
    mulle_container_keycallback_is_equal_t( struct mulle_container_keycallback *callback,
-                                           void *p,
-                                           void *q);
+                                           const void *p,
+                                           const void *q);
 typedef void *
    mulle_container_keycallback_retain_t( struct mulle_container_keycallback *callback,
                                          void *p,
@@ -139,13 +139,13 @@ static inline void
 }
 
 MULLE__CONTAINER_GLOBAL
-int         mulle_container_keycallback_intptr_is_equal( struct mulle_container_keycallback *callback, void *a, void *b);
+int         mulle_container_keycallback_intptr_is_equal( struct mulle_container_keycallback *callback, const void *a, const void *b);
 
 MULLE__CONTAINER_GLOBAL
-uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, void *p);
+uintptr_t   mulle_container_keycallback_pointer_hash( struct mulle_container_keycallback *callback, const void *p);
 
 MULLE__CONTAINER_GLOBAL
-int         mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, void *a, void *b);
+int         mulle_container_keycallback_pointer_is_equal(  struct mulle_container_keycallback *callback, const void *a, const void *b);
 
 MULLE__CONTAINER_GLOBAL
 void        _mulle_container_keycallback_pointer_free( struct mulle_container_keycallback *callback, void *p, struct mulle_allocator *allocator);
@@ -154,12 +154,12 @@ void        _mulle_container_keycallback_pointer_free( struct mulle_container_ke
 MULLE__CONTAINER_GLOBAL
 uintptr_t
    mulle_container_keycallback_cstring_hash( struct mulle_container_keycallback *ignore,
-                                             void *s);
+                                             const void *s);
 MULLE__CONTAINER_GLOBAL
 int
    mulle_container_keycallback_cstring_is_equal( struct mulle_container_keycallback *ignore,
-                                                 void *a,
-                                                 void *b);
+                                                 const void *a,
+                                                 const void *b);
 
 /*
  * Value callbacks

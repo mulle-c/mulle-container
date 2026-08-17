@@ -240,12 +240,12 @@ void  _mulle__pointermap_shrink_if_needed( struct mulle__pointermap *map,
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__pointermap_get( struct mulle__pointermap *map,
-                                void *key);
+                                const void *key);
 
 
 // returns NULL because that's the notfound *value*!
 static inline void   *mulle__pointermap_get( struct mulle__pointermap *map,
-                                             void *key)
+                                             const void *key)
 {
    if( ! map)
       return( NULL);

@@ -180,7 +180,7 @@ static inline void *
 MULLE_C_NONNULL_FIRST_THIRD
 static inline
 void   *_mulle__set_get( struct mulle__set *set,
-                         void *p,
+                         const void *p,
                          struct mulle_container_keycallback *callback)
 {
    return( _mulle__pointerset_get_generic( (struct mulle__pointerset *) set,
@@ -192,7 +192,7 @@ void   *_mulle__set_get( struct mulle__set *set,
 MULLE_C_NONNULL_FIRST
 static inline int
    _mulle__set_member( struct mulle__set *set,
-                       void *p,
+                       const void *p,
                        struct mulle_container_keycallback *callback)
 {
    return( _mulle__pointerset_member_generic( (struct mulle__pointerset *) set,
@@ -203,7 +203,7 @@ static inline int
 
 static inline int
    mulle__set_member( struct mulle__set *set,
-                      void *p,
+                      const void *p,
                       struct mulle_container_keycallback *callback)
 {
    if( ! set)
@@ -217,7 +217,7 @@ static inline int
 MULLE_C_NONNULL_FIRST_THIRD
 static inline
 int  _mulle__set_remove( struct mulle__set *set,
-                         void *p,
+                         const void *p,
                          struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator)
 {
