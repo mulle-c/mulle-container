@@ -1,0 +1,7 @@
+first insert: ok
+duplicate insert: rejected
+original value preserved: YES
+first insert nonull: ok
+duplicate insert nonull: rejected
+register new: got_null_value
+register existing: got_existing_null

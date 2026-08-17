@@ -45,6 +45,10 @@
 
 
 // NSSet/NSMutableSet/NSHashTable
+//
+// Sentinel: notakey via keycallback (default: mulle_not_a_pointer = INTPTR_MIN).
+//           Configurable per instance. Cannot be stored as an element.
+//
 struct mulle__set
 {
    MULLE__SET_BASE;

@@ -20,10 +20,23 @@ Some data structures utilize callbacks that are compatible to OS X's
 
 
 
-
 ## Documentation & Guides
 
-* [API Summary](asset/dox/api/toc)
+* **[Getting Started & Patterns](asset/dox/index.md)** — curated intro, container selection, usage examples
+* [Design Decisions](dox/DESIGN.md) — why things are this way
+* [Container Callbacks](dox/API_CONTAINER_CALLBACK.md)
+* [Arrays](dox/API_ARRAY.md)
+* [Maps](dox/API_MAP.md)
+* [Sets](dox/API_SET.md)
+* [Pointer Arrays](dox/API_POINTERARRAY.md)
+* [Pointer Queue](dox/API_POINTERQUEUE.md)
+* [Range Set](dox/API_RANGESET.md)
+* [Range Map](dox/API_RANGEMAP.md)
+* [Associative Arrays](dox/API_ASSOC.md)
+* [Struct Arrays](dox/API_STRUCTARRAY.md)
+* [Pointer Pair Arrays](dox/API_POINTERPAIRARRAY.md)
+* [Pointer Sets](dox/API_POINTERSET.md)
+* [Hash Functions](dox/API_HASH.md)
 
 ## Data Structures
 
@@ -207,8 +220,10 @@ additions pretty much as fast as possible.
 > digit ns), with no `realloc` ever, so cost stays flat regardless of
 > size. The tradeoff is one small allocation per bucket (16 or 64 slots).
 
-> Filled cells indicate a cell containing a pointer value. All values are
-> possible, so there are no holes.
+> Filled cells indicate a cell containing a pointer value. Unlike hashtables,
+> there is no sentinel/hole concept — buckets are densely packed. (NULL is
+> still not a valid value to store; it is used as the return value of `pop`
+> to signal "queue empty".)
 > The cells are clustered in buckets and the buckets form a linked list. The
 > `_read_index` maintains the number of values already read from the current
 > `_read` bucket.

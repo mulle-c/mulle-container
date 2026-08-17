@@ -70,6 +70,7 @@ static void  bench_insert_remove( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_insert_member();
    bench_insert_remove();
    return( 0);

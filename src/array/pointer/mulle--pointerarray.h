@@ -36,6 +36,7 @@
 #define mulle__pointerarray_h__
 
 #include "include.h"
+#include "mulle-container-math.h"
 #include "mulle-container-operation.h"
 #include <assert.h>
 #include <string.h>
@@ -93,7 +94,8 @@ static inline void   mulle_pointers_done( struct mulle_pointers p,
 #endif
 
 
-
+// Sentinel: none. NULL is a valid element. Index-based access.
+//
 struct mulle__pointerarray
 {
    MULLE__POINTERARRAY_BASE;
@@ -152,7 +154,7 @@ static inline void   _mulle__pointerarray_init( struct mulle__pointerarray *arra
    if( capacity)
    {
       array->_storage         = mulle_allocator_malloc( allocator,
-                                                        capacity * sizeof( void *));
+                                                        mulle_allocator_size_multiply( allocator, capacity, sizeof( void *)));
       array->_curr            = array->_storage;
       array->_sentinel        = &array->_curr[ capacity];
    }
@@ -238,6 +240,11 @@ static inline void **  // deprecated name
 }
 
 
+//
+// Returns a pointer to the internal storage. This pointer is valid until the
+// next realloc-triggering operation (add beyond capacity, grow, guarantee
+// beyond remaining space).
+//
 MULLE_C_NONNULL_FIRST
 static inline void **
    _mulle__pointerarray_get_storage( struct mulle__pointerarray *array)
@@ -308,6 +315,11 @@ static inline int
 
 # pragma mark - memory operations
 
+//
+// Ensure room for `length` more elements. Returns a pointer to the current
+// write position. The returned pointer (and any prior get_storage pointers)
+// are valid until the next realloc-triggering operation.
+//
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void **  _mulle__pointerarray_guarantee( struct mulle__pointerarray *array,

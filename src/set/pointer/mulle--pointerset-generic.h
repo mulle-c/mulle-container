@@ -340,6 +340,12 @@ struct mulle__genericpointersetenumerator
 #define mulle__genericpointersetenumerator_empty  \
    ((struct mulle__genericpointersetenumerator) { 0 })
 
+//
+// The enumerator traverses the set's internal storage directly.
+// It is invalidated by ANY mutation of the set: insert, remove, shrink,
+// reset, or union/intersection. In debug builds, mutations are detected
+// and will trigger an assertion failure.
+//
 MULLE_C_NONNULL_FIRST_SECOND
 static inline struct mulle__genericpointersetenumerator
    _mulle__pointerset_enumerate_generic( struct mulle__pointerset *set,

@@ -161,4 +161,16 @@ static int  bench_compare_intptr( struct mulle_pointerpair *a,
    return( _mulle_pointerpair_compare_intptr_key( a, b, userinfo));
 }
 
+
+//
+// Call at the start of timing benchmarks to warn if we're in a debug build.
+// Debug builds have asserts and no optimization, so timings are meaningless.
+//
+static inline void  bench_warn_if_debug( void)
+{
+#ifdef DEBUG
+   fprintf( stderr, "WARNING: debug build — timings are not meaningful\n");
+#endif
+}
+
 #endif

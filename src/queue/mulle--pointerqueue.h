@@ -57,7 +57,9 @@ struct mulle__pointerqueuebucket;
    unsigned short                     _bucket_size;      \
    unsigned short                     _spare_allowance
 
-
+// Sentinel: none. FIFO queue, NULL is not a valid element (pop returns NULL
+// to signal "queue empty").
+//
 struct mulle__pointerqueue
 {
    MULLE__POINTERQUEUE_BASE;

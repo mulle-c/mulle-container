@@ -1,0 +1,17 @@
+## Documentation & Guides
+
+* **[Getting Started & Patterns](asset/dox/index.md)** — curated intro, container selection, usage examples
+* [Design Decisions](dox/DESIGN.md) — why things are this way
+* [Container Callbacks](dox/API_CONTAINER_CALLBACK.md)
+* [Arrays](dox/API_ARRAY.md)
+* [Maps](dox/API_MAP.md)
+* [Sets](dox/API_SET.md)
+* [Pointer Arrays](dox/API_POINTERARRAY.md)
+* [Pointer Queue](dox/API_POINTERQUEUE.md)
+* [Range Set](dox/API_RANGESET.md)
+* [Range Map](dox/API_RANGEMAP.md)
+* [Associative Arrays](dox/API_ASSOC.md)
+* [Struct Arrays](dox/API_STRUCTARRAY.md)
+* [Pointer Pair Arrays](dox/API_POINTERPAIRARRAY.md)
+* [Pointer Sets](dox/API_POINTERSET.md)
+* [Hash Functions](dox/API_HASH.md)

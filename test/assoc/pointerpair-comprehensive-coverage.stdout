@@ -6,9 +6,9 @@ Invalid pair check: invalid
 Valid pair1 check: valid
 Valid pair2 check: valid
 Testing pointerpair comparison functions
-Pointer compare pair1 vs pair2: -256
+Pointer compare pair1 vs pair2: -1
 Pointer compare pair1 vs pair3 (same key): 0
-Intptr compare pair1 vs pair2: -10
+Intptr compare pair1 vs pair2: -1
 Intptr compare pair1 vs pair3 (same key): 0
 String compare 'apple' vs 'banana': -1
 String compare 'apple' vs 'apple': 0

@@ -78,6 +78,7 @@ static void  bench_remove( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_disjoint();
    bench_overlapping();
    bench_remove();

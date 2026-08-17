@@ -53,7 +53,9 @@
 //
 #define MULLE__MAP_BASE    MULLE__POINTERMAP_BASE
 
-
+// Sentinel: notakey via keycallback (default: mulle_not_a_pointer = INTPTR_MIN).
+//           Configurable per instance. Cannot be stored as a key.
+//
 struct mulle__map
 {
    MULLE__MAP_BASE;

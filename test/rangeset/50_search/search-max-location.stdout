@@ -1,0 +1,4 @@
+greater_than at max: not_found
+greater_than at max-1: found_max
+greater_than at max-3: found_start
+range greater_than at max: invalid

@@ -3,7 +3,7 @@
 ## Project Identity
 
 - **Name**: mulle-container
-- **Version**: 10.1.0 (`MULLE__CONTAINER_VERSION ((10UL << 20) | (1 << 8) | 0)`)
+- **Version**: 10.1.2 (`MULLE__CONTAINER_VERSION ((10UL << 20) | (1 << 8) | 2)`)
 - **Language**: C (C11)
 - **Type**: Library (no executable entry point)
 - **License**: BSD 3-Clause

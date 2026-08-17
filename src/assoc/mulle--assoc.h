@@ -725,6 +725,11 @@ struct mulle__assocenumerator
 #define mulle__assocenumerator_empty   ((struct mulle__assocenumerator) { 0})
 
 
+//
+// The enumerator traverses the assoc's contiguous pair storage.
+// It is invalidated by any add, remove, set, or reset — these may
+// realloc or memmove the internal array. Do not mutate during enumeration.
+//
 MULLE_C_NONNULL_FIRST
 static inline struct mulle__assocenumerator
    _mulle__assoc_enumerate( struct mulle__assoc *assoc,

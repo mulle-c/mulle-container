@@ -60,6 +60,7 @@ static void  bench_cycle( unsigned short bucket_size)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_cycle( 16);
    bench_cycle( 64);
    return( 0);

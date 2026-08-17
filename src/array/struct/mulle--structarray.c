@@ -87,7 +87,8 @@ static void   _mulle__structarray_realloc( struct mulle__structarray *array,
                                            struct mulle_allocator *allocator)
 {
    _mulle__structarray_realloc_as_length( array,
-                                          new_size * array->_sizeof_struct, allocator);
+                                          mulle_allocator_size_multiply( allocator, new_size, array->_sizeof_struct),
+                                          allocator);
 }
 
 
@@ -108,6 +109,8 @@ void   _mulle__structarray_grow( struct mulle__structarray *array,
 
    old_size = _mulle__structarray_get_size_as_length( array);
    new_size = (old_size ? old_size : array->_sizeof_struct) * 2;
+   if( new_size < old_size)
+      mulle_allocation_fail( allocator, NULL, (size_t) -1);
    _mulle__structarray_realloc_as_length( array, new_size, allocator);
 }
 
@@ -133,7 +136,11 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
       // grow by default, if exceeds growth sizeto
       old_size    = _mulle__structarray_get_size_as_length( array);
       new_size    = (old_size ? old_size : array->_sizeof_struct) * 2;
-      needed_size = (size + (length - available)) * array->_sizeof_struct;
+      if( new_size < old_size)
+         mulle_allocation_fail( allocator, NULL, (size_t) -1);
+      needed_size = mulle_allocator_size_multiply( allocator,
+                                                   size + (length - available),
+                                                   array->_sizeof_struct);
       if( needed_size > new_size)
          new_size = needed_size;
       _mulle__structarray_realloc_as_length( array, new_size, allocator);
@@ -304,7 +311,10 @@ void   _mulle__structarray_remove_in_range( struct mulle__structarray *array,
       return;
 
    count  = _mulle__structarray_get_count( array);
-   range  = mulle_range_validate_against_length( range, count);
+   range  = mulle_range_intersect( range, mulle_range_make( 0, count));
+   if( ! range.length)
+      return;
+
    tail   = mulle_range_get_max( range);
    length = (count - tail) * array->_sizeof_struct;
    if( length)

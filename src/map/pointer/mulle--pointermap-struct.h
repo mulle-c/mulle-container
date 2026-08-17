@@ -76,7 +76,9 @@
 #endif
 
 
-
+// Sentinel: notakey (default: mulle_not_a_pointer = INTPTR_MIN).
+//           Configurable via keycallback. Cannot be stored as a key.
+//
 struct mulle__pointermap
 {
    MULLE__POINTERMAP_BASE;

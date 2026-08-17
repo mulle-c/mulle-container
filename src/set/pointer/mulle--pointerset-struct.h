@@ -87,6 +87,10 @@ static inline size_t
 #endif
 
 // NSSet/NSMutableSet/NSHashTable
+//
+// Sentinel: notakey (default: mulle_not_a_pointer = INTPTR_MIN).
+//           Configurable via keycallback. Cannot be stored as an element.
+//
 struct mulle__pointerset
 {
    MULLE__POINTERSET_BASE;

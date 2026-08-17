@@ -45,6 +45,7 @@ static void  bench_insert_member( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_insert_member();
    return( 0);
 }

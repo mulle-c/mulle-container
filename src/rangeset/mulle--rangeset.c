@@ -93,14 +93,16 @@ void   _mulle__rangeset_grow( struct mulle__rangeset *p,
    // need to outgrow static storage ?
    if( p->_initial_storage && p->_initial_storage == p->_ranges)
    {
-      p->_ranges = mulle_allocator_malloc( allocator, sizeof( struct mulle_range) * new_size);
+      p->_ranges = mulle_allocator_malloc( allocator,
+                                           mulle_allocator_size_multiply( allocator, new_size, sizeof( struct mulle_range)));
       memcpy( p->_ranges, p->_initial_storage, sizeof( struct mulle_range) * p->_length);
 
       // could also zero this
       // p->_storage = NULL;
    }
    else
-      p->_ranges  = mulle_allocator_realloc( allocator, p->_ranges, sizeof( struct mulle_range) * new_size);
+      p->_ranges  = mulle_allocator_realloc( allocator, p->_ranges,
+                                             mulle_allocator_size_multiply( allocator, new_size, sizeof( struct mulle_range)));
 //   memset( &p->_ranges[ p->_size], 0, sizeof( struct mulle_range) * (new_size - p->_size));
    p->_size  = new_size;
 }
@@ -166,7 +168,7 @@ int   _mulle__rangeset_contains( struct mulle__rangeset *p,
    if( ! p->_length)
       return( 0);
 
-   found = mulle_range_contains_bsearch( p->_ranges, (unsigned int) p->_length, range);
+   found = mulle_range_contains_bsearch( p->_ranges, p->_length, range);
    return( found ? 1 : 0);
 }
 
@@ -181,7 +183,7 @@ int   _mulle__rangeset_intersects( struct mulle__rangeset *p,
    if( ! p->_length)
       return( 0);
 
-   found = mulle_range_intersects_bsearch( p->_ranges, (unsigned int) p->_length, range);
+   found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
    return( found ? 1 : 0);
 }
 
@@ -242,7 +244,7 @@ static void   __mulle__rangeset_insert_known_absent( struct mulle__rangeset *p,
    if( ! range.length)
       return;
 
-   index = _mulle_range_hole_bsearch( p->_ranges, (unsigned int) p->_length, range.location);
+   index = _mulle_range_hole_bsearch( p->_ranges, p->_length, range.location);
 
    // we know that we don't intersect, but maybe we can combine ?
    // check the previous and the next for combine possibilities
@@ -315,7 +317,7 @@ void   __mulle__rangeset_insert( struct mulle__rangeset *p,
 
    _mulle__rangeset_assert( p);
 
-   found = mulle_range_intersects_bsearch( p->_ranges, (unsigned int) p->_length, range);
+   found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
    if( ! found)
    {
       __mulle__rangeset_insert_known_absent( p, range, allocator);
@@ -409,7 +411,7 @@ void   __mulle__rangeset_remove( struct mulle__rangeset *p,
 
    for(;;)
    {
-      found = mulle_range_intersects_bsearch( p->_ranges, (unsigned int) p->_length, range);
+      found = mulle_range_intersects_bsearch( p->_ranges, p->_length, range);
       if( ! found)
       {
          // no current range intersects, so we're done
@@ -539,7 +541,7 @@ struct mulle_range
    // re-retrieve curr since we don't know what remove ranges did
    //
    curr = mulle_range_intersects_bsearch( p->_ranges,
-                                          (unsigned int) p->_length,
+                                          p->_length,
                                           mulle_range_make( location, 1));
    return( curr ? *curr : mulle_range_make_invalid());
 }
@@ -554,7 +556,7 @@ static struct mulle_range  *
    uintptr_t            index;
 
    curr = mulle_range_intersects_bsearch( p->_ranges,
-                                          (unsigned int) p->_length,
+                                          p->_length,
                                           mulle_range_make( location, 1));
    if( ! curr)
    {
@@ -563,7 +565,7 @@ static struct mulle_range  *
 
       // get the best fitting hole index then
       index = _mulle_range_hole_bsearch( p->_ranges,
-                                         (unsigned int) p->_length,
+                                         p->_length,
                                          location);
       index = index == p->_length ? index - 1 : index;
       curr  = &p->_ranges[ index];
@@ -622,7 +624,7 @@ uintptr_t   _mulle__rangeset_search_location( struct mulle__rangeset *p,
       break;
 
    case mulle_rangeset_greater_than :
-      if( location <= mulle_range_location_max)
+      if( location < mulle_range_location_max)
       {
          if( mulle_range_contains_location( range, location + 1))
             return( location + 1);
@@ -673,7 +675,7 @@ struct mulle_range
       break;
 
    case mulle_rangeset_greater_than :
-      if( location <= mulle_range_location_max)
+      if( location < mulle_range_location_max)
       {
          // we have the nearest range already,
          // but it could be the below location, which makes it useless

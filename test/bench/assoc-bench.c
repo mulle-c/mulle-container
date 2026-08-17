@@ -128,6 +128,7 @@ static void  bench_lookup( char *order)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    g_callback.keycallback   = mulle_container_keycallback_intptr;
    g_callback.valuecallback = mulle_container_valuecallback_intptr;
 
