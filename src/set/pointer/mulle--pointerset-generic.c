@@ -88,7 +88,7 @@ void   **_mulle__pointerset_allocate_storage_generic( size_t n,
 
 
 void   _mulle__pointerset_release_all_generic( struct mulle__pointerset *set,
-                                               struct mulle_container_keycallback *callback,
+                                               const struct mulle_container_keycallback *callback,
                                                struct mulle_allocator *allocator)
 {
    struct mulle__genericpointersetenumerator   rover;
@@ -144,7 +144,7 @@ static void   copy_storage_generic( void **dst,
                                     size_t dst_size,
                                     void **src,
                                     size_t src_size,
-                                    struct mulle_container_keycallback *callback)
+                                    const struct mulle_container_keycallback *callback)
 {
    void        *p;
    void        **sentinel;
@@ -168,7 +168,7 @@ static void   copy_storage_generic( void **dst,
 
 
 static void   grow_generic( struct mulle__pointerset *set,
-                            struct mulle_container_keycallback *callback,
+                            const struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator)
 {
    size_t   new_size;
@@ -205,10 +205,10 @@ static uintptr_t  _find_index_generic( void  **storage,
                                        void *q,
                                        size_t i,
                                        size_t *hole_index,
-                                       struct mulle_container_keycallback *callback)
+                                       const struct mulle_container_keycallback *callback)
 {
    mulle_container_keycallback_is_equal_t   *f;
-   void                                     *param1;
+   const void                               *param1;
    const void                               *param2;
    void                                     *notakey;
    size_t                                   mask;
@@ -239,7 +239,7 @@ static inline uintptr_t   find_index_generic( void **storage,
                                               const void *p,
                                               uintptr_t hash,
                                               size_t *hole_index,
-                                              struct mulle_container_keycallback *callback)
+                                              const struct mulle_container_keycallback *callback)
 {
    void     *q;
    size_t   i;
@@ -264,7 +264,7 @@ static inline uintptr_t   find_index_generic( void **storage,
 void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
                                           void *p,
                                           enum mulle_container_write_mode mode,
-                                          struct mulle_container_keycallback *callback,
+                                          const struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator)
 {
    size_t      i;
@@ -365,7 +365,7 @@ static void   *
 // MEMO: could be global
 static void   *_mulle__pointerset__get_generic( struct mulle__pointerset *set,
                                                 const void *key,
-                                                struct mulle_container_keycallback *callback)
+                                                const struct mulle_container_keycallback *callback)
 {
    uintptr_t   hash;
    size_t      i;
@@ -400,7 +400,7 @@ static void   *_mulle__pointerset__get_generic( struct mulle__pointerset *set,
 
 void   *_mulle__pointerset_get_generic( struct mulle__pointerset *set,
                                         const void *key,
-                                        struct mulle_container_keycallback *callback)
+                                        const struct mulle_container_keycallback *callback)
 {
    void   *value;
 
@@ -422,7 +422,7 @@ void   *_mulle__pointerset_get_generic( struct mulle__pointerset *set,
 
 
 void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
-                                          struct mulle_container_keycallback *callback,
+                                          const struct mulle_container_keycallback *callback,
                                           struct mulle_allocator *allocator)
 {
    void     **buf;
@@ -460,7 +460,7 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
 
 int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
                                          const void *p,
-                                         struct mulle_container_keycallback *callback,
+                                         const struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator)
 {
    uintptr_t   found;
@@ -616,7 +616,7 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
 
 void  _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
                                              struct mulle__pointerset *src,
-                                             struct mulle_container_keycallback *callback,
+                                             const struct mulle_container_keycallback *callback,
                                              struct mulle_allocator *allocator)
 {
    struct mulle__genericpointersetenumerator  rover;
@@ -634,7 +634,7 @@ void  _mulle__pointerset_copy_items_generic( struct mulle__pointerset *dst,
 void   _mulle__pointerset_intersect_generic( struct mulle__pointerset *dst,
                                              struct mulle__pointerset *a,
                                              struct mulle__pointerset *b,
-                                             struct mulle_container_keycallback *callback,
+                                             const struct mulle_container_keycallback *callback,
                                              struct mulle_allocator *allocator)
 {
    struct mulle__genericpointersetenumerator  rover;
@@ -676,7 +676,7 @@ void   _mulle__pointerset_intersect_generic( struct mulle__pointerset *dst,
 void   _mulle__pointerset_union_generic( struct mulle__pointerset *dst,
                                          struct mulle__pointerset *a,
                                          struct mulle__pointerset *b,
-                                         struct mulle_container_keycallback *callback,
+                                         const struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator)
 {
    struct mulle__pointerset   tmp = { 0};

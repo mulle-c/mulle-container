@@ -85,14 +85,14 @@ static inline struct mulle__array   *
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_destroy( struct mulle__array *array,
-                              struct mulle_container_keycallback *callback,
+                              const struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator);
 
 // function should work for not properly initialized with mulle__array_init
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST // MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_done( struct mulle__array *array,
-                           struct mulle_container_keycallback *callback,
+                           const struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator);
 
 
@@ -174,7 +174,7 @@ static inline int
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
 
 static inline int   _mulle__array_callback_equal( struct mulle__array *array,
-                                                  struct mulle_container_keycallback *callback,
+                                                  const struct mulle_container_keycallback *callback,
                                                   void *a,
                                                   void *b)
 {
@@ -190,7 +190,7 @@ static inline int   _mulle__array_callback_equal( struct mulle__array *array,
 
 
 static inline void   *_mulle__array_callback_retain( struct mulle__array *array,
-                                                     struct mulle_container_keycallback *callback,
+                                                     const struct mulle_container_keycallback *callback,
                                                      void *p,
                                                      struct mulle_allocator *allocator)
 {
@@ -204,7 +204,7 @@ static inline void   *_mulle__array_callback_retain( struct mulle__array *array,
 
 
 static inline void   _mulle__array_callback_release( struct mulle__array *array,
-                                                     struct mulle_container_keycallback *callback,
+                                                     const struct mulle_container_keycallback *callback,
                                                      void *p,
                                                      struct mulle_allocator *allocator)
 {
@@ -217,7 +217,7 @@ static inline void   _mulle__array_callback_release( struct mulle__array *array,
 }
 
 static inline char   *_mulle__array_callback_describe( struct mulle__array *array,
-                                                       struct mulle_container_keycallback *callback,
+                                                       const struct mulle_container_keycallback *callback,
                                                        void *p,
                                                        struct mulle_allocator **allocator)
 {
@@ -234,7 +234,7 @@ static inline char   *_mulle__array_callback_describe( struct mulle__array *arra
 #else
 
 static inline int   _mulle__array_callback_equal( struct mulle__array *array,
-                                                  struct mulle_container_keycallback *callback,
+                                                  const struct mulle_container_keycallback *callback,
                                                   void *a,
                                                   void *b)
 {
@@ -248,7 +248,7 @@ static inline int   _mulle__array_callback_equal( struct mulle__array *array,
 
 
 static inline void   *_mulle__array_callback_retain( struct mulle__array *array,
-                                                     struct mulle_container_keycallback *callback,
+                                                     const struct mulle_container_keycallback *callback,
                                                      void *p,
                                                      struct mulle_allocator *allocator)
 {
@@ -260,7 +260,7 @@ static inline void   *_mulle__array_callback_retain( struct mulle__array *array,
 
 
 static inline void   _mulle__array_callback_release( struct mulle__array *array,
-                                                     struct mulle_container_keycallback *callback,
+                                                     const struct mulle_container_keycallback *callback,
                                                      void *p,
                                                      struct mulle_allocator *allocator)
 {
@@ -271,7 +271,7 @@ static inline void   _mulle__array_callback_release( struct mulle__array *array,
 
 
 static inline char   *_mulle__array_callback_describe( struct mulle__array *array,
-                                                       struct mulle_container_keycallback *callback,
+                                                       const struct mulle_container_keycallback *callback,
                                                        void *p,
                                                        struct mulle_allocator **allocator)
 {
@@ -314,7 +314,7 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__array_remove_in_range( struct mulle__array *array,
                                       struct mulle_range location,
-                                      struct mulle_container_keycallback *callback,
+                                      const struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator);
 
 // convenience, that uses find in range and then remove in range
@@ -322,7 +322,7 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__array_remove( struct mulle__array *array,
                              void *item,
-                             struct mulle_container_keycallback *callback,
+                             const struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator);
 
 // convenience, that uses find in range and then remove in range
@@ -330,13 +330,13 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   _mulle__array_remove_unique( struct mulle__array *array,
                                   void *item,
-                                  struct mulle_container_keycallback *callback,
+                                  const struct mulle_container_keycallback *callback,
                                   struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_reset( struct mulle__array *array,
-                            struct mulle_container_keycallback *callback,
+                            const struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator);
 
 
@@ -346,7 +346,7 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 int    _mulle__array_is_equal( struct mulle__array *array,
                                struct mulle__array *other,
-                               struct mulle_container_keycallback *callback);
+                               const struct mulle_container_keycallback *callback);
 
 
 // here the caller guarantees that there is enough space left to add
@@ -356,7 +356,7 @@ MULLE_C_NONNULL_FIRST_THIRD
 static inline
 void    _mulle__array_add_guaranteed( struct mulle__array *array,
                                       void  *p,
-                                      struct mulle_container_keycallback *callback,
+                                      const struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator)
 {
    assert( p != callback->notakey);
@@ -371,7 +371,7 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__array_add( struct mulle__array *array,
                            void  *p,
-                           struct mulle_container_keycallback *callback,
+                           const struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator);
 
 
@@ -380,7 +380,7 @@ MULLE_C_NONNULL_FIRST_THIRD
 void    _mulle__array_set( struct mulle__array *array,
                            size_t i,
                            void  *p,
-                           struct mulle_container_keycallback *callback,
+                           const struct mulle_container_keycallback *callback,
                            struct mulle_allocator *allocator);
 
 MULLE_C_NONNULL_THIRD
@@ -388,7 +388,7 @@ static inline void
    mulle__array_set( struct mulle__array *array,
                      size_t i,
                      void  *p,
-                     struct mulle_container_keycallback *callback,
+                     const struct mulle_container_keycallback *callback,
                      struct mulle_allocator *allocator)
 {
    if( array)
@@ -474,7 +474,7 @@ void   *_mulle__array_get_last( struct mulle__array *array)
 MULLE_C_NONNULL_FIRST_SECOND
 static inline
 void  _mulle__array_remove_last( struct mulle__array *array,
-                                 struct mulle_container_keycallback *callback,
+                                 const struct mulle_container_keycallback *callback,
                                  struct mulle_allocator *allocator)
 {
    void   *p;
@@ -489,20 +489,20 @@ MULLE_C_NONNULL_FIRST_FOURTH
 void   _mulle__array_add_array( struct mulle__array *array,
                                 struct mulle__array *other,
                                 struct mulle_range range,
-                                struct mulle_container_keycallback *callback,
+                                const struct mulle_container_keycallback *callback,
                                 struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 void    _mulle__array_copy_items( struct mulle__array *dst,
                                  struct mulle__array *src,
-                                 struct mulle_container_keycallback *callback,
+                                 const struct mulle_container_keycallback *callback,
                                  struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__array_reset( struct mulle__array *array,
-                            struct mulle_container_keycallback *callback,
+                            const struct mulle_container_keycallback *callback,
                             struct mulle_allocator *allocator);
 
 
@@ -523,7 +523,7 @@ MULLE_C_NONNULL_FIRST
 uintptr_t  _mulle__array_find_in_range( struct mulle__array *array,
                                         void *obj,
                                         struct mulle_range range,
-                                        struct mulle_container_keycallback *callback);
+                                        const struct mulle_container_keycallback *callback);
 
 
 
@@ -554,14 +554,14 @@ static inline void
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 char   *_mulle__array_describe( struct mulle__array *array,
-                                struct mulle_container_keycallback *callback,
+                                const struct mulle_container_keycallback *callback,
                                 struct mulle_allocator *allocator);
 
 
 MULLE_C_NONNULL_SECOND
 static inline
 char   *mulle__array_describe( struct mulle__array *array,
-                               struct mulle_container_keycallback *callback,
+                               const struct mulle_container_keycallback *callback,
                                struct mulle_allocator *allocator)
 {
    if( ! array)
@@ -601,7 +601,7 @@ struct mulle__arrayenumerator
 MULLE_C_NONNULL_FIRST
 static inline struct mulle__arrayenumerator
    _mulle__array_enumerate( struct mulle__array *array,
-                            struct mulle_container_keycallback *callback)
+                            const struct mulle_container_keycallback *callback)
 {
    struct mulle__arrayenumerator   rover;
 
@@ -613,7 +613,7 @@ static inline struct mulle__arrayenumerator
 
 static inline struct mulle__arrayenumerator
    mulle__array_enumerate( struct mulle__array *array,
-                           struct mulle_container_keycallback *callback)
+                           const struct mulle_container_keycallback *callback)
 {
    if( ! array || ! callback)
       return( mulle__arrayenumerator_empty);
@@ -697,7 +697,7 @@ struct mulle__arrayreverseenumerator
 MULLE_C_NONNULL_FIRST
 static inline struct  mulle__arrayreverseenumerator
    _mulle__array_reverseenumerate( struct mulle__array *array,
-                                   struct mulle_container_keycallback *callback)
+                                   const struct mulle_container_keycallback *callback)
 {
    struct mulle__arrayreverseenumerator   rover;
 
@@ -709,7 +709,7 @@ static inline struct  mulle__arrayreverseenumerator
 
 static inline struct  mulle__arrayreverseenumerator
    mulle__array_reverseenumerate( struct mulle__array *array,
-                                  struct mulle_container_keycallback *callback)
+                                  const struct mulle_container_keycallback *callback)
 {
    if( ! array || ! callback)
       return( mulle__arrayreverseenumerator_empty);
@@ -769,7 +769,7 @@ static inline void
 MULLE__CONTAINER_GLOBAL
 int   mulle__array_member( struct mulle__array *array,
                            void *p,
-                           struct mulle_container_keycallback *callback);
+                           const struct mulle_container_keycallback *callback);
 
 
 // created by make-container-do.sh --flexible mulle--array.c
