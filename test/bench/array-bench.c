@@ -85,6 +85,7 @@ static void  bench_member( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_growth();
    bench_preallocated();
    bench_member();

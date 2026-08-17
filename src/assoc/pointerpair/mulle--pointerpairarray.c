@@ -58,7 +58,7 @@ static void   _mulle__pointerpairarray_realloc( struct mulle__pointerpairarray *
    used            = _mulle__pointerpairarray_get_count( array);
    array->_storage = mulle_allocator_realloc( allocator,
                                               array->_storage,
-                                              sizeof( struct mulle_pointerpair) * new_size);
+                                              mulle_allocator_size_multiply( allocator, new_size, sizeof( struct mulle_pointerpair)));
    array->_curr     = &array->_storage[ used];
    array->_sentinel = &array->_storage[ new_size];
 

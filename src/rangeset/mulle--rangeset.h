@@ -36,6 +36,7 @@
 #define mulle__rangeset_h__
 
 #include "include.h"
+#include "mulle-container-math.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -56,6 +57,9 @@
 // MEMO: the previous incarnation _used lazy coalescing, when deemed
 //       necessary. But in the end the amount of memory moves necessary
 //       done late was likely the same as doing them immediately.
+//
+// Sentinel: mulle_not_found_e (INTPTR_MAX) for location — out-of-band by
+//           construction (location_max == INTPTR_MAX-1). See mulle-range.h.
 //
 struct mulle__rangeset
 {
@@ -84,7 +88,8 @@ static inline void   _mulle__rangeset_init( struct mulle__rangeset *p,
    if( capacity > 0)
    {
       p->_size   = capacity;
-      p->_ranges = mulle_allocator_malloc( allocator, sizeof( struct mulle_range) * p->_size);
+      p->_ranges = mulle_allocator_malloc( allocator,
+                                            mulle_allocator_size_multiply( allocator, p->_size, sizeof( struct mulle_range)));
    }
 }
 

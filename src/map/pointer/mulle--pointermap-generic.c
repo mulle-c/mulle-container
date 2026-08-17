@@ -58,7 +58,8 @@ void   **mulle__pointermap_allocate_storage_generic( size_t n,
    if( notakey == NULL)
       return( mulle_allocator_calloc( allocator, n, sizeof( void *) * 2));
 
-   buf      = mulle_allocator_malloc( allocator, n * sizeof( void *) * 2);
+   buf      = mulle_allocator_malloc( allocator,
+                                      mulle_allocator_size_multiply( allocator, n, sizeof( void *) * 2));
 
    // only wipe keys
    p        = &buf[ 0];
@@ -160,7 +161,7 @@ static void   grow_generic( struct mulle__pointermap *map,
 
    new_size = map->_size * 2;
    if( new_size < map->_size)
-      abort();  // overflow
+      mulle_allocation_fail( allocator, NULL, (size_t) -1);  // overflow
 
    assert( MULLE__POINTERMAP_INITIAL_SIZE >= 2);
 
@@ -469,6 +470,21 @@ struct mulle_pointerpair   *_mulle__pointermap__get_pair_generic( struct mulle__
 
    hash = (*callback->keycallback.hash)( &callback->keycallback, key);
    return( _mulle__pointermap__get_pair_generic_knownhash( map, key, hash, callback, space));
+}
+
+
+struct mulle_pointerpair   *
+   _mulle__pointermap_get_pair_generic( struct mulle__pointermap *map,
+                                        void *key,
+                                        struct mulle_container_keyvaluecallback *callback,
+                                        struct mulle_pointerpair *space)
+{
+   if( key == callback->keycallback.notakey)
+      return( NULL);
+
+   assert( map);
+
+   return( _mulle__pointermap__get_pair_generic( map, key, callback, space));
 }
 
 

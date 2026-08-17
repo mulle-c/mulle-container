@@ -13,7 +13,7 @@ Test 4: Memory allocation failures
 Test 5: Error conditions
   Pop from empty array: 0
 Test 6: Static storage initialization
-  Static storage array capacity: 0
+  Static storage array capacity: 10
   Added to static storage, count: 1
 Test 7: Copy operations
   Source array count: 3

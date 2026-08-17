@@ -53,13 +53,13 @@ static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
    if( array->_storage == array->_initial_storage)
    {
       array->_storage = mulle_allocator_malloc( allocator,
-                                                sizeof( void *) * new_size);
+                                                mulle_allocator_size_multiply( allocator, new_size, sizeof( void *)));
       memcpy( array->_storage, array->_initial_storage, sizeof( void *) * used);
    }
    else
       array->_storage = mulle_allocator_realloc( allocator,
                                                  array->_storage,
-                                                 sizeof( void *) * new_size);
+                                                 mulle_allocator_size_multiply( allocator, new_size, sizeof( void *)));
    array->_curr     = &array->_storage[ used];
    array->_sentinel = &array->_storage[ new_size];
 
@@ -177,8 +177,11 @@ void
    size_t   tail;
 
    count  = _mulle__pointerarray_get_count( array);
+   range  = mulle_range_intersect( range, mulle_range_make( 0, count));
+   if( ! range.length)
+      return;
+
    tail   = range.location + range.length;
-   range  = mulle_range_validate_against_length( range, count);
    memmove( &array->_storage[ range.location],
             &array->_storage[ tail],
             (count - tail) * sizeof( void *));
@@ -266,7 +269,8 @@ struct mulle_pointers
 
    if( data.pointers && data.pointers == array->_initial_storage)
    {
-      data.pointers = mulle_allocator_malloc( allocator, data.count * sizeof( void *));
+      data.pointers = mulle_allocator_malloc( allocator,
+                                               mulle_allocator_size_multiply( allocator, data.count, sizeof( void *)));
       memcpy( data.pointers, array->_storage, data.count * sizeof( void *));
 
       array->_curr    =

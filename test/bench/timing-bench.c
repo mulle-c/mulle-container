@@ -47,7 +47,7 @@ static uint64_t  now( void)
 
 static void  report( char *label, uint64_t elapsed, size_t count)
 {
-   printf( "%-28s %8.1f ns/op  (%zu ops)\n",
+   fprintf( stderr, "%-28s %8.1f ns/op  (%zu ops)\n",
            label,
            (double) elapsed / (double) count,
            count);
@@ -81,7 +81,7 @@ static void  bench_pointerarray( void)
    // are no raw baselines to protect - the container internals live in
    // the library as opaque function calls, which keeps the reads honest
    // on their own.  See head-to-head-bench.c for the full story.
-   printf( "  (checksum %zu)\n", n);
+   fprintf( stderr, "  (checksum %zu)\n", n);
 
    mulle_pointerarray_done( &array);
 }
@@ -254,7 +254,8 @@ int  main( int argc, char *argv[])
          g_n = DEFAULT_N;
    }
 
-   printf( "mulle-container wall-clock benchmark (N=%zu)\n", g_n);
+   bench_warn_if_debug();
+   fprintf( stderr, "mulle-container wall-clock benchmark (N=%zu)\n", g_n);
    bench_pointerarray();
    bench_array();
    bench_map();

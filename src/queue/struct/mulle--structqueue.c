@@ -33,6 +33,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #include "mulle--structqueue.h"
+#include "mulle-container-math.h"
 
 #include "include-private.h"
 
@@ -75,9 +76,12 @@ struct mulle__structqueuebucket *
    }
    else
    {
-      space = (sizeof( struct mulle__structqueuebucket) -
-               sizeof( struct mulle__structqueuebucket *)) +
-               (size_t) queue->_bucket_size * (size_t) queue->_sizeof_struct;
+      space = mulle_allocator_size_add( allocator,
+                  sizeof( struct mulle__structqueuebucket) -
+                     sizeof( struct mulle__structqueuebucket *),
+                  mulle_allocator_size_multiply( allocator,
+                                                (size_t) queue->_bucket_size,
+                                                (size_t) queue->_sizeof_struct));
 
       p = mulle_allocator_malloc( allocator, space);
    }

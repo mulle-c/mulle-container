@@ -70,6 +70,7 @@ static void  bench_reserved( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_growth();
    bench_reserved();
    return( 0);

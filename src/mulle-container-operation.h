@@ -87,6 +87,23 @@ enum mulle_container_write_mode
 // the address range around INTPTR_MIN for kernel space (or leave it unmapped),
 // so no conforming allocator will ever return this value.
 //
+// --- SENTINEL POLICY ---
+//
+//   Container            Sentinel          Source           Configurable?
+//   ------------------   ---------------   -------------   -------------
+//   pointerset / set     notakey           keycallback     yes
+//   pointermap / map     notakey (key)     keycallback     yes
+//   pointerarray         (none)            —               —
+//   structarray          (none)            —               —
+//   pointerqueue         (none)            —               —
+//   structqueue          (none)            —               —
+//   pointerpairarray     (none)            —               —
+//   rangeset / rangemap  mulle_not_found_e mulle-range.h   no (out-of-band)
+//
+// "notakey" defaults to mulle_not_a_pointer (INTPTR_MIN). It marks empty
+// hash-table slots, so the sentinel value cannot be stored as a key/element.
+// Containers without sentinels accept any value including NULL.
+//
 #define mulle_not_a_pointer   ((void *) INTPTR_MIN)
 
 // Use this for "notakey" pointer to differentiate valid int keys

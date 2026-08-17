@@ -152,6 +152,5 @@ static inline size_t   mulle_pow2round( size_t v)
 }
 
 
-
 #endif
 

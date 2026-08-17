@@ -29,7 +29,7 @@ Added guaranteed item, count: 1
 Reserved and wrote item directly, count: 2
 Advanced by 2, count: 4
 Testing structarray with static storage
-Initialized with static storage, size: 0
+Initialized with static storage, size: 5
 Count after adding 2 items: 2
 Retrieved from static storage: id=1, name=static1, value=1.0
 Testing structarray sorting operations

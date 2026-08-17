@@ -1,0 +1,4 @@
+empty get_ranges_values: 0
+empty get_exact: NULL (errno=2)
+empty search: not_found
+empty enumerate count: 0

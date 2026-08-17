@@ -33,6 +33,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #include "mulle--pointerqueue.h"
+#include "mulle-container-math.h"
 
 #include "include-private.h"
 
@@ -52,9 +53,10 @@ struct mulle__pointerqueuebucket *
    }
    else
    {
-      space = (sizeof( struct mulle__pointerqueuebucket) -
-               sizeof( struct mulle__pointerqueuebucket *)) +
-               queue->_bucket_size * sizeof( void *);
+      space = mulle_allocator_size_add( allocator,
+                  sizeof( struct mulle__pointerqueuebucket) -
+                     sizeof( struct mulle__pointerqueuebucket *),
+                  mulle_allocator_size_multiply( allocator, queue->_bucket_size, sizeof( void *)));
 
       p = mulle_allocator_malloc( allocator, space);
    }

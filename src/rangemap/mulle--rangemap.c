@@ -33,7 +33,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #include "mulle--rangemap.h"
-
+#include "mulle-container-math.h"
 #include "include-private.h"
 
 #include <errno.h>
@@ -48,7 +48,8 @@ void   _mulle__rangemap_init( struct mulle__rangemap *map,
    memset( map, 0, sizeof( *map));
    if( capacity)
    {
-      total_size    = capacity * (sizeof( struct mulle_range) + sizeof( void *));
+      total_size    = mulle_allocator_size_multiply( allocator, capacity,
+                                                    sizeof( struct mulle_range) + sizeof( void *));
       map->_storage = mulle_allocator_malloc( allocator, total_size);
       map->_size    = capacity;
    }
@@ -80,8 +81,11 @@ static void   _mulle__rangemap_grow( struct mulle__rangemap *map,
    new_size = old_size * 2;
    if( ! new_size)
       new_size = 2;
+   if( new_size < old_size)
+      mulle_allocation_fail( allocator, NULL, (size_t) -1);
 
-   total_size = new_size * (sizeof(struct mulle_range) + sizeof(void *));
+   total_size = mulle_allocator_size_multiply( allocator, new_size,
+                                               sizeof( struct mulle_range) + sizeof( void *));
 
    // Reallocate the combined buffer
    map->_storage = mulle_allocator_realloc( allocator, map->_storage, total_size);
@@ -120,7 +124,7 @@ int   _mulle__rangemap_insert( struct mulle__rangemap *map,
 
    ranges = _mulle__rangemap_get_ranges( map);
    found  = mulle_range_intersects_bsearch( ranges,
-                                            (unsigned int) map->_length,
+                                            map->_length,
                                             range);
    if( found)
       return( EADDRINUSE);
@@ -132,7 +136,7 @@ int   _mulle__rangemap_insert( struct mulle__rangemap *map,
       ranges = _mulle__rangemap_get_ranges( map);
    }
 
-   index  = _mulle_range_hole_bsearch( ranges, (unsigned int) map->_length, range.location);
+   index  = _mulle_range_hole_bsearch( ranges, map->_length, range.location);
 
    // Move everything up to make space for the new range
    memmove( &ranges[ index + 1],
@@ -175,7 +179,7 @@ int   _mulle__rangemap_remove( struct mulle__rangemap *map,
 
    ranges = _mulle__rangemap_get_ranges( map);
    found  = mulle_range_intersects_bsearch( ranges,
-                                            (unsigned int) map->_length,
+                                            map->_length,
                                             range);
    if( ! found)
       return( ENOENT);
@@ -214,18 +218,28 @@ uintptr_t
    struct mulle_range   *curr;
    uintptr_t            found_count;
    uintptr_t            i;
+   uintptr_t            index;
 
    if( ! range.length || ! mulle_range_is_valid( range))
+      return( 0);
+
+   if( ! map->_length)
       return( 0);
 
    ranges      = _mulle__rangemap_get_ranges(map);
    values      = _mulle__rangemap_get_values(map);
 
-   // Find insertion point for range.location
-   curr        = mulle_range_intersects_bsearch( ranges,
-                                                 (unsigned int) map->_length,
-                                                 mulle_range_make( range.location, 1));
-   if( ! curr)
+   // Find the first possible intersection. The intersection bsearch is
+   // location-based and cannot find a range when the query starts in a hole
+   // before it, even though the query itself spans that range.
+   index = _mulle_range_hole_bsearch( ranges, map->_length, range.location);
+   if( index == map->_length)
+      --index;
+   else
+      if( index && mulle_range_intersects( ranges[ index - 1], range))
+         --index;
+   curr = &ranges[ index];
+   if( ! mulle_range_intersects( *curr, range))
       return( 0);
 
    found_count = 0;
@@ -258,7 +272,7 @@ uintptr_t   _mulle__rangemap_search( struct mulle__rangemap *map,
 
    ranges = _mulle__rangemap_get_ranges(map);
    curr   = mulle_range_intersects_bsearch( ranges,
-                                            (unsigned int) map->_length,
+                                            map->_length,
                                             mulle_range_make( location, 1));
    if( ! curr)
       return( mulle_not_found_e);
@@ -276,12 +290,18 @@ void   *_mulle__rangemap_get_exact( struct mulle__rangemap *map,
    struct mulle_range   *curr;
    uintptr_t            i;
 
+   if( ! map->_length)
+   {
+      errno = ENOENT;
+      return( NULL);
+   }
+
    ranges      = _mulle__rangemap_get_ranges(map);
    values      = _mulle__rangemap_get_values(map);
 
    // Find insertion point for range.location
    curr        = mulle_range_intersects_bsearch( ranges,
-                                                 (unsigned int) map->_length,
+                                                 map->_length,
                                                  mulle_range_make( range.location, 1));
    if( ! curr)
    {

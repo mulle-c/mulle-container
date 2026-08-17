@@ -6,7 +6,6 @@
    "license" : "BSD-3-Clause",
    "repo" : "mulle-c/mulle-container",
    "src" : [
-      "asset/dox/api/toc/index.md",
       "src/array/mulle--array.c",
       "src/array/mulle--array.h",
       "src/array/mulle-array.c",

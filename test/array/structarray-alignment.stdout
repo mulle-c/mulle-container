@@ -1,0 +1,8 @@
+static storage sentinel ok: YES
+sizeof_struct: 8
+expected: 8
+runtime sizeof_struct: 8
+matches macro: YES
+element stride correct: YES
+static runtime sentinel ok: YES
+count after fill: 8

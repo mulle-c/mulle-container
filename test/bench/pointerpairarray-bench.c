@@ -72,6 +72,7 @@ static void  bench_add_sort( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    g_seed = 0x12345678;
    bench_add_sort();
    return( 0);

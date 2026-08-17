@@ -109,9 +109,14 @@ static inline int   mulle_map_is_empty( struct mulle_map *map)
 
 static inline int   mulle_map_contains( struct mulle_map *map, void *key)
 {
+   struct mulle_pointerpair   space;
+
    if( ! map)
       return( 0);
-   return( _mulle__map_get( (struct mulle__map *) map, key, map->callback) != NULL);
+   return( _mulle__map_get_pair( (struct mulle__map *) map,
+                                  key,
+                                  map->callback,
+                                  &space) != NULL);
 }
 
 

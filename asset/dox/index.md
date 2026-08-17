@@ -13,7 +13,6 @@ the information you need.
 - Need to understand struct layouts? → `data_models.md`
 - Need to know how to build/test/iterate? → `workflows.md`
 - Need dependency info? → `dependencies.md`
-- Need the full AI-oriented reference? → `TOC.md` (pre-existing, comprehensive)
 
 ## File Descriptions
 
@@ -26,8 +25,6 @@ the information you need.
 | `data_models.md` | Struct definitions, callback types, memory layouts | Understanding internal representation, writing callbacks |
 | `workflows.md` | Build, test, development workflows using mulle-sde | Building, testing, adding files, CI |
 | `dependencies.md` | External dependencies and their roles | Understanding what mulle-allocator and mulle-data provide |
-| `review_notes.md` | Documentation gaps and inconsistencies | Improving documentation coverage |
-| `TOC.md` | Pre-existing comprehensive AI reference with examples | Detailed API usage, code examples, performance characteristics |
 
 ## Cross-References
 

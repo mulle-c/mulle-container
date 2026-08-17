@@ -76,7 +76,8 @@
 
 #endif
 
-
+// Sentinel: none. Index-based access, memcpy value semantics.
+//
 struct mulle__structarray
 {
    MULLE__STRUCTARRAY_BASE;
@@ -84,7 +85,7 @@ struct mulle__structarray
 
 
 #define MULLE__STRUCTARRAY_ALIGNED_SIZE( type)  \
-   (size_t) (sizeof( type) + (sizeof( type) % alignof( type)))
+   (size_t) ((sizeof( type) + alignof( type) - 1) / alignof( type) * alignof( type))
 
 
 #define MULLE__STRUCTARRAY_DATA( storage, type, count)                        \
@@ -123,7 +124,7 @@ static inline void   _mulle__structarray_init( struct mulle__structarray *array,
 
    memset( array, 0, sizeof( *array));
 
-   array->_sizeof_struct      = (size_t) (sizeof_struct + (sizeof_struct % alignof_struct));
+   array->_sizeof_struct      = (size_t) ((sizeof_struct + alignof_struct - 1) / alignof_struct * alignof_struct);
    array->_copy_sizeof_struct = sizeof_struct;
    assert( array->_sizeof_struct);
 
@@ -144,9 +145,9 @@ static inline void
 
    array->_storage            = storage;
    array->_curr               = storage;
-   array->_sentinel           = &((char *) array->_storage)[ count];
+   array->_sizeof_struct      = (size_t) ((sizeof_struct + alignof_struct - 1) / alignof_struct * alignof_struct);
+   array->_sentinel           = &((char *) array->_storage)[ count * array->_sizeof_struct];
    array->_initial_storage    = storage;
-   array->_sizeof_struct      = (size_t) (sizeof_struct + (sizeof_struct % alignof_struct));
    array->_copy_sizeof_struct = sizeof_struct;
 #if !defined(MULLE__CONTAINER_MISER_MODE) && defined(MULLE__CONTAINER_HAVE_MUTATION_COUNT)
    array->_n_mutations        = 0;
@@ -311,6 +312,11 @@ static inline void *
 }
 
 
+//
+// Returns a pointer into the contiguous storage at index `i`.
+// The returned pointer is valid until the next realloc-triggering operation
+// (add beyond capacity, grow, guarantee beyond remaining space).
+//
 MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle__structarray_get( struct mulle__structarray *array, size_t i)
@@ -487,6 +493,13 @@ static inline void
 }
 
 
+//
+// Returns a pointer to reserved storage for `count` elements.
+// The returned pointer is valid until the next operation that may realloc:
+// add, grow, or another guarantee/advance beyond remaining capacity.
+// All previously obtained element pointers (from get, guarantee, advance)
+// are also invalidated by a realloc.
+//
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__structarray_guarantee( struct mulle__structarray *array,

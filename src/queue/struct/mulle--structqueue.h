@@ -62,9 +62,10 @@ struct mulle__structqueuebucket;
 
 
 #define MULLE__STRUCTQUEUE_ALIGNED_SIZE( type)             \
-   (size_t) (sizeof( type) + (sizeof( type) % alignof( type)))
+   (size_t) ((sizeof( type) + alignof( type) - 1) / alignof( type) * alignof( type))
 
-
+// Sentinel: none. FIFO queue, memcpy value semantics.
+//
 struct mulle__structqueue
 {
    MULLE__STRUCTQUEUE_BASE;
@@ -141,7 +142,7 @@ static inline void
    assert( sizeof_struct == (size_t) sizeof_struct);
    assert( alignof_struct <= alignof( double));
 
-   queue->_sizeof_struct       = (size_t) (sizeof_struct + (sizeof_struct % alignof_struct));
+   queue->_sizeof_struct       = (size_t) ((sizeof_struct + alignof_struct - 1) / alignof_struct * alignof_struct);
    queue->_copy_sizeof_struct  = (size_t) sizeof_struct;
    queue->_spare_allowance     = spare_allowance;
 }
@@ -183,6 +184,12 @@ void   _mulle__structqueue_removeall( struct mulle__structqueue *queue,
                                       struct mulle_allocator *allocator);  // keeps spares
 
 
+//
+// Returns a pointer to reserved storage for one element in the queue.
+// Unlike structarray, this pointer is STABLE — it remains valid for the
+// lifetime of the queue (until done/destroy/reset). The queue never
+// reallocates existing buckets; new elements go into new buckets.
+//
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void  *_mulle__structqueue_reserve( struct mulle__structqueue *queue,

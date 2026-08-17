@@ -114,6 +114,7 @@ static void  bench_insert_in_range( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_growth();
    bench_preallocated();
    bench_remove_in_range();

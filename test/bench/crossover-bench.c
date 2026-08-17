@@ -240,7 +240,7 @@ static void  bench_size( size_t n)
    ns[ 4] = (double) (t1 - t0) / (double) (passes * n);
    checksum += hits;
 
-   printf( "n=%8zu: bsearch %8.1f | array %8.1f | assoc %8.1f | set %8.1f | map %8.1f ns/op  (checksum %zu)\n",
+   fprintf( stderr, "n=%8zu: bsearch %8.1f | array %8.1f | assoc %8.1f | set %8.1f | map %8.1f ns/op  (checksum %zu)\n",
            n, ns[ 0], ns[ 1], ns[ 2], ns[ 3], ns[ 4], checksum);
 
    mulle_array_destroy( array);
@@ -271,7 +271,8 @@ int  main( int argc, char *argv[])
    g_callback.keycallback   = mulle_container_keycallback_intptr;
    g_callback.valuecallback = mulle_container_valuecallback_intptr;
 
-   printf( "mulle-container lookup crossover (ns/op, hits only)\n");
+   bench_warn_if_debug();
+   fprintf( stderr, "mulle-container lookup crossover (ns/op, hits only)\n");
    for( i = 0; i < N_SIZES; i++)
       bench_size( g_sizes[ i]);
 

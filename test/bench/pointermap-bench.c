@@ -45,6 +45,7 @@ static void  bench_insert_lookup( void)
 
 int  main( void)
 {
+   bench_warn_if_debug();
    bench_insert_lookup();
    return( 0);
 }

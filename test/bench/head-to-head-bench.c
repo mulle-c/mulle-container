@@ -202,7 +202,7 @@ static uint64_t  now( void)
 
 static void  report( char *label, uint64_t elapsed, size_t count, char *base, double base_ns)
 {
-   printf( "%-24s %8.1f ns/op   vs %-13s %6.1f ns/op   (%.2fx)\n",
+   fprintf( stderr, "%-24s %8.1f ns/op   vs %-13s %6.1f ns/op   (%.2fx)\n",
            label,
            (double) elapsed / (double) count,
            base,
@@ -242,7 +242,8 @@ int  main( int argc, char *argv[])
    callback.keycallback   = mulle_container_keycallback_intptr;
    callback.valuecallback = mulle_container_valuecallback_intptr;
 
-   printf( "mulle-container vs. plain C baselines (n=%zu)\n", n);
+   bench_warn_if_debug();
+   fprintf( stderr, "mulle-container vs. plain C baselines (n=%zu)\n", n);
 
    //
    // raw C array
@@ -265,8 +266,8 @@ int  main( int argc, char *argv[])
    //
    // mulle_pointerarray
    //
-   printf( "%-24s %8.1f ns/op   (the baseline)\n", "raw array add", raw_add_ns);
-   printf( "%-24s %8.1f ns/op   (the baseline)\n", "raw array get", raw_get_ns);
+   fprintf( stderr, "%-24s %8.1f ns/op   (the baseline)\n", "raw array add", raw_add_ns);
+   fprintf( stderr, "%-24s %8.1f ns/op   (the baseline)\n", "raw array get", raw_get_ns);
 
    mulle_pointerarray_init( &parray, 0, NULL);
    t0 = now();
@@ -284,7 +285,7 @@ int  main( int argc, char *argv[])
    checksum += hits;
    mulle_pointerarray_done( &parray);
 
-   printf( "\n");
+   fprintf( stderr, "\n");
 
    //
    // khash-style open addressing
@@ -304,9 +305,9 @@ int  main( int argc, char *argv[])
    khash_get_ns = (double) (t1 - t0) / (double) n;
    checksum += hits;
 
-   printf( "%-24s %8.1f ns/op   (the baseline)\n", "khash set", khash_set_ns);
-   printf( "%-24s %8.1f ns/op   (the baseline)\n", "khash get", khash_get_ns);
-   printf( "\n");
+   fprintf( stderr, "%-24s %8.1f ns/op   (the baseline)\n", "khash set", khash_set_ns);
+   fprintf( stderr, "%-24s %8.1f ns/op   (the baseline)\n", "khash get", khash_get_ns);
+   fprintf( stderr, "\n");
 
    //
    // mulle_map
@@ -350,10 +351,10 @@ int  main( int argc, char *argv[])
    raw_array_done( &raw);
 
    // keep the accumulators observable, or the compiler deletes the loops
-   printf( "checksum: %zu\n", checksum);
+   fprintf( stderr, "checksum: %zu\n", checksum);
 
-   printf( "\nratios >1.0 mean mulle-container is slower than the baseline;\n");
-   printf( "the gap is what you pay for bounds checks, NULL-safety and\n");
-   printf( "allocator/callback indirection.\n");
+   fprintf( stderr, "\nratios >1.0 mean mulle-container is slower than the baseline;\n");
+   fprintf( stderr, "the gap is what you pay for bounds checks, NULL-safety and\n");
+   fprintf( stderr, "allocator/callback indirection.\n");
    return( 0);
 }

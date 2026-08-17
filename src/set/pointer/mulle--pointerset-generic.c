@@ -79,7 +79,8 @@ void   **_mulle__pointerset_allocate_storage_generic( size_t n,
    if( notakey == NULL)
       return( mulle_allocator_calloc( allocator, n, sizeof( void *)));
 
-   buf = mulle_allocator_malloc( allocator, n * sizeof( void *));
+   buf = mulle_allocator_malloc( allocator,
+                                  mulle_allocator_size_multiply( allocator, n, sizeof( void *)));
    _mulle__pointerset_init_storage_generic( buf, n, notakey);
 
    return( buf);
@@ -178,7 +179,7 @@ static void   grow_generic( struct mulle__pointerset *set,
    //
    new_size = set->_size * 2;
    if( new_size < set->_size)
-      abort();  // overflow
+      mulle_allocation_fail( allocator, NULL, (size_t) -1);  // overflow
 
    if( new_size == 0)
       new_size = MULLE__POINTERSET_INITIAL_SIZE;
@@ -451,6 +452,9 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
 
    set->_storage = buf;
    set->_size    = new_size;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   set->_n_mutations++;
+#endif
 }
 
 
@@ -603,6 +607,9 @@ int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
       set->_storage[ dst_index] = q;
       dst_index                 = i;
    }
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   set->_n_mutations++;
+#endif
    return( 1);
 }
 

@@ -312,7 +312,7 @@ static inline
                                                       struct mulle_container_keyvaluecallback *callback,
                                                       struct mulle_allocator *allocator)
 {
-   void   *value;
+   size_t   old_count;
 
    MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
@@ -320,9 +320,21 @@ static inline
                                                   enum mulle_container_write_mode mode,
                                                   struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
+   MULLE__CONTAINER_GLOBAL
+   void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
+                                           void *key,
+                                           struct mulle_container_keyvaluecallback *callback);
 
-   value = _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator);
-   return( value ? value : pair->value);
+   // Detect insertion vs duplicate by checking count change.
+   // On success (new key), return pair->value.
+   // On duplicate, return existing value via get.
+   old_count = map->_count;
+   _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator);
+   if( map->_count != old_count)
+      return( pair->value);
+
+   // key already existed, return its current value
+   return( _mulle__pointermap_get_generic( map, pair->key, callback));
 }
 
 
@@ -333,6 +345,8 @@ int    _mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
                                                struct mulle_container_keyvaluecallback *callback,
                                                struct mulle_allocator *allocator)
 {
+   size_t   old_count;
+
    MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_pointerpair *pair,
@@ -340,10 +354,11 @@ int    _mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
 
-   // MEMO: _mulle__pointermap_write_pair_generic will always return NULL on success
-   // as it returns the value not the key. If the pair->value is NULL you can not
-   // see a difference if the insert worked or not
-   return( _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator) == NULL);
+   // Detect successful insertion by checking if count increased.
+   // This avoids the NULL-value ambiguity in write_pair_generic's return.
+   old_count = map->_count;
+   _mulle__pointermap_write_pair_generic( map, pair, mulle_container_insert_e, callback, allocator);
+   return( map->_count != old_count);
 }
 
 
@@ -468,6 +483,12 @@ struct mulle__genericpointermapenumerator
 
 
 
+//
+// The enumerator traverses the map's internal storage directly.
+// It is invalidated by ANY mutation of the map: set, insert, remove, shrink,
+// reset, or copy_items. In debug builds, mutations are detected and will
+// trigger an assertion failure.
+//
 static inline struct mulle__genericpointermapenumerator
    mulle__pointermap_enumerate_generic( struct mulle__pointermap *map,
                                         struct mulle_container_keyvaluecallback *callback)

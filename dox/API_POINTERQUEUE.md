@@ -9,6 +9,12 @@ You can not store NULL into it.
 
 It is the basis for the `NSAutoreleasePool` implementation.
 
+### Pointer stability
+
+The queue stores pointers (not pointed-to objects), so there is no "element
+address" stability concern as with `mulle_structqueue`. The enumerator is
+invalidated by `pop`, `reset`, or `removeall`.
+
 
 ## Types
 
@@ -25,6 +31,28 @@ struct mulle_pointerqueueenumerator
 
 
 ### Setup
+
+#### `mulle_pointerqueue_alloc`
+
+``` c
+struct mulle_pointerqueue *
+   mulle_pointerqueue_alloc( struct mulle_allocator *allocator)
+```
+
+Allocate a `mulle_pointerqueue` on the heap. Does not set the allocator field;
+use `mulle_pointerqueue_init` afterwards.
+
+
+#### `mulle_pointerqueue_free`
+
+``` c
+void   mulle_pointerqueue_free( struct mulle_pointerqueue *queue)
+```
+
+Free a `mulle_pointerqueue` that was allocated with `mulle_pointerqueue_alloc`.
+Does not release internal resources — call `mulle_pointerqueue_done` first if
+the queue was initialized.
+
 
 #### `mulle_pointerqueue_init`
 
@@ -54,9 +82,10 @@ Initialize with default bucket_size (256) and spare_allowance (16).
 #### `mulle_pointerqueue_create`
 
 ``` c
-struct mulle_pointerqueue   *mulle_pointerqueue_create( unsigned short bucket_size,
-                                                        unsigned short spare_allowance,
-                                                        struct mulle_allocator *allocator)
+struct mulle_pointerqueue *
+   mulle_pointerqueue_create( unsigned short bucket_size,
+                              unsigned short spare_allowance,
+                              struct mulle_allocator *allocator)
 ```
 
 Allocate and init a `mulle_pointerqueue` on the heap.
@@ -103,7 +132,8 @@ Return the bucket size.
 #### `mulle_pointerqueue_get_allocator`
 
 ``` c
-struct mulle_allocator   *mulle_pointerqueue_get_allocator( struct mulle_pointerqueue *queue)
+struct mulle_allocator *
+   mulle_pointerqueue_get_allocator( struct mulle_pointerqueue *queue)
 ```
 
 Return the allocator.
@@ -187,13 +217,14 @@ manipulate the queue.
 #### `mulle_pointerqueue_enumerate`
 
 ``` c
-struct mulle_pointerqueueenumerator   mulle_pointerqueue_enumerate( struct mulle_pointerqueue *queue)
+struct mulle_pointerqueueenumerator
+   mulle_pointerqueue_enumerate( struct mulle_pointerqueue *queue)
 ```
 
 Start enumeration of the queue from oldest to newest.
 
 
-#### `mulle_pointerqueueenumerator_next`
+#### `_mulle_pointerqueueenumerator_next`
 
 ``` c
 int   _mulle_pointerqueueenumerator_next( struct mulle_pointerqueueenumerator *rover,
@@ -213,6 +244,16 @@ Marks the end of the enumerator lifetime. Conventional.
 
 
 ### Macros
+
+#### `MULLE_POINTERQUEUE_DATA`
+
+``` c
+MULLE_POINTERQUEUE_DATA( bucket_size, spare_allowance, allocator)
+```
+
+Compound-literal initializer for a `struct mulle_pointerqueue`. Can be used
+for static or stack initialization without calling `mulle_pointerqueue_init`.
+
 
 #### `mulle_pointerqueue_do`
 
