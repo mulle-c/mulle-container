@@ -48,7 +48,7 @@
 
 void    _mulle__set_init( struct mulle__set *p,
                           size_t capacity,
-                          struct mulle_container_keycallback *callback,
+                          const struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
    memset( p, 0, sizeof( *p));
@@ -68,7 +68,7 @@ void    _mulle__set_init( struct mulle__set *p,
 
 struct mulle__set   *_mulle__set_create( size_t capacity,
                                          size_t extra,
-                                         struct mulle_container_keycallback *callback,
+                                         const struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator)
 {
    struct mulle__set   *p;
@@ -80,7 +80,7 @@ struct mulle__set   *_mulle__set_create( size_t capacity,
 
 
 void   _mulle__set_release_all( struct mulle__set *set,
-                                struct mulle_container_keycallback *callback,
+                                const struct mulle_container_keycallback *callback,
                                 struct mulle_allocator *allocator)
 {
    struct mulle__setenumerator  rover;
@@ -97,7 +97,7 @@ void   _mulle__set_release_all( struct mulle__set *set,
 
 
 void   _mulle__set_done( struct mulle__set *set,
-                         struct mulle_container_keycallback *callback,
+                         const struct mulle_container_keycallback *callback,
                          struct mulle_allocator *allocator)
 {
    _mulle__set_release_all( set, callback, allocator);
@@ -106,7 +106,7 @@ void   _mulle__set_done( struct mulle__set *set,
 
 
 void   _mulle__set_reset( struct mulle__set *set,
-                          struct mulle_container_keycallback *callback,
+                          const struct mulle_container_keycallback *callback,
                           struct mulle_allocator *allocator)
 {
    _mulle__set_release_all( set, callback, allocator);
@@ -116,7 +116,7 @@ void   _mulle__set_reset( struct mulle__set *set,
 
 
 void    _mulle__set_destroy( struct mulle__set *set,
-                             struct mulle_container_keycallback *callback,
+                             const struct mulle_container_keycallback *callback,
                              struct mulle_allocator *allocator)
 {
    _mulle__set_done( set, callback, allocator);
@@ -125,7 +125,7 @@ void    _mulle__set_destroy( struct mulle__set *set,
 
 
 struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
-                                      struct mulle_container_keycallback *callback,
+                                      const struct mulle_container_keycallback *callback,
                                       struct mulle_allocator *allocator)
 {
    struct mulle__set   *other;
@@ -139,7 +139,7 @@ struct mulle__set   *_mulle__set_copy( struct mulle__set *set,
 
 // use this only for debugging
 char   *_mulle__set_describe( struct mulle__set *set,
-                              struct mulle_container_keycallback *callback,
+                              const struct mulle_container_keycallback *callback,
                               struct mulle_allocator *allocator)
 {
    char                          *result;

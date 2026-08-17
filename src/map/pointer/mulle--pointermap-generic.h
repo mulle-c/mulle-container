@@ -44,7 +44,7 @@
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
 
 static inline uintptr_t   _mulle__pointermap_keycallback_hash( struct mulle__pointermap *map,
-                                                               struct mulle_container_keycallback *callback,
+                                                               const struct mulle_container_keycallback *callback,
                                                                const void *a)
 {
    uintptr_t   memo_map;
@@ -58,7 +58,7 @@ static inline uintptr_t   _mulle__pointermap_keycallback_hash( struct mulle__poi
 }
 
 static inline int   _mulle__pointermap_keycallback_equal( struct mulle__pointermap *map,
-                                                          struct mulle_container_keycallback *callback,
+                                                          const struct mulle_container_keycallback *callback,
                                                           const void *a,
                                                           const void *b)
 {
@@ -74,7 +74,7 @@ static inline int   _mulle__pointermap_keycallback_equal( struct mulle__pointerm
 
 
 static inline void   *_mulle__pointermap_keycallback_retain( struct mulle__pointermap *map,
-                                                             struct mulle_container_keycallback *callback,
+                                                             const struct mulle_container_keycallback *callback,
                                                              void *p,
                                                              struct mulle_allocator *allocator)
 {
@@ -88,7 +88,7 @@ static inline void   *_mulle__pointermap_keycallback_retain( struct mulle__point
 
 
 static inline void   _mulle__pointermap_keycallback_release( struct mulle__pointermap *map,
-                                                             struct mulle_container_keycallback *callback,
+                                                             const struct mulle_container_keycallback *callback,
                                                              void *p,
                                                              struct mulle_allocator *allocator)
 {
@@ -102,7 +102,7 @@ static inline void   _mulle__pointermap_keycallback_release( struct mulle__point
 
 
 static inline char   *_mulle__pointermap_keycallback_describe( struct mulle__pointermap *map,
-                                                               struct mulle_container_keycallback *callback,
+                                                               const struct mulle_container_keycallback *callback,
                                                                void *p,
                                                                struct mulle_allocator **allocator)
 {
@@ -117,7 +117,7 @@ static inline char   *_mulle__pointermap_keycallback_describe( struct mulle__poi
 
 
 static inline void   *_mulle__pointermap_valuecallback_retain( struct mulle__pointermap *map,
-                                                               struct mulle_container_valuecallback *callback,
+                                                               const struct mulle_container_valuecallback *callback,
                                                                void *p,
                                                                struct mulle_allocator *allocator)
 {
@@ -131,7 +131,7 @@ static inline void   *_mulle__pointermap_valuecallback_retain( struct mulle__poi
 
 
 static inline void   _mulle__pointermap_valuecallback_release( struct mulle__pointermap *map,
-                                                               struct mulle_container_valuecallback *callback,
+                                                               const struct mulle_container_valuecallback *callback,
                                                                void *p,
                                                                struct mulle_allocator *allocator)
 {
@@ -145,7 +145,7 @@ static inline void   _mulle__pointermap_valuecallback_release( struct mulle__poi
 
 
 static inline char   *_mulle__pointermap_valuecallback_describe( struct mulle__pointermap *map,
-                                                                 struct mulle_container_valuecallback *callback,
+                                                                 const struct mulle_container_valuecallback *callback,
                                                                  void *p,
                                                                  struct mulle_allocator **allocator)
 {
@@ -162,7 +162,7 @@ static inline char   *_mulle__pointermap_valuecallback_describe( struct mulle__p
 #else
 
 static inline uintptr_t   _mulle__pointermap_keycallback_hash( struct mulle__pointermap *map,
-                                                               struct mulle_container_keycallback *callback,
+                                                               const struct mulle_container_keycallback *callback,
                                                                const void *a)
 {
    uintptr_t   hash;
@@ -175,7 +175,7 @@ static inline uintptr_t   _mulle__pointermap_keycallback_hash( struct mulle__poi
 
 
 static inline int   _mulle__pointermap_keycallback_equal( struct mulle__pointermap *map,
-                                                          struct mulle_container_keycallback *callback,
+                                                          const struct mulle_container_keycallback *callback,
                                                           const void *a,
                                                           const void *b)
 {
@@ -189,7 +189,7 @@ static inline int   _mulle__pointermap_keycallback_equal( struct mulle__pointerm
 
 
 static inline void   *_mulle__pointermap_keycallback_retain( struct mulle__pointermap *map,
-                                                             struct mulle_container_keycallback *callback,
+                                                             const struct mulle_container_keycallback *callback,
                                                              void *p,
                                                              struct mulle_allocator *allocator)
 {
@@ -201,7 +201,7 @@ static inline void   *_mulle__pointermap_keycallback_retain( struct mulle__point
 
 
 static inline void   _mulle__pointermap_keycallback_release( struct mulle__pointermap *map,
-                                                             struct mulle_container_keycallback *callback,
+                                                             const struct mulle_container_keycallback *callback,
                                                              void *p,
                                                              struct mulle_allocator *allocator)
 {
@@ -212,7 +212,7 @@ static inline void   _mulle__pointermap_keycallback_release( struct mulle__point
 
 
 static inline char   *_mulle__pointermap_keycallback_describe( struct mulle__pointermap *map,
-                                                               struct mulle_container_keycallback *callback,
+                                                               const struct mulle_container_keycallback *callback,
                                                                void *p,
                                                                struct mulle_allocator **allocator)
 {
@@ -226,7 +226,7 @@ static inline char   *_mulle__pointermap_keycallback_describe( struct mulle__poi
 
 
 static inline void   *_mulle__pointermap_valuecallback_retain( struct mulle__pointermap *map,
-                                                               struct mulle_container_valuecallback *callback,
+                                                               const struct mulle_container_valuecallback *callback,
                                                                void *p,
                                                                struct mulle_allocator *allocator)
 {
@@ -238,7 +238,7 @@ static inline void   *_mulle__pointermap_valuecallback_retain( struct mulle__poi
 
 
 static inline void   _mulle__pointermap_valuecallback_release( struct mulle__pointermap *map,
-                                                               struct mulle_container_valuecallback *callback,
+                                                               const struct mulle_container_valuecallback *callback,
                                                                void *p,
                                                                struct mulle_allocator *allocator)
 {
@@ -249,7 +249,7 @@ static inline void   _mulle__pointermap_valuecallback_release( struct mulle__poi
 
 
 static inline char   *_mulle__pointermap_valuecallback_describe( struct mulle__pointermap *map,
-                                                                 struct mulle_container_valuecallback *callback,
+                                                                 const struct mulle_container_valuecallback *callback,
                                                                  void *p,
                                                                  struct mulle_allocator **allocator)
 {
@@ -287,14 +287,14 @@ MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
 void   _mulle__pointermap_set_pair_generic( struct mulle__pointermap *map,
                                             struct mulle_pointerpair *pair,
-                                            struct mulle_container_keyvaluecallback *callback,
+                                            const struct mulle_container_keyvaluecallback *callback,
                                             struct mulle_allocator *allocator)
 {
    MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_pointerpair *pair,
                                                   enum mulle_container_write_mode mode,
-                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  const struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
 
    _mulle__pointermap_write_pair_generic( map,
@@ -309,7 +309,7 @@ MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
    void    *_mulle__pointermap_register_pair_generic( struct mulle__pointermap *map,
                                                       struct mulle_pointerpair *pair,
-                                                      struct mulle_container_keyvaluecallback *callback,
+                                                      const struct mulle_container_keyvaluecallback *callback,
                                                       struct mulle_allocator *allocator)
 {
    size_t   old_count;
@@ -318,12 +318,12 @@ static inline
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_pointerpair *pair,
                                                   enum mulle_container_write_mode mode,
-                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  const struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
    MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
                                            const void *key,
-                                           struct mulle_container_keyvaluecallback *callback);
+                                           const struct mulle_container_keyvaluecallback *callback);
 
    // Detect insertion vs duplicate by checking count change.
    // On success (new key), return pair->value.
@@ -342,7 +342,7 @@ MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline
 int    _mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
                                                struct mulle_pointerpair *pair,
-                                               struct mulle_container_keyvaluecallback *callback,
+                                               const struct mulle_container_keyvaluecallback *callback,
                                                struct mulle_allocator *allocator)
 {
    size_t   old_count;
@@ -351,7 +351,7 @@ int    _mulle__pointermap_insert_pair_generic( struct mulle__pointermap *map,
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_pointerpair *pair,
                                                   enum mulle_container_write_mode mode,
-                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  const struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
 
    // Detect successful insertion by checking if count increased.
@@ -367,14 +367,14 @@ MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline void *
    _mulle__pointermap_update_pair_generic( struct mulle__pointermap *map,
                                            struct mulle_pointerpair *pair,
-                                           struct mulle_container_keyvaluecallback *callback,
+                                           const struct mulle_container_keyvaluecallback *callback,
                                            struct mulle_allocator *allocator)
 {
    MULLE__CONTAINER_GLOBAL
    void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
                                                   struct mulle_pointerpair *pair,
                                                   enum mulle_container_write_mode mode,
-                                                  struct mulle_container_keyvaluecallback *callback,
+                                                  const struct mulle_container_keyvaluecallback *callback,
                                                   struct mulle_allocator *allocator);
 
    // can do this only if the release is a nop (could also do this technically
@@ -392,7 +392,7 @@ void   *
    _mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map,
                                               const void *key,
                                               uintptr_t hash,
-                                              struct mulle_container_keyvaluecallback *callback);
+                                              const struct mulle_container_keyvaluecallback *callback);
 
 //
 // the __get function does not do a quick check for pointer equality.
@@ -403,19 +403,19 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
                                          const void *key,
-                                         struct mulle_container_keyvaluecallback *callback);
+                                         const struct mulle_container_keyvaluecallback *callback);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD_FOURTH
 struct mulle_pointerpair   *_mulle__pointermap__get_pair_generic( struct mulle__pointermap *map,
                                                                   const void *key,
-                                                                  struct mulle_container_keyvaluecallback *callback,
+                                                                  const struct mulle_container_keyvaluecallback *callback,
                                                                   struct mulle_pointerpair *space);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 struct mulle_pointerpair   *_mulle__pointermap_get_any_pair_generic( struct mulle__pointermap *map,
-                                                                     struct mulle_container_keyvaluecallback *callback,
+                                                                     const struct mulle_container_keyvaluecallback *callback,
                                                                      struct mulle_pointerpair *space);
 
 MULLE__CONTAINER_GLOBAL
@@ -423,32 +423,32 @@ MULLE_C_NONNULL_FIRST_FOURTH
 void   *_mulle__pointermap_get_generic_knownhash( struct mulle__pointermap *map,
                                                   const void *key,
                                                   uintptr_t hash,
-                                                  struct mulle_container_keyvaluecallback *callback);
+                                                  const struct mulle_container_keyvaluecallback *callback);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
                                         const void *key,
-                                        struct mulle_container_keyvaluecallback *callback);
+                                        const struct mulle_container_keyvaluecallback *callback);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 struct mulle_pointerpair   *_mulle__pointermap_get_pair_generic( struct mulle__pointermap *map,
                                                                  const void *key,
-                                                                 struct mulle_container_keyvaluecallback *callback,
+                                                                 const struct mulle_container_keyvaluecallback *callback,
                                                                  struct mulle_pointerpair *space);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_THIRD
 int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
                                          const void *key,
-                                         struct mulle_container_keyvaluecallback *callback,
+                                         const struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 void   _mulle__pointermap_shrink_generic( struct mulle__pointermap *map,
-                                          struct mulle_container_keyvaluecallback *callback,
+                                          const struct mulle_container_keyvaluecallback *callback,
                                           struct mulle_allocator *allocator);
 
 
@@ -456,14 +456,14 @@ MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 void   _mulle__pointermap_copy_items_generic( struct mulle__pointermap *dst,
                                               struct mulle__pointermap *src,
-                                              struct mulle_container_keyvaluecallback *callback,
+                                              const struct mulle_container_keyvaluecallback *callback,
                                               struct mulle_allocator *allocator);
 
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST_SECOND
 size_t
    _mulle__pointermap_count_collisions_generic( struct mulle__pointermap *set,
-                                                struct mulle_container_keyvaluecallback *callback,
+                                                const struct mulle_container_keyvaluecallback *callback,
                                                 size_t *perfects);
 
 
@@ -491,7 +491,7 @@ struct mulle__genericpointermapenumerator
 //
 static inline struct mulle__genericpointermapenumerator
    mulle__pointermap_enumerate_generic( struct mulle__pointermap *map,
-                                        struct mulle_container_keyvaluecallback *callback)
+                                        const struct mulle_container_keyvaluecallback *callback)
 {
    struct mulle__genericpointermapenumerator   rover = { 0 }; // awkward, but sanitizes better
 

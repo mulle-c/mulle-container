@@ -50,7 +50,7 @@
 
 void   _mulle__map_init( struct mulle__map *p,
                          size_t capacity,
-                         struct mulle_container_keyvaluecallback *callback,
+                         const struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
 {
    assert_mulle_container_keyvaluecallback( callback);
@@ -74,7 +74,7 @@ void   _mulle__map_init( struct mulle__map *p,
 
 struct mulle__map   *_mulle__map_create( size_t capacity,
                                          size_t extra,
-                                         struct mulle_container_keyvaluecallback *callback,
+                                         const struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator)
 {
    struct mulle__map   *p;
@@ -97,7 +97,7 @@ static inline void _mulle__map_free_storage( struct mulle__map *map,
 
 
 static void   _mulle__map_release_all( struct mulle__map *map,
-                                       struct mulle_container_keyvaluecallback *callback,
+                                       const struct mulle_container_keyvaluecallback *callback,
                                        struct mulle_allocator *allocator)
 {
    struct mulle__mapenumerator   rover;
@@ -120,7 +120,7 @@ static void   _mulle__map_release_all( struct mulle__map *map,
 
 
 void   _mulle__map_done( struct mulle__map *map,
-                         struct mulle_container_keyvaluecallback *callback,
+                         const struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
 {
    _mulle__map_release_all( map, callback, allocator);
@@ -132,7 +132,7 @@ void   _mulle__map_done( struct mulle__map *map,
 
 
 void   _mulle__map_destroy( struct mulle__map *map,
-                            struct mulle_container_keyvaluecallback *callback,
+                            const struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator)
 {
    _mulle__map_done( map, callback, allocator);
@@ -141,7 +141,7 @@ void   _mulle__map_destroy( struct mulle__map *map,
 
 
 void   _mulle__map_reset( struct mulle__map *map,
-                          struct mulle_container_keyvaluecallback *callback,
+                          const struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator)
 {
    // this is good because it allows reset of empty uninitialized maps and
@@ -158,7 +158,7 @@ void   _mulle__map_reset( struct mulle__map *map,
 void   _mulle__map_insert_key_valuesv( struct mulle__map *map,
                                        void *firstkey,
                                        va_list args,
-                                       struct mulle_container_keyvaluecallback *callback,
+                                       const struct mulle_container_keyvaluecallback *callback,
                                        struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   pair;
@@ -178,7 +178,7 @@ void   _mulle__map_insert_key_valuesv( struct mulle__map *map,
 
 
 struct mulle__map   *_mulle__map_copy( struct mulle__map *map,
-                                       struct mulle_container_keyvaluecallback *callback,
+                                       const struct mulle_container_keyvaluecallback *callback,
                                        struct mulle_allocator *allocator)
 {
    struct mulle__map   *other;
@@ -193,7 +193,7 @@ struct mulle__map   *_mulle__map_copy( struct mulle__map *map,
 // use this only for debugging
 //
 char   *_mulle__map_describe( struct mulle__map *map,
-                              struct mulle_container_keyvaluecallback *callback,
+                              const struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator)
 {
    char                          *result;

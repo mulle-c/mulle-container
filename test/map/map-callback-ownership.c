@@ -45,7 +45,7 @@ static void   *copy_string( void *p)
 }
 
 
-static void   *retain_key( struct mulle_container_keycallback *callback,
+static void   *retain_key( const struct mulle_container_keycallback *callback,
                            void *p,
                            struct mulle_allocator *allocator)
 {
@@ -59,7 +59,7 @@ static void   *retain_key( struct mulle_container_keycallback *callback,
 }
 
 
-static void   release_key( struct mulle_container_keycallback *callback,
+static void   release_key( const struct mulle_container_keycallback *callback,
                            void *p,
                            struct mulle_allocator *allocator)
 {
@@ -74,7 +74,7 @@ static void   release_key( struct mulle_container_keycallback *callback,
 }
 
 
-static void   *retain_value( struct mulle_container_valuecallback *callback,
+static void   *retain_value( const struct mulle_container_valuecallback *callback,
                              void *p,
                              struct mulle_allocator *allocator)
 {
@@ -88,7 +88,7 @@ static void   *retain_value( struct mulle_container_valuecallback *callback,
 }
 
 
-static void   release_value( struct mulle_container_valuecallback *callback,
+static void   release_value( const struct mulle_container_valuecallback *callback,
                              void *p,
                              struct mulle_allocator *allocator)
 {

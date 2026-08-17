@@ -83,7 +83,7 @@ static inline int   mulle_pointerpair_is_invalid( struct mulle_pointerpair pair)
 MULLE_C_NONNULL_SECOND
 static inline struct mulle_pointerpair
    mulle_pointerpair_retain( struct mulle_pointerpair pair,
-                             struct mulle_container_keyvaluecallback *callback,
+                             const struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
    struct mulle_pointerpair   new_pair;
@@ -101,7 +101,7 @@ static inline struct mulle_pointerpair
 MULLE_C_NONNULL_SECOND
 static inline
 void  mulle_pointerpair_release( struct mulle_pointerpair pair,
-                                 struct mulle_container_keyvaluecallback *callback,
+                                 const struct mulle_container_keyvaluecallback *callback,
                                  struct mulle_allocator *allocator)
 {
    (*callback->keycallback.release)( &callback->keycallback, pair.key, allocator);
@@ -279,7 +279,7 @@ uintptr_t
    _mulle_pointerpair_find_in_range_callback( struct mulle_pointerpair *buf,
                                               struct mulle_pointerpair search,
                                               struct mulle_range range,
-                                              struct mulle_container_keyvaluecallback *callback);
+                                              const struct mulle_container_keyvaluecallback *callback);
 
 MULLE__CONTAINER_GLOBAL
 uintptr_t
