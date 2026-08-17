@@ -107,7 +107,7 @@ static inline int   mulle_map_is_empty( struct mulle_map *map)
 }
 
 
-static inline int   mulle_map_contains( struct mulle_map *map, void *key)
+static inline int   mulle_map_contains( struct mulle_map *map, const void *key)
 {
    struct mulle_pointerpair   space;
 
@@ -217,13 +217,13 @@ static inline void   *mulle_map_get_notakey( struct mulle_map *map)
 #pragma mark - operations
 
 MULLE_C_NONNULL_FIRST
-static inline void   *_mulle_map_get( struct mulle_map *map, void *key)
+static inline void   *_mulle_map_get( struct mulle_map *map, const void *key)
 {
    return( _mulle__map_get( (struct mulle__map *) map, key, map->callback));
 }
 
 
-static inline void   *mulle_map_get( struct mulle_map *map, void *key)
+static inline void   *mulle_map_get( struct mulle_map *map, const void *key)
 {
    if( ! map)
       return( NULL);
@@ -235,7 +235,7 @@ static inline void   *mulle_map_get( struct mulle_map *map, void *key)
 MULLE_C_NONNULL_FIRST_THIRD
 static inline struct mulle_pointerpair   *
    _mulle_map_get_pair( struct mulle_map *map,
-                        void *key,
+                        const void *key,
                         struct mulle_pointerpair *space)
 {
    return( _mulle__map_get_pair( (struct mulle__map *) map,
@@ -248,7 +248,7 @@ static inline struct mulle_pointerpair   *
 MULLE_C_NONNULL_THIRD
 static inline struct mulle_pointerpair   *
    mulle_map_get_pair( struct mulle_map *map,
-                       void *key,
+                       const void *key,
                        struct mulle_pointerpair *space)
 {
    if( ! map)
@@ -261,7 +261,7 @@ static inline struct mulle_pointerpair   *
 
 
 MULLE_C_NONNULL_FIRST
-static inline int   _mulle_map_remove( struct mulle_map *map, void *key)
+static inline int   _mulle_map_remove( struct mulle_map *map, const void *key)
 {
    return( _mulle__map_remove( (struct mulle__map *) map,
                                key,
@@ -270,7 +270,7 @@ static inline int   _mulle_map_remove( struct mulle_map *map, void *key)
 }
 
 
-static inline int   mulle_map_remove( struct mulle_map *map, void *key)
+static inline int   mulle_map_remove( struct mulle_map *map, const void *key)
 {
    if( ! map)
       return( 0);

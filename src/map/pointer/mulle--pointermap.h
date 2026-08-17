@@ -225,7 +225,7 @@ static inline void   *
 MULLE_C_NONNULL_FIRST_SECOND
 static inline
 int   _mulle__pointermap_remove( struct mulle__pointermap *map,
-                                 void *key,
+                                 const void *key,
                                  struct mulle_allocator *allocator)
 {
    return( _mulle__pointermap_remove_generic( map,
@@ -237,7 +237,7 @@ int   _mulle__pointermap_remove( struct mulle__pointermap *map,
 MULLE_C_NONNULL_SECOND
 static inline
 int   mulle__pointermap_remove( struct mulle__pointermap *map,
-                                void *key,
+                                const void *key,
                                 struct mulle_allocator *allocator)
 {
    if( map)

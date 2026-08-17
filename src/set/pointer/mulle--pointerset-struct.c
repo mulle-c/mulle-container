@@ -139,7 +139,7 @@ void    _mulle__pointerset_destroy( struct mulle__pointerset *set,
 
 // MEMO: could be global
 static void   *_mulle__pointerset__get( struct mulle__pointerset *set,
-                                 void *key)
+                                 const void *key)
 {
    uintptr_t   hash;
    size_t      i;
@@ -168,7 +168,7 @@ static void   *_mulle__pointerset__get( struct mulle__pointerset *set,
 
 
 void   *_mulle__pointerset_get( struct mulle__pointerset *set,
-                                void *key)
+                                const void *key)
 {
    void   *value;
 

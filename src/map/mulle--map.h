@@ -224,7 +224,7 @@ static inline struct mulle_pointerpair   *
 MULLE_C_NONNULL_FIRST_THIRD
 static inline void   *
    _mulle__map_get( struct mulle__map *map,
-                    void *key,
+                    const void *key,
                     struct mulle_container_keyvaluecallback *callback)
 {
    return( _mulle__pointermap_get_generic( (struct mulle__pointermap *) map, key, callback));
@@ -234,7 +234,7 @@ static inline void   *
 MULLE_C_NONNULL_FIRST_THIRD_FOURTH
 static inline struct mulle_pointerpair   *
    _mulle__map_get_pair( struct mulle__map *map,
-                         void *key,
+                         const void *key,
                          struct mulle_container_keyvaluecallback *callback,
                          struct mulle_pointerpair *space)
 {
@@ -504,7 +504,7 @@ static inline void *
 MULLE_C_NONNULL_FIRST_SECOND_THIRD
 static inline int
    _mulle__map_remove( struct mulle__map *map,
-                       void *key,
+                       const void *key,
                        struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
 {
@@ -517,7 +517,7 @@ static inline int
 
 static inline int
    mulle__map_remove( struct mulle__map *map,
-                      void *key,
+                      const void *key,
                       struct mulle_container_keyvaluecallback *callback,
                       struct mulle_allocator *allocator)
 {

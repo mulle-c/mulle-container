@@ -151,7 +151,7 @@ void   _mulle__pointermap_reset( struct mulle__pointermap *map,
 // get, if a key/value pair exists, if NULL is a valid value!
 //
 void   *_mulle__pointermap_get( struct mulle__pointermap *map,
-                                void *key)
+                                const void *key)
 {
    size_t      i;
    size_t      size;

@@ -183,15 +183,15 @@ static void   grow_generic( struct mulle__pointermap *map,
 
 static uintptr_t   _find_index_generic( void **storage,
                                         size_t size,
-                                        void *key,
+                                        const void *key,
                                         void *q,
                                         size_t i,
                                         size_t *hole_index,
                                         struct mulle_container_keycallback *callback)
 {
    mulle_container_keycallback_is_equal_t   *f;
-   void     *param1;
-   void     *param2;
+   void           *param1;
+   const void     *param2;
    void     *notakey;
    size_t   mask;
    int      is_equal;
@@ -220,7 +220,7 @@ static uintptr_t   _find_index_generic( void **storage,
 
 static inline uintptr_t  find_index_generic( void **storage,
                                              size_t size,
-                                             void *key,
+                                             const void *key,
                                              uintptr_t  hash,
                                              size_t *hole_index,
                                              struct mulle_container_keycallback *callback)
@@ -349,7 +349,7 @@ void   *_mulle__pointermap_write_pair_generic( struct mulle__pointermap *map,
 // notakey is just for key.
 //
 void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map,
-                                                   void *key,
+                                                   const void *key,
                                                    uintptr_t hash,
                                                    struct mulle_container_keyvaluecallback *callback)
 {
@@ -399,7 +399,7 @@ void   *_mulle__pointermap__get_generic_knownhash( struct mulle__pointermap *map
 // returns NULL if nothing found.
 //
 void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
-                                         void *key,
+                                         const void *key,
                                          struct mulle_container_keyvaluecallback *callback)
 {
    uintptr_t   hash;
@@ -411,7 +411,7 @@ void   *_mulle__pointermap__get_generic( struct mulle__pointermap *map,
 
 struct mulle_pointerpair   *
    _mulle__pointermap__get_pair_generic_knownhash( struct mulle__pointermap *map,
-                                                   void *key,
+                                                   const void *key,
                                                    uintptr_t hash,
                                                    struct mulle_container_keyvaluecallback *callback,
                                                    struct mulle_pointerpair *pair)
@@ -462,7 +462,7 @@ struct mulle_pointerpair   *
 
 
 struct mulle_pointerpair   *_mulle__pointermap__get_pair_generic( struct mulle__pointermap *map,
-                                                                  void *key,
+                                                                  const void *key,
                                                                   struct mulle_container_keyvaluecallback *callback,
                                                                   struct mulle_pointerpair *space)
 {
@@ -475,7 +475,7 @@ struct mulle_pointerpair   *_mulle__pointermap__get_pair_generic( struct mulle__
 
 struct mulle_pointerpair   *
    _mulle__pointermap_get_pair_generic( struct mulle__pointermap *map,
-                                        void *key,
+                                        const void *key,
                                         struct mulle_container_keyvaluecallback *callback,
                                         struct mulle_pointerpair *space)
 {
@@ -526,7 +526,7 @@ struct mulle_pointerpair   *
 
 static void   *
    _mulle__pointermap_pointerequalitysearch( struct mulle__pointermap *map,
-                                             void *key)
+                                             const void *key)
 {
    void   **q;
    void   **sentinel;
@@ -545,7 +545,7 @@ static void   *
 
 
 void   *_mulle__pointermap_get_generic_knownhash( struct mulle__pointermap *map,
-                                                  void *key,
+                                                  const void *key,
                                                   uintptr_t hash,
                                                   struct mulle_container_keyvaluecallback *callback)
 {
@@ -570,7 +570,7 @@ void   *_mulle__pointermap_get_generic_knownhash( struct mulle__pointermap *map,
 
 
 void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
-                                        void *key,
+                                        const void *key,
                                         struct mulle_container_keyvaluecallback *callback)
 {
    void   *value;
@@ -593,7 +593,7 @@ void   *_mulle__pointermap_get_generic( struct mulle__pointermap *map,
 
 
 int   _mulle__pointermap_remove_generic( struct mulle__pointermap *map,
-                                         void *key,
+                                         const void *key,
                                          struct mulle_container_keyvaluecallback *callback,
                                          struct mulle_allocator *allocator)
 {

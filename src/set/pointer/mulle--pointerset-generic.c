@@ -201,7 +201,7 @@ static void   grow_generic( struct mulle__pointerset *set,
 
 static uintptr_t  _find_index_generic( void  **storage,
                                        size_t size,
-                                       void *p,
+                                       const void *p,
                                        void *q,
                                        size_t i,
                                        size_t *hole_index,
@@ -209,7 +209,7 @@ static uintptr_t  _find_index_generic( void  **storage,
 {
    mulle_container_keycallback_is_equal_t   *f;
    void                                     *param1;
-   void                                     *param2;
+   const void                               *param2;
    void                                     *notakey;
    size_t                                   mask;
 
@@ -236,7 +236,7 @@ static uintptr_t  _find_index_generic( void  **storage,
 
 static inline uintptr_t   find_index_generic( void **storage,
                                               size_t size,
-                                              void *p,
+                                              const void *p,
                                               uintptr_t hash,
                                               size_t *hole_index,
                                               struct mulle_container_keycallback *callback)
@@ -342,7 +342,7 @@ void   *_mulle__pointerset_write_generic( struct mulle__pointerset *set,
 
 static void   *
    _mulle__pointerset_pointerequalitysearch_generic( struct mulle__pointerset *set,
-                                                     void *key,
+                                                     const void *key,
                                                      void *notakey)
 {
    void   **q;
@@ -357,14 +357,14 @@ static void   *
    //
    for( ; q < sentinel; q++)
       if( key == *q)
-         return( key);  // pointer equality: can use key
+         return( (void *) key);  // pointer equality: can use key
 
    return( notakey);
 }
 
 // MEMO: could be global
 static void   *_mulle__pointerset__get_generic( struct mulle__pointerset *set,
-                                                void *key,
+                                                const void *key,
                                                 struct mulle_container_keycallback *callback)
 {
    uintptr_t   hash;
@@ -399,7 +399,7 @@ static void   *_mulle__pointerset__get_generic( struct mulle__pointerset *set,
 
 
 void   *_mulle__pointerset_get_generic( struct mulle__pointerset *set,
-                                        void *key,
+                                        const void *key,
                                         struct mulle_container_keycallback *callback)
 {
    void   *value;
@@ -459,7 +459,7 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
 
 
 int   _mulle__pointerset_remove_generic( struct mulle__pointerset *set,
-                                         void *p,
+                                         const void *p,
                                          struct mulle_container_keycallback *callback,
                                          struct mulle_allocator *allocator)
 {

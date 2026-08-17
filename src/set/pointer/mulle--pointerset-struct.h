@@ -193,7 +193,7 @@ static inline int  _mulle__pointerset_is_sparse( struct mulle__pointerset *set)
 MULLE__CONTAINER_GLOBAL
 MULLE_C_NONNULL_FIRST
 void   *_mulle__pointerset_get( struct mulle__pointerset *set,
-                                void *p);
+                                const void *p);
 
 
 
