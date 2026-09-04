@@ -40,3 +40,15 @@ export MULLE_TEST_LIBRARY_STYLE="static"
 
 
 
+#
+#
+#
+export MULLE_SDE_CLEAN_DEFAULT="mulle-container"
+
+
+#
+#
+#
+export MULLE_SDE_CLEAN_BEFORE_CRAFT="YES"
+
+
