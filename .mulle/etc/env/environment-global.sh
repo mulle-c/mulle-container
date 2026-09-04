@@ -1,7 +1,7 @@
 #
 #
 #
-export vibecoding="off"
+
 
 
 #
