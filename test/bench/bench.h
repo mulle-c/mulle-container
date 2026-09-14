@@ -58,18 +58,18 @@ static void  *bench_calloc( size_t n, size_t size, struct mulle_allocator *alloc
 }
 
 
-static void  *bench_realloc( void *block, size_t size, struct mulle_allocator *allocator)
+static void  *bench_reallocarray( void *block, size_t n, size_t size, struct mulle_allocator *allocator)
 {
    struct bench_allocator  *bench;
 
    bench = (struct bench_allocator *) allocator->aba;
 
    bench->n_realloc++;
-   bench->realloc_bytes += size;
-   if( ! block)             // realloc( NULL, size) allocates
+   bench->realloc_bytes += n * size;
+   if( ! block)             // reallocarray( NULL, n, size) allocates
       bench->live++;
 
-   return( bench->delegate->realloc( block, size, bench->delegate));
+   return( bench->delegate->reallocarray( block, n, size, bench->delegate));
 }
 
 
@@ -92,9 +92,9 @@ static void  bench_allocator_init( struct bench_allocator *bench)
    bench->delegate  = &mulle_allocator_default;
    bench->allocator = *bench->delegate;   // copy fail/abafree/aba from default
 
-   bench->allocator.calloc  = bench_calloc;
-   bench->allocator.realloc = bench_realloc;
-   bench->allocator.free    = bench_free;
+   bench->allocator.calloc       = bench_calloc;
+   bench->allocator.reallocarray = bench_reallocarray;
+   bench->allocator.free         = bench_free;
    bench->allocator.aba     = bench;      // back-pointer
 
    bench->n_calloc = 0;

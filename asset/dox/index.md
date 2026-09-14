@@ -13,6 +13,8 @@ the information you need.
 - Need to understand struct layouts? → `data_models.md`
 - Need to know how to build/test/iterate? → `workflows.md`
 - Need dependency info? → `dependencies.md`
+- Need to see how the cmake files wire together? → `cmake_build_graph.md`
+- Need the include tree resolved into one file? → `cmake_flat_expansion.md`
 
 ## File Descriptions
 
@@ -25,6 +27,8 @@ the information you need.
 | `data_models.md` | Struct definitions, callback types, memory layouts | Understanding internal representation, writing callbacks |
 | `workflows.md` | Build, test, development workflows using mulle-sde | Building, testing, adding files, CI |
 | `dependencies.md` | External dependencies and their roles | Understanding what mulle-allocator and mulle-data provide |
+| `cmake_build_graph.md` | The cmake include/value graph and `tools/cmake-graph.py` | Understanding or changing how the build scripts feed each other |
+| `cmake_flat_expansion.md` | The flattened cmake tree (`pix/cmake-flat.cmake`) and `tools/cmake-flatten.py` | Reading the build as one file, in the order cmake runs it |
 
 ## Cross-References
 

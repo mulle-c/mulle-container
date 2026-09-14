@@ -3,7 +3,7 @@ cmake_minimum_required( VERSION 3.13...99.99)
 project( mulle-container VERSION 10.1.3 LANGUAGES C)
 
 
-### mulle-sde environment
+
 
 # add cmake module paths to search path
 list( INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/share")
@@ -47,9 +47,18 @@ endif()
 
 include( InstallLibrary)
 
+
 if( LINK_PHASE)
-   include( InstallCMakeInclude)
-   include( InstallCMakePackage)
+   #
+   # In a mulle-sde build the headers are installed into the SDK, so this
+   # path is only for plain cmake consumers. The copying itself runs at the
+   # start of the build regardless of where this include sits, the build
+   # graph decides that, not the declaration order.
+   #
+   if( NOT USE_DEPENDENCY_DIR)
+      include( AddSubdirectorySupport)
+   endif()
+   include( FindPackageSupport)
 endif()
 
 include( FinalOutput OPTIONAL)
