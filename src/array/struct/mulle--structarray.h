@@ -380,8 +380,8 @@ static inline void *
    if( array->_curr == array->_storage)
       return( NULL);
 
-   assert( &((char *) array->_curr)[ - array->_sizeof_struct] >= (char *) array->_storage);
-   return(  &((char *) array->_curr)[ - array->_sizeof_struct]);
+   assert( (char *) array->_curr - array->_sizeof_struct >= (char *) array->_storage);
+   return(  (char *) array->_curr - array->_sizeof_struct);
 }
 
 
@@ -884,7 +884,7 @@ static inline int
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
       assert( rover->_array->_n_mutations == rover->_n_mutations && "array was modified during enumeration");
 #endif
-      rover->_curr = &((char *) rover->_curr)[ - rover->_sizeof_struct];
+      rover->_curr = (char *) rover->_curr - rover->_sizeof_struct;
       *item = rover->_curr;
       return( 1);
    }
@@ -905,7 +905,7 @@ static inline int
       return( 0);
    }
 
-   rover->_curr = &((char *) rover->_curr)[ - rover->_sizeof_struct];
+   rover->_curr = (char *) rover->_curr - rover->_sizeof_struct;
    if( item)
       *item = rover->_curr;
    return( 1);

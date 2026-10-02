@@ -91,3 +91,7 @@ mulle-container.sublime-project
 REVIEW.md
 tools/__pycache__/cmake-flatten.cpython-314.pyc
 tools/__pycache__/cmake-graph.cpython-314.pyc
+.touch
+*.orig
+*.workspace
+*.future

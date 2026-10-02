@@ -42,7 +42,7 @@ jobs:
     - name: Dump Environment
       run:  env | sort
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - uses: mulle-sde/github-ci@v2
 
@@ -71,7 +71,7 @@ jobs:
     - name: Add to path
       run:  echo "$HOME/bin" >> $GITHUB_PATH
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - uses: mulle-sde/github-ci@v2
 
@@ -80,10 +80,10 @@ jobs:
 
     - name: Mulle-SDE Craft (ASAN + UBSAN)
       run: |
-        mulle-sde \
-          -DCFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
-          -DLDFLAGS="-fsanitize=address,undefined" \
-          craft --debug
+        mulle-sde craft --debug \
+          -DCMAKE_C_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address,undefined"
 
     - name: Mulle-SDE Test (ASAN + UBSAN)
       run: |
@@ -107,7 +107,7 @@ jobs:
     - name: Add to path
       run:  echo "$HOME/bin" >> $GITHUB_PATH
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - uses: mulle-sde/github-ci@v2
 
@@ -116,10 +116,10 @@ jobs:
 
     - name: Mulle-SDE Craft (32-bit)
       run: |
-        mulle-sde \
-          -DCFLAGS="-m32" \
-          -DLDFLAGS="-m32" \
-          craft --release
+        mulle-sde craft --release \
+          -DCMAKE_C_FLAGS="-m32" \
+          -DCMAKE_EXE_LINKER_FLAGS="-m32" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-m32"
 
     - name: Mulle-SDE Test (32-bit)
       run: |
@@ -140,7 +140,7 @@ jobs:
     - name: Add to path
       run:  echo "$HOME/bin" >> $GITHUB_PATH
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - uses: mulle-sde/github-ci@v2
 

@@ -103,6 +103,34 @@ Every container has macros for stack lifetime and iteration:
 
 These are ideal for short-lived, scoped use.
 
+### Mutation pointers (enumeration change detection)
+
+Every container exposes a `*_get_mutation_pointer` function returning a `uintptr_t *` whose pointed-to value changes whenever the container is mutated. This is the value suited to `NSFastEnumeration`'s `mutationsPtr`. It is built on `_mulle__pointerarray_get_mutation_pointer`, which returns `&array->_n_mutations` when mutation counting is enabled (`MULLE__CONTAINER_HAVE_MUTATION_COUNT`), otherwise falls back to `(uintptr_t *) &array->_curr` (the write pointer; it changes when the count changes but not on in-place replacement).
+
+```c
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__pointerarray_get_mutation_pointer( struct mulle__pointerarray *array)
+
+static inline uintptr_t *
+   mulle__pointerarray_get_mutation_pointer( struct mulle__pointerarray *array)
+```
+
+The double-underscore containers provide `_mulle__<container>_get_mutation_pointer` and the NULL-safe `mulle__<container>_get_mutation_pointer`; the single-underscore wrappers are `_mulle_<container>_get_mutation_pointer` and `mulle_<container>_get_mutation_pointer`:
+
+- **array:** `_mulle__array_get_mutation_pointer`, `mulle__array_get_mutation_pointer`, `_mulle_array_get_mutation_pointer`, `mulle_array_get_mutation_pointer`
+- **pointerarray:** `_mulle__pointerarray_get_mutation_pointer`, `mulle__pointerarray_get_mutation_pointer`, `_mulle_pointerarray_get_mutation_pointer`, `mulle_pointerarray_get_mutation_pointer`
+- **structarray:** `_mulle__structarray_get_mutation_pointer`, `mulle__structarray_get_mutation_pointer`, `_mulle_structarray_get_mutation_pointer`, `mulle_structarray_get_mutation_pointer`
+- **assoc:** `_mulle__assoc_get_mutation_pointer`, `mulle__assoc_get_mutation_pointer`, `_mulle_assoc_get_mutation_pointer`, `mulle_assoc_get_mutation_pointer`
+- **pointerpairarray:** `_mulle__pointerpairarray_get_mutation_pointer`, `mulle__pointerpairarray_get_mutation_pointer`, `_mulle_pointerpairarray_get_mutation_pointer`, `mulle_pointerpairarray_get_mutation_pointer`
+- **map:** `_mulle__map_get_mutation_pointer`, `mulle__map_get_mutation_pointer`, `_mulle_map_get_mutation_pointer`, `mulle_map_get_mutation_pointer`
+- **pointermap:** `_mulle__pointermap_get_mutation_pointer`, `mulle__pointermap_get_mutation_pointer`
+- **set:** `_mulle__set_get_mutation_pointer`, `mulle__set_get_mutation_pointer`, `mulle_set_get_mutation_pointer`
+- **pointerset:** `_mulle__pointerset_get_mutation_pointer`, `mulle__pointerset_get_mutation_pointer`, `mulle_pointerset_get_mutation_pointer`
+- **pointerqueue:** `_mulle__pointerqueue_get_mutation_pointer`, `mulle__pointerqueue_get_mutation_pointer`, `_mulle_pointerqueue_get_mutation_pointer`, `mulle_pointerqueue_get_mutation_pointer`
+- **structqueue:** `_mulle__structqueue_get_mutation_pointer`, `mulle__structqueue_get_mutation_pointer`, `_mulle_structqueue_get_mutation_pointer`, `mulle_structqueue_get_mutation_pointer`
+- **rangemap:** `_mulle__rangemap_get_mutation_pointer`, `mulle__rangemap_get_mutation_pointer`
+
 ## 3. Core API & Data Structures
 
 All signatures below are copied verbatim from the public headers. The single-underscore API is documented; `_`-prefixed functions (e.g. `_mulle_array_get_size`) are non-NULL-safe internal helpers and are only listed by name here. `MULLE__CONTAINER_GLOBAL` and `MULLE_C_NONNULL_*` are compile-time annotation macros, not part of the calling convention.
@@ -591,6 +619,14 @@ void   mulle_pointerarray_remove_at_index( struct mulle_pointerarray *array,
 static inline
 void   *mulle_pointerarray_remove_unique( struct mulle_pointerarray *array,
                                           void *p)
+```
+
+```c
+static inline
+void   _mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
+
+static inline
+void   mulle_pointerarray_remove_last( struct mulle_pointerarray *array)
 ```
 
 ```c

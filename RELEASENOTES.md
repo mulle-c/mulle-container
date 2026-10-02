@@ -1,3 +1,20 @@
+### 10.1.4
+
+
+
+* public container structs now embed the internal struct as a member instead of
+  repeating its fields through a macro, eliminating the C11 strict-aliasing
+  violation that GCC could exploit at -O2/-O3 to silently corrupt state
+* add ``mulle_*_get_mutation_pointer`` to every container, exposing the mutation
+  counter for external fast enumeration (e.g. NSFastEnumeration's mutationsPtr)
+* set, map and struct enumerators now detect and assert when the container is
+  mutated during enumeration
+* repair the long-broken ``_for`` / ``_for_reverse`` convenience macros, whose
+  enumerator call sites had stale signatures and had never compiled
+* fix a zero-length copy in ``mulle__pointerpairarray_get_in_range``
+
+**BREAKING**: the public struct layout and the ``MULLE_*_BASE`` composition macros
+
 ### 10.1.3
 
 
