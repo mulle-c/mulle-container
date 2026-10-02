@@ -158,6 +158,33 @@ static inline size_t   _mulle__pointerset_get_count( struct mulle__pointerset *s
 }
 
 
+//
+// Returns a pointer suitable for NSFastEnumeration's mutationsPtr. The value
+// it points to changes whenever the set is mutated.
+//
+// If mutation counting is disabled, fall back to the count, which is present
+// in every configuration. It changes on add and remove, but not on a
+// remove+add that nets the same count.
+//
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__pointerset_get_mutation_pointer( struct mulle__pointerset *set)
+{
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   return( &set->_n_mutations);
+#else
+   return( (uintptr_t *) &set->_count);
+#endif
+}
+
+
+static inline uintptr_t *
+   mulle__pointerset_get_mutation_pointer( struct mulle__pointerset *set)
+{
+   return( set ? _mulle__pointerset_get_mutation_pointer( set) : NULL);
+}
+
+
 #pragma mark - query
 
 MULLE_C_NONNULL_FIRST

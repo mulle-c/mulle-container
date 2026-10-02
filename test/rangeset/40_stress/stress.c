@@ -14,7 +14,6 @@ int   main( int argc, char *argv[])
 {
    struct mulle__rangeset   set;
    uintptr_t                i;
-   struct mulle_range       range;
 
    _mulle__rangeset_init( &set, 0, NULL);
 

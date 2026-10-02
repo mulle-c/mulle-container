@@ -87,6 +87,8 @@ static void  bench_free( void *block, struct mulle_allocator *allocator)
 }
 
 
+static void  bench_allocator_init( struct bench_allocator *bench) MULLE_C_UNUSED_FUNCTION;
+
 static void  bench_allocator_init( struct bench_allocator *bench)
 {
    bench->delegate  = &mulle_allocator_default;
@@ -106,6 +108,8 @@ static void  bench_allocator_init( struct bench_allocator *bench)
 }
 
 
+static void  bench_allocator_print( struct bench_allocator *bench, char *label) MULLE_C_UNUSED_FUNCTION;
+
 static void  bench_allocator_print( struct bench_allocator *bench, char *label)
 {
    printf( "%scalloc=%zu realloc=%zu free=%zu live=%zu\n",
@@ -124,6 +128,8 @@ static void  bench_allocator_print( struct bench_allocator *bench, char *label)
 
 # include <windows.h>
 
+static uint64_t  bench_now( void) MULLE_C_UNUSED_FUNCTION;
+
 static uint64_t  bench_now( void)
 {
    LARGE_INTEGER   counter;
@@ -135,6 +141,8 @@ static uint64_t  bench_now( void)
 }
 
 #else
+
+static uint64_t  bench_now( void) MULLE_C_UNUSED_FUNCTION;
 
 static uint64_t  bench_now( void)
 {
@@ -155,6 +163,10 @@ static size_t  g_comparisons;
 
 static int  bench_compare_intptr( struct mulle_pointerpair *a,
                                   struct mulle_pointerpair *b,
+                                  void *userinfo) MULLE_C_UNUSED_FUNCTION;
+
+static int  bench_compare_intptr( struct mulle_pointerpair *a,
+                                  struct mulle_pointerpair *b,
                                   void *userinfo)
 {
    g_comparisons++;
@@ -163,13 +175,14 @@ static int  bench_compare_intptr( struct mulle_pointerpair *a,
 
 
 //
-// Call at the start of timing benchmarks to warn if we're in a debug build.
-// Debug builds have asserts and no optimization, so timings are meaningless.
+// Call at the start of timing benchmarks to warn if asserts are on / the build
+// is unoptimized. Such timings are not meaningful (and some containers run
+// quadratically), so the scaling benchmark also shortens its size range.
 //
 static inline void  bench_warn_if_debug( void)
 {
-#ifdef DEBUG
-   fprintf( stderr, "WARNING: debug build — timings are not meaningful\n");
+#ifndef NDEBUG
+   fprintf( stderr, "WARNING: asserts enabled (NDEBUG not defined) - timings are not meaningful\n");
 #endif
 }
 

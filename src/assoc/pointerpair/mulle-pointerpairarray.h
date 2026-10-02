@@ -48,10 +48,14 @@
 // TODO: hide mulle_pointerpair from API and use key/value ?
 // You can also use it as stack
 //
+//
+// The struct holds the internal one as a member (see mulle-array.h for why
+// repeating the fields by macro is a strict-aliasing violation).
+//
 struct mulle_pointerpairarray
 {
-   MULLE__POINTERPAIRARRAY_BASE;
-   struct mulle_allocator      *allocator;
+   struct mulle__pointerpairarray   base;
+   struct mulle_allocator           *allocator;
 };
 
 
@@ -69,7 +73,7 @@ static inline void   _mulle_pointerpairarray_init( struct mulle_pointerpairarray
                                                    size_t  capacity,
                                                    struct mulle_allocator *allocator)
 {
-   _mulle__pointerpairarray_init( (struct mulle__pointerpairarray *) array,
+   _mulle__pointerpairarray_init(&array->base,
                                    capacity,
                                    allocator);
 
@@ -79,7 +83,7 @@ static inline void   _mulle_pointerpairarray_init( struct mulle_pointerpairarray
 
 static inline void  _mulle_pointerpairarray_done( struct mulle_pointerpairarray *array)
 {
-   _mulle__pointerpairarray_done( (struct mulle__pointerpairarray *) array, array->allocator);
+   _mulle__pointerpairarray_done(&array->base, array->allocator);
 }
 
 
@@ -97,14 +101,14 @@ static inline struct mulle_pointerpairarray *
 static inline void  mulle_pointerpairarray_destroy( struct mulle_pointerpairarray *array)
 {
    if( array)
-      _mulle__pointerpairarray_destroy( (struct mulle__pointerpairarray *) array, array->allocator);
+      _mulle__pointerpairarray_destroy(&array->base, array->allocator);
 }
 
 
 static inline void
    mulle_pointerpairarray_reset( struct mulle_pointerpairarray *array)
 {
-   mulle__pointerpairarray_reset( (struct mulle__pointerpairarray *) array);
+   mulle__pointerpairarray_reset(&array->base);
 }
 
 
@@ -115,14 +119,14 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
 	_mulle_pointerpairarray_get_size( struct mulle_pointerpairarray *array)
 {
-   return( _mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) array));
+   return( _mulle__pointerpairarray_get_size(&array->base));
 }
 
 
 static inline size_t
    mulle_pointerpairarray_get_size( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_get_size( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_get_size(&array->base));
 }
 
 
@@ -130,14 +134,29 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
 	_mulle_pointerpairarray_get_count( struct mulle_pointerpairarray *array)
 {
-   return( _mulle__pointerpairarray_get_count( (struct mulle__pointerpairarray *) array));
+   return( _mulle__pointerpairarray_get_count(&array->base));
 }
 
 
 static inline size_t
    mulle_pointerpairarray_get_count( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_get_count( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_get_count(&array->base));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle_pointerpairarray_get_mutation_pointer( struct mulle_pointerpairarray *array)
+{
+   return( _mulle__pointerpairarray_get_mutation_pointer( &array->base));
+}
+
+
+static inline uintptr_t *
+   mulle_pointerpairarray_get_mutation_pointer( struct mulle_pointerpairarray *array)
+{
+   return( mulle__pointerpairarray_get_mutation_pointer( array ? &array->base : NULL));
 }
 
 
@@ -145,14 +164,14 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
 	_mulle_pointerpairarray_get_guaranteed_size( struct mulle_pointerpairarray *array)
 {
-   return( _mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) array));
+   return( _mulle__pointerpairarray_get_guaranteed_size(&array->base));
 }
 
 
 static inline size_t
 	mulle_pointerpairarray_get_guaranteed_size( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_get_guaranteed_size( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_get_guaranteed_size(&array->base));
 }
 
 
@@ -160,14 +179,14 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_pointerpairarray_is_full( struct mulle_pointerpairarray *array)
 {
-   return( _mulle__pointerpairarray_is_full( (struct mulle__pointerpairarray *) array));
+   return( _mulle__pointerpairarray_is_full(&array->base));
 }
 
 
 static inline int
    mulle_pointerpairarray_is_full( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_is_full( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_is_full(&array->base));
 }
 
 
@@ -177,7 +196,7 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle_pointerpairarray_add( struct mulle_pointerpairarray *array,
                                                   struct mulle_pointerpair pair)
 {
-   _mulle__pointerpairarray_add( (struct mulle__pointerpairarray *) array,
+   _mulle__pointerpairarray_add(&array->base,
                                  pair,
                                  array->allocator);
 }
@@ -191,7 +210,7 @@ static inline
 void    _mulle_pointerpairarray_add_guaranteed( struct mulle_pointerpairarray *array,
                                                 struct mulle_pointerpair pair)
 {
-   _mulle__pointerpairarray_add_guaranteed( (struct mulle__pointerpairarray *) array,
+   _mulle__pointerpairarray_add_guaranteed(&array->base,
                                              pair);
 }
 
@@ -203,7 +222,7 @@ static inline void
                                struct mulle_pointerpair pair)
 {
    if( array)
-      _mulle__pointerpairarray_add( (struct mulle__pointerpairarray *) array,
+      _mulle__pointerpairarray_add(&array->base,
                                     pair,
                                     array->allocator);
 }
@@ -214,7 +233,7 @@ static inline void   _mulle_pointerpairarray_add_kv( struct mulle_pointerpairarr
                                                      void *key,
                                                      void *value)
 {
-   _mulle__pointerpairarray_add( (struct mulle__pointerpairarray *) array,
+   _mulle__pointerpairarray_add(&array->base,
                                  (struct mulle_pointerpair) { key, value },
                                  array->allocator);
 }
@@ -227,7 +246,7 @@ static inline void
                                   void *value)
 {
    if( array)
-      _mulle__pointerpairarray_add( (struct mulle__pointerpairarray *) array,
+      _mulle__pointerpairarray_add(&array->base,
                                     (struct mulle_pointerpair) { key, value },
                                     array->allocator);
 }
@@ -237,14 +256,14 @@ static inline void
 static inline struct mulle_pointerpair
 	mulle_pointerpairarray_pop( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_pop( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_pop(&array->base));
 }
 
 
 static inline struct mulle_pointerpair
 	mulle_pointerpairarray_get_last( struct mulle_pointerpairarray *array)
 {
-   return( mulle__pointerpairarray_get_last( (struct mulle__pointerpairarray *) array));
+   return( mulle__pointerpairarray_get_last(&array->base));
 }
 
 
@@ -253,7 +272,7 @@ static inline struct mulle_pointerpair
 	_mulle_pointerpairarray_get( struct mulle_pointerpairarray *array,
                                 size_t i)
 {
-   return( _mulle__pointerpairarray_get( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_get(&array->base,
                                          i));
 }
 
@@ -265,7 +284,7 @@ static inline struct mulle_pointerpair
    if( ! array )
       return( mulle_pointerpair_make_invalid());
 
-   return( _mulle__pointerpairarray_get( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_get(&array->base,
                                          i));
 }
 
@@ -276,7 +295,7 @@ static inline size_t
                                          struct mulle_range range,
                                          void *buf)
 {
-   return( _mulle__pointerpairarray_get_in_range( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_get_in_range(&array->base,
                                                   range,
                                                   buf));
 }
@@ -286,7 +305,7 @@ static inline size_t
                                         struct mulle_range range,
                                         void *buf)
 {
-   return( mulle__pointerpairarray_get_in_range( (struct mulle__pointerpairarray *) array,
+   return( mulle__pointerpairarray_get_in_range(&array->base,
                                                  range,
                                                  buf));
 }
@@ -297,7 +316,7 @@ static inline void
                                size_t i,
                                struct mulle_pointerpair pair)
 {
-   _mulle__pointerpairarray_set( (struct mulle__pointerpairarray *) array,
+   _mulle__pointerpairarray_set(&array->base,
                                  i,
                                  pair);
 }
@@ -312,7 +331,7 @@ static inline uintptr_t
                                           struct mulle_pointerpair search,
                                           struct mulle_range range)
 {
-   return( _mulle__pointerpairarray_find_in_range( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_find_in_range(&array->base,
                                                    search,
                                                    range));
 }
@@ -334,7 +353,7 @@ static inline uintptr_t
    _mulle_pointerpairarray_find( struct mulle_pointerpairarray *array,
                                  struct mulle_pointerpair search)
 {
-   return( _mulle__pointerpairarray_find( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_find(&array->base,
                                           search));
 }
 
@@ -355,7 +374,7 @@ static inline uintptr_t
                                           struct mulle_pointerpair search,
                                           const struct mulle_container_keyvaluecallback *callback)
 {
-   return( _mulle__pointerpairarray_find_callback( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_find_callback(&array->base,
                                                    search,
                                                    callback));
 }
@@ -380,7 +399,7 @@ static inline uintptr_t
                                          mulle_pointerpair_compare_t *compare,
                                          void *userinfo)
 {
-   return( _mulle__pointerpairarray_find_compare( (struct mulle__pointerpairarray *) array,
+   return( _mulle__pointerpairarray_find_compare(&array->base,
                                                   search,
                                                   compare,
                                                   userinfo));
@@ -406,7 +425,7 @@ static inline void   mulle_pointerpairarray_qsort_r( struct mulle_pointerpairarr
                                                      mulle_pointerpair_compare_t *compare,
                                                      void *userinfo)
 {
-   mulle__pointerpairarray_qsort_r( (struct mulle__pointerpairarray *) array,
+   mulle__pointerpairarray_qsort_r(&array->base,
                                     compare,
                                     userinfo);
 }
@@ -414,7 +433,7 @@ static inline void   mulle_pointerpairarray_qsort_r( struct mulle_pointerpairarr
 static inline void   mulle_pointerpairarray_qsort( struct mulle_pointerpairarray *array,
                                                    mulle_pointerpair_compare_t *compare)
 {
-   mulle__pointerpairarray_qsort_r( (struct mulle__pointerpairarray *) array,
+   mulle__pointerpairarray_qsort_r(&array->base,
                                     compare,
                                     array);
 }
@@ -424,33 +443,26 @@ static inline void   mulle_pointerpairarray_qsort( struct mulle_pointerpairarray
 
 #pragma mark - enumerator
 
+//
+// The public enumerator holds the internal one as a member (see mulle-array.h
+// for why repeating the fields by macro is a strict-aliasing violation). The
+// mutation-count fields live in the member now, so the #if branch is gone.
+//
 #define _MULLE_POINTERPAIRARRAYENUMERATOR_BASE   \
-   struct mulle_pointerpair   *_curr;            \
-   struct mulle_pointerpair   *_sentinel
+   struct mulle__pointerpairarrayenumerator base
 
-#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-struct mulle_pointerpairarrayenumerator
-{
-   _MULLE_POINTERPAIRARRAYENUMERATOR_BASE;
-   struct mulle__pointerpairarray *_array;
-   uintptr_t  _n_mutations;
-};
-#else
 struct mulle_pointerpairarrayenumerator
 {
    _MULLE_POINTERPAIRARRAYENUMERATOR_BASE;
 };
-#endif
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpairarrayenumerator
    _mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
-   struct mulle_pointerpairarrayenumerator    rover;
-   struct mulle__pointerpairarrayenumerator   tmp;
+   struct mulle_pointerpairarrayenumerator   rover;
 
-   tmp = _mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
-   memcpy( &rover, &tmp, sizeof( struct mulle__pointerpairarrayenumerator));
+   rover.base = _mulle__pointerpairarray_enumerate(&array->base);
    return( rover);
 }
 
@@ -459,10 +471,7 @@ static inline struct mulle_pointerpairarrayenumerator
    mulle_pointerpairarray_enumerate( struct mulle_pointerpairarray *array)
 {
    struct mulle_pointerpairarrayenumerator    rover;
-   struct mulle__pointerpairarrayenumerator   tmp;
-
-   tmp = mulle__pointerpairarray_enumerate( (struct mulle__pointerpairarray *) array);
-   memcpy( &rover, &tmp, sizeof( struct mulle__pointerpairarrayenumerator));
+   rover.base = mulle__pointerpairarray_enumerate(&array->base);
    return( rover);
 }
 
@@ -472,8 +481,7 @@ static inline int
 	_mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover,
                                            struct mulle_pointerpair *pair)
 {
-   return( _mulle__pointerpairarrayenumerator_next( (struct mulle__pointerpairarrayenumerator *) rover,
-                                                    pair));
+   return( _mulle__pointerpairarrayenumerator_next( &rover->base, pair));
 }
 
 
@@ -481,8 +489,7 @@ static inline int
 	mulle_pointerpairarrayenumerator_next( struct mulle_pointerpairarrayenumerator *rover,
                                           struct mulle_pointerpair *pair)
 {
-   return( mulle__pointerpairarrayenumerator_next( (struct mulle__pointerpairarrayenumerator *) rover,
-                                                   pair));
+   return( mulle__pointerpairarrayenumerator_next( &rover->base, pair));
 }
 
 
@@ -490,14 +497,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
 	_mulle_pointerpairarrayenumerator_done( struct mulle_pointerpairarrayenumerator *rover)
 {
-   _mulle__pointerpairarrayenumerator_done( (struct mulle__pointerpairarrayenumerator *) rover);
+   _mulle__pointerpairarrayenumerator_done( &rover->base);
 }
 
 
 static inline void
 	mulle_pointerpairarrayenumerator_done( struct mulle_pointerpairarrayenumerator *rover)
 {
-   mulle__pointerpairarrayenumerator_done( (struct mulle__pointerpairarrayenumerator *) rover);
+   mulle__pointerpairarrayenumerator_done( &rover->base);
 }
 
 

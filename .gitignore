@@ -89,3 +89,5 @@ asset/dox/.last_commit
 mulle-container.sublime-project
 .kiro/
 REVIEW.md
+tools/__pycache__/cmake-flatten.cpython-314.pyc
+tools/__pycache__/cmake-graph.cpython-314.pyc

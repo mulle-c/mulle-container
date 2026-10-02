@@ -65,7 +65,7 @@ static void  bench_add_sort( void)
       }
    }
 
-   printf( "qsort: comparisons=%zu sorted=%d\n", comparisons, sorted);
+   printf( "qsort: comparisons=%zu sorted=%zu\n", comparisons, sorted);
    mulle_pointerpairarray_destroy( array);
 }
 

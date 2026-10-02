@@ -9,7 +9,6 @@
 //
 
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 
@@ -38,7 +37,6 @@ static void  loops( void)
    struct mulle_arrayreverseenumerator    rerover;
    void                                   *item;
    int                                    i;
-   char                                   *s;
 
    // the pointer is considered just void *  by the array nothing happens during
    // addition or removal
@@ -70,15 +68,13 @@ static void  loops( void)
 
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void  run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
 #ifdef DEBUG
    fprintf( stderr, "%s\n", name);
 #endif
    (f)();
-   mulle_testallocator_reset();
 }
 
 

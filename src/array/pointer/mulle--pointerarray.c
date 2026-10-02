@@ -54,7 +54,8 @@ static void   _mulle__pointerarray_realloc( struct mulle__pointerarray *array,
    {
       array->_storage = mulle_allocator_malloc( allocator,
                                                 mulle_allocator_size_multiply( allocator, new_size, sizeof( void *)));
-      memcpy( array->_storage, array->_initial_storage, sizeof( void *) * used);
+      if( used)
+         memcpy( array->_storage, array->_initial_storage, sizeof( void *) * used);
    }
    else
       array->_storage = mulle_allocator_realloc( allocator,
@@ -165,6 +166,9 @@ int    _mulle__pointerarray_is_equal( struct mulle__pointerarray *array,
    if( n != _mulle__pointerarray_get_count( other))
       return( 0);
 
+   if( ! n)
+      return( 1);
+
    return( ! memcmp( array->_storage, other->_storage, n * sizeof( void *)));
 }
 
@@ -248,6 +252,9 @@ size_t   _mulle__pointerarray_get_in_range( struct mulle__pointerarray *array,
 {
    range = mulle_range_validate_against_length( range,
                                                 _mulle__pointerarray_get_count( array));
+   if( ! range.length)
+      return( 0);
+
    memcpy( buf, &array->_storage[ range.location], range.length * sizeof( void *));
    return( range.length);
 }
@@ -350,7 +357,8 @@ void  _mulle__pointerarray_absorb_array( struct mulle__pointerarray *array,
 
    n        = _mulle__pointerarray_get_count( victim);
    reserved = _mulle__pointerarray_advance( array, n, allocator);
-   memcpy( reserved, victim->_storage, sizeof( void *) * n);
+   if( n)
+      memcpy( reserved, victim->_storage, sizeof( void *) * n);
 
    // clean out victim
    _mulle__pointerarray_reset( victim);

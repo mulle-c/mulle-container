@@ -79,6 +79,50 @@ microbenchmark-grade measurements. (Sorted-structure lookups like
 benchmark instead.)
 
 
+### Scaling charts
+
+These are wall-clock ns/op numbers from
+[`scaling-bench`](test/bench/README.md) on a release build, for containers from
+16 up to 1M entries (log-log, lower is better). A flat line is O(1), a line
+that rises one decade per decade is O(n), and `x` marks a verb that a container
+does not have. Reads use each container's real verb from
+[SYNTAX.md](//github.com/mulle-c/mulle-c11/dox/SYNTAX.md), so `get` (by index)
+and `lookup` (by key) are not the same thing.
+
+Adding an element costs the same no matter how large an array or queue grows,
+while a hashtable gets slower once it no longer fits in the CPU cache:
+
+![](pix/bench-insert.svg)
+
+Removing is flat for the arrays, queues and rangeset, because they only drop a
+cell or a range; the keyed containers pay about the same as a lookup. Dashed
+lines are `pop` (remove from the end), solid lines are `remove` by key or range:
+
+![](pix/bench-remove.svg)
+
+Reading by index, the `get` of an array, is a plain O(1) access, and only the
+arrays offer it:
+
+![](pix/bench-get.svg)
+
+Looking a key up in a hashtable is the `lookup` of a map, not a `get`, and stays
+O(1) until the table grows past the cache:
+
+![](pix/bench-lookup.svg)
+
+Binary search, the `search` of an already sorted structure, is logarithmic,
+which is why `assoc` and `rangemap` fall behind the hashtables as they grow:
+
+![](pix/bench-search.svg)
+
+`mulle_pointerpairarray` is kept sorted but only offers a linear `find`, so it
+is the one structure whose lookup cost grows linearly:
+
+![](pix/bench-find.svg)
+
+Regenerate with `tools/bench-chart.py pix/bench-scaling.csv`.
+
+
 ### Arrays
 
 All arrays store their elements in a single block of memory.
@@ -502,9 +546,15 @@ Add mulle-container and dependencies as git submodules and link against
 them:
 
 ``` bash
+git submodule add -f --name "mulle-c11" \
+                            "https://github.com/mulle-c/mulle-c11.git" \
+                            "stash/mulle-c11"
 git submodule add -f --name "mulle-allocator" \
                             "https://github.com/mulle-c/mulle-allocator.git" \
                             "stash/mulle-allocator"
+git submodule add -f --name "src/xxhash/xxhash.h" \
+                            "https://raw.githubusercontent.com/mulle-c/xxHash/refs/heads/dev/xxhash.h" \
+                            "stash/src/xxhash/xxhash.h"
 git submodule add -f --name "mulle-data" \
                             "https://github.com/mulle-c/mulle-data.git" \
                             "stash/mulle-data"
@@ -517,11 +567,15 @@ git submodule update --init --recursive
 ``` cmake
 include_directories( SYSTEM "${CMAKE_BINARY_DIR}/include")
 
+add_subdirectory( stash/mulle-c11)
 add_subdirectory( stash/mulle-allocator)
+add_subdirectory( stash/src/xxhash/xxhash.h)
 add_subdirectory( stash/mulle-data)
 add_subdirectory( stash/mulle-container)
 
+target_link_libraries( ${PROJECT_NAME} PUBLIC mulle-c11)
 target_link_libraries( ${PROJECT_NAME} PUBLIC mulle-allocator)
+target_link_libraries( ${PROJECT_NAME} PUBLIC src/xxhash/xxhash.h)
 target_link_libraries( ${PROJECT_NAME} PUBLIC mulle-data)
 target_link_libraries( ${PROJECT_NAME} PUBLIC mulle-container)
 ```
@@ -545,7 +599,7 @@ cmake -S "mulle-container" -B "${BUILD_DIR}"    \
   -DCMAKE_INSTALL_PREFIX="${PREFIX}"            \
   -DCMAKE_PREFIX_PATH="${PREFIX}"               \
   -DCMAKE_C_FLAGS="-I"${PREFIX}"/include"       \
-&& cmake --build "${BUILD_DIR}" &&              \
+&& cmake --build "${BUILD_DIR}"  --parallel     \
 && cmake --install "${BUILD_DIR}"
 ```
 

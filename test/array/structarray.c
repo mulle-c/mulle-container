@@ -9,7 +9,6 @@
 //
 
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 
@@ -25,13 +24,10 @@ struct demo_struct
 
 static void  null( void)
 {
-   char                                       *s;
    struct demo_struct                         *a;
-   struct demo_struct                         space;
    struct mulle_structarray                   *array;
    struct mulle_structarrayenumerator         rover;
    struct mulle_structarrayreverseenumerator  rrover;
-   size_t                               i;
 
    array = NULL;
 
@@ -61,14 +57,12 @@ static void  null( void)
 
 static void  simple( void)
 {
-   char                                       *s;
    struct demo_struct                         *a;
    struct demo_struct                         space;
    struct mulle_structarray                   *array;
    struct mulle_structarrayenumerator         rover;
    struct mulle_structarrayreverseenumerator  rrover;
    size_t                                     i;
-   void                                       *item;
 
    array = mulle_structarray_create( sizeof( struct demo_struct),
                                      alignof( struct demo_struct),
@@ -146,13 +140,11 @@ static void  simple( void)
 }
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void  run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
   // printf( "%s\n", name);
    (f)();
-   mulle_testallocator_reset();
 }
 
 

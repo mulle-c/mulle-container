@@ -4,7 +4,6 @@
 
 int   test( int empty)
 {
-   struct mulle__rangeset   set;
    struct mulle_range       range = mulle_range_make( 3, 2);
 
    mulle__rangeset_do( set)

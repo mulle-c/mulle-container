@@ -1,5 +1,4 @@
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 
@@ -45,12 +44,9 @@ static void   simple_fill_test()
 
 int  main()
 {
-   mulle_testallocator_initialize();
-   mulle_default_allocator = mulle_testallocator;
 
    simple_fill_test();
 
-   mulle_testallocator_reset();
 
    return( 0);
 }

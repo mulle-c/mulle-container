@@ -140,7 +140,14 @@ static inline void   store_pointer_generic( void **data,
 }
 
 
-static void   copy_storage_generic( void **dst,
+//
+// `dst` is raw storage, not a set, so the mutation check must be run against
+// the real `set`. Passing the storage cast to a set pointer would make
+// _mulle__pointerset_keycallback_hash() read set->_n_mutations out of the
+// first storage slot (strict-aliasing violation and wrong value).
+//
+static void   copy_storage_generic( struct mulle__pointerset *set,
+                                    void **dst,
                                     size_t dst_size,
                                     void **src,
                                     size_t src_size,
@@ -158,7 +165,7 @@ static void   copy_storage_generic( void **dst,
       if( p == callback->notakey)
          continue;
 
-      hash = _mulle__pointerset_keycallback_hash( (struct mulle__pointerset *) dst,
+      hash = _mulle__pointerset_keycallback_hash( set,
                                                   callback,
                                                   p);
       i    = (size_t) mulle__pointerset_hash_for_size( hash, dst_size);
@@ -187,7 +194,7 @@ static void   grow_generic( struct mulle__pointerset *set,
    assert( MULLE__POINTERSET_INITIAL_SIZE >= 2);
 
    buf = _mulle__pointerset_allocate_storage_generic( new_size, callback->notakey, allocator);
-   copy_storage_generic( buf, new_size, set->_storage, set->_size, callback);
+   copy_storage_generic( set, buf, new_size, set->_storage, set->_size, callback);
    if( set->_storage != set->_initial_storage)
       mulle_allocator_free( allocator, set->_storage);
 
@@ -446,7 +453,7 @@ void   _mulle__pointerset_shrink_generic( struct mulle__pointerset *set,
    assert( set->_count < new_size);
 
    buf = _mulle__pointerset_allocate_storage_generic( new_size, callback->notakey, allocator);
-   copy_storage_generic( buf, new_size, set->_storage, set->_size, callback);
+   copy_storage_generic( set, buf, new_size, set->_storage, set->_size, callback);
    if( set->_storage != set->_initial_storage)
       mulle_allocator_free( allocator, set->_storage);
 
@@ -641,6 +648,9 @@ void   _mulle__pointerset_intersect_generic( struct mulle__pointerset *dst,
    struct mulle__pointerset                   tmp = { 0};
    void                                       *item;
    void                                       *found;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   uintptr_t                                  memo;
+#endif
 
    // Create temporary set, if any of a or b is NULL, we can skip this
    // as the intersection is empty
@@ -666,10 +676,16 @@ void   _mulle__pointerset_intersect_generic( struct mulle__pointerset *dst,
    // Swap storage between dst and tmp, we do it like this so dst can also
    // be a or b
    //
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   memo = dst->_n_mutations;
+#endif
    _mulle__pointerset_release_all_generic( dst, callback, allocator);
    _mulle__pointerset_done( dst, allocator);
 
    *dst = tmp;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   dst->_n_mutations = memo + 1;
+#endif
 }
 
 
@@ -680,6 +696,9 @@ void   _mulle__pointerset_union_generic( struct mulle__pointerset *dst,
                                          struct mulle_allocator *allocator)
 {
    struct mulle__pointerset   tmp = { 0};
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   uintptr_t                  memo;
+#endif
 
    // Create temporary set, if both a and b are NULL, we can skip this
    // as the union is empty
@@ -703,8 +722,14 @@ void   _mulle__pointerset_union_generic( struct mulle__pointerset *dst,
    // Swap storage between dst and tmp, we do it like this so dst can also
    // be a or b
    //
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   memo = dst->_n_mutations;
+#endif
    _mulle__pointerset_release_all_generic( dst, callback, allocator);
    _mulle__pointerset_done( dst, allocator);
 
    *dst = tmp;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   dst->_n_mutations = memo + 1;
+#endif
 }

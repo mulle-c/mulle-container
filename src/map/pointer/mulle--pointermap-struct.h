@@ -226,6 +226,33 @@ static inline size_t   mulle__pointermap_get_size( struct mulle__pointermap *map
 }
 
 
+//
+// Returns a pointer suitable for NSFastEnumeration's mutationsPtr. The value
+// it points to changes whenever the map is mutated.
+//
+// If mutation counting is disabled, fall back to the count, which is present
+// in every configuration. It changes on add and remove, but not on a value
+// overwrite or a remove+add that nets the same count.
+//
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__pointermap_get_mutation_pointer( struct mulle__pointermap *map)
+{
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   return( &map->_n_mutations);
+#else
+   return( (uintptr_t *) &map->_count);
+#endif
+}
+
+
+static inline uintptr_t *
+   mulle__pointermap_get_mutation_pointer( struct mulle__pointermap *map)
+{
+   return( map ? _mulle__pointermap_get_mutation_pointer( map) : NULL);
+}
+
+
 #pragma mark - operations
 
 //

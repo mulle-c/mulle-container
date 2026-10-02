@@ -9,7 +9,6 @@
 //
 
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 
@@ -40,7 +39,6 @@ static void  simple( void)
    struct demo_struct                   a;
    struct demo_struct                   *item;
    struct mulle_structarray             *array;
-   struct mulle_structarrayenumerator   rover;
    unsigned int                         i;
 
    array = mulle_structarray_create( sizeof( struct demo_struct),
@@ -69,7 +67,7 @@ static void  simple( void)
    }
 
 
-   mulle_qsort_r( array->_storage, LOOPS, sizeof( struct demo_struct), reverse_compare, NULL);
+   mulle_qsort_r( array->base._storage, LOOPS, sizeof( struct demo_struct), reverse_compare, NULL);
 
    printf( "\nReversed:\n");
    // more or less just a syntax check
@@ -85,13 +83,11 @@ static void  simple( void)
 }
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void  run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
   // printf( "%s\n", name);
    (f)();
-   mulle_testallocator_reset();
 }
 
 

@@ -264,7 +264,6 @@ static inline int   _mulle_pointerpair_bsearch_or_less( struct mulle_pointerpair
 
 
 MULLE__CONTAINER_GLOBAL
-MULLE_C_NONNULL_FOURTH
 void   mulle_pointerpair_qsort_r( struct mulle_pointerpair *buf,
                                   size_t n,
                                   mulle_pointerpair_compare_t *compare,

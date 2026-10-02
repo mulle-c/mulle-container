@@ -9,7 +9,6 @@
 //
 
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +19,6 @@ static void  run_random( void)
 {
    struct mulle_pointerarray             *array;
    struct mulle_pointerarrayenumerator   rover;
-   char                                  *sep;
    int                                   i;
    int                                   index;
 
@@ -52,13 +50,11 @@ static void  run_random( void)
 
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void  run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
   // printf( "%s\n", name);
    (f)();
-   mulle_testallocator_reset();
 }
 
 

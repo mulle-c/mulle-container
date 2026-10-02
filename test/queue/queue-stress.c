@@ -10,7 +10,6 @@
 //
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 #include <assert.h>
 
 static void  stress_queue( int bucketsize, int spares)
@@ -60,12 +59,10 @@ static void  stress_queue( int bucketsize, int spares)
 }
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void  run_test( void (*f)( int, int), int bucketsize, int spares)
 {
-   mulle_testallocator_reset();
    (f)( bucketsize, spares);
-   mulle_testallocator_reset();
 }
 
 

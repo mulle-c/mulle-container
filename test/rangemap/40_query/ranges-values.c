@@ -9,7 +9,6 @@ int   main( void)
    struct mulle__rangemap   map;
    struct mulle_range       ranges[ 8];
    void                     *values[ 8];
-   struct mulle_range       range;
    uintptr_t                n;
    uintptr_t                i;
    void                     *value;

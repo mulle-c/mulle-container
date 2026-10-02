@@ -323,7 +323,6 @@ static void test_pointerpair_retain_release(void)
     // since we don't have a real retain/release callback setup in this simple test
     
     struct mulle_pointerpair                   pair;
-    struct mulle_container_keyvaluecallback    callback = { 0 };
     
     pair = mulle_pointerpair_make("test_key", "test_value");
     

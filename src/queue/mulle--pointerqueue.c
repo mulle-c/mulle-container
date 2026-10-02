@@ -103,6 +103,9 @@ void   _mulle__pointerqueue_grow( struct mulle__pointerqueue *queue,
       queue->_read       = queue->_write;
       queue->_read_index = 0;
    }
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations++;
+#endif
 }
 
 
@@ -135,6 +138,9 @@ void   _mulle__pointerqueue_shrink( struct mulle__pointerqueue *queue,
    }
 
    mulle__pointerqueue_free_bucket( queue, q, allocator);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations++;
+#endif
 }
 
 
@@ -202,6 +208,9 @@ static inline void  *
 
    assert( queue->_count);
    queue->_count--;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations++;
+#endif
    //
    // now if "release" truely releases, p is pointing to a zombie.
    // not so, if release is autorelease or nop
@@ -251,6 +260,9 @@ void   _mulle__pointerqueue_reset( struct mulle__pointerqueue *queue,
    queue->_write_index = queue->_bucket_size;
 
    queue->_count       = 0;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations++;
+#endif
 }
 
 
@@ -260,6 +272,9 @@ void   _mulle__pointerqueue_done( struct mulle__pointerqueue *queue,
 {
    free_chained_buckets( queue->_read, allocator);
    free_chained_buckets( queue->_spares, allocator);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations++;
+#endif
 #ifdef DEBUG
    mulle_memset_uint32( queue, 0xDEADDEAD,sizeof( struct mulle__pointerqueue));
 #endif

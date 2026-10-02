@@ -64,8 +64,6 @@ int   main( void)
    // Test 4: Memory allocation failures
    printf("Test 4: Memory allocation failures\n");
    {
-      struct mulle__pointermap  map;
-      
       // Test create with large capacity
       struct mulle__pointermap *large_map = 
          mulle__pointermap_create(1000000, 0, NULL);
@@ -143,9 +141,6 @@ int   main( void)
    printf("Test 7: Enumeration\n");
    {
       struct mulle__pointermap  map;
-      struct mulle__pointermapenumerator rover;
-      void *key;
-      struct TestStruct *value;
       
       _mulle__pointermap_init(&map, 10, NULL);
       

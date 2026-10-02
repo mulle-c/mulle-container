@@ -1,5 +1,4 @@
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -8,7 +7,6 @@ static void  test_insert_in_range( void)
 {
    struct mulle_pointerarray   array;
    void                        *pointers[ 5];
-   void                        *item;
    struct mulle_range          range;
    unsigned int                i;
    char                        *sep;
@@ -111,11 +109,8 @@ static void  test_insert_in_range( void)
 
 static void  run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_set_tracelevel( 2);
-   mulle_testallocator_reset();
    printf( "%s\n", name);
    (f)();
-   mulle_testallocator_reset();
 }
 
 

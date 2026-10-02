@@ -51,7 +51,11 @@
 // That didn't really show up in benchmarks though, actually it seemed
 // a smidgen slower (for very small dictionaries)
 //
-#define MULLE__MAP_BASE    MULLE__POINTERMAP_BASE
+//
+// The struct holds the internal one as a member (see mulle-array.h for why
+// repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE__MAP_BASE   struct mulle__pointermap base
 
 // Sentinel: notakey via keycallback (default: mulle_not_a_pointer = INTPTR_MIN).
 //           Configurable per instance. Cannot be stored as a key.
@@ -107,24 +111,24 @@ void   _mulle__map_reset( struct mulle__map *map,
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__map_is_full( struct mulle__map *map)
 {
-   return( _mulle__pointermap_is_full( (struct mulle__pointermap *) map));
+   return( _mulle__pointermap_is_full( &map->base));
 }
 
 static inline int   mulle__map_is_full( struct mulle__map *map)
 {
-   return( mulle__pointermap_is_full( (struct mulle__pointermap *) map));
+   return( mulle__pointermap_is_full( &map->base));
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle__map_is_sparse( struct mulle__map *map)
 {
-   return( _mulle__pointermap_is_sparse( (struct mulle__pointermap *) map));
+   return( _mulle__pointermap_is_sparse( &map->base));
 }
 
 static inline int   mulle__map_is_sparse( struct mulle__map *map)
 {
-   return( mulle__pointermap_is_sparse( (struct mulle__pointermap *) map));
+   return( mulle__pointermap_is_sparse( &map->base));
 }
 
 
@@ -132,12 +136,12 @@ static inline int   mulle__map_is_sparse( struct mulle__map *map)
 MULLE_C_NONNULL_FIRST
 static inline size_t   _mulle__map_get_count( struct mulle__map *map)
 {
-   return( _mulle__pointermap_get_count( (struct mulle__pointermap *) map));
+   return( _mulle__pointermap_get_count( &map->base));
 }
 
 static inline size_t   mulle__map_get_count( struct mulle__map *map)
 {
-   return( mulle__pointermap_get_count( (struct mulle__pointermap *) map));
+   return( mulle__pointermap_get_count( &map->base));
 }
 
 
@@ -145,12 +149,27 @@ static inline size_t   mulle__map_get_count( struct mulle__map *map)
 MULLE_C_NONNULL_FIRST
 static inline size_t   _mulle__map_get_size( struct mulle__map *map)
 {
-   return( _mulle__pointermap_get_size( (struct mulle__pointermap *) map));
+   return( _mulle__pointermap_get_size( &map->base));
 }
 
 static inline size_t   mulle__map_get_size( struct mulle__map *map)
 {
-   return( mulle__pointermap_get_size( (struct mulle__pointermap *) map));
+   return( mulle__pointermap_get_size( &map->base));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__map_get_mutation_pointer( struct mulle__map *map)
+{
+   return( _mulle__pointermap_get_mutation_pointer( &map->base));
+}
+
+
+static inline uintptr_t *
+   mulle__map_get_mutation_pointer( struct mulle__map *map)
+{
+   return( mulle__pointermap_get_mutation_pointer( map ? &map->base : NULL));
 }
 
 
@@ -168,7 +187,7 @@ void   *_mulle__map__get( struct mulle__map *map,
                           void *key,
                           const struct mulle_container_keyvaluecallback *callback)
 {
-   return( _mulle__pointermap__get_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap__get_generic( &map->base,
                                             key,
                                             callback));
 }
@@ -185,7 +204,7 @@ static inline struct mulle_pointerpair   *
                           const struct mulle_container_keyvaluecallback *callback,
                           struct mulle_pointerpair *space)
 {
-   return( _mulle__pointermap__get_pair_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap__get_pair_generic( &map->base,
                                                   key,
                                                   callback,
                                                   space));
@@ -202,7 +221,7 @@ static inline void   *
                                uintptr_t hash,
                                const struct mulle_container_keyvaluecallback *callback)
 {
-   return( _mulle__pointermap__get_generic_knownhash( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap__get_generic_knownhash( &map->base,
                                                       key,
                                                       hash,
                                                       callback));
@@ -215,7 +234,7 @@ static inline struct mulle_pointerpair   *
                              const struct mulle_container_keyvaluecallback *callback,
                              struct mulle_pointerpair *space)
 {
-   return( _mulle__pointermap_get_any_pair_generic( (struct mulle__pointermap *) map, callback, space));
+   return( _mulle__pointermap_get_any_pair_generic( &map->base, callback, space));
 }
 
 
@@ -227,7 +246,7 @@ static inline void   *
                     const void *key,
                     const struct mulle_container_keyvaluecallback *callback)
 {
-   return( _mulle__pointermap_get_generic( (struct mulle__pointermap *) map, key, callback));
+   return( _mulle__pointermap_get_generic( &map->base, key, callback));
 }
 
 
@@ -238,7 +257,7 @@ static inline struct mulle_pointerpair   *
                          const struct mulle_container_keyvaluecallback *callback,
                          struct mulle_pointerpair *space)
 {
-   return( _mulle__pointermap_get_pair_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap_get_pair_generic( &map->base,
                                                  key,
                                                  callback,
                                                  space));
@@ -255,7 +274,7 @@ static inline void
                          const struct mulle_container_keyvaluecallback *callback,
                          struct mulle_allocator *allocator)
 {
-   _mulle__pointermap_set_pair_generic( (struct mulle__pointermap *) map,
+   _mulle__pointermap_set_pair_generic( &map->base,
                                          pair,
                                          callback,
                                          allocator);
@@ -313,7 +332,7 @@ static inline int
                             const struct mulle_container_keyvaluecallback *callback,
                             struct mulle_allocator *allocator)
 {
-   return( _mulle__pointermap_insert_pair_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap_insert_pair_generic( &map->base,
                                                    pair,
                                                    callback,
                                                    allocator));
@@ -388,7 +407,7 @@ static inline void *
                               const struct mulle_container_keyvaluecallback *callback,
                               struct mulle_allocator *allocator)
 {
-   return( _mulle__pointermap_register_pair_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap_register_pair_generic( &map->base,
                                                      pair,
                                                      callback,
                                                      allocator));
@@ -448,7 +467,7 @@ static inline void *
                              const struct mulle_container_keyvaluecallback *callback,
                              struct mulle_allocator *allocator)
 {
-   return( _mulle__pointermap_update_pair_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap_update_pair_generic( &map->base,
                                                     pair,
                                                     callback,
                                                     allocator));
@@ -501,14 +520,14 @@ static inline void *
 
 /// REMOVE
 
-MULLE_C_NONNULL_FIRST_SECOND_THIRD
+MULLE_C_NONNULL_FIRST_THIRD
 static inline int
    _mulle__map_remove( struct mulle__map *map,
                        const void *key,
                        const struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
 {
-   return( _mulle__pointermap_remove_generic( (struct mulle__pointermap *) map,
+   return( _mulle__pointermap_remove_generic( &map->base,
                                               key,
                                               callback,
                                               allocator));
@@ -533,7 +552,7 @@ static inline void
                        const struct mulle_container_keyvaluecallback *callback,
                        struct mulle_allocator *allocator)
 {
-   _mulle__pointermap_shrink_generic( (struct mulle__pointermap *)  map,
+   _mulle__pointermap_shrink_generic( &map->base,
                                       callback,
                                       allocator);
 }
@@ -546,8 +565,8 @@ static inline void
                            const struct mulle_container_keyvaluecallback *callback,
                            struct mulle_allocator *allocator)
 {
-   _mulle__pointermap_copy_items_generic( (struct mulle__pointermap *) dst,
-                                          (struct mulle__pointermap *) src,
+   _mulle__pointermap_copy_items_generic( &dst->base,
+                                          &src->base,
                                           callback,
                                           allocator);
 }
@@ -628,7 +647,7 @@ static inline size_t
                                  const struct mulle_container_keyvaluecallback *callback,
                                  size_t *perfects)
 {
-   return( _mulle__pointermap_count_collisions_generic( (struct mulle__pointermap *) set,
+   return( _mulle__pointermap_count_collisions_generic( &set->base,
                                                          callback,
                                                          perfects));
 }
@@ -637,7 +656,14 @@ static inline size_t
 # pragma mark - enumeration
 
 
-#define MULLE__MAPENUMERATOR_BASE  MULLE__GENERICPOINTERMAPENUMERATOR_BASE
+//
+// The map enumerators nest: mulle_mapenumerator -> mulle__mapenumerator ->
+// mulle__genericpointermapenumerator. Each level holds the next as a member,
+// because repeating the fields by macro makes distinct struct types of
+// identical layout, and accessing one through a pointer to the other is a
+// strict-aliasing violation that GCC exploits at -O2 (see mulle-array.h).
+//
+#define MULLE__MAPENUMERATOR_BASE   struct mulle__genericpointermapenumerator base
 
 
 struct mulle__mapenumerator
@@ -652,13 +678,10 @@ static inline struct mulle__mapenumerator
    mulle__map_enumerate( struct mulle__map *map,
                          const struct mulle_container_keyvaluecallback *callback)
 {
-   struct mulle__mapenumerator                 rover;
-   struct mulle__genericpointermapenumerator   tmp;
+   struct mulle__mapenumerator   rover;
 
-   tmp = mulle__pointermap_enumerate_generic( (struct mulle__pointermap *) map, callback);
-   // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2 optimizer on
-   // this memcpy(). CI lowers MSVC to /O1, so no code workaround is needed.
-   memcpy( &rover, &tmp, sizeof( struct mulle__genericpointermapenumerator));
+   rover.base = mulle__pointermap_enumerate_generic( &map->base,
+                                                     callback);
    return( rover);
 }
 
@@ -671,14 +694,14 @@ MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair   *
    _mulle__mapenumerator_next_pair( struct mulle__mapenumerator *rover)
 {
-   return( _mulle__genericpointermapenumerator_next_pair( (struct mulle__genericpointermapenumerator *) rover));
+   return( _mulle__genericpointermapenumerator_next_pair( &rover->base));
 }
 
 
 static inline struct mulle_pointerpair   *
    mulle__mapenumerator_next_pair( struct mulle__mapenumerator *rover)
 {
-   return( mulle__genericpointermapenumerator_next_pair( (struct mulle__genericpointermapenumerator *) rover));
+   return( mulle__genericpointermapenumerator_next_pair( &rover->base));
 }
 
 
@@ -689,7 +712,7 @@ static inline int
                                void **key,
                                void **value)
 {
-   return( _mulle__genericpointermapenumerator_next( (struct mulle__genericpointermapenumerator *) rover, key, value));
+   return( _mulle__genericpointermapenumerator_next( &rover->base, key, value));
 }
 
 
@@ -698,7 +721,7 @@ static inline int
                               void **key,
                               void **value)
 {
-   return( mulle__genericpointermapenumerator_next( (struct mulle__genericpointermapenumerator *) rover, key, value));
+   return( mulle__genericpointermapenumerator_next( &rover->base, key, value));
 }
 
 
@@ -743,13 +766,13 @@ static inline void
 
 
 
-#define mulle__map_for( map, key, value)                                                        \
-   assert( sizeof( key) == sizeof( void *));                                                    \
-   assert( sizeof( value) == sizeof( void *));                                                  \
-   for( struct mulle__mapenumerator rover__ ## key ## __ ## value = mulle__map_enumerate( map); \
-        _mulle__mapenumerator_next( &rover__ ## key ## __ ## value,                             \
-                                    (void **) &(key),                                           \
-                                    (void **) &(value));                                        \
+#define mulle__map_for( map, callback, key, value)                                                              \
+   assert( sizeof( key) == sizeof( void *));                                                                    \
+   assert( sizeof( value) == sizeof( void *));                                                                  \
+   for( struct mulle__mapenumerator rover__ ## key ## __ ## value = mulle__map_enumerate( map, callback);       \
+        _mulle__mapenumerator_next( &rover__ ## key ## __ ## value,                                             \
+                                    (void **) &(key),                                                           \
+                                    (void **) &(value));                                                        \
         _mulle__mapenumerator_done( &rover__ ## key ## __ ## value))
 
 #endif

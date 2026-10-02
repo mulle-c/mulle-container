@@ -114,7 +114,6 @@ static void  khash_grow( struct khash_table *table)
 {
    size_t        new_buckets;
    size_t        i;
-   size_t        j;
    uintptr_t     index;
    void          **new_keys;
    void          **new_values;

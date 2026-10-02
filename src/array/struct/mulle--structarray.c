@@ -76,6 +76,11 @@ static void   _mulle__structarray_realloc_as_length( struct mulle__structarray *
    array->_curr     = &((char *) array->_storage)[ old_size];
    array->_sentinel = &((char *) array->_storage)[ new_size];
 
+// memo its not directly a mutation, but an enumerator will get garbage now
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
+
    assert( (char *) array->_storage <= (char *) array->_curr);
    assert( (char *) array->_curr <= (char *) array->_sentinel);
 }
@@ -145,6 +150,12 @@ void *  _mulle__structarray_guarantee( struct mulle__structarray *array,
          new_size = needed_size;
       _mulle__structarray_realloc_as_length( array, new_size, allocator);
    }
+
+   // we only guarantee, so someone can write into the array, so assume this
+   // is a mutation
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( array->_curr);
 }
 
@@ -158,7 +169,13 @@ size_t  _mulle__structarray_set_count( struct mulle__structarray *array,
    diff = (long) count - (long) _mulle__structarray_get_count( array);
    if( diff <= 0)
    {
-      array->_curr =  &((char *) array->_curr)[ diff * array->_sizeof_struct];
+      if( diff)
+      {
+         array->_curr =  &((char *) array->_curr)[ diff * array->_sizeof_struct];
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+         array->_n_mutations++;
+#endif
+      }
       _mulle__structarray_size_to_fit( array, allocator);
       return( 0);
    }
@@ -218,9 +235,9 @@ struct mulle_data
 {
    struct mulle_data   data;
 
-//#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-//   array->_n_mutations++;
-//#endif
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 
    data = mulle_data_make( array->_storage,
                            _mulle__structarray_get_size( array));
@@ -293,7 +310,7 @@ void   _mulle__structarray_insert_in_range( struct mulle__structarray *array,
    // Update _curr pointer
    array->_curr = (char *) array->_storage + new_count * array->_sizeof_struct;
 
-#if !defined(MULLE__CONTAINER_MISER_MODE) && defined(MULLE__CONTAINER_HAVE_MUTATION_COUNT)
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
    array->_n_mutations++;
 #endif
 }

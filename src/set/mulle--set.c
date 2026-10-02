@@ -58,10 +58,10 @@ void    _mulle__set_init( struct mulle__set *p,
    // so give it ~25% holes. For this to work though, we can not be smaller
    // than 4 items.
    //
-   p->_size  = capacity >= MULLE__POINTERSET_MIN_SIZE
+   p->base._size  = capacity >= MULLE__POINTERSET_MIN_SIZE
                      ? mulle_pow2round( capacity + (capacity >> MULLE__POINTERSET_FILL_SHIFT))
                      : MULLE__POINTERSET_MIN_SIZE;
-   p->_storage = _mulle__pointerset_allocate_storage_generic( p->_size, callback->notakey, allocator);
+   p->base._storage = _mulle__pointerset_allocate_storage_generic( p->base._size, callback->notakey, allocator);
 }
 
 
@@ -101,7 +101,7 @@ void   _mulle__set_done( struct mulle__set *set,
                          struct mulle_allocator *allocator)
 {
    _mulle__set_release_all( set, callback, allocator);
-   _mulle__pointerset_done( (struct mulle__pointerset *) set, allocator);
+   _mulle__pointerset_done( &set->base, allocator);
 }
 
 
@@ -110,7 +110,7 @@ void   _mulle__set_reset( struct mulle__set *set,
                           struct mulle_allocator *allocator)
 {
    _mulle__set_release_all( set, callback, allocator);
-   _mulle__pointerset_reset_generic( (struct mulle__pointerset *) set,
+   _mulle__pointerset_reset_generic( &set->base,
                                      callback ? callback->notakey : NULL);
 }
 

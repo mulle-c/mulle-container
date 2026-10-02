@@ -130,6 +130,10 @@ static inline void   _mulle__structarray_init( struct mulle__structarray *array,
 
    if( capacity)
       _mulle__structarray_sizeto( array, capacity, allocator);
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations = 0;
+#endif
 }
 
 
@@ -149,7 +153,7 @@ static inline void
    array->_sentinel           = &((char *) array->_storage)[ count * array->_sizeof_struct];
    array->_initial_storage    = storage;
    array->_copy_sizeof_struct = sizeof_struct;
-#if !defined(MULLE__CONTAINER_MISER_MODE) && defined(MULLE__CONTAINER_HAVE_MUTATION_COUNT)
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
    array->_n_mutations        = 0;
 #endif
 
@@ -176,6 +180,10 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle__structarray_done( struct mulle__structarray *array,
                                                struct mulle_allocator *allocator)
 {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
+
    if( ! array->_initial_storage)
       mulle_allocator_free( allocator, array->_storage);
 #ifdef DEBUG
@@ -200,6 +208,9 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle__structarray_reset( struct mulle__structarray *array)
 {
    array->_curr = array->_storage;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -249,6 +260,34 @@ static inline size_t
    _mulle__structarray_get_used_as_length( struct mulle__structarray *array)
 {
    return( (size_t) ((char *) array->_curr - (char *) array->_storage));
+}
+
+
+//
+// Returns a pointer suitable for NSFastEnumeration's mutationsPtr. The value
+// it points to changes whenever the array is mutated.
+//
+// If mutation counting is disabled, fall back to the write pointer, which is
+// present in every configuration. It changes whenever the count changes, but
+// not on in-place replacement, so a remove+add within an enumeration can slip
+// through undetected.
+//
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__structarray_get_mutation_pointer( struct mulle__structarray *array)
+{
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   return( &array->_n_mutations);
+#else
+   return( (uintptr_t *) &array->_curr);
+#endif
+}
+
+
+static inline uintptr_t *
+   mulle__structarray_get_mutation_pointer( struct mulle__structarray *array)
+{
+   return( array ? _mulle__structarray_get_mutation_pointer( array) : NULL);
 }
 
 
@@ -414,7 +453,12 @@ static inline void
    _mulle__structarray_remove_last( struct mulle__structarray *array)
 {
    if( array->_curr > array->_storage)
+   {
       array->_curr = _mulle__structarray_get_last( array);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      array->_n_mutations++;
+#endif
+   }
 }
 
 
@@ -441,6 +485,9 @@ static inline void *
    adr = array->_curr;
    memcpy( array->_curr, item, array->_copy_sizeof_struct);
    array->_curr = &((char *) array->_curr)[ array->_sizeof_struct];
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( adr);
 }
 
@@ -462,6 +509,9 @@ static inline int
 
    memcpy( item, adr, array->_copy_sizeof_struct);
    array->_curr = adr;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( 1);
 }
 
@@ -475,6 +525,9 @@ static inline void
 
    address = _mulle__structarray_get( array, i);
    memcpy( address, item, array->_copy_sizeof_struct);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -490,6 +543,9 @@ static inline void
 
    memcpy( array->_curr, item, array->_copy_sizeof_struct);
    array->_curr = &((char *) array->_curr)[ array->_sizeof_struct];
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -518,6 +574,9 @@ static inline void *
    reserved = _mulle__structarray_guarantee( array, count, allocator);
    if( reserved)
       array->_curr = &((char *) array->_curr)[ array->_sizeof_struct * count];
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( reserved);
 }
 
@@ -552,6 +611,9 @@ static inline void *
    reserved = _mulle__structarray_guarantee( array, 1, allocator);
    if( reserved)
       array->_curr = &((char *) array->_curr)[ array->_sizeof_struct];
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
    return( reserved);
 }
 
@@ -596,6 +658,9 @@ static inline void
                           array->_sizeof_struct,
                           (mulle_qsort_r_cmp_t *) compare,
                           userinfo);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -620,6 +685,9 @@ static inline void
                   array->_sizeof_struct,
                   (mulle_qsort_r_cmp_t *) compare,
                   userinfo);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   array->_n_mutations++;
+#endif
 }
 
 
@@ -646,10 +714,28 @@ struct mulle_data
 
 #pragma mark - structarray enumerator
 
-#define MULLE__STRUCTARRAYENUMERATOR_BASE    \
+#define _MULLE__STRUCTARRAYENUMERATOR_BASE   \
    void     *_curr;                          \
    void     *_sentinel;                      \
    size_t   _sizeof_struct
+
+//
+// could also use MULLE__CONTAINER_MISER_MODE, but enumerators are not to
+// be stored over the length of a function call
+//
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+#define MULLE__STRUCTARRAYENUMERATOR_BASE    \
+    _MULLE__STRUCTARRAYENUMERATOR_BASE;      \
+    struct mulle__structarray *_array;       \
+    uintptr_t  _n_mutations
+
+#else
+
+#define MULLE__STRUCTARRAYENUMERATOR_BASE    \
+    _MULLE__STRUCTARRAYENUMERATOR_BASE
+
+#endif
 
 
 struct mulle__structarrayenumerator
@@ -670,6 +756,11 @@ static inline struct mulle__structarrayenumerator
    rover._curr          = array->_storage;
    rover._sentinel      = array->_curr;
    rover._sizeof_struct = array->_sizeof_struct;
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations   = array->_n_mutations;
+   rover._array         = array;
+#endif
 
    assert( (char *) rover._sentinel >= (char *) rover._curr);
 
@@ -693,6 +784,10 @@ static inline int
 {
    if( rover->_curr < rover->_sentinel)
    {
+      // assert here coz rover->_array could be NULL
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      assert( rover->_array->_n_mutations == rover->_n_mutations && "array was modified during enumeration");
+#endif
       *item        = rover->_curr;
       rover->_curr = &((char *) rover->_curr)[ rover->_sizeof_struct];
       return( 1);
@@ -758,6 +853,11 @@ static inline struct mulle__structarrayreverseenumerator
    rover._sentinel      = array->_storage;
    rover._sizeof_struct = array->_sizeof_struct;
 
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations   = array->_n_mutations;
+   rover._array         = array;
+#endif
+
    assert( (char *) rover._curr >= (char *) rover._sentinel);
 
    return( rover);
@@ -780,6 +880,10 @@ static inline int
 {
    if( rover->_curr > rover->_sentinel)
    {
+      // assert here coz rover->_array could be NULL
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      assert( rover->_array->_n_mutations == rover->_n_mutations && "array was modified during enumeration");
+#endif
       rover->_curr = &((char *) rover->_curr)[ - rover->_sizeof_struct];
       *item = rover->_curr;
       return( 1);

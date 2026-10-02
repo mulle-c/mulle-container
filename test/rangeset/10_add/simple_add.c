@@ -5,7 +5,6 @@
 
 int   main( int argc, char *argv[])
 {
-   struct mulle__rangeset   set;
 
    mulle__rangeset_do( set)
    {

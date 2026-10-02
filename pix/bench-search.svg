@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="1120" height="640" fill="white"/>
+<text x="78" y="30" font-size="18" font-weight="bold" fill="#1a1a1a">mulle-container search (binary) cost vs. container size</text>
+<text x="78" y="46" font-size="12" fill="#555555">ns/op, lower is better &#183; log-log &#183; flat = O(1) &#183; rising = O(log n) / O(n) &#183; &#215; = not applicable</text>
+<line x1="78" y1="566.0" x2="820" y2="566.0" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="570.0" font-size="11" fill="#555555" text-anchor="end">10</text>
+<line x1="78" y1="56.0" x2="820" y2="56.0" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="60.0" font-size="11" fill="#555555" text-anchor="end">100</text>
+<line x1="78.0" y1="56" x2="78.0" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="78.0" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 78.0 584)">16</text>
+<line x1="124.4" y1="56" x2="124.4" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="124.4" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 124.4 584)">32</text>
+<line x1="170.8" y1="56" x2="170.8" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="170.8" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 170.8 584)">64</text>
+<line x1="217.1" y1="56" x2="217.1" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="217.1" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 217.1 584)">128</text>
+<line x1="263.5" y1="56" x2="263.5" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="263.5" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 263.5 584)">256</text>
+<line x1="309.9" y1="56" x2="309.9" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="309.9" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 309.9 584)">512</text>
+<line x1="356.2" y1="56" x2="356.2" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="356.2" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 356.2 584)">1k</text>
+<line x1="402.6" y1="56" x2="402.6" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="402.6" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 402.6 584)">2k</text>
+<line x1="449.0" y1="56" x2="449.0" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="449.0" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 449.0 584)">4k</text>
+<line x1="495.4" y1="56" x2="495.4" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="495.4" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 495.4 584)">8k</text>
+<line x1="541.8" y1="56" x2="541.8" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="541.8" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 541.8 584)">16k</text>
+<line x1="588.1" y1="56" x2="588.1" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="588.1" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 588.1 584)">33k</text>
+<line x1="634.5" y1="56" x2="634.5" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="634.5" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 634.5 584)">66k</text>
+<line x1="680.9" y1="56" x2="680.9" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="680.9" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 680.9 584)">131k</text>
+<line x1="727.2" y1="56" x2="727.2" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="727.2" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 727.2 584)">262k</text>
+<line x1="773.6" y1="56" x2="773.6" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="773.6" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 773.6 584)">524k</text>
+<line x1="820.0" y1="56" x2="820.0" y2="566" stroke="#f0f0f0" stroke-width="1"/>
+<text x="820.0" y="584" font-size="10" fill="#555555" text-anchor="end" transform="rotate(-45 820.0 584)">1M</text>
+<line x1="78" y1="566" x2="820" y2="566" stroke="#333333" stroke-width="1.5"/>
+<line x1="78" y1="56" x2="78" y2="566" stroke="#333333" stroke-width="1.5"/>
+<text x="449" y="632" font-size="12" fill="#333333" text-anchor="middle">container size (entries)</text>
+<text x="18" y="311" font-size="12" fill="#333333" text-anchor="middle" transform="rotate(-90 18 311)">ns/op</text>
+<polyline points="78.0,556.0 124.4,520.0 170.8,485.7 217.1,452.2 263.5,391.2 309.9,329.3 356.2,268.8 402.6,241.2 449.0,226.4 495.4,221.8 541.8,206.8 588.1,196.8 634.5,186.4 680.9,173.0 727.2,156.4 773.6,148.3 820.0,135.4" fill="none" stroke="#7f7f7f" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="78.0" cy="556.0" r="2.6" fill="#7f7f7f"/>
+<circle cx="124.4" cy="520.0" r="2.6" fill="#7f7f7f"/>
+<circle cx="170.8" cy="485.7" r="2.6" fill="#7f7f7f"/>
+<circle cx="217.1" cy="452.2" r="2.6" fill="#7f7f7f"/>
+<circle cx="263.5" cy="391.2" r="2.6" fill="#7f7f7f"/>
+<circle cx="309.9" cy="329.3" r="2.6" fill="#7f7f7f"/>
+<circle cx="356.2" cy="268.8" r="2.6" fill="#7f7f7f"/>
+<circle cx="402.6" cy="241.2" r="2.6" fill="#7f7f7f"/>
+<circle cx="449.0" cy="226.4" r="2.6" fill="#7f7f7f"/>
+<circle cx="495.4" cy="221.8" r="2.6" fill="#7f7f7f"/>
+<circle cx="541.8" cy="206.8" r="2.6" fill="#7f7f7f"/>
+<circle cx="588.1" cy="196.8" r="2.6" fill="#7f7f7f"/>
+<circle cx="634.5" cy="186.4" r="2.6" fill="#7f7f7f"/>
+<circle cx="680.9" cy="173.0" r="2.6" fill="#7f7f7f"/>
+<circle cx="727.2" cy="156.4" r="2.6" fill="#7f7f7f"/>
+<circle cx="773.6" cy="148.3" r="2.6" fill="#7f7f7f"/>
+<circle cx="820.0" cy="135.4" r="2.6" fill="#7f7f7f"/>
+<polyline points="78.0,564.2 124.4,542.9 170.8,475.7 217.1,479.7 263.5,422.1 309.9,380.0 356.2,324.2 402.6,280.1 449.0,263.8 495.4,248.6 541.8,240.3 588.1,232.0 634.5,223.5 680.9,214.0 727.2,199.8 773.6,188.5 820.0,172.7" fill="none" stroke="#aec7e8" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="78.0" cy="564.2" r="2.6" fill="#aec7e8"/>
+<circle cx="124.4" cy="542.9" r="2.6" fill="#aec7e8"/>
+<circle cx="170.8" cy="475.7" r="2.6" fill="#aec7e8"/>
+<circle cx="217.1" cy="479.7" r="2.6" fill="#aec7e8"/>
+<circle cx="263.5" cy="422.1" r="2.6" fill="#aec7e8"/>
+<circle cx="309.9" cy="380.0" r="2.6" fill="#aec7e8"/>
+<circle cx="356.2" cy="324.2" r="2.6" fill="#aec7e8"/>
+<circle cx="402.6" cy="280.1" r="2.6" fill="#aec7e8"/>
+<circle cx="449.0" cy="263.8" r="2.6" fill="#aec7e8"/>
+<circle cx="495.4" cy="248.6" r="2.6" fill="#aec7e8"/>
+<circle cx="541.8" cy="240.3" r="2.6" fill="#aec7e8"/>
+<circle cx="588.1" cy="232.0" r="2.6" fill="#aec7e8"/>
+<circle cx="634.5" cy="223.5" r="2.6" fill="#aec7e8"/>
+<circle cx="680.9" cy="214.0" r="2.6" fill="#aec7e8"/>
+<circle cx="727.2" cy="199.8" r="2.6" fill="#aec7e8"/>
+<circle cx="773.6" cy="188.5" r="2.6" fill="#aec7e8"/>
+<circle cx="820.0" cy="172.7" r="2.6" fill="#aec7e8"/>
+<text x="844" y="60" font-size="13" font-weight="bold" fill="#1a1a1a">containers</text>
+<line x1="844" y1="78" x2="866" y2="78" stroke="#7f7f7f" stroke-width="3"/>
+<circle cx="855" cy="78" r="2.6" fill="#7f7f7f"/>
+<text x="874" y="82" font-size="12" fill="#222222">assoc</text>
+<line x1="844" y1="98" x2="866" y2="98" stroke="#aec7e8" stroke-width="3"/>
+<circle cx="855" cy="98" r="2.6" fill="#aec7e8"/>
+<text x="874" y="102" font-size="12" fill="#222222">rangemap</text>
+<line x1="847" y1="110" x2="861" y2="124" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="124" x2="861" y2="110" stroke="#999999" stroke-width="2"/>
+<text x="874" y="122" font-size="12" fill="#888888">pointerarray</text>
+<line x1="847" y1="130" x2="861" y2="144" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="144" x2="861" y2="130" stroke="#999999" stroke-width="2"/>
+<text x="874" y="142" font-size="12" fill="#888888">array</text>
+<line x1="847" y1="150" x2="861" y2="164" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="164" x2="861" y2="150" stroke="#999999" stroke-width="2"/>
+<text x="874" y="162" font-size="12" fill="#888888">structarray</text>
+<line x1="847" y1="170" x2="861" y2="184" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="184" x2="861" y2="170" stroke="#999999" stroke-width="2"/>
+<text x="874" y="182" font-size="12" fill="#888888">map</text>
+<line x1="847" y1="190" x2="861" y2="204" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="204" x2="861" y2="190" stroke="#999999" stroke-width="2"/>
+<text x="874" y="202" font-size="12" fill="#888888">pointermap</text>
+<line x1="847" y1="210" x2="861" y2="224" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="224" x2="861" y2="210" stroke="#999999" stroke-width="2"/>
+<text x="874" y="222" font-size="12" fill="#888888">set</text>
+<line x1="847" y1="230" x2="861" y2="244" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="244" x2="861" y2="230" stroke="#999999" stroke-width="2"/>
+<text x="874" y="242" font-size="12" fill="#888888">pointerset</text>
+<line x1="847" y1="250" x2="861" y2="264" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="264" x2="861" y2="250" stroke="#999999" stroke-width="2"/>
+<text x="874" y="262" font-size="12" fill="#888888">pointerpairarray</text>
+<line x1="847" y1="270" x2="861" y2="284" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="284" x2="861" y2="270" stroke="#999999" stroke-width="2"/>
+<text x="874" y="282" font-size="12" fill="#888888">rangeset</text>
+<line x1="847" y1="290" x2="861" y2="304" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="304" x2="861" y2="290" stroke="#999999" stroke-width="2"/>
+<text x="874" y="302" font-size="12" fill="#888888">pointerqueue</text>
+<line x1="847" y1="310" x2="861" y2="324" stroke="#999999" stroke-width="2"/>
+<line x1="847" y1="324" x2="861" y2="310" stroke="#999999" stroke-width="2"/>
+<text x="874" y="322" font-size="12" fill="#888888">structqueue</text>
+</svg>

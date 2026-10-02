@@ -47,8 +47,12 @@
 //
 
 // callback and allocator can be public
+//
+// The public struct holds the internal one as a member (see mulle-array.h for
+// why repeating the fields by macro is a strict-aliasing violation).
+//
 #define MULLE_SET_BASE                             \
-   MULLE__SET_BASE;                                \
+   struct mulle__set                    base;      \
    struct mulle_container_keycallback   *callback; \
    struct mulle_allocator               *allocator
 
@@ -80,28 +84,28 @@ void   mulle_set_init( struct mulle_set *set,
 
 static inline void   _mulle_set_done( struct mulle_set *set)
 {
-   _mulle__set_done( (struct mulle__set *) set, set->callback, set->allocator);
+   _mulle__set_done( &set->base, set->callback, set->allocator);
 }
 
 
 static inline void   mulle_set_done( struct mulle_set *set)
 {
    if( set)
-      _mulle__set_done( (struct mulle__set *) set, set->callback, set->allocator);
+      _mulle__set_done( &set->base, set->callback, set->allocator);
 }
 
 
 static inline void   mulle_set_destroy( struct mulle_set *set)
 {
    if( set)
-      _mulle__set_destroy( (struct mulle__set *) set, set->callback, set->allocator);
+      _mulle__set_destroy( &set->base, set->callback, set->allocator);
 }
 
 
 static inline void   mulle_set_reset( struct mulle_set *set)
 {
    if( set)
-      _mulle__set_reset( (struct mulle__set *) set, set->callback, set->allocator);
+      _mulle__set_reset( &set->base, set->callback, set->allocator);
 }
 
 #pragma mark - petty accessors
@@ -121,13 +125,20 @@ static inline struct mulle_container_keycallback   *
 
 static inline size_t   mulle_set_get_count( struct mulle_set *set)
 {
-   return( set ? _mulle__set_get_count( (struct mulle__set *) set) : 0);
+   return( set ? _mulle__set_get_count( &set->base) : 0);
 }
 
 
 static inline size_t   mulle_set_get_size( struct mulle_set *set)
 {
-   return( set ? _mulle__set_get_size( (struct mulle__set *) set) : 0);
+   return( set ? _mulle__set_get_size( &set->base) : 0);
+}
+
+
+static inline uintptr_t *
+   mulle_set_get_mutation_pointer( struct mulle_set *set)
+{
+   return( mulle__set_get_mutation_pointer( set ? &set->base : NULL));
 }
 
 
@@ -136,7 +147,7 @@ static inline size_t   mulle_set_get_size( struct mulle_set *set)
 
 static inline void   *mulle_set_get( struct mulle_set *set, const void *p)
 {
-   return( set ? _mulle__set_get( (struct mulle__set *) set, p, set->callback) : NULL);
+   return( set ? _mulle__set_get( &set->base, p, set->callback) : NULL);
 }
 
 
@@ -144,7 +155,7 @@ MULLE_C_NONNULL_FIRST
 static inline int
    _mulle_set_member( struct mulle_set *set, const void *p)
 {
-   return( _mulle__set_member( (struct mulle__set *) set, p, set->callback));
+   return( _mulle__set_member( &set->base, p, set->callback));
 }
 
 
@@ -160,7 +171,7 @@ static inline int
 static inline void   mulle_set_remove( struct mulle_set *set, const void *p)
 {
    if( set)
-      _mulle__set_remove( (struct mulle__set *) set, p, set->callback, set->allocator);
+      _mulle__set_remove( &set->base, p, set->callback, set->allocator);
 }
 
 
@@ -168,7 +179,7 @@ static inline void   mulle_set_remove( struct mulle_set *set, const void *p)
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle_set_insert( struct mulle_set *set, void *p)
 {
-   return( _mulle__set_insert( (struct mulle__set *) set, p, set->callback, set->allocator));
+   return( _mulle__set_insert( &set->base, p, set->callback, set->allocator));
 }
 
 
@@ -183,7 +194,7 @@ static inline int   mulle_set_insert( struct mulle_set *set, void *p)
 MULLE_C_NONNULL_FIRST
 static inline void   *_mulle_set_register( struct mulle_set *set, void *p)
 {
-   return( _mulle__set_register( (struct mulle__set *) set, p, set->callback, set->allocator));
+   return( _mulle__set_register( &set->base, p, set->callback, set->allocator));
 }
 
 
@@ -199,14 +210,14 @@ static inline void   *mulle_set_register( struct mulle_set *set, void *p)
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_set_set( struct mulle_set *set, void *p)
 {
-   _mulle__set_set( (struct mulle__set *) set, p, set->callback, set->allocator);
+   _mulle__set_set( &set->base, p, set->callback, set->allocator);
 }
 
 
 static inline void   mulle_set_set( struct mulle_set *set, void *p)
 {
    if( set)
-      _mulle__set_set( (struct mulle__set *) set, p, set->callback, set->allocator);
+      _mulle__set_set( &set->base, p, set->callback, set->allocator);
 }
 
 
@@ -217,8 +228,8 @@ static inline void   mulle_set_set( struct mulle_set *set, void *p)
 static inline void   mulle_set_copy_items( struct mulle_set *dst, struct mulle_set *src)
 {
    if( dst)
-      _mulle__set_copy_items( (struct mulle__set *) dst,
-                              (struct mulle__set *) src,
+      _mulle__set_copy_items( &dst->base,
+                              &src->base,
                               dst->callback,
                               dst->allocator);
 }
@@ -233,8 +244,8 @@ static inline struct mulle_set   *mulle_set_copy( struct mulle_set *set)
 
    // can't allow creation to be done by struct mulle__set
    other = mulle_set_create( mulle_set_get_count( set), set->callback, set->allocator);
-   _mulle__set_copy_items( (struct mulle__set *) other,
-                           (struct mulle__set *) set,
+   _mulle__set_copy_items( &other->base,
+                           &set->base,
                            set->callback,
                            set->allocator);
    return( other);
@@ -251,9 +262,9 @@ static inline void
                          struct mulle_set *a,
                          struct mulle_set *b)
 {
-   _mulle__set_intersect( (struct mulle__set *) dst,
-                          (struct mulle__set *) a,
-                          (struct mulle__set *) b,
+   _mulle__set_intersect( &dst->base,
+                          &a->base,
+                          &b->base,
                           dst->callback,
                           dst->allocator);
 }
@@ -275,9 +286,9 @@ static inline void   _mulle_set_union( struct mulle_set *dst,
                                        struct mulle_set *a,
                                        struct mulle_set *b)
 {
-   _mulle__set_union( (struct mulle__set *) dst,
-                      (struct mulle__set *) a,
-                      (struct mulle__set *) b,
+   _mulle__set_union( &dst->base,
+                      &a->base,
+                      &b->base,
                       dst->callback,
                       dst->allocator);
 }
@@ -296,7 +307,7 @@ static inline void   mulle_set_union( struct mulle_set *dst,
 
 static inline void   _mulle_set_shrink_if_needed( struct mulle_set *set)
 {
-   _mulle__set_shrink_if_needed( (struct mulle__set *) set,
+   _mulle__set_shrink_if_needed( &set->base,
                                  set->callback,
                                  set->allocator);
 }
@@ -316,7 +327,7 @@ static inline void   *mulle_set_describe( struct mulle_set *set)
 {
    if( ! set)
       return( NULL);
-   return( _mulle__set_describe( (struct mulle__set *) set, set->callback, set->allocator));
+   return( _mulle__set_describe( &set->base, set->callback, set->allocator));
 }
 
 
@@ -332,40 +343,28 @@ static inline void   *mulle_set_describe( struct mulle_set *set)
  * mulle_setenumerator_done( &rover);
  *
  */
-#define MULLE_SETENUMERATOR_BASE   MULLE__SETENUMERATOR_BASE
+//
+// The public enumerator holds the internal one as a member (see mulle-array.h
+// for why repeating the fields by macro is a strict-aliasing violation). The
+// mutation-count fields live in the member now, so the #if branch is gone.
+//
+#define MULLE_SETENUMERATOR_BASE   struct mulle__setenumerator base
 
 #define mulle_setenumerator_empty  \
    ((struct mulle_setenumerator) { 0 })
 
-#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-struct mulle_setenumerator
-{
-   MULLE_SETENUMERATOR_BASE;
-   struct mulle__set *_set;
-   uintptr_t  _n_mutations;
-};
-#else
 struct mulle_setenumerator
 {
    MULLE_SETENUMERATOR_BASE;
 };
-#endif
 
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_setenumerator
    _mulle_set_enumerate( struct mulle_set *set)
 {
-   struct mulle_setenumerator    rover;
-   struct mulle__setenumerator   tmp;
+   struct mulle_setenumerator   rover;
 
-   tmp = _mulle__set_enumerate( (struct mulle__set *) set, set->callback);
-   rover._curr    = tmp._curr;
-   rover._left    = tmp._left;
-   rover._notakey = tmp._notakey;
-#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   rover._set = (struct mulle__set *) set;
-   rover._n_mutations = tmp._n_mutations;
-#endif
+   rover.base = _mulle__set_enumerate( &set->base, set->callback);
    return( rover);
 }
 
@@ -382,14 +381,14 @@ MULLE_C_NONNULL_FIRST_SECOND
 static inline int
    _mulle_setenumerator_next( struct mulle_setenumerator *rover, void **item)
 {
-   return( _mulle__setenumerator_next( (struct mulle__setenumerator *) rover, item));
+   return( _mulle__setenumerator_next( &rover->base, item));
 }
 
 
 static inline int
    mulle_setenumerator_next( struct mulle_setenumerator *rover, void **item)
 {
-   return( mulle__setenumerator_next( (struct mulle__setenumerator *) rover, item));
+   return( mulle__setenumerator_next( &rover->base, item));
 }
 
 

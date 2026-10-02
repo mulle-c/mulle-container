@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 
 static void   create( void)
@@ -33,7 +32,6 @@ static void   create( void)
 static void  simple( void)
 {
    char   onstack[] = { 'V', 'f', 'L', 0 };
-   void   *old;
    int    state;
 
    mulle__pointermap_do( map)
@@ -146,7 +144,6 @@ static void  enumerate( void)
    int                                  i;
    int                                  state;
    struct mulle__pointermap             *map;
-   struct mulle_pointerpair             pair;
 
    map = mulle__pointermap_create( 100, 0, NULL);
 
@@ -196,8 +193,6 @@ static void  enumerate( void)
 static void  enumerate_pairs( void)
 {
    struct mulle__pointermapenumerator   rover;
-   void                                 *key;
-   void                                 *value;
    int                                  rval;
    int                                  i;
    struct mulle__pointermap             *map;
@@ -242,15 +237,13 @@ static void  enumerate_pairs( void)
 }
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void   run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
 #ifdef DEBUG
    fprintf( stderr, "%s\n", name);
 #endif
    (f)();
-   mulle_testallocator_reset();
 }
 
 

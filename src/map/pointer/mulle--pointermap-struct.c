@@ -111,7 +111,7 @@ static inline void _mulle__pointermap_free_storage( struct mulle__pointermap *ma
    // doesn't hurt, can help
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
    map->_n_mutations++;
-#endif 
+#endif
    mulle_allocator_free( allocator, map->_storage);
 }
 

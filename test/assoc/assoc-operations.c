@@ -13,7 +13,6 @@
 
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 
 static void  test_is_equal( void)
@@ -72,9 +71,7 @@ static void  test_index_access( void)
 
 static void  run_test( void (*f)( void))
 {
-   mulle_testallocator_reset();
    (f)();
-   mulle_testallocator_reset();
 }
 
 

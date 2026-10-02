@@ -49,10 +49,28 @@
  * must be NULL
  */
 
-#define MULLE__MAPTINYENUMERATOR_BASE  \
+#define _MULLE__MAPTINYENUMERATOR_BASE  \
    void     **_curr;                   \
    size_t   _left;                     \
    size_t   _offset
+
+//
+// could also use MULLE__CONTAINER_MISER_MODE, but enumerators are not to
+// be stored over the length of a function call
+//
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+#define MULLE__MAPTINYENUMERATOR_BASE   \
+   _MULLE__MAPTINYENUMERATOR_BASE;      \
+   struct mulle__map  *_map;            \
+   uintptr_t          _n_mutations
+
+#else
+
+#define MULLE__MAPTINYENUMERATOR_BASE   \
+   _MULLE__MAPTINYENUMERATOR_BASE
+
+#endif
 
 
 struct mulle__maptinyenumerator
@@ -67,9 +85,14 @@ static inline struct mulle__maptinyenumerator
    struct mulle__maptinyenumerator   rover;
 
    assert( map);
-   rover._left   = map->_count;
-   rover._curr   = map->_storage;
+   rover._left   = map->base._count;
+   rover._curr   = map->base._storage;
    rover._offset = _mulle__map_get_size( map);
+
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._map         = map;
+   rover._n_mutations = map->base._n_mutations;
+#endif
 
    return( rover);
 }
@@ -102,6 +125,9 @@ static inline int
    }
 
    rover->_left--;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   assert( rover->_map->base._n_mutations == rover->_n_mutations && "map was modified during enumeration");
+#endif
    for(;;)
    {
       p = rover->_curr++;

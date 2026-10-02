@@ -51,8 +51,12 @@
 //
 // The userinfo for the compare will be the assoc itself.
 //
+//
+// The public struct holds the internal one as a member (see mulle-array.h for
+// why repeating the fields by macro is a strict-aliasing violation).
+//
 #define MULLE_ASSOC_BASE                                  \
-   MULLE__ASSOC_BASE;                                     \
+   struct mulle__assoc                       base;        \
    struct mulle_container_keyvaluecallback   *callback;   \
    mulle_pointerpair_compare_t               *compare;    \
    struct mulle_allocator                    *allocator
@@ -70,7 +74,7 @@ struct mulle_assoc
       .callback         = (xcallback),                     \
       .allocator        = (xallocator),                    \
       .compare          = (xcompare),                      \
-      ._is_sorted       = 0                                \
+      .base._is_sorted  = 0                                \
    })
 
 MULLE_C_NONNULL_THIRD
@@ -83,7 +87,7 @@ static inline void    mulle_assoc_init( struct mulle_assoc *assoc,
    if( ! assoc)
       return;
 
-   _mulle__assoc_init( (struct mulle__assoc *) assoc, length, allocator);
+   _mulle__assoc_init( &assoc->base, length, allocator);
 
    assoc->callback   = callback;
    assoc->allocator  = allocator;
@@ -93,7 +97,7 @@ static inline void    mulle_assoc_init( struct mulle_assoc *assoc,
 
 static inline void   _mulle_assoc_done( struct mulle_assoc *assoc)
 {
-   _mulle__assoc_done( (struct mulle__assoc *) assoc,
+   _mulle__assoc_done( &assoc->base,
                        assoc->callback,
                        assoc->allocator);
 }
@@ -103,7 +107,7 @@ static inline void   mulle_assoc_done( struct mulle_assoc *assoc)
 {
    if( ! assoc)
       return;
-   _mulle__assoc_done( (struct mulle__assoc *) assoc,
+   _mulle__assoc_done( &assoc->base,
                        assoc->callback,
                        assoc->allocator);
 }
@@ -122,7 +126,7 @@ static inline void   mulle_assoc_destroy( struct mulle_assoc *assoc)
    if( ! assoc)
       return;
 
-   _mulle__assoc_destroy( (struct mulle__assoc *) assoc,
+   _mulle__assoc_destroy( &assoc->base,
                           assoc->callback,
                           assoc->allocator);
 }
@@ -134,14 +138,14 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_assoc_get_size( struct mulle_assoc *assoc)
 {
-   return( _mulle__assoc_get_size( (struct mulle__assoc *) assoc));
+   return( _mulle__assoc_get_size( &assoc->base));
 }
 
 
 static inline size_t
    mulle_assoc_get_size( struct mulle_assoc *assoc)
 {
-   return( mulle__assoc_get_size( (struct mulle__assoc *) assoc));
+   return( mulle__assoc_get_size( &assoc->base));
 }
 
 
@@ -149,14 +153,14 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
 	_mulle_assoc_get_guaranteed_size( struct mulle_assoc *assoc)
 {
-   return( _mulle__assoc_get_guaranteed_size( (struct mulle__assoc *) assoc));
+   return( _mulle__assoc_get_guaranteed_size( &assoc->base));
 }
 
 
 static inline size_t
 	mulle_assoc_get_guaranteed_size( struct mulle_assoc *assoc)
 {
-   return( mulle__assoc_get_guaranteed_size( (struct mulle__assoc *) assoc));
+   return( mulle__assoc_get_guaranteed_size( &assoc->base));
 }
 
 
@@ -164,14 +168,29 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_assoc_get_count( struct mulle_assoc *assoc)
 {
-   return( _mulle__assoc_get_count( (struct mulle__assoc *) assoc));
+   return( _mulle__assoc_get_count( &assoc->base));
 }
 
 
 static inline size_t
    mulle_assoc_get_count( struct mulle_assoc *assoc)
 {
-   return( mulle__assoc_get_count( (struct mulle__assoc *) assoc));
+   return( mulle__assoc_get_count( &assoc->base));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle_assoc_get_mutation_pointer( struct mulle_assoc *assoc)
+{
+   return( _mulle__assoc_get_mutation_pointer( &assoc->base));
+}
+
+
+static inline uintptr_t *
+   mulle_assoc_get_mutation_pointer( struct mulle_assoc *assoc)
+{
+   return( mulle__assoc_get_mutation_pointer( assoc ? &assoc->base : NULL));
 }
 
 
@@ -179,14 +198,14 @@ MULLE_C_NONNULL_FIRST
 static inline int
    _mulle_assoc_is_full( struct mulle_assoc *assoc)
 {
-   return( _mulle__assoc_is_full( (struct mulle__assoc *) assoc));
+   return( _mulle__assoc_is_full( &assoc->base));
 }
 
 
 static inline int
    mulle_assoc_is_full( struct mulle_assoc *assoc)
 {
-   return( mulle__assoc_is_full( (struct mulle__assoc *) assoc));
+   return( mulle__assoc_is_full( &assoc->base));
 }
 
 
@@ -194,7 +213,7 @@ MULLE_C_NONNULL_FIRST
 static inline int
    _mulle_assoc_is_sorted( struct mulle_assoc *assoc)
 {
-   return _mulle__assoc_is_sorted((struct mulle__assoc *) assoc);
+   return _mulle__assoc_is_sorted(&assoc->base);
 }
 
 
@@ -257,7 +276,7 @@ static inline void
                              mulle_pointerpair_compare_t *compare)
 {
    assoc->compare = compare ? compare : _mulle_pointerpair_compare_pointer_key;
-   _mulle__assoc_set_unsorted((struct mulle__assoc *) assoc);
+   _mulle__assoc_set_unsorted(&assoc->base);
 }
 
 
@@ -295,7 +314,7 @@ static inline uintptr_t
                               const void *key,
                               struct mulle_range range)
 {
-   return( mulle__assoc_find_in_range( (struct mulle__assoc *) assoc,
+   return( mulle__assoc_find_in_range( &assoc->base,
                                        key,
                                        range,
                                        assoc->callback,
@@ -306,7 +325,7 @@ static inline uintptr_t
 static inline uintptr_t
    mulle_assoc_find( struct mulle_assoc *assoc, const void *key)
 {
-   return( mulle__assoc_find( (struct mulle__assoc *) assoc,
+   return( mulle__assoc_find( &assoc->base,
                               key,
                               assoc->callback,
                               assoc->compare,
@@ -317,7 +336,7 @@ static inline uintptr_t
 //
 // static inline void   mulle_assoc_qsort( struct mulle_assoc *assoc)
 // {
-//    mulle__assoc_qsort_r( (struct mulle__assoc *) assoc,
+//    mulle__assoc_qsort_r( &assoc->base,
 //                          assoc->compare,
 //                          assoc);
 // }
@@ -332,7 +351,7 @@ static inline uintptr_t
 static inline
 void   *_mulle_assoc_get( struct mulle_assoc *assoc, const void *key)
 {
-   return( _mulle__assoc_get( (struct mulle__assoc *) assoc,
+   return( _mulle__assoc_get( &assoc->base,
                               key,
                               assoc->compare,
                               assoc));
@@ -344,7 +363,7 @@ void   *mulle_assoc_get( struct mulle_assoc *assoc, const void *key)
    if( ! assoc)
       return( NULL);
 
-   return( _mulle__assoc_get( (struct mulle__assoc *) assoc,
+   return( _mulle__assoc_get( &assoc->base,
                               key,
                               assoc->compare,
                               assoc));
@@ -355,7 +374,7 @@ MULLE_C_NONNULL_FIRST
 static inline void
 _mulle_assoc_set( struct mulle_assoc *assoc, void *key, void *value)
 {
-   _mulle__assoc_set( (struct mulle__assoc *) assoc,
+   _mulle__assoc_set( &assoc->base,
                        key,
                        value,
                        assoc->callback,
@@ -378,7 +397,7 @@ void   _mulle_assoc_remap_intptr_key_range( struct mulle_assoc *assoc,
                                             struct mulle_range range,
                                             intptr_t offset)
 {
-   _mulle__assoc_remap_intptr_key_range( (struct mulle__assoc *) assoc,
+   _mulle__assoc_remap_intptr_key_range( &assoc->base,
                                          range,
                                          offset,
                                          assoc->callback,
@@ -403,7 +422,7 @@ static inline void
                                       struct mulle_range range,
                                       intptr_t offset)
 {
-   _mulle__assoc_move_intptr_key_range( (struct mulle__assoc *) assoc,
+   _mulle__assoc_move_intptr_key_range( &assoc->base,
                                         range,
                                         offset,
                                         assoc->callback,
@@ -427,7 +446,7 @@ static inline void
 static inline void
    mulle_assoc_assert_no_intptr_key_dupes( struct mulle_assoc *assoc)
 {
-   mulle__pointerpairarray_assert_no_dupes( (struct mulle__pointerpairarray *) assoc);
+   mulle__pointerpairarray_assert_no_dupes( &assoc->base.base);
 }
 
 
@@ -436,7 +455,7 @@ static inline void
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_assoc_add( struct mulle_assoc *assoc, void *key, void *value)
 {
-   _mulle__assoc_add( (struct mulle__assoc *) assoc,
+   _mulle__assoc_add( &assoc->base,
                       key,
                       value,
                       assoc->callback,
@@ -459,7 +478,7 @@ static inline void   mulle_assoc_remove_in_range( struct mulle_assoc *assoc,
 {
    if( assoc)
    {
-      _mulle__assoc_remove_in_range( (struct mulle__assoc *) assoc,
+      _mulle__assoc_remove_in_range( &assoc->base,
                                      range,
                                      assoc->callback,
                                      assoc->allocator);
@@ -471,7 +490,7 @@ static inline void   mulle_assoc_remove_in_range( struct mulle_assoc *assoc,
 static inline void   _mulle_assoc_remove( struct mulle_assoc *assoc,
                                           const void *key)
 {
-   _mulle__assoc_remove( (struct mulle__assoc *) assoc,
+   _mulle__assoc_remove( &assoc->base,
                          key,
                          assoc->callback,
                          assoc->compare,
@@ -485,7 +504,7 @@ static inline void   mulle_assoc_remove( struct mulle_assoc *assoc,
 {
    if( assoc)
    {
-      _mulle__assoc_remove( (struct mulle__assoc *) assoc,
+      _mulle__assoc_remove( &assoc->base,
                             key,
                             assoc->callback,
                             assoc->compare,
@@ -498,7 +517,7 @@ static inline void   mulle_assoc_remove( struct mulle_assoc *assoc,
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_assoc_reset( struct mulle_assoc *assoc)
 {
-   _mulle__assoc_reset( (struct mulle__assoc *) assoc,
+   _mulle__assoc_reset( &assoc->base,
                         assoc->callback,
                         assoc->allocator);
 }
@@ -525,8 +544,8 @@ static inline int   mulle_assoc_is_equal( struct mulle_assoc *assoc,
       return( assoc == other);
 
    assert( assoc->callback->keycallback.is_equal == other->callback->keycallback.is_equal);
-   return( _mulle__assoc_is_equal( (struct mulle__assoc *) assoc,
-                                   (struct mulle__assoc *) other,
+   return( _mulle__assoc_is_equal( &assoc->base,
+                                   &other->base,
                                    assoc->callback,
                                    assoc->compare,
                                    assoc));
@@ -540,7 +559,7 @@ struct mulle_pointerpair  mulle_assoc_get_at_index( struct mulle_assoc *assoc,
    if( ! assoc)
       return( mulle_pointerpair_make_invalid());
 
-   return( _mulle__assoc_get_at_index( (struct mulle__assoc *) assoc, index, assoc->compare, assoc));
+   return( _mulle__assoc_get_at_index( &assoc->base, index, assoc->compare, assoc));
 }
 
 
@@ -551,7 +570,7 @@ void  mulle_assoc_set_at_index( struct mulle_assoc *assoc,
                                 void *value)
 {
    if( assoc)
-      _mulle__assoc_set_at_index( (struct mulle__assoc *) assoc,
+      _mulle__assoc_set_at_index( &assoc->base,
                                   index,
                                   key,
                                   value,
@@ -568,7 +587,7 @@ static inline size_t
                               struct mulle_range range,
                               struct mulle_pointerpair *buf)
 {
-   return( _mulle__assoc_get_in_range( (struct mulle__assoc *) assoc,
+   return( _mulle__assoc_get_in_range( &assoc->base,
                                        range,
                                        buf));
 }
@@ -579,7 +598,7 @@ static inline size_t
                              struct mulle_range range,
                              struct mulle_pointerpair *buf)
 {
-   return( mulle__assoc_get_in_range( (struct mulle__assoc *) assoc,
+   return( mulle__assoc_get_in_range( &assoc->base,
                                       range,
                                       buf));
 }
@@ -590,7 +609,7 @@ static inline struct mulle_pointerpair
 {
    if( ! assoc)
       return( mulle_pointerpair_make_invalid());
-   return( _mulle__assoc_get_last( (struct mulle__assoc *) assoc));
+   return( _mulle__assoc_get_last( &assoc->base));
 }
 
 
@@ -598,7 +617,7 @@ static inline void   mulle_assoc_remove_last( struct mulle_assoc *assoc)
 {
    if( assoc)
    {
-      _mulle__assoc_remove_last( (struct mulle__assoc *) assoc,
+      _mulle__assoc_remove_last( &assoc->base,
                                  assoc->callback,
                                  assoc->allocator);
    }
@@ -613,8 +632,8 @@ static inline void
       return;
 
    assert( assoc->callback == other->callback);
-   _mulle__assoc_add_assoc_range( (struct mulle__assoc *) assoc,
-                                  (struct mulle__assoc *) other,
+   _mulle__assoc_add_assoc_range( &assoc->base,
+                                  &other->base,
                                   range,
                                   assoc->callback,
                                   assoc->allocator);
@@ -642,8 +661,8 @@ static inline struct mulle_assoc   *mulle_assoc_copy( struct mulle_assoc *assoc)
                                assoc->callback,
                                assoc->compare,
                                assoc->allocator);
-   _mulle__assoc_copy_items( (struct mulle__assoc *) other,
-                             (struct mulle__assoc *) assoc,
+   _mulle__assoc_copy_items( &other->base,
+                             &assoc->base,
                              assoc->callback,
                              assoc->allocator);
    return( other);
@@ -657,7 +676,7 @@ static inline struct mulle_assoc   *mulle_assoc_copy( struct mulle_assoc *assoc)
 MULLE_C_NONNULL_FIRST
 static inline char   *_mulle_assoc_describe( struct mulle_assoc *assoc)
 {
-   return( _mulle__assoc_describe( (struct mulle__assoc *) assoc,
+   return( _mulle__assoc_describe( &assoc->base,
                                     assoc->callback,
                                     assoc->compare,
                                     assoc,
@@ -668,7 +687,7 @@ static inline char   *_mulle_assoc_describe( struct mulle_assoc *assoc)
 static inline char
    *mulle_assoc_describe( struct mulle_assoc *assoc)
 {
-   return( mulle__assoc_describe( (struct mulle__assoc *) assoc,
+   return( mulle__assoc_describe( &assoc->base,
                                    assoc->callback,
                                    assoc->compare,
                                    assoc,
@@ -684,7 +703,7 @@ static inline int   mulle_assoc_member( struct mulle_assoc *assoc,
 {
    if( ! assoc)
       return( 0);
-   return( _mulle__assoc_member( (struct mulle__assoc *) assoc, key, assoc->callback));
+   return( _mulle__assoc_member( &assoc->base, key, assoc->callback));
 }
 
 
@@ -708,7 +727,13 @@ static inline int   mulle_assoc_member( struct mulle_assoc *assoc,
  *  mulle_assoc_for( assoc, item)
  *     printf( "%s\n", item);
  */
-#define MULLE_ASSOCENUMERATOR_BASE   MULLE__ASSOCENUMERATOR_BASE
+//
+// The public enumerator holds the internal one as a member. It used to repeat
+// the internal fields by macro, which made the two distinct struct types with
+// an identical layout; accessing one through a pointer to the other violates
+// C11 6.5p7 and GCC exploits it at -O2 (silent under-enumeration).
+//
+#define MULLE_ASSOCENUMERATOR_BASE   struct mulle__assocenumerator base
 
 struct mulle_assocenumerator
 {
@@ -718,21 +743,14 @@ struct mulle_assocenumerator
 #define mulle_assocenumerator_empty   ((struct mulle_assocenumerator) { 0})
 
 
-//
-// lots of shit code, because C compilers are broken and we want to
-// have one '_' less in our type, yet can't alias struct x = struct y...
-// (without typedef), but we also want to avoid base.base.base.base..
-//
 MULLE_C_NONNULL_FIRST
 static inline struct mulle_assocenumerator
    _mulle_assoc_enumerate( struct mulle_assoc *assoc)
 {
-   struct mulle_assocenumerator    rval;
-   struct mulle__assocenumerator   tmp;
+   struct mulle_assocenumerator   rover;
 
-   tmp = _mulle__assoc_enumerate( (struct mulle__assoc *) assoc, assoc->callback, assoc->compare, assoc);
-   memcpy( &rval, &tmp, sizeof( struct mulle__assocenumerator));
-   return( rval);
+   rover.base = _mulle__assoc_enumerate( &assoc->base, assoc->callback, assoc->compare, assoc);
+   return( rover);
 }
 
 
@@ -750,7 +768,7 @@ MULLE_C_NONNULL_FIRST
 static inline int
    _mulle_assocenumerator_next( struct mulle_assocenumerator *rover, void **key, void **value)
 {
-   return( _mulle__assocenumerator_next( (struct mulle__assocenumerator *) rover, key, value));
+   return( _mulle__assocenumerator_next( &rover->base, key, value));
 }
 
 
@@ -758,7 +776,7 @@ static inline int
 static inline int
    mulle_assocenumerator_next( struct mulle_assocenumerator *rover, void **key, void **value)
 {
-   return( mulle__assocenumerator_next( (struct mulle__assocenumerator *) rover, key, value));
+   return( mulle__assocenumerator_next( &rover->base, key, value));
 }
 
 

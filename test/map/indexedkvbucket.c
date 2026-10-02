@@ -1,5 +1,4 @@
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 
@@ -56,13 +55,10 @@ int  main()
    _CALLBACK.keycallback   = mulle_container_keycallback_copied_cstring;
    _CALLBACK.valuecallback = mulle_container_valuecallback_copied_cstring;
 
-   mulle_testallocator_initialize();
 
-   mulle_default_allocator = mulle_testallocator;
 
    simple_fill_test();
 
-   mulle_testallocator_reset();
 
    return( 0);
 }

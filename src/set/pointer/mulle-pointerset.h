@@ -39,9 +39,15 @@
 
 #pragma mark - operations built on generic and struct operations
 
+//
+// The struct holds the internal one as a member (see mulle-array.h for why
+// repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE_POINTERSET_BASE   struct mulle__pointerset base
+
 struct mulle_pointerset
 {
-   MULLE__POINTERSET_BASE;
+   MULLE_POINTERSET_BASE;
    struct mulle_allocator   *allocator;   // public...
 };
 
@@ -79,7 +85,7 @@ static inline void    _mulle_pointerset_init( struct mulle_pointerset *set,
                                               size_t capacity,
                                               struct mulle_allocator *allocator)
 {
-   _mulle__pointerset_init( (struct mulle__pointerset *) set, capacity, allocator);
+   _mulle__pointerset_init( &set->base, capacity, allocator);
 
    set->allocator = allocator;
 }
@@ -102,7 +108,7 @@ static inline void
 {
     if( set)
     {
-       _mulle__pointerset_init_with_static_pointers( (struct mulle__pointerset *) set,
+       _mulle__pointerset_init_with_static_pointers( &set->base,
                                                      storage,
                                                      capacity);
       set->allocator = allocator;
@@ -113,7 +119,7 @@ static inline void
 MULLE_C_NONNULL_FIRST
 static inline void    _mulle_pointerset_done( struct mulle_pointerset *set)
 {
-   _mulle__pointerset_done( (struct mulle__pointerset *) set, set->allocator);
+   _mulle__pointerset_done( &set->base, set->allocator);
 }
 
 
@@ -138,7 +144,7 @@ static inline struct mulle_pointerset *
 static inline void   mulle_pointerset_destroy( struct mulle_pointerset *set)
 {
    if( set)
-      _mulle__pointerset_destroy( (struct mulle__pointerset *) set,
+      _mulle__pointerset_destroy( &set->base,
                                  set->allocator);
 }
 
@@ -146,7 +152,7 @@ static inline void   mulle_pointerset_destroy( struct mulle_pointerset *set)
 static inline void   mulle__pointerset_reset( struct mulle_pointerset *set)
 {
    if( set)
-      _mulle__pointerset_reset( (struct mulle__pointerset *) set);
+      _mulle__pointerset_reset( &set->base);
 }
 
 //
@@ -156,14 +162,20 @@ static inline size_t   mulle_pointerset_get_count( struct mulle_pointerset *set)
 {
    if( ! set)
       return( 0);
-   return( _mulle__pointerset_get_count( (struct mulle__pointerset *) set));
+   return( _mulle__pointerset_get_count( &set->base));
 }
 
 static inline size_t   mulle_pointerset_get_size( struct mulle_pointerset *set)
 {
    if( ! set)
       return( 0);
-   return( _mulle__pointerset_get_size( (struct mulle__pointerset *) set));
+   return( _mulle__pointerset_get_size( &set->base));
+}
+
+
+static inline uintptr_t *mulle_pointerset_get_mutation_pointer( struct mulle_pointerset *set)
+{
+   return( mulle__pointerset_get_mutation_pointer( set ? &set->base : NULL));
 }
 
 
@@ -171,7 +183,7 @@ static inline int   mulle_pointerset_is_full( struct mulle_pointerset *set)
 {
    if( ! set)
       return( 1);
-   return( _mulle__pointerset_is_full( (struct mulle__pointerset *) set));
+   return( _mulle__pointerset_is_full( &set->base));
 }
 
 
@@ -179,7 +191,7 @@ static inline int   mulle_pointerset_is_sparse( struct mulle_pointerset *set)
 {
    if( ! set)
       return( 0);
-   return( _mulle__pointerset_is_sparse( (struct mulle__pointerset *) set));
+   return( _mulle__pointerset_is_sparse( &set->base));
 }
 
 
@@ -190,7 +202,7 @@ void *    mulle_pointerset_get( struct mulle_pointerset *set, const void *p)
 {
    if( ! set)
       return( NULL);
-   return( _mulle__pointerset_get( (struct mulle__pointerset *) set, p));
+   return( _mulle__pointerset_get( &set->base, p));
 }
 
 
@@ -198,7 +210,7 @@ static inline
 void    mulle_pointerset_set( struct mulle_pointerset *set, void *p)
 {
    if( set)
-      _mulle__pointerset_set( (struct mulle__pointerset *) set, p, set->allocator);
+      _mulle__pointerset_set( &set->base, p, set->allocator);
 }
 
 
@@ -208,7 +220,7 @@ static inline int
 {
    if( ! set)
       return( 0);
-   return( _mulle__pointerset_insert( (struct mulle__pointerset *) set, p, set->allocator));
+   return( _mulle__pointerset_insert( &set->base, p, set->allocator));
 }
 
 
@@ -217,7 +229,7 @@ static inline void *
 {
    if( ! set)
       return( NULL);
-   return( _mulle__pointerset_register( (struct mulle__pointerset *) set, p, set->allocator));
+   return( _mulle__pointerset_register( &set->base, p, set->allocator));
 }
 
 
@@ -226,7 +238,7 @@ static inline
 void   mulle_pointerset_shrink( struct mulle_pointerset *set)
 {
    if( set)
-      _mulle__pointerset_shrink( (struct mulle__pointerset *) set, set->allocator);
+      _mulle__pointerset_shrink( &set->base, set->allocator);
 }
 
 
@@ -234,7 +246,7 @@ static inline void
    mulle_pointerset_shrink_if_needed( struct mulle_pointerset *set)
 {
    if( set)
-      _mulle__pointerset_shrink_if_needed( (struct mulle__pointerset *) set, set->allocator);
+      _mulle__pointerset_shrink_if_needed( &set->base, set->allocator);
 }
 
 
@@ -243,7 +255,7 @@ int  mulle_pointerset_remove( struct mulle_pointerset *set, void *p)
 {
    if( ! set)
       return( 0);
-   return( _mulle__pointerset_remove( (struct mulle__pointerset *) set, p, set->allocator));
+   return( _mulle__pointerset_remove( &set->base, p, set->allocator));
 }
 
 
@@ -252,8 +264,8 @@ static inline void
                                 struct mulle_pointerset *src)
 {
    if( dst)
-      _mulle__pointerset_copy_items( (struct mulle__pointerset *) dst,
-                                     (struct mulle__pointerset *) src,
+      _mulle__pointerset_copy_items( &dst->base,
+                                     &src->base,
                                      dst->allocator);
 }
 
@@ -291,9 +303,10 @@ struct mulle_pointerset  *mulle_pointerset_copy( struct mulle_pointerset *set);
 //
 #define mulle_pointerset_for( set, item)                                                                                     \
    assert( sizeof( item) == sizeof( void *));                                                                                \
-   for( struct mulle__pointersetenumerator rover__ ## item = mulle__pointerset_enumerate( (struct mulle__pointerset *) set); \
-        *rover__  ## item ## __i = (void *) 0;                                                                               \
-        ! rover__  ## item ## __i;                                                                                           \
+   for( struct mulle__pointersetenumerator                                                                                   \
+           rover__ ## item = mulle__pointerset_enumerate( &set->base),                                                       \
+           *rover__ ## item ## __i = (void *) 0;                                                                             \
+        ! rover__ ## item ## __i;                                                                                             \
         rover__ ## item ## __i   = (_mulle__pointersetenumerator_done( &rover__ ## item), (void *) 1))                       \
                                                                                                                              \
       MULLE_C_CONFINED_LOOP                                                                                                  \

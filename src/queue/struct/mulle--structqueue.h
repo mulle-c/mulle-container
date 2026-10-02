@@ -47,7 +47,7 @@
 
 struct mulle__structqueuebucket;
 
-#define MULLE__STRUCTQUEUE_BASE                            \
+#define _MULLE__STRUCTQUEUE_BASE                           \
    struct mulle__structqueuebucket    *_spares;            \
    struct mulle__structqueuebucket    *_read;              \
    struct mulle__structqueuebucket    *_write;             \
@@ -59,6 +59,19 @@ struct mulle__structqueuebucket;
    size_t                       _copy_sizeof_struct; \
    unsigned short                     _bucket_size;        \
    unsigned short                     _spare_allowance
+
+#ifndef MULLE__CONTAINER_MISER_MODE
+
+#define MULLE__STRUCTQUEUE_BASE                            \
+   _MULLE__STRUCTQUEUE_BASE;                               \
+   uintptr_t                    _n_mutations
+
+#else
+
+#define MULLE__STRUCTQUEUE_BASE                            \
+   _MULLE__STRUCTQUEUE_BASE
+
+#endif
 
 
 #define MULLE__STRUCTQUEUE_ALIGNED_SIZE( type)             \
@@ -145,6 +158,9 @@ static inline void
    queue->_sizeof_struct       = (size_t) ((sizeof_struct + alignof_struct - 1) / alignof_struct * alignof_struct);
    queue->_copy_sizeof_struct  = (size_t) sizeof_struct;
    queue->_spare_allowance     = spare_allowance;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations         = 0;
+#endif
 }
 
 
@@ -226,6 +242,25 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__structqueue_get_mutation_pointer( struct mulle__structqueue *queue)
+{
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   return( &queue->_n_mutations);
+#else
+   return( (uintptr_t *) &queue->_count);
+#endif
+}
+
+
+static inline uintptr_t *
+   mulle__structqueue_get_mutation_pointer( struct mulle__structqueue *queue)
+{
+   return( queue ? _mulle__structqueue_get_mutation_pointer( queue) : NULL);
+}
+
+
+MULLE_C_NONNULL_FIRST
 static inline unsigned short
    _mulle__structqueue_get_bucketsize( struct mulle__structqueue *queue)
 {
@@ -245,10 +280,27 @@ static inline size_t
  * The enumerator interface is rarely useful, since you can NOT use
  * it to manipulate the queue.
  */
-#define MULLE__STRUCTQUEUEENUMERATOR_BASE      \
+#define _MULLE__STRUCTQUEUEENUMERATOR_BASE     \
    struct mulle__structqueue        *_queue;   \
    struct mulle__structqueuebucket  *_curr;    \
    size_t                      _index
+
+//
+// could also use MULLE__CONTAINER_MISER_MODE, but enumerators are not to
+// be stored over the length of a function call
+//
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+#define MULLE__STRUCTQUEUEENUMERATOR_BASE      \
+   _MULLE__STRUCTQUEUEENUMERATOR_BASE;         \
+   uintptr_t                   _n_mutations
+
+#else
+
+#define MULLE__STRUCTQUEUEENUMERATOR_BASE      \
+   _MULLE__STRUCTQUEUEENUMERATOR_BASE
+
+#endif
 
 
 struct mulle__structqueueenumerator
@@ -269,6 +321,9 @@ static inline struct mulle__structqueueenumerator
    rover._queue = queue;
    rover._curr  = queue->_read;
    rover._index = queue->_read_index;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations = queue->_n_mutations;
+#endif
    return( rover);
 }
 
@@ -306,6 +361,9 @@ static inline int
    limit = rover->_curr != queue->_write ? queue->_bucket_size : queue->_write_index;
    if( rover->_index < limit)
    {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      assert( rover->_queue->_n_mutations == rover->_n_mutations && "queue was modified during enumeration");
+#endif
       offset = rover->_index++ * queue->_sizeof_struct;
       *item  = &rover->_curr->_storage[ offset];
       return( 1);

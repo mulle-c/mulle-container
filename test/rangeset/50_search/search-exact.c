@@ -6,7 +6,6 @@
 int   main( int argc, char *argv[])
 {
    struct mulle__rangeset   set;
-   uintptr_t                location;
    uintptr_t                i;
    struct mulle_range       range;
 

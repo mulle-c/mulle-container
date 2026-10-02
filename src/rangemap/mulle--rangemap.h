@@ -106,6 +106,33 @@ static inline size_t  _mulle__rangemap_get_count( struct mulle__rangemap *map)
 }
 
 
+//
+// Returns a pointer suitable for NSFastEnumeration's mutationsPtr. The value
+// it points to changes whenever the map is mutated.
+//
+// If mutation counting is disabled, fall back to the length, which is present
+// in every configuration. It changes on insert and remove, but not on an
+// in-place value overwrite or a remove+add that nets the same length.
+//
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__rangemap_get_mutation_pointer( struct mulle__rangemap *map)
+{
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   return( &map->_n_mutations);
+#else
+   return( (uintptr_t *) &map->_length);
+#endif
+}
+
+
+static inline uintptr_t *
+   mulle__rangemap_get_mutation_pointer( struct mulle__rangemap *map)
+{
+   return( map ? _mulle__rangemap_get_mutation_pointer( map) : NULL);
+}
+
+
 MULLE_C_NONNULL_FIRST
 static inline int  _mulle__rangemap_is_empty( struct mulle__rangemap *map)
 {
@@ -215,6 +242,10 @@ struct mulle__rangemapenumerator
    struct mulle_range   *_curr;
    struct mulle_range   *_sentinel;
    void                 **_values;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   struct mulle__rangemap  *_map;
+   uintptr_t                _n_mutations;
+#endif
 };
 
 
@@ -254,6 +285,10 @@ static inline struct mulle__rangemapenumerator
       rover._sentinel = NULL;
       rover._values   = NULL;
    }
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._map         = map;
+   rover._n_mutations = map->_n_mutations;
+#endif
    return( rover);
 }
 
@@ -264,6 +299,10 @@ static inline int
 {
    if( rover->_curr < rover->_sentinel)
    {
+      // assert here coz rover->_map could be NULL
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      assert( rover->_map->_n_mutations == rover->_n_mutations && "rangemap was modified during enumeration");
+#endif
       *range = *rover->_curr++;
       *value = *rover->_values++;
       return( 1);

@@ -47,7 +47,7 @@ void   mulle_set_init( struct mulle_set *set,
    if( ! set)
       return;
 
-   _mulle__set_init( (struct mulle__set *) set, capacity, callback, allocator);
+   _mulle__set_init( &set->base, capacity, callback, allocator);
 
    assert( callback);
 

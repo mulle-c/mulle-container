@@ -13,7 +13,6 @@
 #include <assert.h>
 
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 
@@ -287,7 +286,7 @@ static void   grow( void)
    assert( mulle_array_get_guaranteed_size( &array) >= 20);
 
    memo_size    = mulle_array_get_size( &array);
-   memo_storage = array._storage;
+   memo_storage = array.base.base._storage;
 
    n = mulle_array_get_guaranteed_size( &array);
    for( i = 0; i < n; i++)
@@ -298,7 +297,7 @@ static void   grow( void)
    // guarantee means unchanging internal _storage
    assert( mulle_array_get_guaranteed_size( &array) == 0);
    assert( mulle_array_get_size( &array) == memo_size);
-   assert( array._storage == memo_storage);
+   assert( array.base.base._storage == memo_storage);
 
    assert( mulle_array_is_full( &array) == 1);
    _mulle_array_grow( &array);
@@ -587,11 +586,8 @@ static void   reverse_enumerate( void)
 
 
 static void   get_in_range( void)
-{
-   struct mulle_array             array;
-   struct mulle_arrayenumerator   rover;
-   void                           *item;
-   char                           *buf[ 32];
+{      struct mulle_array             array;
+      char                           *buf[ 32];
    size_t                   length;
 
    mulle_array_init( &array, 0, &mulle_container_keycallback_copied_cstring, NULL);
@@ -643,15 +639,13 @@ static void   describe( void)
 
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void   run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
 #ifdef DEBUG
    fprintf( stderr, "%s\n", name);
 #endif
    (f)();
-   mulle_testallocator_reset();
 }
 
 

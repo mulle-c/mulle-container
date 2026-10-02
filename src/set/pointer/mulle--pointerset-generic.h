@@ -433,11 +433,18 @@ static inline void   mulle__genericpointersetenumerator_done( struct mulle__gene
 }
 
 
+//
+// `set` is a wrapper that holds `struct mulle__pointerset base` as its first
+// member (e.g. struct mulle_pointerset). Reach the inner set through
+// `&(set)->base` rather than casting the wrapper to the inner type, which
+// would be a strict-aliasing violation.
+//
 #define mulle__genericpointerset_for( set, callback, item)                                                                                            \
    assert( sizeof( item) == sizeof( void *));                                                                                                         \
-   for( struct mulle__genericpointersetenumerator rover__ ## item = mulle__pointerset_enumerate_generic( (struct mulle__pointerset *) set, callback); \
-        *rover__  ## item ## __i = (void *) 0;                                                                                                        \
-        ! rover__  ## item ## __i;                                                                                                                    \
+   for( struct mulle__genericpointersetenumerator                                                                                                     \
+           rover__ ## item = _mulle__pointerset_enumerate_generic( &(set)->base, callback),                                                           \
+           *rover__ ## item ## __i = (void *) 0;                                                                                                      \
+        ! rover__ ## item ## __i;                                                                                                                     \
         rover__ ## item ## __i   = (_mulle__genericpointersetenumerator_done( &rover__ ## item), (void *) 1))                                         \
                                                                                                                                                       \
       while( _mulle__genericpointersetenumerator_next( &rover__ ## item, (void **) &item))

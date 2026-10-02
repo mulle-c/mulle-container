@@ -49,7 +49,11 @@
 #pragma mark - tiny enumeration
 
 
-#define MULLE_MAPTINYENUMERATOR_BASE    MULLE__MAPTINYENUMERATOR_BASE
+//
+// The public enumerator holds the internal one as a member (see mulle-array.h
+// for why repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE_MAPTINYENUMERATOR_BASE   struct mulle__maptinyenumerator base
 
 
 struct mulle_maptinyenumerator
@@ -62,13 +66,9 @@ struct mulle_maptinyenumerator
 static inline struct mulle_maptinyenumerator
    mulle_map_tinyenumerate_nil( struct mulle_map *map)
 {
-   struct mulle_maptinyenumerator    rover;
-   struct mulle__maptinyenumerator   tmp;
+   struct mulle_maptinyenumerator   rover;
 
-   tmp = mulle__map_tinyenumerate_nil( (struct mulle__map *) map);
-   // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2 optimizer on
-   // this memcpy(). CI lowers MSVC to /O1, so no code workaround is needed.
-   memcpy( &rover, &tmp, sizeof( struct mulle__maptinyenumerator));
+   rover.base = mulle__map_tinyenumerate_nil( &map->base);
    return( rover);
 }
 
@@ -80,9 +80,8 @@ static inline int
 {
    if( ! rover)
       return( 0);
-   return( _mulle__maptinyenumerator_next( (struct mulle__maptinyenumerator *) rover,
-                                           key,
-                                           value));
+
+   return( _mulle__maptinyenumerator_next( &rover->base, key, value));
 }
 
 
@@ -90,14 +89,14 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
 {
-   _mulle__maptinyenumerator_done( (struct mulle__maptinyenumerator *) rover);
+   _mulle__maptinyenumerator_done( &rover->base);
 }
 
 
 static inline void
    mulle_maptinyenumerator_done( struct mulle_maptinyenumerator *rover)
 {
-   mulle__maptinyenumerator_done( (struct mulle__maptinyenumerator *) rover);
+   mulle__maptinyenumerator_done( &rover->base);
 }
 
 #endif

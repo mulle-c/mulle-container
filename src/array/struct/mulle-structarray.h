@@ -55,9 +55,15 @@
 // to be useful only until you modify the mulle_structarray. If you need
 // pointer stable storage use struct mulle_storage (different project)
 //
+//
+// The struct holds the internal one as a member (see mulle-array.h for why
+// repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE_STRUCTARRAY_BASE   struct mulle__structarray base
+
 struct mulle_structarray
 {
-   MULLE__STRUCTARRAY_BASE;
+   MULLE_STRUCTARRAY_BASE;
    struct mulle_allocator   *allocator;
 };
 
@@ -65,13 +71,13 @@ struct mulle_structarray
 #define MULLE_STRUCTARRAY_DATA( storage, type, count, xallocator)     \
    ((struct mulle_structarray)                                        \
    {                                                                  \
-      ._storage            = (storage),                               \
-      ._curr               = (storage),                               \
-      ._sentinel           = &((char *) (storage))[ (count) * MULLE__STRUCTARRAY_ALIGNED_SIZE( type)], \
-      ._initial_storage    = (storage),                               \
-      ._sizeof_struct      = MULLE__STRUCTARRAY_ALIGNED_SIZE( type),  \
-      ._copy_sizeof_struct = sizeof( type),                           \
-      .allocator           = (xallocator)                             \
+      .base._storage            = (storage),                          \
+      .base._curr               = (storage),                          \
+      .base._sentinel           = &((char *) (storage))[ (count) * MULLE__STRUCTARRAY_ALIGNED_SIZE( type)], \
+      .base._initial_storage    = (storage),                          \
+      .base._sizeof_struct      = MULLE__STRUCTARRAY_ALIGNED_SIZE( type), \
+      .base._copy_sizeof_struct = sizeof( type),                      \
+      .allocator                = (xallocator)                        \
    })
 
 
@@ -96,7 +102,7 @@ static inline void   _mulle_structarray_init( struct mulle_structarray *array,
                                               size_t capacity,
                                               struct mulle_allocator *allocator)
 {
-   _mulle__structarray_init( (struct mulle__structarray *) array,
+   _mulle__structarray_init( &array->base,
                              _sizeof_struct,
                              alignof_struct,
                              capacity,
@@ -145,7 +151,7 @@ static inline void
                                                 void  *storage,
                                                 struct mulle_allocator *allocator)
 {
-   _mulle__structarray_init_with_static_storage( (struct mulle__structarray *) array,
+   _mulle__structarray_init_with_static_storage( &array->base,
                                                   sizeof_struct,
                                                   alignof_struct,
                                                   count,
@@ -165,7 +171,7 @@ static inline void
 {
    if(  array)
    {
-      _mulle__structarray_init_with_static_storage( (struct mulle__structarray *) array,
+      _mulle__structarray_init_with_static_storage( &array->base,
                                                     sizeof_struct,
                                                     alignof_struct,
                                                     count,
@@ -198,14 +204,14 @@ static inline struct mulle_structarray *
 MULLE_C_NONNULL_FIRST
 static inline void  _mulle_structarray_done( struct mulle_structarray *array)
 {
-   _mulle__structarray_done( (struct mulle__structarray *) array, array->allocator);
+   _mulle__structarray_done( &array->base, array->allocator);
 }
 
 
 static inline void  mulle_structarray_done( struct mulle_structarray *array)
 {
    if( array)
-      _mulle__structarray_done( (struct mulle__structarray *) array, array->allocator);
+      _mulle__structarray_done( &array->base, array->allocator);
 }
 
 
@@ -224,14 +230,14 @@ static inline void  mulle_structarray_destroy( struct mulle_structarray *array)
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_reset( struct mulle_structarray *array)
 {
-   _mulle__structarray_reset( (struct mulle__structarray *) array);
+   _mulle__structarray_reset( &array->base);
 }
 
 
 static inline void   mulle_structarray_reset( struct mulle_structarray *array)
 {
    if( array)
-      _mulle__structarray_reset( (struct mulle__structarray *) array);
+      _mulle__structarray_reset( &array->base);
 }
 
 
@@ -245,14 +251,14 @@ static inline void   mulle_structarray_reset( struct mulle_structarray *array)
 // static inline void *
 //    _mulle_structarray_get_storage( struct mulle_structarray *array)
 // {
-//    return( _mulle__structarray_get_storage( (struct mulle__structarray *) array));
+//    return( _mulle__structarray_get_storage( &array->base));
 // }
 //
 //
 // static inline void *
 //    mulle_structarray_get_storage( struct mulle_structarray *array)
 // {
-//    return( array ? _mulle__structarray_get_storage( (struct mulle__structarray *) array) : NULL);
+//    return( array ? _mulle__structarray_get_storage( &array->base) : NULL);
 // }
 
 
@@ -260,7 +266,7 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_structarray_get_count( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_count( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_count( &array->base));
 }
 
 
@@ -278,16 +284,30 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_structarray_get_used_as_length( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_used_as_length( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_used_as_length( &array->base));
 }
 
+
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle_structarray_get_mutation_pointer( struct mulle_structarray *array)
+{
+   return( _mulle__structarray_get_mutation_pointer( &array->base));
+}
+
+
+static inline uintptr_t *
+   mulle_structarray_get_mutation_pointer( struct mulle_structarray *array)
+{
+   return( mulle__structarray_get_mutation_pointer( array ? &array->base : NULL));
+}
 
 
 MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_structarray_get_size( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_size( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_size( &array->base));
 }
 
 
@@ -297,7 +317,7 @@ static inline size_t
    if( ! array)
       return( 0);
 
-   return( _mulle__structarray_get_size( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_size( &array->base));
 }
 
 
@@ -305,7 +325,7 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_structarray_get_size_as_length( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_size_as_length( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_size_as_length( &array->base));
 }
 
 
@@ -315,7 +335,7 @@ static inline size_t
    if( ! array)
       return( 0);
 
-   return( _mulle__structarray_get_size_as_length( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_size_as_length( &array->base));
 }
 
 
@@ -324,7 +344,7 @@ MULLE_C_NONNULL_FIRST_SECOND
 static inline void
    _mulle_structarray_assert_pointer( struct mulle_structarray *array, void *p)
 {
-   _mulle__structarray_assert_pointer( (struct mulle__structarray *) array, p);
+   _mulle__structarray_assert_pointer( &array->base, p);
 }
 
 
@@ -332,7 +352,7 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_structarray_get_element_size( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_element_size( &array->base));
 }
 
 
@@ -342,7 +362,7 @@ static inline size_t
    if( ! array)
       return( 0);
 
-   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_element_size( &array->base));
 }
 
 
@@ -351,7 +371,7 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_structarray_get_struct_size( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_element_size( &array->base));
 }
 
 
@@ -361,7 +381,7 @@ static inline size_t
    if( ! array)
       return( 0);
 
-   return( _mulle__structarray_get_element_size( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_element_size( &array->base));
 }
 
 
@@ -372,7 +392,7 @@ MULLE_C_NONNULL_FIRST_SECOND
 static inline void *
    _mulle_structarray_add( struct mulle_structarray *array, void *item)
 {
-   return( _mulle__structarray_add( (struct mulle__structarray *) array,
+   return( _mulle__structarray_add( &array->base,
                                     item,
                                     array->allocator));
 }
@@ -384,7 +404,7 @@ static inline int
    if( ! array)
       return( 0);
 
-   return( _mulle__structarray_pop( (struct mulle__structarray *) array,
+   return( _mulle__structarray_pop( &array->base,
                                     item,
                                     array->allocator));
 }
@@ -403,7 +423,7 @@ MULLE_C_NONNULL_FIRST_THIRD
 static inline void
    _mulle_structarray_set( struct mulle_structarray *array, size_t i, void *item)
 {
-   _mulle__structarray_set( (struct mulle__structarray *) array, i, item);
+   _mulle__structarray_set( &array->base, i, item);
 }
 
 
@@ -422,7 +442,7 @@ MULLE_C_NONNULL_FIRST
 static inline void   *_mulle_structarray_guarantee( struct mulle_structarray *array,
                                                     size_t count)
 {
-   return( _mulle__structarray_guarantee( (struct mulle__structarray *) array,
+   return( _mulle__structarray_guarantee( &array->base,
                                           count,
                                           array->allocator));
 }
@@ -435,7 +455,7 @@ static inline void *
    _mulle_structarray_advance( struct mulle_structarray *array,
                                size_t count)
 {
-   return( _mulle__structarray_advance( (struct mulle__structarray *) array,
+   return( _mulle__structarray_advance( &array->base,
                                         count,
                                         array->allocator));
 }
@@ -447,8 +467,8 @@ static inline void
                                       struct mulle_range range)
 {
    if( array)
-      mulle__structarray_add_structarray( (struct mulle__structarray *) array,
-                                          (struct mulle__structarray *) other,
+      mulle__structarray_add_structarray( &array->base,
+                                          &other->base,
                                           range,
                                           array->allocator);
 }
@@ -465,8 +485,8 @@ static inline struct mulle_structarray *
 
    array = mulle_structarray_alloc( allocator);
    memset( array, 0, sizeof( *array));
-   array->_sizeof_struct      = other->_sizeof_struct;
-   array->_copy_sizeof_struct = other->_copy_sizeof_struct;
+   array->base._sizeof_struct      = other->base._sizeof_struct;
+   array->base._copy_sizeof_struct = other->base._copy_sizeof_struct;
    array->allocator           = allocator;
    mulle_structarray_add_structarray( array, other, mulle_range_make_all());
    return( array);
@@ -479,7 +499,7 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_reserve( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_reserve( (struct mulle__structarray *) array,
+   return( _mulle__structarray_reserve( &array->base,
                                         array->allocator));
 }
 
@@ -489,7 +509,7 @@ static inline void *
 {
    if( ! array)
       return( NULL);
-   return( _mulle__structarray_reserve( (struct mulle__structarray *) array,
+   return( _mulle__structarray_reserve( &array->base,
                                         array->allocator));
 }
 
@@ -498,7 +518,7 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_set_count( struct mulle_structarray *array,
                                                    size_t count)
 {
-   _mulle__structarray_set_count( (struct mulle__structarray *) array,
+   _mulle__structarray_set_count( &array->base,
                                   count,
                                   array->allocator);
 }
@@ -508,7 +528,7 @@ MULLE_C_NONNULL_FIRST
 static inline void   _mulle_structarray_zero_to_count( struct mulle_structarray *array,
                                                        size_t count)
 {
-   _mulle__structarray_zero_to_count( (struct mulle__structarray *) array,
+   _mulle__structarray_zero_to_count( &array->base,
                                       count,
                                       array->allocator);
 }
@@ -523,7 +543,7 @@ static inline void
                                       mulle_structarray_cmp_t *compare,
                                       void *userinfo)
 {
-   _mulle__structarray_qsort_r_inline( (struct mulle__structarray *) array,
+   _mulle__structarray_qsort_r_inline( &array->base,
                                        compare,
                                        userinfo);
 }
@@ -545,7 +565,7 @@ static inline void
                                mulle_structarray_cmp_t *compare,
                                void *userinfo)
 {
-   _mulle__structarray_qsort_r( (struct mulle__structarray *) array, compare, userinfo);
+   _mulle__structarray_qsort_r( &array->base, compare, userinfo);
 }
 
 
@@ -581,14 +601,14 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_get_current( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_current( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_current( &array->base));
 }
 
 
 static inline void *
    mulle_structarray_get_current( struct mulle_structarray *array)
 {
-   return( array ? _mulle__structarray_get_current( (struct mulle__structarray *) array) : NULL);
+   return( array ? _mulle__structarray_get_current( &array->base) : NULL);
 }
 
 
@@ -597,14 +617,14 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_get_first( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_first( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_first( &array->base));
 }
 
 
 static inline void *
    mulle_structarray_get_first( struct mulle_structarray *array)
 {
-   return( array  ? _mulle__structarray_get_first( (struct mulle__structarray *) array) : NULL);
+   return( array  ? _mulle__structarray_get_first( &array->base) : NULL);
 }
 
 
@@ -614,7 +634,7 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_get( struct mulle_structarray *array, size_t i)
 {
-   return( _mulle__structarray_get( (struct mulle__structarray *) array, i));
+   return( _mulle__structarray_get( &array->base, i));
 }
 
 
@@ -631,7 +651,7 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_get_lenient( struct mulle_structarray *array, size_t i)
 {
-   return( _mulle__structarray_get_lenient( (struct mulle__structarray *) array, i));
+   return( _mulle__structarray_get_lenient( &array->base, i));
 }
 
 
@@ -649,7 +669,7 @@ MULLE_C_NONNULL_FIRST
 static inline void *
    _mulle_structarray_get_last( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_get_last( (struct mulle__structarray *) array));
+   return( _mulle__structarray_get_last( &array->base));
 }
 
 
@@ -667,7 +687,7 @@ static inline void
    _mulle_structarray_remove_in_range( struct mulle_structarray *array,
                                        struct mulle_range range)
 {
-   _mulle__structarray_remove_in_range( (struct mulle__structarray *) array, range);
+   _mulle__structarray_remove_in_range( &array->base, range);
 }
 
 
@@ -676,7 +696,7 @@ static inline void
                                       struct mulle_range range)
 {
    if( array)
-      _mulle__structarray_remove_in_range( (struct mulle__structarray *) array, range);
+      _mulle__structarray_remove_in_range( &array->base, range);
 }
 
 
@@ -685,7 +705,7 @@ static inline void
    _mulle_structarray_remove_at_index( struct mulle_structarray *array,
                                        uintptr_t location)
 {
-      _mulle__structarray_remove_in_range( (struct mulle__structarray *) array, mulle_range_make( location, 1));
+      _mulle__structarray_remove_in_range( &array->base, mulle_range_make( location, 1));
 }
 
 
@@ -694,7 +714,7 @@ static inline void
                                      uintptr_t location)
 {
    if( array)
-      _mulle__structarray_remove_in_range( (struct mulle__structarray *) array, mulle_range_make( location, 1));
+      _mulle__structarray_remove_in_range( &array->base, mulle_range_make( location, 1));
 }
 
 
@@ -704,7 +724,7 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_structarray_remove_last( struct mulle_structarray *array)
 {
-   _mulle__structarray_remove_last( (struct mulle__structarray *) array);
+   _mulle__structarray_remove_last( &array->base);
 }
 
 
@@ -722,7 +742,7 @@ static inline void
                                        struct mulle_range range,
                                        void *items)
 {
-   _mulle__structarray_insert_in_range( (struct mulle__structarray *) array,
+   _mulle__structarray_insert_in_range( &array->base,
                                         range,
                                         items,
                                         array->allocator);
@@ -745,7 +765,7 @@ static inline void
                               uintptr_t location,
                               void *item)
 {
-   _mulle__structarray_insert( (struct mulle__structarray *) array,
+   _mulle__structarray_insert( &array->base,
                                location,
                                item,
                                array->allocator);
@@ -767,14 +787,18 @@ MULLE_C_NONNULL_FIRST
 static inline void
    _mulle_structarray_size_to_fit( struct mulle_structarray *array)
 {
-   return( _mulle__structarray_size_to_fit( (struct mulle__structarray *) array,
+   return( _mulle__structarray_size_to_fit( &array->base,
                                             array->allocator));
 }
 
 
 #pragma mark - structarray enumerator
 
-#define MULLE_STRUCTARRAYENUMERATOR_BASE   MULLE__STRUCTARRAYENUMERATOR_BASE
+//
+// The public enumerator holds the internal one as a member (see mulle-array.h
+// for why repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE_STRUCTARRAYENUMERATOR_BASE   struct mulle__structarrayenumerator base
 
 
 struct mulle_structarrayenumerator
@@ -790,8 +814,8 @@ static inline struct mulle_structarrayenumerator
    struct mulle_structarrayenumerator    rover;
    struct mulle__structarrayenumerator   tmp;
 
-   tmp = _mulle__structarray_enumerate( (struct mulle__structarray *) array);
-   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayenumerator));
+   tmp = _mulle__structarray_enumerate( &array->base);
+   rover.base = tmp;
    return( rover);
 }
 
@@ -802,8 +826,8 @@ static inline struct mulle_structarrayenumerator
    struct mulle_structarrayenumerator    rover;
    struct mulle__structarrayenumerator   tmp;
 
-   tmp = mulle__structarray_enumerate( (struct mulle__structarray *) array);
-   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayenumerator));
+   tmp = mulle__structarray_enumerate( &array->base);
+   rover.base = tmp;
    return( rover);
 }
 
@@ -813,8 +837,7 @@ static inline int
    _mulle_structarrayenumerator_next( struct mulle_structarrayenumerator *rover,
                                       void **item)
 {
-   return( _mulle__structarrayenumerator_next( (struct mulle__structarrayenumerator *) rover,
-                                               item));
+   return( _mulle__structarrayenumerator_next( &rover->base, item));
 }
 
 
@@ -822,8 +845,7 @@ static inline int
    mulle_structarrayenumerator_next( struct mulle_structarrayenumerator *rover,
                                      void **item)
 {
-   return( mulle__structarrayenumerator_next( (struct mulle__structarrayenumerator *) rover,
-                                               item));
+   return( mulle__structarrayenumerator_next( &rover->base, item));
 }
 
 
@@ -846,7 +868,7 @@ static inline void
 
 #pragma mark - structarray enumerator
 
-#define MULLE_STRUCTARRAYREVERSEENUMERATOR_BASE   MULLE__STRUCTARRAYREVERSEENUMERATOR_BASE
+#define MULLE_STRUCTARRAYREVERSEENUMERATOR_BASE   struct mulle__structarrayreverseenumerator base
 
 struct mulle_structarrayreverseenumerator
 {
@@ -861,8 +883,8 @@ static inline struct mulle_structarrayreverseenumerator
    struct mulle_structarrayreverseenumerator    rover;
    struct mulle__structarrayreverseenumerator   tmp;
 
-   tmp = _mulle__structarray_reverseenumerate( (struct mulle__structarray *) array);
-   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayreverseenumerator));
+   tmp = _mulle__structarray_reverseenumerate( &array->base);
+   rover.base = tmp;
    return( rover);
 }
 
@@ -873,8 +895,8 @@ static inline struct mulle_structarrayreverseenumerator
    struct mulle_structarrayreverseenumerator    rover;
    struct mulle__structarrayreverseenumerator   tmp;
 
-   tmp = mulle__structarray_reverseenumerate( (struct mulle__structarray *) array);
-   memcpy( &rover, &tmp, sizeof( struct mulle__structarrayreverseenumerator));
+   tmp = mulle__structarray_reverseenumerate( &array->base);
+   rover.base = tmp;
    return( rover);
 }
 
@@ -883,8 +905,7 @@ static inline int
    _mulle_structarrayreverseenumerator_next( struct mulle_structarrayreverseenumerator *rover,
                                              void **item)
 {
-   return( _mulle__structarrayreverseenumerator_next( (struct mulle__structarrayreverseenumerator *) rover,
-                                                      item));
+   return( _mulle__structarrayreverseenumerator_next( &rover->base, item));
 }
 
 
@@ -892,8 +913,7 @@ static inline int
    mulle_structarrayreverseenumerator_next( struct mulle_structarrayreverseenumerator *rover,
                                              void **item)
 {
-   return( mulle__structarrayreverseenumerator_next( (struct mulle__structarrayreverseenumerator *) rover,
-                                                     item));
+   return( mulle__structarrayreverseenumerator_next( &rover->base, item));
 }
 
 

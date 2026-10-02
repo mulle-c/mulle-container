@@ -9,7 +9,6 @@
 //
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 
 static void  no_leak_empty_queue( void)
@@ -116,12 +115,10 @@ static void  large_queue( void)
 }
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void  run_test( void (*f)( void))
 {
-   mulle_testallocator_reset();
    (f)();
-   mulle_testallocator_reset();
 }
 
 

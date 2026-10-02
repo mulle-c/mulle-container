@@ -59,6 +59,9 @@ void   _mulle__rangemap_init( struct mulle__rangemap *map,
 void   _mulle__rangemap_done( struct mulle__rangemap *map,
                              struct mulle_allocator *allocator)
 {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   map->_n_mutations++;
+#endif
    if( map->_storage)
       mulle_allocator_free( allocator, map->_storage);
 #ifdef DEBUG

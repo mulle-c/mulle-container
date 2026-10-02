@@ -56,9 +56,9 @@ static inline void
    void   **sentinel;
 
    // i would like to release the objects in reverse order, just because.
-   // but if array->_storage is NULL, this will produce an underflow crash
+   // but if array->base._storage is NULL, this will produce an underflow crash
 
-   sentinel = array->_storage;
+   sentinel = array->base._storage;
    if( ! sentinel)
       return;
 
@@ -78,7 +78,7 @@ void   _mulle__array_done( struct mulle__array *array,
                            struct mulle_allocator *allocator)
 {
    _mulle__array_release( array, mulle_range_make( 0, _mulle__array_get_count( array)), callback, allocator);
-   _mulle__pointerarray_done( (struct mulle__pointerarray *) array, allocator);
+   _mulle__pointerarray_done( &array->base, allocator);
 }
 
 
@@ -107,21 +107,21 @@ uintptr_t   _mulle__array_find_in_range( struct mulle__array *array,
    range = mulle_range_validate_against_length( range, _mulle__array_get_count( array));
 
    // quick check for first 32 pointers
-   p        = &array->_storage[ range.location];
+   p        = &array->base._storage[ range.location];
    sentinel = &p[ range.length < 32 ? range.length : 32];
    while( p < sentinel)
    {
       if( *p == obj)
-         return( p - array->_storage);
+         return( p - array->base._storage);
       ++p;
    }
 
-   p        = &array->_storage[ range.location];
+   p        = &array->base._storage[ range.location];
    sentinel = &p[ range.length];
    while( p < sentinel)
    {
       if( _mulle__array_callback_equal( array, callback, obj, *p))
-         return( p - array->_storage);
+         return( p - array->base._storage);
       ++p;
    }
 
@@ -139,7 +139,7 @@ void   _mulle__array_reset( struct mulle__array *array,
    if( _mulle_container_keycallback_releases( callback))
       _mulle__array_release( array, mulle_range_make( 0, _mulle__array_get_count( array)), callback, allocator);
 
-   _mulle__pointerarray_reset( (struct mulle__pointerarray *) array);
+   _mulle__pointerarray_reset( &array->base);
 }
 
 
@@ -151,7 +151,7 @@ void   _mulle__array_remove_in_range( struct mulle__array *array,
    range = mulle_range_validate_against_length( range, _mulle__array_get_count( array));
    _mulle__array_release( array, range, callback, allocator);
 
-   _mulle__pointerarray_remove_in_range( (struct mulle__pointerarray *) array,
+   _mulle__pointerarray_remove_in_range( &array->base,
                                          range);
 }
 
@@ -258,24 +258,24 @@ int    _mulle__array_is_equal( struct mulle__array *array,
       return( 0);
 
    if( callback->is_equal == mulle_container_keycallback_pointer_is_equal)
-      return( ! memcmp( array->_storage, other->_storage, n * sizeof( void *)));
+      return( ! memcmp( array->base._storage, other->base._storage, n * sizeof( void *)));
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
    uintptr_t   memo_array;
    uintptr_t   memo_other;
 
-   memo_array = array->_n_mutations;
-   memo_other = other->_n_mutations;
+   memo_array = array->base._n_mutations;
+   memo_other = other->base._n_mutations;
 #endif
-   p = array->_storage;
-   q = other->_storage;
+   p = array->base._storage;
+   q = other->base._storage;
    for( i = 0; i < n; i++)
    {
       is_equal = (callback->is_equal)( callback, *p, *q);
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-      assert( array->_n_mutations == memo_array && "array was modified during is_equal");
-      assert( other->_n_mutations == memo_other && "other was modified during is_equal");
+      assert( array->base._n_mutations == memo_array && "array was modified during is_equal");
+      assert( other->base._n_mutations == memo_other && "other was modified during is_equal");
 #endif
       if( ! is_equal)
          return( 0);
@@ -296,7 +296,7 @@ void    _mulle__array_add( struct mulle__array *array,
    assert( p != callback->notakey);
 
    p = _mulle__array_callback_retain( array, callback, p, allocator);
-   _mulle__pointerarray_add( (struct mulle__pointerarray *)  array,
+   _mulle__pointerarray_add( &array->base,
                              p,
                              allocator);
 }
@@ -314,7 +314,7 @@ void    _mulle__array_set( struct mulle__array *array,
    assert( p != callback->notakey);
 
    p   = _mulle__array_callback_retain( array, callback, p, allocator);
-   old = _mulle__pointerarray_set( (struct mulle__pointerarray *)  array,
+   old = _mulle__pointerarray_set( &array->base,
                                     i,
                                     p);
    _mulle__array_callback_release( array, callback, old, allocator);
@@ -340,9 +340,9 @@ void   _mulle__array_add_array( struct mulle__array *array,
    if( ! range.length)
       return;
 
-   _mulle__pointerarray_guarantee( (struct mulle__pointerarray *) array, range.length, allocator);
+   _mulle__pointerarray_guarantee( &array->base, range.length, allocator);
 
-   q        = &other->_storage[ range.location];
+   q        = &other->base._storage[ range.location];
    sentinel = &q[ range.length];
    while( q < sentinel)
       _mulle__array_add_guaranteed( array, *q++, callback, allocator);
@@ -366,10 +366,10 @@ void _mulle__array_copy_items( struct mulle__array *dst,
 
    _mulle__array_guarantee( dst, n, allocator);
 
-   p        = dst->_curr;
-   sentinel = dst->_curr + n;
+   p        = dst->base._curr;
+   sentinel = dst->base._curr + n;
 
-   memcpy( p, src->_storage, n * sizeof( void *));
+   memcpy( p, src->base._storage, n * sizeof( void *));
 
    if( _mulle_container_keycallback_retains( callback))
       while( p < sentinel)
@@ -378,7 +378,7 @@ void _mulle__array_copy_items( struct mulle__array *dst,
          ++p;
       }
 
-   dst->_curr = sentinel;
+   dst->base._curr = sentinel;
 }
 
 

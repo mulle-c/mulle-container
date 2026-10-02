@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 
 static void   create( void)
@@ -75,7 +74,6 @@ static void  enumerate( void)
    struct mulle_set                        *set;
    struct mulle_setenumerator              rover;
    void                                    *key;
-   int                                     rval;
    int                                     i;
    int                                     state;
    struct mulle_container_keycallback      callback;
@@ -188,7 +186,6 @@ static void   set_copy( void)
    struct mulle_set                          *set;
    struct mulle_set                          *copy;
    struct mulle__set                         *copy2;
-   struct mulle_container_keyvaluecallback   callback;
 
    set = mulle_set_create( 1000, &mulle_container_keycallback_copied_cstring, NULL);
 
@@ -260,15 +257,13 @@ static void   set_add( void)
 
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void   run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
 #ifdef DEBUG
    fprintf( stderr, "%s\n", name);
 #endif
    (f)();
-   mulle_testallocator_reset();
 }
 
 

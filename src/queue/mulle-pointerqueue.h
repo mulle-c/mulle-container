@@ -47,9 +47,15 @@
 // would need to release on pop, which would be disastrous if the release does
 // a free (copied C-string for example). Or pop would have to return retained.
 //
+//
+// The struct holds the internal one as a member (see mulle-array.h for why
+// repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE_POINTERQUEUE_BASE   struct mulle__pointerqueue base
+
 struct mulle_pointerqueue
 {
-   MULLE__POINTERQUEUE_BASE;
+   MULLE_POINTERQUEUE_BASE;
    struct mulle_allocator   *allocator;   // public...
 };
 
@@ -57,11 +63,11 @@ struct mulle_pointerqueue
 #define MULLE_POINTERQUEUE_DATA( xbucket_size, xspare_allowance, xallocator) \
    ((struct mulle_pointerqueue)                                              \
    {                                                                         \
-      ._bucket_size     = xbucket_size,                                      \
-      ._read_index      = xbucket_size,                                      \
-      ._write_index     = xbucket_size,                                      \
-      ._spare_allowance = xspare_allowance,                                  \
-      .allocator        = xallocator                                         \
+      .base._bucket_size     = xbucket_size,                                 \
+      .base._read_index      = xbucket_size,                                 \
+      .base._write_index     = xbucket_size,                                 \
+      .base._spare_allowance = xspare_allowance,                             \
+      .allocator             = xallocator                                    \
    })
 
 
@@ -93,7 +99,7 @@ static inline void  _mulle_pointerqueue_init( struct mulle_pointerqueue *queue,
                                               unsigned short spare_allowance,
                                               struct mulle_allocator *allocator)
 {
-   _mulle__pointerqueue_init( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_init( &queue->base,
                               bucket_size,
                               spare_allowance);
    queue->allocator = allocator;
@@ -131,7 +137,7 @@ MULLE_C_NONNULL_FIRST
 static inline
 void   _mulle_pointerqueue_destroy( struct mulle_pointerqueue *queue)
 {
-   _mulle__pointerqueue_destroy( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_destroy( &queue->base,
                                  queue->allocator);
 }
 
@@ -147,7 +153,7 @@ MULLE_C_NONNULL_FIRST
 static inline
 void   _mulle_pointerqueue_done( struct mulle_pointerqueue *queue)
 {
-   _mulle__pointerqueue_done( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_done( &queue->base,
                               queue->allocator);
 }
 
@@ -165,7 +171,7 @@ MULLE_C_NONNULL_FIRST
 static inline
 void   _mulle_pointerqueue_grow( struct mulle_pointerqueue *queue)
 {
-   _mulle__pointerqueue_grow( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_grow( &queue->base,
                               queue->allocator);
 }
 
@@ -183,7 +189,7 @@ MULLE_C_NONNULL_FIRST
 static inline
 void   _mulle_pointerqueue_shrink( struct mulle_pointerqueue *queue)
 {
-   _mulle__pointerqueue_shrink( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_shrink( &queue->base,
                                 queue->allocator);
 }
 
@@ -200,7 +206,7 @@ MULLE_C_NONNULL_FIRST
 static inline
 void   _mulle_pointerqueue_reset( struct mulle_pointerqueue *queue)
 {
-   _mulle__pointerqueue_reset( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_reset( &queue->base,
                                queue->allocator);
 }
 
@@ -217,7 +223,7 @@ MULLE_C_NONNULL_FIRST
 static inline
 void   _mulle_pointerqueue_removeall( struct mulle_pointerqueue *queue)
 {
-   _mulle__pointerqueue_removeall( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_removeall( &queue->base,
                                    queue->allocator);
 }
 
@@ -235,7 +241,7 @@ static inline
 void  _mulle_pointerqueue_push( struct mulle_pointerqueue *queue,
                                 void *p)
 {
-   _mulle__pointerqueue_push( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_push( &queue->base,
                               p,
                               queue->allocator);
 }
@@ -255,7 +261,7 @@ static inline
 void  _mulle_pointerqueue_add( struct mulle_pointerqueue *queue,
                                 void *p)
 {
-   _mulle__pointerqueue_push( (struct mulle__pointerqueue *) queue,
+   _mulle__pointerqueue_push( &queue->base,
                               p,
                               queue->allocator);
 }
@@ -274,7 +280,7 @@ MULLE_C_NONNULL_FIRST
 static inline
 void  *_mulle_pointerqueue_pop( struct mulle_pointerqueue *queue)
 {
-   return( _mulle__pointerqueue_pop( (struct mulle__pointerqueue *) queue,
+   return( _mulle__pointerqueue_pop( &queue->base,
                                      queue->allocator));
 }
 
@@ -290,7 +296,7 @@ MULLE_C_NONNULL_FIRST
 static inline size_t
    _mulle_pointerqueue_get_count( struct mulle_pointerqueue *queue)
 {
-   return( _mulle__pointerqueue_get_count( (struct mulle__pointerqueue *) queue));
+   return( _mulle__pointerqueue_get_count( &queue->base));
 }
 
 
@@ -302,10 +308,25 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle_pointerqueue_get_mutation_pointer( struct mulle_pointerqueue *queue)
+{
+   return( _mulle__pointerqueue_get_mutation_pointer( &queue->base));
+}
+
+
+static inline uintptr_t *
+   mulle_pointerqueue_get_mutation_pointer( struct mulle_pointerqueue *queue)
+{
+   return( mulle__pointerqueue_get_mutation_pointer( queue ? &queue->base : NULL));
+}
+
+
+MULLE_C_NONNULL_FIRST
 static inline unsigned short
    _mulle_pointerqueue_get_bucketsize( struct mulle_pointerqueue *queue)
 {
-   return( _mulle__pointerqueue_get_bucketsize( (struct mulle__pointerqueue *) queue));
+   return( _mulle__pointerqueue_get_bucketsize( &queue->base));
 }
 
 
@@ -335,7 +356,11 @@ static inline struct mulle_allocator *
  * The enumerator interface is rarely useful, since you can NOT use
  * it to manipulate the queue.
  */
-#define MULLE_POINTERQUEUEENUMERATOR_BASE  MULLE__POINTERQUEUEENUMERATOR_BASE
+//
+// The public enumerator holds the internal one as a member (see mulle-array.h
+// for why repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE_POINTERQUEUEENUMERATOR_BASE   struct mulle__pointerqueueenumerator base
 
 struct mulle_pointerqueueenumerator
 {
@@ -346,11 +371,9 @@ struct mulle_pointerqueueenumerator
 static inline struct mulle_pointerqueueenumerator
    mulle_pointerqueue_enumerate( struct mulle_pointerqueue *queue)
 {
-   struct mulle_pointerqueueenumerator    rover;
-   struct mulle__pointerqueueenumerator   tmp;
+   struct mulle_pointerqueueenumerator   rover;
 
-   tmp = mulle__pointerqueue_enumerate( (struct mulle__pointerqueue *) queue);
-   memcpy( &rover, &tmp, sizeof( struct mulle_pointerqueueenumerator));
+   rover.base = mulle__pointerqueue_enumerate( &queue->base);
    return( rover);
 }
 
@@ -360,8 +383,7 @@ static inline int
    _mulle_pointerqueueenumerator_next( struct mulle_pointerqueueenumerator *rover,
                                        void **item)
 {
-   return( _mulle__pointerqueueenumerator_next( (struct mulle__pointerqueueenumerator *) rover,
-                                                item));
+   return( _mulle__pointerqueueenumerator_next( &rover->base, item));
 }
 
 

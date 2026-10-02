@@ -53,7 +53,7 @@ void   _mulle_map_init( struct mulle_map *map,
    if( ! allocator)
       allocator = &mulle_default_allocator;
 
-   _mulle__map_init( (struct mulle__map *) map, capacity, callback, allocator);
+   _mulle__map_init( &map->base, capacity, callback, allocator);
 
    map->callback  = callback;
    map->allocator = allocator;

@@ -40,6 +40,65 @@ as a diff.
 | `head-to-head-bench.c`  | vs. raw C array / khash-style hash (ratios) |
 | `crossover-bench.c`     | lookup cost vs. size (bsearch/array/assoc/set/map) |
 | `timing-bench.c`        | wall-clock ns/op for core operations        |
+| `scaling-bench.c`       | ns/op insert/lookup/remove vs. size (CSV)   |
+
+## Scaling benchmark and charts (no golden file)
+
+`scaling-bench.c` measures wall-clock insert / read / remove cost for every
+container across sizes that are powers of two (`2^4 .. 2^20`, i.e. up to ~1 MB
+entries) and prints one machine-readable row per measurement to **stderr**:
+
+```
+container,op,n,ns_op
+pointerarray,get,16,1.700
+```
+
+`op` is the container's real verb, following mulle-c11's `SYNTAX.md`, so reads
+are not conflated:
+
+| verb     | meaning                                  | containers |
+|----------|------------------------------------------|------------|
+| `get`    | random access read by index             | pointerarray, array, structarray |
+| `lookup` | hashtable indexing by key               | map, pointermap |
+| `member` | presence test (0/1)                     | set, pointerset, rangeset |
+| `search` | non-linear (binary) search by key       | assoc, rangemap |
+| `find`   | linear search by key                    | pointerpairarray |
+
+`tools/bench-chart.py` turns that stream into one log-log SVG per operation
+(flat line = O(1), rising = O(log n) / O(n)) plus an optional markdown table:
+
+``` sh
+mulle-sde test --configuration Release run test/bench/scaling-bench.c
+tools/bench-chart.py pix/bench-scaling.csv          # writes pix/bench-*.svg
+tools/bench-chart.py pix/bench-scaling.csv --markdown
+```
+
+Every chart lists every container. An operation that a container does not have
+is shown with `x` (grey `&#215;` in the SVG legend) — e.g. only the arrays have
+`get`, only the queues have no read at all. `-` is reserved for "operation
+exists but this size was not measured".
+
+Notes on the workload:
+
+- `find` probes a *bounded* set of keys (`mulle_pointerpairarray` is a linear
+  scan), so a 1 MB run stays O(n) instead of O(n^2).
+- `assoc` and `pointerpairarray` are sorted on first read, so the benchmark
+  warms them up outside the timed region.
+- Removal removes the last element (no memmove) so it measures the read/remove
+  pairing rather than an O(n^2) shift.
+- Growing a container stops once a single size costs more than 200 ms, so a
+  slow operation cannot drag a normal `mulle-sde test` run into its timeout.
+  The cutoff is reported as a `# <container>: stopped after n=...` comment.
+  (With the current code `mulle_assoc remove` is the first to hit it, because
+  it re-sorts after every removal.)
+
+**A note on debug builds.** With asserts on (`NDEBUG` not defined) the range is
+clamped to `2^12`, because `mulle_assoc_add` then runs an O(n) membership assert
+per insert. Use a release build for the full `2^20` range. In mixed kitchen
+environments the test harness may still compile the test binary with `-O0` and
+link the Debug library even under `--release`; `bench_warn_if_debug()` prints a
+warning in that case, and the freshly crafted release executable is the
+trustworthy one.
 
 ## Head-to-head benchmark (no golden file)
 

@@ -62,10 +62,10 @@ void   _mulle__map_init( struct mulle__map *p,
    //
    if( capacity)
    {
-      p->_size    = capacity >= MULLE__POINTERMAP_MIN_SIZE
+      p->base._size    = capacity >= MULLE__POINTERMAP_MIN_SIZE
                         ? mulle_pow2round( capacity + (capacity >> MULLE__POINTERMAP_FILL_SHIFT))
                         : MULLE__POINTERMAP_INITIAL_SIZE;
-      p->_storage = mulle__pointermap_allocate_storage_generic( p->_size,
+      p->base._storage = mulle__pointermap_allocate_storage_generic( p->base._size,
                                                                callback->keycallback.notakey,
                                                                allocator);
    }
@@ -90,9 +90,9 @@ static inline void _mulle__map_free_storage( struct mulle__map *map,
 {
    // doesn't hurt, can help
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   map->_n_mutations++;
-#endif 
-   mulle_allocator_free( allocator, map->_storage);
+   map->base._n_mutations++;
+#endif
+   mulle_allocator_free( allocator, map->base._storage);
 }
 
 
@@ -111,8 +111,8 @@ static void   _mulle__map_release_all( struct mulle__map *map,
       rover = mulle__map_enumerate( map, callback);
       while( (pair = _mulle__mapenumerator_next_pair( &rover)))
       {
-         _mulle__pointermap_keycallback_release( (struct mulle__pointermap *) map, &callback->keycallback, pair->key, allocator);
-         _mulle__pointermap_valuecallback_release( (struct mulle__pointermap *) map, &callback->valuecallback, pair->value, allocator);
+         _mulle__pointermap_keycallback_release( &map->base, &callback->keycallback, pair->key, allocator);
+         _mulle__pointermap_valuecallback_release( &map->base, &callback->valuecallback, pair->value, allocator);
       }
       mulle__mapenumerator_done( &rover);
    }
@@ -144,12 +144,23 @@ void   _mulle__map_reset( struct mulle__map *map,
                           const struct mulle_container_keyvaluecallback *callback,
                           struct mulle_allocator *allocator)
 {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   uintptr_t   memo;
+#endif
+
    // this is good because it allows reset of empty uninitialized maps and
    // avoids superfluous free/dealloc pair
-   if( map->_count)
+   if( map->base._count)
    {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      memo = map->base._n_mutations;
+#endif
       _mulle__map_done( map, callback, allocator);
       _mulle__map_init( map, 0, callback, allocator);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      // init zeroes the whole struct, so restore a monotonic counter
+      map->base._n_mutations = memo + 1;
+#endif
    }
 }
 
@@ -216,9 +227,9 @@ char   *_mulle__map_describe( struct mulle__map *map,
       key_allocator   = allocator ? allocator : &mulle_default_allocator;
       value_allocator = key_allocator;
 
-      key        = _mulle__pointermap_keycallback_describe( (struct mulle__pointermap *) map, &callback->keycallback, item->key, &key_allocator);
+      key        = _mulle__pointermap_keycallback_describe( &map->base, &callback->keycallback, item->key, &key_allocator);
       key_len    = strlen( key);
-      value      = _mulle__pointermap_valuecallback_describe( (struct mulle__pointermap *) map, &callback->valuecallback, item->value, &value_allocator);
+      value      = _mulle__pointermap_valuecallback_describe( &map->base, &callback->valuecallback, item->value, &value_allocator);
       value_len  = strlen( value);
 
       separate = result != NULL;

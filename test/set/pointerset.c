@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 
 static void   create( void)
@@ -101,7 +100,6 @@ static void   set_copy( void)
 {
    struct mulle_pointerset   *set;
    struct mulle_pointerset   *copy;
-   struct mulle__set         *copy2;
 
    set = mulle_pointerset_create( NULL);
 
@@ -143,15 +141,13 @@ static void   misc( void)
 }
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void   run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
 #ifdef DEBUG
    fprintf( stderr, "%s\n", name);
 #endif
    (f)();
-   mulle_testallocator_reset();
 }
 
 

@@ -220,6 +220,34 @@ static inline int
 }
 
 
+//
+// Returns a pointer suitable for NSFastEnumeration's mutationsPtr. The value
+// it points to changes whenever the array is mutated.
+//
+// If mutation counting is disabled, fall back to the write pointer, which is
+// present in every configuration. It changes whenever the count changes, but
+// not on in-place replacement, so a remove+add within an enumeration can slip
+// through undetected.
+//
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__pointerpairarray_get_mutation_pointer( struct mulle__pointerpairarray *array)
+{
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   return( &array->_n_mutations);
+#else
+   return( (uintptr_t *) &array->_curr);
+#endif
+}
+
+
+static inline uintptr_t *
+   mulle__pointerpairarray_get_mutation_pointer( struct mulle__pointerpairarray *array)
+{
+   return( array ? _mulle__pointerpairarray_get_mutation_pointer( array) : NULL);
+}
+
+
 # pragma mark - operations
 
 // intentionally not static inline
@@ -412,10 +440,15 @@ static inline void   mulle__pointerpairarray_qsort_r( struct mulle__pointerpaira
                                                       void *userinfo)
 {
    if( array)
+   {
       mulle_pointerpair_qsort_r( array->_storage,
                                  mulle__pointerpairarray_get_count( array),
                                  compare,
                                  userinfo);
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      array->_n_mutations++;
+#endif
+   }
 }
 
 

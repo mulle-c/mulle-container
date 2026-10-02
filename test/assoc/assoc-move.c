@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 
 #define N  5
@@ -23,11 +22,9 @@ static void   move_test( struct mulle_range range, intptr_t index)
 {
    struct mulle_assoc                        *assoc;
    struct mulle_container_keyvaluecallback   callback;
-   struct mulle_pointerpair                  pair;
    intptr_t                                  key;
    char                                      *value;
    char                                      *sep;
-   size_t                              i;
 
    callback.keycallback   = mulle_container_keycallback_intptr;
    callback.valuecallback = mulle_container_valuecallback_copied_cstring;
@@ -77,15 +74,13 @@ static void   move()
 }
 
 
-// the mulle_testallocator detects and aborts on leaks
+// the mulle_allocator_default detects and aborts on leaks
 static void   run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
 #ifdef DEBUG
    fprintf( stderr, "%s\n", name);
 #endif
    (f)();
-   mulle_testallocator_reset();
 }
 
 

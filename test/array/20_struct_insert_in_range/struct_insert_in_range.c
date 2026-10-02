@@ -1,5 +1,4 @@
 #include <mulle-container/mulle-container.h>
-#include <mulle-testallocator/mulle-testallocator.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -132,10 +131,8 @@ static void  test_struct_insert_in_range( void)
 
 static void  run_test( void (*f)( void), char *name)
 {
-   mulle_testallocator_reset();
    printf( "%s\n", name);
    (f)();
-   mulle_testallocator_reset();
 }
 
 

@@ -46,7 +46,7 @@
 
 struct mulle__pointerqueuebucket;
 
-#define MULLE__POINTERQUEUE_BASE                         \
+#define _MULLE__POINTERQUEUE_BASE                        \
    struct mulle__pointerqueuebucket   *_spares;          \
    struct mulle__pointerqueuebucket   *_read;            \
    struct mulle__pointerqueuebucket   *_write;           \
@@ -56,6 +56,19 @@ struct mulle__pointerqueuebucket;
                                                          \
    unsigned short                     _bucket_size;      \
    unsigned short                     _spare_allowance
+
+#ifndef MULLE__CONTAINER_MISER_MODE
+
+#define MULLE__POINTERQUEUE_BASE                         \
+   _MULLE__POINTERQUEUE_BASE;                            \
+   uintptr_t                          _n_mutations
+
+#else
+
+#define MULLE__POINTERQUEUE_BASE                         \
+   _MULLE__POINTERQUEUE_BASE
+
+#endif
 
 // Sentinel: none. FIFO queue, NULL is not a valid element (pop returns NULL
 // to signal "queue empty").
@@ -126,6 +139,9 @@ static inline void
    queue->_write_index = bucket_size >= 4 ? bucket_size : 4;
 
    queue->_spare_allowance = spare_allowance;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations     = 0;
+#endif
 }
 
 
@@ -176,6 +192,9 @@ static inline void  _mulle__pointerqueue_push( struct mulle__pointerqueue *queue
 
    queue->_count++;
    queue->_write->_storage[ queue->_write_index++] = p;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   queue->_n_mutations++;
+#endif
 }
 
 
@@ -194,6 +213,25 @@ static inline size_t
 
 
 MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle__pointerqueue_get_mutation_pointer( struct mulle__pointerqueue *queue)
+{
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   return( &queue->_n_mutations);
+#else
+   return( (uintptr_t *) &queue->_count);
+#endif
+}
+
+
+static inline uintptr_t *
+   mulle__pointerqueue_get_mutation_pointer( struct mulle__pointerqueue *queue)
+{
+   return( queue ? _mulle__pointerqueue_get_mutation_pointer( queue) : NULL);
+}
+
+
+MULLE_C_NONNULL_FIRST
 static inline unsigned short
    _mulle__pointerqueue_get_bucketsize( struct mulle__pointerqueue *queue)
 {
@@ -205,10 +243,27 @@ static inline unsigned short
  * The enumerator interface is rarely useful, since you can NOT use
  * it to manipulate the queue.
  */
-#define MULLE__POINTERQUEUEENUMERATOR_BASE      \
+#define _MULLE__POINTERQUEUEENUMERATOR_BASE     \
    struct mulle__pointerqueue        *_queue;   \
    struct mulle__pointerqueuebucket  *_curr;    \
    size_t                       _index
+
+//
+// could also use MULLE__CONTAINER_MISER_MODE, but enumerators are not to
+// be stored over the length of a function call
+//
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+
+#define MULLE__POINTERQUEUEENUMERATOR_BASE      \
+   _MULLE__POINTERQUEUEENUMERATOR_BASE;         \
+   uintptr_t                    _n_mutations
+
+#else
+
+#define MULLE__POINTERQUEUEENUMERATOR_BASE      \
+   _MULLE__POINTERQUEUEENUMERATOR_BASE
+
+#endif
 
 
 struct mulle__pointerqueueenumerator
@@ -229,6 +284,9 @@ static inline struct mulle__pointerqueueenumerator
    rover._queue = queue;
    rover._curr  = queue->_read;
    rover._index = queue->_read_index;
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+   rover._n_mutations = queue->_n_mutations;
+#endif
    return( rover);
 }
 
@@ -266,6 +324,9 @@ static inline int
    limit = rover->_curr != queue->_write ? queue->_bucket_size : queue->_write_index;
    if( rover->_index < limit)
    {
+#if MULLE__CONTAINER_HAVE_MUTATION_COUNT
+      assert( rover->_queue->_n_mutations == rover->_n_mutations && "queue was modified during enumeration");
+#endif
       *item = rover->_curr->_storage[ rover->_index++];
       return( 1);
    }

@@ -58,7 +58,7 @@ static inline void
    if( ! callback || ! mulle_container_keyvaluecallback_releases( callback))
       return;
 
-   p        = &assoc->_storage[ range.location];
+   p        = &assoc->base._storage[ range.location];
    sentinel = &p[ range.length];
    while( p < sentinel)
       mulle_pointerpair_release( *p++, callback, allocator);
@@ -73,7 +73,7 @@ void   _mulle__assoc_done( struct mulle__assoc *assoc,
                            struct mulle_allocator *allocator)
 {
    _mulle__assoc_release( assoc, mulle_range_make( 0, _mulle__assoc_get_count( assoc)), callback, allocator);
-   _mulle__pointerpairarray_done( (struct mulle__pointerpairarray *) assoc, allocator);
+   _mulle__pointerpairarray_done( &assoc->base, allocator);
 }
 
 
@@ -96,10 +96,10 @@ void   _mulle__assoc_reset( struct mulle__assoc *assoc,
 {
    _mulle__assoc_release( assoc, mulle_range_make( 0, _mulle__assoc_get_count( assoc)), callback, allocator);
 
-   mulle__pointerpairarray_reset( (struct mulle__pointerpairarray *) assoc);
+   mulle__pointerpairarray_reset( &assoc->base);
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+   assoc->base._n_mutations++;
 #endif
 }
 
@@ -111,12 +111,17 @@ void   _mulle__assoc_remove_in_range( struct mulle__assoc *assoc,
    range = mulle_range_validate_against_length( range, _mulle__assoc_get_count( assoc));
    _mulle__assoc_release( assoc, range, callback, allocator);
 
-   _mulle__pointerpairarray_remove_in_range( (struct mulle__pointerpairarray *) assoc,
+   _mulle__pointerpairarray_remove_in_range( &assoc->base,
                                              range);
-   assoc->_is_sorted = 0;
+
+   //
+   // Removing elements from a sorted sequence leaves it sorted, so the sort
+   // order stays valid. Clearing `_is_sorted` here used to force a full qsort
+   // on the next access, which made removing n elements O(n^2 log n).
+   //
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+   assoc->base._n_mutations++;
 #endif
 }
 
@@ -127,38 +132,58 @@ void   _mulle__assoc_remove( struct mulle__assoc *assoc,
                              void *userinfo,
                              struct mulle_allocator *allocator)
 {
-   size_t               i;
-   struct mulle_pointerpair   item;
+   struct mulle_pointerpair   *storage;
+   struct mulle_pointerpair   search;
+   size_t                     count;
+   size_t                     first;
+   size_t                     last;
+   int                        index;
 
    //
-   // Removal back to front is cool, as long as we are the only one
-   // modifying the assoc. We don't use an enumerator here, but an index is
-   // safe...
+   // Sort once, then locate the key with a binary search instead of scanning
+   // the whole array. Equal keys are adjacent in sorted order, so the run of
+   // matches (assoc keys are unique, but be tolerant) is removed in one go.
    //
+   _mulle__assoc_qsort_r_if_needed( assoc, compare, userinfo);
+
+   storage = assoc->base._storage;
+   count   = assoc->base._curr - storage;
+
+   search = mulle_pointerpair_make( (void *) key, NULL);
+   index  = _mulle_pointerpair_bsearch( storage,
+                                        count,
+                                        search,
+                                        compare,
+                                        userinfo);
+   if( index == -1)
+      return;
+
+   first = (size_t) index;
+   last  = first + 1;
+
    if( _mulle_container_keycallback_isbitequals( &callback->keycallback))
    {
-      for( i = mulle__assoc_get_count( assoc); i;)
-      {
-         item = mulle__assoc_get_at_index( assoc, --i, compare, userinfo);
-         if( key == item.key)
-            _mulle__assoc_remove_in_range( assoc,
-                                           mulle_range_make( i, 1),
-                                           callback,
-                                           allocator);
-      }
+      while( first && storage[ first - 1].key == key)
+         first--;
+      while( last < count && storage[ last].key == key)
+         last++;
    }
    else
    {
-      for( i = mulle__assoc_get_count( assoc); i;)
-      {
-         item = mulle__assoc_get_at_index( assoc, --i, compare, userinfo);
-         if( (callback->keycallback.is_equal)( &callback->keycallback, key, item.key))
-            _mulle__assoc_remove_in_range( assoc,
-                                           mulle_range_make( i, 1),
-                                           callback,
-                                           allocator);
-      }
+      while( first && (*callback->keycallback.is_equal)( &callback->keycallback,
+                                                         storage[ first - 1].key,
+                                                         key))
+         first--;
+      while( last < count && (*callback->keycallback.is_equal)( &callback->keycallback,
+                                                                storage[ last].key,
+                                                                key))
+         last++;
    }
+
+   _mulle__assoc_remove_in_range( assoc,
+                                  mulle_range_make( first, last - first),
+                                  callback,
+                                  allocator);
 }
 
 
@@ -180,14 +205,17 @@ int    _mulle__assoc_is_equal( struct mulle__assoc *assoc,
    if( n != _mulle__assoc_get_count( other))
       return( 0);
 
+   if( ! n)
+      return( 1);
+
    _mulle__assoc_qsort_r_if_needed( assoc, compare, userinfo);
    _mulle__assoc_qsort_r_if_needed( other, compare, userinfo);
 
    if( _mulle_container_keycallback_isbitequals( &callback->keycallback))
-      return( ! memcmp( assoc->_storage, other->_storage, n * sizeof( struct mulle_pointerpair)));
+      return( ! memcmp( assoc->base._storage, other->base._storage, n * sizeof( struct mulle_pointerpair)));
 
-   p = assoc->_storage;
-   q = other->_storage;
+   p = assoc->base._storage;
+   q = other->base._storage;
    
    // If we have a compare function, use it for equality (compare == 0 means equal)
    if( compare)
@@ -227,7 +255,7 @@ void    _mulle__assoc_add( struct mulle__assoc *assoc,
 
    pair     = mulle_pointerpair_make( key, value);
    retained = mulle_pointerpair_retain( pair, callback, allocator);
-   _mulle__pointerpairarray_add( (struct mulle__pointerpairarray *) assoc,
+   _mulle__pointerpairarray_add( &assoc->base,
                                   retained,
                                   allocator);
 
@@ -257,7 +285,7 @@ void    _mulle__assoc_set_at_index( struct mulle__assoc *assoc,
 
    pair     = mulle_pointerpair_make( key, value);
    retained = mulle_pointerpair_retain( pair, callback, allocator);
-   old      = _mulle__pointerpairarray_set( (struct mulle__pointerpairarray *)  assoc,
+   old      = _mulle__pointerpairarray_set( &assoc->base,
                                             i,
                                             retained);
    mulle_pointerpair_release( old, callback, allocator);
@@ -285,11 +313,11 @@ void
       return;
 
    all      = mulle_range_make( 0, _mulle__assoc_get_count( assoc));
-   q        = &other->_storage[ range.location];
+   q        = &other->base._storage[ range.location];
    sentinel = &q[ range.length];
    while( q < sentinel)
    {
-      i = _mulle_pointerpair_find_in_range_callback( assoc->_storage,
+      i = _mulle_pointerpair_find_in_range_callback( assoc->base._storage,
                                                      *q,
                                                      all,
                                                      callback);      
@@ -304,7 +332,7 @@ void
    assoc->_is_sorted = 0;
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+   assoc->base._n_mutations++;
 #endif
 }
 
@@ -324,12 +352,12 @@ void _mulle__assoc_copy_items( struct mulle__assoc *dst,
 
    assert( dst != src);
 
-   _mulle__pointerpairarray_guarantee( (struct mulle__pointerpairarray *) dst, n, allocator);
+   _mulle__pointerpairarray_guarantee( &dst->base, n, allocator);
 
-   p        = dst->_curr;
-   sentinel = dst->_curr + n;
+   p        = dst->base._curr;
+   sentinel = dst->base._curr + n;
 
-   memcpy( p, src->_storage, n * sizeof( struct mulle_pointerpair));
+   memcpy( p, src->base._storage, n * sizeof( struct mulle_pointerpair));
 
    // check if we need to call at all
    if( mulle_container_keyvaluecallback_retains( callback))
@@ -341,11 +369,11 @@ void _mulle__assoc_copy_items( struct mulle__assoc *dst,
       }
    }
 
-   dst->_curr      = sentinel;
+   dst->base._curr      = sentinel;
    dst->_is_sorted = 0;
 
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   ((struct mulle__pointerpairarray *) dst)->_n_mutations++;
+   dst->base._n_mutations++;
 #endif
 }
 
@@ -366,7 +394,7 @@ static uintptr_t
    if( ! range.length)
       return( mulle_not_found_e);
 
-   p        = &assoc->_storage[ range.location];
+   p        = &assoc->base._storage[ range.location];
    sentinel = &p[ range.length];
 
    // NULL check needed for remap
@@ -374,13 +402,13 @@ static uintptr_t
    {
       for( ; p < sentinel; p++)
          if( p->key == key)
-            return( p - assoc->_storage);
+            return( p - assoc->base._storage);
    }
    else
    {
       for( ; p < sentinel; p++)
          if( (*callback->keycallback.is_equal)( &callback->keycallback, p->key, key))
-            return( p - assoc->_storage);
+            return( p - assoc->base._storage);
    }
    return( mulle_not_found_e);
 }
@@ -420,15 +448,15 @@ void   *_mulle__assoc_get( struct mulle__assoc *assoc,
    _mulle__assoc_qsort_r_if_needed( assoc, compare, userinfo);
 
    search = mulle_pointerpair_make( (void *) key, NULL);
-   index = _mulle_pointerpair_bsearch( assoc->_storage,
-                                       assoc->_curr - assoc->_storage,
+   index = _mulle_pointerpair_bsearch( assoc->base._storage,
+                                       assoc->base._curr - assoc->base._storage,
                                        search,
                                        compare,
                                        userinfo);
    if (index == -1)
       return( NULL);
 
-   return assoc->_storage[index].value;
+   return assoc->base._storage[index].value;
 }
 
 
@@ -447,8 +475,8 @@ void   _mulle__assoc_set( struct mulle__assoc *assoc,
    mulle__assoc_qsort_if_needed(assoc, compare, userinfo);
 
    pair  = mulle_pointerpair_make(key, value);
-   index = _mulle_pointerpair_bsearch(assoc->_storage,
-                                     assoc->_curr - assoc->_storage,
+   index = _mulle_pointerpair_bsearch(assoc->base._storage,
+                                     assoc->base._curr - assoc->base._storage,
                                      pair,
                                      compare,
                                      userinfo);
@@ -462,8 +490,8 @@ void   _mulle__assoc_set( struct mulle__assoc *assoc,
    }
    else
    {
-      old                     = assoc->_storage[index];
-      assoc->_storage[index]  = mulle_pointerpair_retain( pair,
+      old                     = assoc->base._storage[index];
+      assoc->base._storage[index]  = mulle_pointerpair_retain( pair,
                                                           callback,
                                                           allocator);
       mulle_pointerpair_release( old, callback, allocator);
@@ -471,7 +499,7 @@ void   _mulle__assoc_set( struct mulle__assoc *assoc,
 
    assoc->_is_sorted = 0;
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+   assoc->base._n_mutations++;
 #endif
 }
 
@@ -507,8 +535,8 @@ void   _mulle__assoc_remap_intptr_key_range( struct mulle__assoc *assoc,
       return;
 
    end      = mulle_range_get_max(range);
-   p        = &assoc->_storage[start];
-   sentinel = assoc->_curr;
+   p        = &assoc->base._storage[start];
+   sentinel = assoc->base._curr;
 
    for (; p < sentinel; p++)
    {
@@ -522,7 +550,7 @@ void   _mulle__assoc_remap_intptr_key_range( struct mulle__assoc *assoc,
 
    assoc->_is_sorted = 0;
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+   assoc->base._n_mutations++;
 #endif
 }
 
@@ -601,8 +629,8 @@ void   _mulle__assoc_move_intptr_key_range( struct mulle__assoc *assoc,
    if (start == mulle_not_found_e)
       return;
 
-   p        = &assoc->_storage[start];
-   sentinel = assoc->_curr;
+   p        = &assoc->base._storage[start];
+   sentinel = assoc->base._curr;
 
    for (; p < sentinel; p++)
    {
@@ -620,7 +648,7 @@ void   _mulle__assoc_move_intptr_key_range( struct mulle__assoc *assoc,
 
    assoc->_is_sorted = 0;
 #if MULLE__CONTAINER_HAVE_MUTATION_COUNT
-   ((struct mulle__pointerpairarray *) assoc)->_n_mutations++;
+   assoc->base._n_mutations++;
 #endif
 }
 

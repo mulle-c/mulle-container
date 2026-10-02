@@ -142,6 +142,9 @@ size_t
 {
    range = mulle_range_validate_against_length( range,
                                                 mulle__pointerpairarray_get_count( array));
+   if( ! range.length)
+      return( 0);
+
    memcpy( buf, &array->_storage[ range.location], range.length * sizeof( struct mulle_pointerpair));
    return( range.length);
 }

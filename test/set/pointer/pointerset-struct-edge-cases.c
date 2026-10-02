@@ -70,8 +70,6 @@ int   main( void)
    // Test 5: Memory allocation failures
    printf("Test 5: Memory allocation failures\n");
    {
-      struct mulle__pointerset  set;
-      
       // Test create with large capacity
       struct mulle__pointerset *large_set = 
          _mulle__pointerset_create(1000000, 0, NULL);
@@ -149,8 +147,6 @@ int   main( void)
    printf("Test 8: Enumeration\n");
    {
       struct mulle__pointerset  set;
-      struct mulle__pointersetenumerator rover;
-      struct TestStruct *item;
       
       _mulle__pointerset_init(&set, 10, NULL);
       

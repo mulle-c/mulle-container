@@ -44,8 +44,12 @@
 // just like struct mulle__map but has the callback embedded in
 // its structure
 //
+//
+// The public struct holds the internal one as a member (see mulle-array.h for
+// why repeating the fields by macro is a strict-aliasing violation).
+//
 #define MULLE_MAP_BASE                                   \
-   MULLE__MAP_BASE;                                      \
+   struct mulle__map                         base;       \
    struct mulle_container_keyvaluecallback   *callback;  \
    struct mulle_allocator                    *allocator
 
@@ -92,7 +96,7 @@ static inline void   mulle_map_init( struct mulle_map *map,
 MULLE_C_NONNULL_FIRST
 static inline void    _mulle_map_done( struct mulle_map *map)
 {
-   _mulle__map_done( (struct mulle__map *) map, map->callback, map->allocator);
+   _mulle__map_done( &map->base, map->callback, map->allocator);
 }static inline void   mulle_map_done( struct mulle_map *map)
 {
    if( ! map)
@@ -103,7 +107,7 @@ static inline void    _mulle_map_done( struct mulle_map *map)
 
 static inline int   mulle_map_is_empty( struct mulle_map *map)
 {
-   return( map ? ! _mulle__map_get_count( (struct mulle__map *) map) : 1);
+   return( map ? ! _mulle__map_get_count( &map->base) : 1);
 }
 
 
@@ -113,7 +117,7 @@ static inline int   mulle_map_contains( struct mulle_map *map, const void *key)
 
    if( ! map)
       return( 0);
-   return( _mulle__map_get_pair( (struct mulle__map *) map,
+   return( _mulle__map_get_pair( &map->base,
                                   key,
                                   map->callback,
                                   &space) != NULL);
@@ -123,7 +127,7 @@ static inline int   mulle_map_contains( struct mulle_map *map, const void *key)
 static inline void   mulle_map_remove_all( struct mulle_map *map)
 {
    if( map)
-      _mulle__map_reset( (struct mulle__map *) map, map->callback, map->allocator);
+      _mulle__map_reset( &map->base, map->callback, map->allocator);
 }
 
 
@@ -132,28 +136,28 @@ static inline void   mulle_map_remove_all( struct mulle_map *map)
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_map_destroy( struct mulle_map *map)
 {
-   _mulle__map_destroy( (struct mulle__map *) map, map->callback, map->allocator);
+   _mulle__map_destroy( &map->base, map->callback, map->allocator);
 }
 
 
 static inline void   mulle_map_destroy( struct mulle_map *map)
 {
    if( map)
-      _mulle__map_destroy( (struct mulle__map *) map, map->callback, map->allocator);
+      _mulle__map_destroy( &map->base, map->callback, map->allocator);
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_map_reset( struct mulle_map *map)
 {
-   _mulle__map_reset( (struct mulle__map *) map, map->callback, map->allocator);
+   _mulle__map_reset( &map->base, map->callback, map->allocator);
 }
 
 
 static inline void    mulle_map_reset( struct mulle_map *map)
 {
    if( map)
-      _mulle__map_reset( (struct mulle__map *) map, map->callback, map->allocator);
+      _mulle__map_reset( &map->base, map->callback, map->allocator);
 }
 
 
@@ -178,13 +182,13 @@ static inline struct mulle_allocator *
 MULLE_C_NONNULL_FIRST
 static inline size_t   _mulle_map_get_count( struct mulle_map *map)
 {
-   return( _mulle__map_get_count( (struct mulle__map *) map));
+   return( _mulle__map_get_count( &map->base));
 }
 
 
 static inline size_t   mulle_map_get_count( struct mulle_map *map)
 {
-   return( mulle__map_get_count( (struct mulle__map *) map));
+   return( mulle__map_get_count( &map->base));
 }
 
 
@@ -192,12 +196,27 @@ static inline size_t   mulle_map_get_count( struct mulle_map *map)
 MULLE_C_NONNULL_FIRST
 static inline size_t   _mulle_map_get_size( struct mulle_map *map)
 {
-   return( _mulle__map_get_size( (struct mulle__map *) map));
+   return( _mulle__map_get_size( &map->base));
 }
 
 static inline size_t   mulle_map_get_size( struct mulle_map *map)
 {
-   return( mulle__map_get_size( (struct mulle__map *) map));
+   return( mulle__map_get_size( &map->base));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static inline uintptr_t *
+   _mulle_map_get_mutation_pointer( struct mulle_map *map)
+{
+   return( _mulle__map_get_mutation_pointer( &map->base));
+}
+
+
+static inline uintptr_t *
+   mulle_map_get_mutation_pointer( struct mulle_map *map)
+{
+   return( mulle__map_get_mutation_pointer( map ? &map->base : NULL));
 }
 
 
@@ -219,7 +238,7 @@ static inline void   *mulle_map_get_notakey( struct mulle_map *map)
 MULLE_C_NONNULL_FIRST
 static inline void   *_mulle_map_get( struct mulle_map *map, const void *key)
 {
-   return( _mulle__map_get( (struct mulle__map *) map, key, map->callback));
+   return( _mulle__map_get( &map->base, key, map->callback));
 }
 
 
@@ -227,7 +246,7 @@ static inline void   *mulle_map_get( struct mulle_map *map, const void *key)
 {
    if( ! map)
       return( NULL);
-   return( _mulle__map_get( (struct mulle__map *) map, key, map->callback));
+   return( _mulle__map_get( &map->base, key, map->callback));
 }
 
 
@@ -238,7 +257,7 @@ static inline struct mulle_pointerpair   *
                         const void *key,
                         struct mulle_pointerpair *space)
 {
-   return( _mulle__map_get_pair( (struct mulle__map *) map,
+   return( _mulle__map_get_pair( &map->base,
                                  key,
                                  map->callback,
                                  space));
@@ -263,7 +282,7 @@ static inline struct mulle_pointerpair   *
 MULLE_C_NONNULL_FIRST
 static inline int   _mulle_map_remove( struct mulle_map *map, const void *key)
 {
-   return( _mulle__map_remove( (struct mulle__map *) map,
+   return( _mulle__map_remove( &map->base,
                                key,
                                map->callback,
                                map->allocator));
@@ -275,7 +294,7 @@ static inline int   mulle_map_remove( struct mulle_map *map, const void *key)
    if( ! map)
       return( 0);
 
-   return( _mulle__map_remove( (struct mulle__map *) map,
+   return( _mulle__map_remove( &map->base,
                                key,
                                map->callback,
                                map->allocator));
@@ -285,7 +304,7 @@ static inline int   mulle_map_remove( struct mulle_map *map, const void *key)
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_map_shrink_if_needed( struct mulle_map *map)
 {
-   _mulle__map_shrink_if_needed( (struct mulle__map *) map,
+   _mulle__map_shrink_if_needed( &map->base,
                                   map->callback,
                                   map->allocator);
 }
@@ -294,7 +313,7 @@ static inline void   _mulle_map_shrink_if_needed( struct mulle_map *map)
 static inline void   mulle_map_shrink_if_needed( struct mulle_map *map)
 {
    if( map)
-      _mulle__map_shrink_if_needed( (struct mulle__map *) map,
+      _mulle__map_shrink_if_needed( &map->base,
                                      map->callback,
                                      map->allocator);
 }
@@ -308,7 +327,7 @@ static inline void
                                   void *firstkey,
                                   va_list args)
 {
-   _mulle__map_insert_key_valuesv( (struct mulle__map *) map,
+   _mulle__map_insert_key_valuesv( &map->base,
                                    firstkey,
                                    args,
                                    map->callback,
@@ -348,7 +367,7 @@ static inline int
 
    pair.key   = key;
    pair.value = value;
-   return( _mulle__map_insert_pair( (struct mulle__map *) map,
+   return( _mulle__map_insert_pair( &map->base,
                                      &pair,
                                      map->callback,
                                      map->allocator));
@@ -366,7 +385,7 @@ static inline void   *
 
    pair.key   = key;
    pair.value = value;
-   registered = _mulle__map_register_pair( (struct mulle__map *) map,
+   registered = _mulle__map_register_pair( &map->base,
                                            &pair,
                                            map->callback,
                                            map->allocator);
@@ -390,7 +409,7 @@ static inline void   *
 
    pair.key   = key;
    pair.value = value;
-   return( _mulle__map_update_pair( (struct mulle__map *) map,
+   return( _mulle__map_update_pair( &map->base,
                                      &pair,
                                      map->callback,
                                      map->allocator));
@@ -413,7 +432,7 @@ static inline void
 
    pair.key   = key;
    pair.value = value;
-   _mulle__map_set_pair( (struct mulle__map *) map,
+   _mulle__map_set_pair( &map->base,
                           &pair,
                           map->callback,
                           map->allocator);
@@ -439,8 +458,8 @@ static inline  void
 {
    assert( dst->callback == src->callback);
 
-   _mulle__map_copy_items( (struct mulle__map *) dst,
-                           (struct mulle__map *) src,
+   _mulle__map_copy_items( &dst->base,
+                           &src->base,
                            dst->callback,
                            allocator);
 }
@@ -454,8 +473,8 @@ static inline struct mulle_map   *mulle_map_copy( struct mulle_map *map)
       return( map);
    // can't allow creation to be done by struct mulle__map
    other = mulle_map_create( mulle_map_get_count( map), map->callback, map->allocator);
-   _mulle__map_copy_items( (struct mulle__map *) other,
-                           (struct mulle__map *) map,
+   _mulle__map_copy_items( &other->base,
+                           &map->base,
                            map->callback,
                            map->allocator);
    return( other);
@@ -472,7 +491,7 @@ void   mulle_map_add_map( struct mulle_map *map, struct mulle_map *other);
 static inline char *
    _mulle_map_describe( struct mulle_map *map)
 {
-   return( _mulle__map_describe( (struct mulle__map *) map,
+   return( _mulle__map_describe( &map->base,
                                   map->callback,
                                   map->allocator));
 }
@@ -499,7 +518,11 @@ static inline char *
  *    printf( "%s : %s\n", key, value);
  * mulle_mapenumerator_done( &rover);
  */
-#define MULLE_MAPENUMERATOR_BASE    MULLE__MAPENUMERATOR_BASE
+//
+// The public enumerator holds the internal one as a member (see mulle-array.h
+// for why repeating the fields by macro is a strict-aliasing violation).
+//
+#define MULLE_MAPENUMERATOR_BASE   struct mulle__mapenumerator base
 
 
 struct mulle_mapenumerator
@@ -511,15 +534,11 @@ struct mulle_mapenumerator
 static inline struct mulle_mapenumerator
    mulle_map_enumerate( struct mulle_map *map)
 {
-   struct mulle_mapenumerator    rover;
-   struct mulle__mapenumerator   tmp;
+   struct mulle_mapenumerator   rover;
 
-   tmp = map
-         ? mulle__map_enumerate( (struct mulle__map *) map, map->callback)
-         : (struct mulle__mapenumerator) { 0 };
-   // MSVC (VS 2022 / 14.44) fatally crashes with C1001 in the /O2 optimizer on
-   // this memcpy(). CI lowers MSVC to /O1, so no code workaround is needed.
-   memcpy( &rover, &tmp, sizeof( struct mulle_mapenumerator));
+   rover.base = map
+                ? mulle__map_enumerate( &map->base, map->callback)
+                : (struct mulle__mapenumerator) { 0 };
    return( rover);
 }
 
@@ -528,14 +547,14 @@ MULLE_C_NONNULL_FIRST
 static inline struct mulle_pointerpair *
    _mulle_mapenumerator_next_pair( struct mulle_mapenumerator *rover)
 {
-   return( _mulle__mapenumerator_next_pair( (struct mulle__mapenumerator *) rover));
+   return( _mulle__mapenumerator_next_pair( &rover->base));
 }
 
 
 static inline struct mulle_pointerpair *
    mulle_mapenumerator_next_pair( struct mulle_mapenumerator *rover)
 {
-   return( mulle__mapenumerator_next_pair( (struct mulle__mapenumerator *) rover));
+   return( mulle__mapenumerator_next_pair( &rover->base));
 }
 
 
@@ -546,9 +565,7 @@ static inline int
                               void **key,
                               void **value)
 {
-   return( _mulle__mapenumerator_next( (struct mulle__mapenumerator *) rover,
-                                       key,
-                                       value));
+   return( _mulle__mapenumerator_next( &rover->base, key, value));
 }
 
 
@@ -558,22 +575,20 @@ static inline int
                              void **key,
                              void **value)
 {
-   return( mulle__mapenumerator_next( (struct mulle__mapenumerator *) rover,
-                                      key,
-                                      value));
+   return( mulle__mapenumerator_next( &rover->base, key, value));
 }
 
 
 MULLE_C_NONNULL_FIRST
 static inline void   _mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
 {
-   mulle__mapenumerator_done( (struct mulle__mapenumerator *) rover);
+   mulle__mapenumerator_done( &rover->base);
 }
 
 
 static inline void   mulle_mapenumerator_done( struct mulle_mapenumerator *rover)
 {
-   mulle__mapenumerator_done( (struct mulle__mapenumerator *) rover);
+   mulle__mapenumerator_done( &rover->base);
 }
 
 
