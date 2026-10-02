@@ -193,7 +193,7 @@ void   _mulle__structarray_zero_to_count( struct mulle__structarray *array,
    size_t   diff; // _mulle__structarray_set_count won't return negative
 
    diff = _mulle__structarray_set_count( array, count, allocator);
-   memset( &((char *) array->_curr)[ - (long) diff * array->_sizeof_struct],
+   memset( (char *) array->_curr - diff * array->_sizeof_struct,
            0,
            diff * array->_sizeof_struct);
 }
