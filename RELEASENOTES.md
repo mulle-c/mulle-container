@@ -2,6 +2,7 @@
 
 
 
+
 * public container structs now embed the internal struct as a member instead of
   repeating its fields through a macro, eliminating the C11 strict-aliasing
   violation that GCC could exploit at -O2/-O3 to silently corrupt state
