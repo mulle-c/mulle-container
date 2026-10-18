@@ -1,5 +1,9 @@
 #include "include.h"
 
+// The key is looked up by address, so it needs a stable address. tcc does not
+// merge identical string literals.
+static char   key1[] = "key1";
+
 static void test_struct_pointermap_basics(void)
 {
     struct mulle__pointermap  map;
@@ -13,10 +17,10 @@ static void test_struct_pointermap_basics(void)
     printf("Initialized map size: %ld\n", (long) _mulle__pointermap_get_size(&map));
     
     // Test basic operations
-    mulle__pointermap_set(&map, "key1", "value1", NULL);
+    mulle__pointermap_set(&map, key1, "value1", NULL);
     printf("Count after set: %ld\n", (long) _mulle__pointermap_get_count(&map));
     
-    value = mulle__pointermap_get(&map, "key1");
+    value = mulle__pointermap_get(&map, key1);
     printf("Retrieved value: %s\n", value ? (char*) value : "NULL");
     
     // Test state queries

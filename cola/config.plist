@@ -3,5 +3,9 @@
    showButtons = YES;
    showCoverage = YES;
    showCodacy = NO;
+   showStd = "C11";
+   showApis = "ansi";
+   showMemory = "allocator";
+   showThreads = "singlethreaded";
    }
 }

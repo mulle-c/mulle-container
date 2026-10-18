@@ -1,5 +1,11 @@
 #include "include.h"
 
+#include <assert.h>
+
+// Keys are matched by address. tcc does not merge identical string literals, so
+// a key has to be one object that outlives the map.
+static char   remove_key[] = "remove_key";
+
 struct TestStruct
 {
    int   id;
@@ -119,13 +125,13 @@ int   main( void)
       
       // Add test data
       struct TestStruct item = {100, "remove_test", 123.45};
-      _mulle__pointermap_set(&map, "remove_key", &item, NULL);
+      _mulle__pointermap_set(&map, remove_key, &item, NULL);
       
       printf("  Before remove, count: %zu\n",
                    _mulle__pointermap_get_count(&map));
       
       // Test remove
-      int removed = _mulle__pointermap_remove(&map, "remove_key", NULL);
+      int removed = _mulle__pointermap_remove(&map, remove_key, NULL);
       printf("  Remove result: %d\n", removed);
       printf("  After remove, count: %zu\n",
                    _mulle__pointermap_get_count(&map));
@@ -243,22 +249,25 @@ int   main( void)
       
       // Add many items to force growth
       struct TestStruct item = {999, "shrink", 999.9};
+      // The map stores the key address, so the keys have to outlive the map;
+      // a local array per iteration goes stale as soon as the block is left.
+      static char shrink_keys[50][32];
       for (int i = 0; i < 50; i++)
       {
-         char key[32];
-         snprintf(key, sizeof(key), "shrink_key_%d", i);
-         _mulle__pointermap_set(&map, key, &item, NULL);
+         snprintf(shrink_keys[i], sizeof(shrink_keys[i]), "shrink_key_%d", i);
+         _mulle__pointermap_set(&map, shrink_keys[i], &item, NULL);
       }
       
       printf("  Before shrink, size: %zu\n", map._size);
       
       // Remove most items
       for (int i = 0; i < 45; i++)
-      {
-         char key[32];
-         snprintf(key, sizeof(key), "shrink_key_%d", i);
-         _mulle__pointermap_remove(&map, key, NULL);
-      }
+         _mulle__pointermap_remove(&map, shrink_keys[i], NULL);
+
+      // 50 distinct keys were set and 45 removed, so five must still be in the
+      // map. Without this, a future change that makes the keys collide again
+      // would still match the expected "size after shrink" output.
+      assert( _mulle__pointermap_get_count(&map) == 5);
       
       _mulle__pointermap_shrink_if_needed(&map, NULL);
       printf("  After shrink, size: %zu\n", map._size);

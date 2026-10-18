@@ -9,8 +9,7 @@
       user="mulle-c";
       repo="mulle-container";
       homepage="https://github.com/mulle-c/mulle-container";
-            version="10.1.4";
-license="BSD-3-Clause";
+      license="BSD-3-Clause";
    };
    dependencies =
    (
@@ -23,7 +22,7 @@ license="BSD-3-Clause";
          user="mulle-c";
       },
       {
-         description="#️⃣ A collection of hash functions";
+         description="#️⃣  A collection of hash functions";
          domain="github";
          name="mulle-data";
          repo="mulle-data";

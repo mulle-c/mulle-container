@@ -15,6 +15,14 @@
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
 
+// The pointer set identifies its values by address, not by content. Identical
+// string literals are not guaranteed to be merged (tcc does not merge them),
+// so a value needs storage with a stable address for as long as it is in the
+// set.
+static char   vfl[]    = "VfL";
+static char   bochum[] = "Bochum";
+static char   year[]   = "1848";
+
 
 static void   create( void)
 {
@@ -54,18 +62,18 @@ static void  simple( void)
    mulle_pointerset_do( set)
    {
       assert( mulle_pointerset_get_count( set) == 0);
-      assert( ! mulle_pointerset_get( set, "VfL"));
+      assert( ! mulle_pointerset_get( set, vfl));
 
-      mulle_pointerset_set( set, "VfL");
-      assert( ! strcmp( "VfL", mulle_pointerset_get( set, "VfL")));
+      mulle_pointerset_set( set, vfl);
+      assert( ! strcmp( "VfL", mulle_pointerset_get( set, vfl)));
 
-      mulle_pointerset_set( set, "VfL");
-      assert( ! strcmp( "VfL", mulle_pointerset_get( set, "VfL")));
+      mulle_pointerset_set( set, vfl);
+      assert( ! strcmp( "VfL", mulle_pointerset_get( set, vfl)));
 
       assert( ! mulle_pointerset_get( set, "Whatever"));
 
       mulle_pointerset_remove( set, onstack);  // can't match
-      assert( ! strcmp( "VfL", mulle_pointerset_get( set, "VfL")));
+      assert( ! strcmp( "VfL", mulle_pointerset_get( set, vfl)));
    }
 }
 
@@ -76,20 +84,20 @@ static void   set_remove( void)
 
    set = mulle_pointerset_create( NULL);
 
-   mulle_pointerset_set( set, "VfL");
-   mulle_pointerset_set( set, "Bochum");
-   mulle_pointerset_set( set, "1848");
+   mulle_pointerset_set( set, vfl);
+   mulle_pointerset_set( set, bochum);
+   mulle_pointerset_set( set, year);
 
-   mulle_pointerset_remove( set, "Bochum");
+   mulle_pointerset_remove( set, bochum);
    assert( mulle_pointerset_get_count( set) == 2);
 
-   mulle_pointerset_remove( set, "Bochum");
+   mulle_pointerset_remove( set, bochum);
    assert( mulle_pointerset_get_count( set) == 2);
 
-   mulle_pointerset_remove( set, "1848");
+   mulle_pointerset_remove( set, year);
    assert( mulle_pointerset_get_count( set) == 1);
 
-   mulle_pointerset_remove( set, "VfL");
+   mulle_pointerset_remove( set, vfl);
    assert( mulle_pointerset_get_count( set) == 0);
 
    mulle_pointerset_destroy( set);
@@ -111,9 +119,9 @@ static void   set_copy( void)
    copy = mulle_pointerset_copy( set);
    mulle_pointerset_destroy( copy);
 
-   mulle_pointerset_set( set, "VfL");
-   mulle_pointerset_set( set, "Bochum");
-   mulle_pointerset_set( set, "1848");
+   mulle_pointerset_set( set, vfl);
+   mulle_pointerset_set( set, bochum);
+   mulle_pointerset_set( set, year);
 
    copy = mulle_pointerset_copy( set);
    assert( mulle_pointerset_get_count( copy) == 3);

@@ -1,5 +1,10 @@
 #include "include.h"
 
+// test_pointerpairarray_search_and_find() looks the key up by pointer identity,
+// so the added key and the searched key must be the same object. tcc does not
+// merge identical string literals.
+static char   banana[] = "banana";
+
 static void test_pointerpair_basic_operations(void)
 {
     struct mulle_pointerpair   pair1, pair2, invalid;
@@ -191,14 +196,14 @@ static void test_pointerpairarray_search_and_find(void)
     pair = mulle_pointerpair_make("apple", "fruit1");
     _mulle__pointerpairarray_add(array, pair, NULL);
     
-    pair = mulle_pointerpair_make("banana", "fruit2");
+    pair = mulle_pointerpair_make(banana, "fruit2");
     _mulle__pointerpairarray_add(array, pair, NULL);
     
     pair = mulle_pointerpair_make("cherry", "fruit3");
     _mulle__pointerpairarray_add(array, pair, NULL);
     
     // Test basic find (pointer equality)
-    search = mulle_pointerpair_make("banana", NULL);
+    search = mulle_pointerpair_make(banana, NULL);
     index = _mulle__pointerpairarray_find(array, search);
     if( index != mulle_not_found_e)
     {

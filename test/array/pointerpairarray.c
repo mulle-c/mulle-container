@@ -12,6 +12,11 @@
 
 #include <stdio.h>
 
+// find() below compares by pointer identity, so the key and value must be the
+// very same objects on both sides. tcc does not merge identical literals.
+static char   msv[]      = "MSV";
+static char   duisburg[] = "Duisburg";
+
 
 
 static void  find( void)
@@ -25,7 +30,7 @@ static void  find( void)
 
    mulle_pointerpairarray_add_kv( array, "VfL", "Bochum");
    mulle_pointerpairarray_add_kv( array, "WSV", "Wuppertal");
-   mulle_pointerpairarray_add_kv( array, "MSV", "Duisburg");
+   mulle_pointerpairarray_add_kv( array, msv, duisburg);
    mulle_pointerpairarray_add_kv( array, "KSC", "Karlsruhe");
 
    mulle_pointerpairarray_get_in_range( array, mulle_range_make( 0, 3), pairs);
@@ -46,19 +51,19 @@ static void  find( void)
    index = mulle_pointerpairarray_find_in_range( array, item, mulle_range_make_all());
    assert( index == mulle_not_found_e);
 
-   item  = mulle_pointerpair_make( "MSV", "Duisburg");
+   item  = mulle_pointerpair_make( msv, duisburg);
    index = mulle_pointerpairarray_find( array, item);
    assert( index != mulle_not_found_e);
 
-   item  = mulle_pointerpair_make( "MSV", "Duisburg");
+   item  = mulle_pointerpair_make( msv, duisburg);
    index = mulle_pointerpairarray_find_callback( array, item, NULL);
    assert( index != mulle_not_found_e);
 
-   item  = mulle_pointerpair_make( "MSV", "Duisburg");
+   item  = mulle_pointerpair_make( msv, duisburg);
    index = mulle_pointerpairarray_find_compare( NULL, item, 0, NULL);
    assert( index == mulle_not_found_e);
 
-   item  = mulle_pointerpair_make( "MSV", "Duisburg");
+   item  = mulle_pointerpair_make( msv, duisburg);
    index = mulle_pointerpairarray_find_compare( array, item, 0, NULL);
    assert( index != mulle_not_found_e);
 

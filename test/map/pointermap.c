@@ -15,6 +15,16 @@
 #include <stdio.h>
 #include <mulle-container/mulle-container.h>
 
+// A pointer map identifies its keys by address, not by content. Identical
+// string literals are not guaranteed to be merged (tcc does not merge them),
+// so a key needs storage with a stable address for as long as it is in the
+// map. Literals would work here only because gcc and clang happen to merge
+// them.
+static char   vfl[]       = "VfL";
+static char   vfl_upper[] = "VFL";
+static char   bochum[]    = "Bochum";
+static char   year[]      = "1848";
+
 
 static void   create( void)
 {
@@ -37,22 +47,22 @@ static void  simple( void)
    mulle__pointermap_do( map)
    {
       assert( mulle__pointermap_get_count( map) == 0);
-      assert( ! mulle__pointermap_get( map, "VfL"));
+      assert( ! mulle__pointermap_get( map, vfl));
 
-      mulle__pointermap_set( map, "VfL", "VFL", NULL);
-      assert( ! mulle__pointermap_get( map, "VFL"));
-      assert( ! strcmp( "VFL", mulle__pointermap_get( map, "VfL")));
+      mulle__pointermap_set( map, vfl, "VFL", NULL);
+      assert( ! mulle__pointermap_get( map, vfl_upper));
+      assert( ! strcmp( "VFL", mulle__pointermap_get( map, vfl)));
 
-      state = mulle__pointermap_insert( map, "VfL", "xxx", NULL);
+      state = mulle__pointermap_insert( map, vfl, "xxx", NULL);
       assert( ! state);
-      assert( ! strcmp( "VFL", mulle__pointermap_get( map, "VfL")));
+      assert( ! strcmp( "VFL", mulle__pointermap_get( map, vfl)));
 
-      mulle__pointermap_set( map, "VfL", "BOCHUM", NULL);
-      assert( ! strcmp( "BOCHUM", mulle__pointermap_get( map, "VfL")));
+      mulle__pointermap_set( map, vfl, "BOCHUM", NULL);
+      assert( ! strcmp( "BOCHUM", mulle__pointermap_get( map, vfl)));
 
       // should NOT  remove
       mulle__pointermap_remove( map, onstack, NULL);
-      assert( mulle__pointermap_get( map, "VfL"));
+      assert( mulle__pointermap_get( map, vfl));
    }
 }
 
@@ -63,9 +73,9 @@ static void   map_reset( void)
 
    map = mulle__pointermap_create( 0, 9, NULL);
 
-   mulle__pointermap_set( map, "VfL", "VFL", NULL);
-   mulle__pointermap_set( map, "Bochum", "BOCHUM", NULL);
-   mulle__pointermap_set( map, "1848", "1848", NULL);
+   mulle__pointermap_set( map, vfl, "VFL", NULL);
+   mulle__pointermap_set( map, bochum, "BOCHUM", NULL);
+   mulle__pointermap_set( map, year, "1848", NULL);
 
    mulle__pointermap_reset( map, NULL);
    assert( mulle__pointermap_get_count( map) == 0);
@@ -81,20 +91,20 @@ static void   map_remove( void)
 
    map = mulle__pointermap_create( 3, 0, NULL);
 
-   mulle__pointermap_set( map, "VfL", "VFL", NULL);
-   mulle__pointermap_set( map, "Bochum", "BOCHUM", NULL);
-   mulle__pointermap_set( map, "1848", "1848", NULL);
+   mulle__pointermap_set( map, vfl, "VFL", NULL);
+   mulle__pointermap_set( map, bochum, "BOCHUM", NULL);
+   mulle__pointermap_set( map, year, "1848", NULL);
 
-   mulle__pointermap_remove( map, "Bochum", NULL);
+   mulle__pointermap_remove( map, bochum, NULL);
    assert( mulle__pointermap_get_count( map) == 2);
 
-   mulle__pointermap_remove( map, "Bochum", NULL);
+   mulle__pointermap_remove( map, bochum, NULL);
    assert( mulle__pointermap_get_count( map) == 2);
 
-   mulle__pointermap_remove( map, "1848", NULL);
+   mulle__pointermap_remove( map, year, NULL);
    assert( mulle__pointermap_get_count( map) == 1);
 
-   mulle__pointermap_remove( map, "VfL", NULL);
+   mulle__pointermap_remove( map, vfl, NULL);
    assert( mulle__pointermap_get_count( map) == 0);
 
    mulle__pointermap_destroy( map, NULL);
@@ -111,23 +121,23 @@ static void   map_copy( void)
    copy = _mulle__pointermap_copy( map, NULL);
    mulle__pointermap_destroy( copy, NULL);
 
-   mulle__pointermap_set( map, "VfL", "VFL", NULL);
-   mulle__pointermap_set( map, "Bochum", "BOCHUM", NULL);
-   mulle__pointermap_set( map, "1848", "1848", NULL);
+   mulle__pointermap_set( map, vfl, "VFL", NULL);
+   mulle__pointermap_set( map, bochum, "BOCHUM", NULL);
+   mulle__pointermap_set( map, year, "1848", NULL);
 
    copy = _mulle__pointermap_copy( map, NULL);
    mulle__pointermap_destroy( copy, NULL);
 
-   mulle__pointermap_remove( map, "Bochum", NULL);
+   mulle__pointermap_remove( map, bochum, NULL);
    assert( mulle__pointermap_get_count( map) == 2);
 
-   mulle__pointermap_remove( map, "Bochum", NULL);
+   mulle__pointermap_remove( map, bochum, NULL);
    assert( mulle__pointermap_get_count( map) == 2);
 
-   mulle__pointermap_remove( map, "1848", NULL);
+   mulle__pointermap_remove( map, year, NULL);
    assert( mulle__pointermap_get_count( map) == 1);
 
-   mulle__pointermap_remove( map, "VfL", NULL);
+   mulle__pointermap_remove( map, vfl, NULL);
    assert( mulle__pointermap_get_count( map) == 0);
 
    mulle__pointermap_destroy( map, NULL);
@@ -147,9 +157,9 @@ static void  enumerate( void)
 
    map = mulle__pointermap_create( 100, 0, NULL);
 
-   mulle__pointermap_set( map, "VfL", "VFL", NULL);
-   mulle__pointermap_set( map, "Bochum", "BOCHUM", NULL);
-   mulle__pointermap_set( map, "1848", "1848", NULL);
+   mulle__pointermap_set( map, vfl, "VFL", NULL);
+   mulle__pointermap_set( map, bochum, "BOCHUM", NULL);
+   mulle__pointermap_set( map, year, "1848", NULL);
 
    assert( mulle__pointermap_get_count( map) == 3);
 
@@ -200,9 +210,9 @@ static void  enumerate_pairs( void)
 
    map = mulle__pointermap_create( 0, 0, NULL);
 
-   mulle__pointermap_set( map, "VfL", "VFL", NULL);
-   mulle__pointermap_set( map, "Bochum", "BOCHUM", NULL);
-   mulle__pointermap_set( map, "1848", "1848", NULL);
+   mulle__pointermap_set( map, vfl, "VFL", NULL);
+   mulle__pointermap_set( map, bochum, "BOCHUM", NULL);
+   mulle__pointermap_set( map, year, "1848", NULL);
 
    assert( mulle__pointermap_get_count( map) == 3);
 

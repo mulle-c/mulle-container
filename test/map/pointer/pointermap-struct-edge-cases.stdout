@@ -34,5 +34,5 @@ Test 9: Copy operations
     Verified copy: copy_key2 -> id=200
 Test 10: Shrink operations
   Before shrink, size: 128
-  After shrink, size: 4
+  After shrink, size: 8
 All pointermap-struct edge case tests completed
