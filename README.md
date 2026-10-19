@@ -16,7 +16,7 @@ Some data structures utilize callbacks that are compatible to OS X's
 
 | Release Version                                       | Release Notes  | AI Documentation
 |-------------------------------------------------------|----------------|---------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) ![standard: C11](pix/c11.svg) ![apis: ansi](pix/apis-ansi.svg) ![memory: allocator](pix/memory-allocator.svg) ![threads: singlethreaded](pix/thread-singlethreaded.svg) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg)](//github.com/mulle-c/mulle-container/actions) ![Coverage](https://img.shields.io/badge/coverage-92%25%C2%A0-seagreen) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-container](https://deepwiki.com/mulle-c/mulle-container)
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-c/mulle-container.svg) ![standard: C11](pix/c11.svg) ![apis: ansi](pix/apis-ansi.svg) ![memory: allocator](pix/memory-allocator.svg) ![threads: singlethreaded](pix/thread-singlethreaded.svg) [![Build Status](https://github.com/mulle-c/mulle-container/workflows/CI/badge.svg)](//github.com/mulle-c/mulle-container/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-container](https://deepwiki.com/mulle-c/mulle-container)
 
 
 
