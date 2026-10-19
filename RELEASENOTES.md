@@ -3,6 +3,18 @@
 
 
 
+* plain ``add_subdirectory()`` consumers that only call ``target_link_libraries()`` can again include headers by their installed-style path (e.g. ``<mulle-container/mulle-container.h>``); the library now re-exports its interface include directory
+* the library is now compiled as strict ANSI/ISO C11 with no feature-test macros, so POSIX/BSD calls fail instead of slipping through — matching the newly advertised `std: C11` and `apis: ansi` badges
+* pointermap, pointerset and pointerpairarray tests now key on objects with stable addresses, so they no longer depend on string literal merging and pass under compilers like tcc
+
+
+
+
+
+
+
+
+
 * public container structs now embed the internal struct as a member instead of
   repeating its fields through a macro, eliminating the C11 strict-aliasing
   violation that GCC could exploit at -O2/-O3 to silently corrupt state
